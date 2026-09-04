@@ -2,7 +2,7 @@
 
 > 一眼辨色，科学筛查 — 在线色觉检测 Web 应用
 
-> **实现状态**：当前为「文档 + 高保真静态原型」阶段，应用源码（Next.js）**尚未实现**；下方"快速开始"依赖尚未创建，不可直接运行。权威规范见 [docs/SPEC.md](docs/SPEC.md)。当前项目版本 **v1.0.0**（见 `VERSION`）。
+> **实现状态**：v1.0 已实现（Next.js 14 应用 + 石原氏检测 + 结果/历史/科普/隐私）。路径追踪与色相排列为 v1.1 规划。权威规范见 [docs/SPEC.md](docs/SPEC.md)。当前项目版本 **v1.0.0**（见 `VERSION`）。
 
 [![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
@@ -17,29 +17,29 @@
 
 ## 功能特性
 
-- 石原氏数字图测试（快速版 10 题 / 标准版 24 题）
-- 路径追踪图测试（区分红/绿色盲类型）
-- 色相排列测试（简化版 Farnsworth-Munsell D15）
-- 智能判读算法（基于答题模式推断异常类型与程度）
-- 结果可视化（雷达图、条形图、答题明细）
-- 报告导出（PNG / PDF）
-- 检测历史本地存储（无需注册）
-- 响应式设计（桌面 / 平板 / 手机）
-- 深色模式支持
+- 石原氏数字图测试（快速版 10 题 / 标准版 24 题）— **已实现**
+- 智能判读算法（基于答题模式推断异常类型、程度与三轴维度）— **已实现**
+- 结果可视化（维度条形图、答题明细、错误模式）— **已实现**
+- 报告导出（PNG / 打印另存 PDF / 复制文字）— **已实现**
+- 检测历史本地存储（无需注册，可查看/删除/清空）— **已实现**
+- 响应式设计（桌面 / 平板 / 手机）— **已实现**
+- 深色模式 + 色觉安全模式 — **已实现**
+- 路径追踪图测试（区分红/绿色盲类型）— *规划中（v1.1）*
+- 色相排列测试（简化版 Farnsworth-Munsell D15）— *规划中（v1.1）*
 
 ## 技术栈
+
+> v1.0 实际落地：以 Next.js + TypeScript + Tailwind 为核心，图表用内联 SVG、导出用 Canvas + 浏览器打印，不引入重型依赖。路径追踪 / 色相排列（v1.1）将按需引入 dnd-kit / 图表库。
 
 | 类别 | 技术 | 版本 |
 |------|------|------|
 | 框架 | Next.js (App Router) | 14.x |
 | 语言 | TypeScript | 5.x |
-| 样式 | Tailwind CSS | 3.x |
-| UI 组件 | shadcn/ui + Radix UI | latest |
-| 图表 | Recharts | 2.x |
-| 拖拽 | @dnd-kit/core | 6.x |
-| 导出 | html2canvas + jsPDF | latest |
-| 代码规范 | ESLint + Prettier | latest |
-| 部署 | Vercel | — |
+| 样式 | Tailwind CSS + 设计令牌（CSS 变量，支持深色与色觉安全模式） | 3.x |
+| 图表 | 内联 SVG（自绘维度条形图） | — |
+| 导出 | Canvas（PNG）+ `window.print()`（PDF） | — |
+| 代码规范 | ESLint（next/core-web-vitals） | latest |
+| 部署 | Vercel / 任意静态 Node 托管 | — |
 
 详细技术架构见 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)。
 
@@ -189,7 +189,7 @@ chromacheck/
 | [测试策略文档](docs/TESTING.md) | 单元/集成/手动测试计划 |
 | [隐私与合规文档](docs/PRIVACY.md) | 数据收集、存储、合规要求 |
 | [路线图文档](docs/ROADMAP.md) | 版本规划与未来方向 |
-| [贡献指南](.github/CONTRIBUTING.md) | 开发流程、代码规范 |
+| [贡献指南](.github/.github/CONTRIBUTING.md) | 开发流程、代码规范 |
 
 ## 高保真原型
 

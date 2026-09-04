@@ -1,12 +1,18 @@
 # 记忆索引
 
 ## 项目：ChromaCheck（e:/Github/ChromaCheck）
-- 纯文档 + 静态原型项目，当前无 `package.json` / `VERSION` 单一版本源（原型文件头统一 v0.1.0）。
-- 原型集（`prototype/`）四页互相链接、纯 HTML+CSS+原生 JS、无构建依赖：
-  - `prototype.html`：高保真可交互产品原型（真实数据：`data.js` 24题/判读/历史/结果）+ 设备画框切换 + 色觉模拟
-  - `wireframes.html`：组件库规范（基础/复合/业务组件 + 使用规则 + 无障碍基线）
-  - `design-system.html`：设计系统（色彩/字体/间距·圆角·阴影/图标/动效令牌 + 色觉模拟基线）
-  - `interaction.html`：交互标准（模式/反馈/错误/空状态，均可交互演示）
-- 图标库：`prototype/assets/js/icons.js` 暴露 `CC.icon(name)`（24×24 线性 SVG，`currentColor` 继承）；`CC.ICON_GROUPS` 供展示。
-- 设计令牌在 `prototype/assets/css/tokens.css` 为单一来源；样式分层 tokens / ui / screens / screens-test / docs（docs.css 另含规范页与交互演示样式）。
-- 色觉绘制核心：`prototype/assets/js/ishihara.js` 暴露 `CC.renderPlate` / `CC.renderPathField` / `CC.simulate`；`renderPathField` 返回 `{W,H,path}`（path 为归一化坐标，用于重合度计算）。
+- 已从「纯文档 + 静态原型」进入**应用开发阶段**，v1.0.0 已实现（2026-09-04）。
+- 应用技术栈：Next.js 14 (App Router) + React 18 + TypeScript(strict) + Tailwind 3，纯本地、无后端、无重型依赖；图表用内联 SVG，报告导出用 Canvas(PNG)+`window.print()`(PDF)。
+- 版本单一来源：`VERSION`(=1.0.0) 与 `package.json` version 一致；原型文件头原为 v0.1.0，与正式应用版本解耦。
+- **已实现页面/功能**（v1.0）：首页(含色觉模拟 CvdSimulator)、检测前指引、模式选择(快速10题/标准24题)、石原氏测试(`/test/ishihara/[mode]`)、结果页(`/result/[id]`)、历史、科普列表+详情、隐私政策。
+- **规划中（v1.1）**：路径追踪、色相排列（F4/F5，原型 `ishihara.js` 已含 `renderPathField` 可复用）。
+- 数据/算法权威来源（应用从原型移植）：`prototype/assets/js/data.js`(24题)、`scoring.js`(判读)、`ishihara.js`(点阵绘制/色觉模拟)。移植后位于 `lib/questions.ts` `lib/scoring.ts` `lib/ishihara.ts` `components/test/IshiharaPlate.tsx`。
+- **构建关键坑（Windows/PowerShell + 腾讯 coding-copilot 扩展）**：该扩展注入的 `node-safe-delete-shim` 会拦截 Node 目录删除并因调用 genie-trash 超时，导致 `next build` 在 cleanup 阶段失败（ETIMEDOUT）。**解决办法**：构建前设 `$env:CODEBUDDY_SAFE_DELETE_ENABLED='0'`（shim 读此变量跳过安全删除），不影响代码本身。
+- 内置题库 24 道（`lib/questions.ts`），题型含 demonstration/transformation/vanishing/hidden/classification/normal；隐藏题对正常视觉应渲染为空白图版（figureText 返回 ''），避免误判。
+- 设计令牌移植到 `app/globals.css`（`:root`/`[data-theme=dark]`/`body.cvd-safe`）；`tailwind.config.ts` 将颜色映射到这些 CSS 变量。
+- 原型集（`prototype/`）四页互相链接、纯 HTML+CSS+原生 JS、无构建依赖：`prototype.html`(高保真可交互+色觉模拟) / `wireframes.html`(组件库) / `design-system.html`(设计系统) / `interaction.html`(交互标准)。图标库 `prototype/assets/js/icons.js` 暴露 `CC.icon(name)`（24×24 线性 SVG，`currentColor` 继承）。
+
+## 跨项目通用（沿用）
+- 源文件单文件 >200 行须按职责拆分（仅代码文件，文档不拆）。
+- 每次修改 bump 最小版本号；仅被改文件头注释更新，禁止全仓库刷写头注释。
+- 中文对话、回复精简直给。

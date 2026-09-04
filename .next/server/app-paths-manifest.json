@@ -1,0 +1,12 @@
+{
+  "/_not-found/page": "app/_not-found/page.js",
+  "/history/page": "app/history/page.js",
+  "/guide/page": "app/guide/page.js",
+  "/learn/page": "app/learn/page.js",
+  "/page": "app/page.js",
+  "/privacy/page": "app/privacy/page.js",
+  "/result/[id]/page": "app/result/[id]/page.js",
+  "/test/ishihara/[mode]/page": "app/test/ishihara/[mode]/page.js",
+  "/test/page": "app/test/page.js",
+  "/learn/[slug]/page": "app/learn/[slug]/page.js"
+}
