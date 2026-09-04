@@ -1,4 +1,4 @@
-/* prototype/assets/js/screens-result.js v0.1.0 — 结果页（维度评分 / 雷达 / 明细 / 建议） */
+/* prototype/assets/js/screens-result.js v0.1.1 — 结果页（维度评分 / 雷达 / 明细 / 建议） */
 window.CC = window.CC || {};
 CC.screens = CC.screens || {};
 
@@ -75,7 +75,7 @@ CC.screens = CC.screens || {};
                 '<span class="chip chip--outline">' + (res.device || '本机浏览器') + '</span>' +
               '</div>' +
               '<div class="row" style="gap:10px;margin-top:28px">' +
-                '<a class="btn btn--primary" href="report.html" target="_blank">导出 PNG / PDF 报告</a>' +
+                '<button class="btn btn--primary" data-act="export">导出 PNG / PDF 报告</button>' +
                 '<button class="btn btn--secondary" data-go="guide">重新检测</button>' +
               '</div>' +
             '</div>' +
@@ -113,14 +113,18 @@ CC.screens = CC.screens || {};
                     '<p class="muted" style="font-size:13px;margin-top:8px">' + p.description + '</p></div>';
                 }).join('') +
               '</div>' +
-              (res.pathTracking
+              (CC.state.mode === 'advanced' || res.pathTracking
                 ? '<hr class="dot-rule" style="margin:20px 0"><strong>进阶测试</strong>' +
-                  res.pathTracking.map(function (p, i) {
-                    return '<div class="row row--between" style="margin-top:12px"><span class="muted" style="font-size:13px">路径 ' + (i + 1) + '</span>' +
-                      '<span class="mono">' + p.overlapScore + '% ' + (p.passed ? '✅' : '⚠️') + '</span></div>';
-                  }).join('') +
-                  '<div class="row row--between" style="margin-top:12px"><span class="muted" style="font-size:13px">色相排列 TES</span>' +
-                  '<span class="mono">' + res.hueArrangement.totalErrorScore + ' · ' + (res.hueArrangement.normal ? '正常' : '偏差') + '</span></div>'
+                  (res.pathTracking
+                    ? res.pathTracking.map(function (p, i) {
+                        return '<div class="row row--between" style="margin-top:12px"><span class="muted" style="font-size:13px">路径 ' + (i + 1) + '</span>' +
+                          '<span class="mono">' + p.overlapScore + '% ' + (p.passed ? '✅' : '⚠️') + '</span></div>';
+                      }).join('')
+                    : '<p class="muted" style="font-size:13px;margin-top:12px">本次未记录到路径追踪结果。</p>') +
+                  (res.hueArrangement
+                    ? '<div class="row row--between" style="margin-top:12px"><span class="muted" style="font-size:13px">色相排列 TES</span>' +
+                      '<span class="mono">' + res.hueArrangement.totalErrorScore + ' · ' + (res.hueArrangement.normal ? '正常' : '偏差') + '</span></div>'
+                    : '')
                 : '<hr class="dot-rule" style="margin:20px 0"><p class="muted" style="font-size:13px">本次为' + CC.modeText[res.mode] + '，未包含进阶测试。做进阶版可得到路径追踪与色相排列结果。</p>') +
             '</div>' +
           '</div>' +
@@ -171,6 +175,8 @@ CC.screens = CC.screens || {};
           f.style.width = f.getAttribute('data-w') + '%';
         });
       }, 120);
+      var exp = root.querySelector('[data-act="export"]');
+      if (exp) exp.addEventListener('click', function () { window.print(); CC.toast('已调用浏览器导出（PDF / 打印）'); });
     }
   };
 })();

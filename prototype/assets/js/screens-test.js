@@ -1,4 +1,4 @@
-/* prototype/assets/js/screens-test.js v0.1.0 — 石原氏数字图检测屏（可真实作答） */
+/* prototype/assets/js/screens-test.js v0.1.1 — 石原氏数字图检测屏（可真实作答） */
 window.CC = window.CC || {};
 CC.screens = CC.screens || {};
 
@@ -130,6 +130,8 @@ CC.screens = CC.screens || {};
         if (t.index < t.set.length - 1) {
           t.index++;
           CC.go('ishihara');
+        } else if (CC.state.mode === 'advanced') {
+          CC.go('path');
         } else {
           CC.finishTest();
         }

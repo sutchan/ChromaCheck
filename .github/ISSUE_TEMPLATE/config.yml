@@ -1,0 +1,11 @@
+# 禁用空白 Issue，强制使用模板
+blank_issues_enabled: false
+
+# 如需启用安全漏洞 / 文档快捷入口，请取消注释并替换 OWNER/REPO 为真实仓库路径：
+# contact_links:
+#   - name: 安全漏洞报告
+#     url: https://github.com/OWNER/REPO/security/advisories/new
+#     about: 请勿公开披露安全漏洞，请通过 Security Advisory 私密提交。
+#   - name: 规范总纲 SPEC
+#     url: https://github.com/OWNER/REPO/blob/main/docs/SPEC.md
+#     about: 权威功能/数据/算法说明。

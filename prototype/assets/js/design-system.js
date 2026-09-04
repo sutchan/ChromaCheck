@@ -1,6 +1,7 @@
-/* prototype/assets/js/design-system.js v0.1.0 — 色觉模拟基线小样生成 */
+/* prototype/assets/js/design-system.js v0.1.2 — 色觉模拟基线小样生成 */
 (function () {
   'use strict';
+  /* 与 ishihara.js 的 CC.simulate 保持同一套矩阵 + 2.2 gamma 校正，避免两处模拟口径不一致 */
   function hexToRgb(h) {
     h = h.replace('#', '');
     if (h.length === 3) h = h.split('').map(function (x) { return x + x; }).join('');
@@ -18,9 +19,15 @@
       mono: [[0.299, 0.587, 0.114], [0.299, 0.587, 0.114], [0.299, 0.587, 0.114]]
     }[type];
     if (!M) return hex;
-    var r = cl(M[0][0] * c.r + M[0][1] * c.g + M[0][2] * c.b);
-    var g = cl(M[1][0] * c.r + M[1][1] * c.g + M[1][2] * c.b);
-    var b = cl(M[2][0] * c.r + M[2][1] * c.g + M[2][2] * c.b);
+    var lin = [Math.pow(c.r / 255, 2.2), Math.pow(c.g / 255, 2.2), Math.pow(c.b / 255, 2.2)];
+    var o = [
+      M[0][0] * lin[0] + M[0][1] * lin[1] + M[0][2] * lin[2],
+      M[1][0] * lin[0] + M[1][1] * lin[1] + M[1][2] * lin[2],
+      M[2][0] * lin[0] + M[2][1] * lin[1] + M[2][2] * lin[2]
+    ];
+    var r = cl(Math.pow(Math.max(o[0], 0), 1 / 2.2) * 255);
+    var g = cl(Math.pow(Math.max(o[1], 0), 1 / 2.2) * 255);
+    var b = cl(Math.pow(Math.max(o[2], 0), 1 / 2.2) * 255);
     return 'rgb(' + r + ',' + g + ',' + b + ')';
   }
   function build() {
@@ -43,7 +50,7 @@
   document.addEventListener('DOMContentLoaded', build);
 })();
 
-/* prototype/assets/js/design-system.js v0.1.0（续）— 图标库 + 动效令牌渲染 */
+/* prototype/assets/js/design-system.js v0.1.2（续）— 图标库 + 动效令牌渲染 */
 (function () {
   'use strict';
 
@@ -119,10 +126,29 @@
     });
   }
 
+  function rgbToHex(c) {
+    var m = String(c).match(/\d+(\.\d+)?/g);
+    if (!m || m.length < 3) return c;
+    function h(x) { var n = Math.round(parseFloat(x)).toString(16); return n.length === 1 ? '0' + n : n; }
+    return '#' + h(m[0]) + h(m[1]) + h(m[2]);
+  }
+  function syncSwatchLabels() {
+    var sw = document.querySelectorAll('.swatch');
+    for (var i = 0; i < sw.length; i++) {
+      var c = sw[i].querySelector('.c');
+      var v = sw[i].querySelector('.v');
+      if (!c || !v) continue;
+      var bg = getComputedStyle(c).backgroundColor;
+      if (!bg || bg === 'rgba(0, 0, 0, 0)' || bg === 'transparent') { v.textContent = '（令牌未定义）'; continue; }
+      v.textContent = rgbToHex(bg);
+    }
+  }
+
   document.addEventListener('DOMContentLoaded', function () {
     renderIcons();
     renderMotionTokens();
     renderMotionGrid();
     wireMotionDemos();
+    syncSwatchLabels();
   });
 })();

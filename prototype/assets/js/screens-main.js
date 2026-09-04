@@ -1,4 +1,4 @@
-/* prototype/assets/js/screens-main.js v0.1.0 — 视图骨架 / 首页 / 检测前指引 / 模式选择 */
+/* prototype/assets/js/screens-main.js v0.1.2 — 视图骨架 / 首页 / 检测前指引 / 模式选择 */
 window.CC = window.CC || {};
 CC.screens = CC.screens || {};
 
@@ -59,7 +59,7 @@ CC.screens = CC.screens || {};
           '<div>' +
             '<p class="eyebrow">Ishihara · Path tracing · Hue arrangement</p>' +
             '<h1 style="margin-top:14px">一眼辨色，<em>科学</em>筛查</h1>' +
-            '<p class="lead">24 版标准石原氏色觉检测图，配合路径追踪与色相排列三重交叉验证。全程约 3 分钟，答题数据只留在你的浏览器里。</p>' +
+            '<p class="lead">24 版标准石原氏色觉检测图，配合路径追踪形成交叉验证。色相排列（D15）为规划中模块，结果不计入判读。全程约 3 分钟，答题数据只留在你的浏览器里。</p>' +
             '<div class="cta-row">' +
               '<button class="btn btn--primary btn--lg" data-go="guide">开始检测</button>' +
               '<button class="btn btn--secondary btn--lg" data-go="result">看一份示例报告</button>' +
@@ -91,7 +91,7 @@ CC.screens = CC.screens || {};
           '<div class="section-head"><h2>比纸质图谱更可靠的地方</h2><p>纸质图谱会磨损、受环境光影响，也无法记录你究竟错在哪一类题上。</p></div>' +
           '<div class="grid grid-4">' +
             '<div class="card card--pad feature"><div class="ic">◍</div><h4>等亮度点阵</h4><p>色点只差色相、明暗一致，避免靠亮度差异"猜"出数字。</p></div>' +
-            '<div class="card card--pad feature"><div class="ic">⌁</div><h4>三重交叉验证</h4><p>数字图、路径追踪、色相排列互相印证，单一测试误判不再放大。</p></div>' +
+            '<div class="card card--pad feature"><div class="ic">⌁</div><h4>交叉验证</h4><p>数字图与路径追踪互相印证，单一测试误判不再放大；色相排列（D15）为规划中模块。</p></div>' +
             '<div class="card card--pad feature"><div class="ic">◫</div><h4>判读看错误模式</h4><p>不只统计对错，还看错误落在红轴还是绿轴，才推得出类型。</p></div>' +
             '<div class="card card--pad feature"><div class="ic">◒</div><h4>数据不出本机</h4><p>结果默认写入浏览器本地存储，可随时一键清除，不强制上传。</p></div>' +
           '</div>' +
@@ -197,8 +197,8 @@ CC.screens = CC.screens || {};
           desc: ['从标准题库中抽取 10 版', '适合首次自查或快速复查', '给出总体结论与置信度'] },
         { key: 'standard', name: '标准版', qs: '24 题', time: '约 3 分钟', tag: '推荐',
           desc: ['完整 24 版石原氏检测图', '区分红色觉 / 绿色觉异常', '给出类型、程度与逐题明细'] },
-        { key: 'advanced', name: '进阶版', qs: '24+3+15', time: '约 6 分钟', tag: '',
-          desc: ['标准版全部内容', '追加路径追踪 3 题', '追加色相排列 15 色卡（D15）'] }
+        { key: 'advanced', name: '进阶版', qs: '24+3', time: '约 4 分钟', tag: '',
+          desc: ['标准版全部内容', '追加路径追踪 3 题（描线重合度）', '色相排列（D15）为规划中模块'] }
       ];
       return CC.view.page('select',
         '<div class="guide-wrap">' +
@@ -211,7 +211,7 @@ CC.screens = CC.screens || {};
                 (m.tag ? '<span class="chip chip--brand tag">' + m.tag + '</span>' : '') +
                 '<p class="eyebrow">' + m.name + '</p>' +
                 '<h3>' + m.qs + '</h3>' +
-                '<div class="meta"><span>' + m.time + '</span><span>' + (m.key === 'advanced' ? '含 D15' : '石原氏') + '</span></div>' +
+                '<div class="meta"><span>' + m.time + '</span><span>' + (m.key === 'advanced' ? '含路径追踪' : '石原氏') + '</span></div>' +
                 '<ul>' + m.desc.map(function (d) { return '<li>' + d + '</li>'; }).join('') + '</ul>' +
                 '</div>';
             }).join('') +

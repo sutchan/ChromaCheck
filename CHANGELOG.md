@@ -1,7 +1,14 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.1.0`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.1.1`）。
+
+## [1.1.1] - 2026-09-04
+
+### 文档
+- 完善 `.github/` Community Health Files：新增 `CODE_OF_CONDUCT.md`、`SECURITY.md`、`SUPPORT.md`、`ISSUE_TEMPLATE/{bug_report,feature_request,config}.yml`、`PULL_REQUEST_TEMPLATE.md`，与既有 `CONTRIBUTING.md`、`workflows/ci.yml` 组成标准社区健康文件集合。
+- `CONTRIBUTING.md` 行为准则段链接至 `CODE_OF_CONDUCT.md`。
+- 版本单一来源同步至 `1.1.1`（`VERSION`、`package.json`、本文件）。
 
 ## [1.1.0] - 2026-09-04
 

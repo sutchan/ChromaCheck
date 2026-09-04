@@ -1,4 +1,4 @@
-/* prototype/assets/js/screens-advanced.js v0.1.0 — 路径追踪 / 色相排列（D15） */
+/* prototype/assets/js/screens-advanced.js v0.1.1 — 路径追踪 / 色相排列（D15） */
 window.CC = window.CC || {};
 CC.screens = CC.screens || {};
 
@@ -92,7 +92,7 @@ CC.screens = CC.screens || {};
           passed: score >= CC.rules.pathOverlap.pass, userPath: pts.slice()
         };
         if (p.index < 2) { p.index++; CC.go('path'); }
-        else { CC.state.hue.order = CC.hueShuffled.slice(); CC.go('hue'); }
+        else { CC.finishTest(); }
       });
     }
   };
@@ -131,6 +131,7 @@ CC.screens = CC.screens || {};
           '<span class="mono">TES <strong id="tes-val">' + r.totalErrorScore + '</strong></span>' +
         '</div>' +
         '<div class="hue-body">' +
+          '<div style="background:var(--n-100);border:1px solid var(--n-300);border-radius:var(--r-md);padding:10px 14px;font-size:13px;color:var(--fg-soft);margin-bottom:16px"><strong style="color:var(--fg)">示意功能</strong> · 色相排列（D15）为规划中的进阶模块，此处仅演示交互，结果不计入最终判读。</div>' +
           '<div><h3 style="font-size:var(--fs-h3)">把 15 张色卡按颜色渐变的顺序排好</h3>' +
           '<p class="muted" style="margin-top:8px">两端紫色卡固定不动。点击一张选中，再点另一张交换位置。</p></div>' +
           '<div class="hue-rail" id="hue-rail">' + cards.join('') + '</div>' +

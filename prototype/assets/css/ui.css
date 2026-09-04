@@ -1,4 +1,4 @@
-/* prototype/assets/css/ui.css v0.1.0 — 基础与复合组件层（与 wireframes.html 一一对应） */
+/* prototype/assets/css/ui.css v0.1.2 — 基础与复合组件层（与 wireframes.html 一一对应） */
 
 /* ---------- 基础重置 ---------- */
 *, *::before, *::after { box-sizing: border-box; }
@@ -213,3 +213,17 @@ button { font: inherit; color: inherit; }
   display: grid; place-items: center; z-index: var(--z-overlay); animation: cc-fade var(--d-2) var(--ease) both;
 }
 .modal-card { width: min(440px, calc(100vw - 32px)); background: var(--bg-elev); border-radius: var(--r-lg); box-shadow: var(--sh-3); animation: cc-pop var(--d-3) var(--ease) both; }
+
+/* ---------- 移动端：放大触控目标（≤620px 单列堆叠） ---------- */
+@media (max-width: 620px) {
+  .btn { height: 48px; padding: 0 var(--s-6); font-size: 16px; }
+  .btn--sm { height: 40px; font-size: var(--fs-sm); }
+  .btn--lg { height: 56px; }
+  .input, .select, .textarea { min-height: 48px; padding: 0 var(--s-4); font-size: 16px; }
+  .check .box, .radio .box { width: 24px; height: 24px; }
+  .chip { height: 32px; padding: 0 var(--s-4); }
+  .grid-2, .grid-3, .grid-4 { grid-template-columns: 1fr; }
+  .navbar nav { gap: var(--s-2); }
+  .navbar nav a { padding: 10px 8px; font-size: 13px; }
+  .section, .wrap { padding-left: var(--s-4); padding-right: var(--s-4); }
+}

@@ -188,6 +188,8 @@ npm install
 
 ## 行为准则
 
+> 本项目的完整行为准则见 [CODE_OF_CONDUCT.md](CODE_OF_CONDUCT.md)。以下为要点：
+
 参与本项目即表示你同意遵守以下准则：
 
 - 尊重他人，友善沟通。

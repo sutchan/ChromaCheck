@@ -1,9 +1,9 @@
 # 记忆索引
 
 ## 项目：ChromaCheck（e:/Github/ChromaCheck）
-- 已从「纯文档 + 静态原型」进入**应用开发阶段**，v1.0.0 已实现（2026-09-04），当前版本 **v1.1.0**。
+- 已从「纯文档 + 静态原型」进入**应用开发阶段**，v1.0.0 已实现（2026-09-04），当前版本 **v1.1.1**。
 - 应用技术栈：Next.js 14 (App Router) + React 18 + TypeScript(strict) + Tailwind 3，纯本地、无后端、无重型依赖；图表用内联 SVG，报告导出用 Canvas(PNG)+`window.print()`(PDF)。
-- 版本单一来源：`VERSION`(=1.1.0) 与 `package.json` version 一致；原型文件头原为 v0.1.0，与正式应用版本解耦。
+- 版本单一来源：`VERSION`(=1.1.1) 与 `package.json` version 一致；原型文件头原为 v0.1.0，与正式应用版本解耦。
 - **已实现页面/功能**：v1.0 首页(含色觉模拟 CvdSimulator)、检测前指引、模式选择(快速10题/标准24题)、石原氏测试(`/test/ishihara/[mode]`)、结果页(`/result/[id]`)、历史、科普列表+详情、隐私政策；v1.1 路径追踪(`/test/path-tracking/[mode]`)。
 - **规划中（v1.1+）**：色相排列（F5，Farnsworth-Munsell D15，规范见 DATA-SPEC §2.3/§4.3）；路径追踪已实现。
 - 路径追踪模块（v1.1 已实现）架构：题库 `lib/questions/path-tracking.ts`（3 题，kind 0/1/2，复用 `standardPath`）；渲染用 `lib/ishihara.ts` 的 `buildPathField`（离屏 canvas 缓存于 `PathTrackingCanvas`）；评分 `lib/path-scoring.ts`（`pathOverlap` IoU + `computePathResult`）；`TestResult.ishihara` 改为可选、`pathTracking?: PathTrackingResult[]` 新增；结果页/摘要/导出/历史均按测试类型守卫渲染。

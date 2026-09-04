@@ -1,4 +1,4 @@
-/* prototype/assets/css/tokens.css v0.1.0 — 设计令牌：色彩 / 字体 / 间距 / 圆角 / 阴影 / 动效 */
+/* prototype/assets/css/tokens.css v0.1.2 — 设计令牌：色彩 / 字体 / 间距 / 圆角 / 阴影 / 动效 */
 
 /* ============================================================
    1. 中性色阶（冷灰，带蓝调，取自光学仪器外壳）
@@ -36,6 +36,9 @@
   --axis-protan: #c9543a;
   --axis-deutan: #4f7c46;
   --axis-tritan: #3d6fb4;
+  --cvd-blue: #2f6f9e;
+  --cvd-cyan: #1fb6c9;
+  --cvd-amber: #e0a23b;
 
   /* 5. 语义映射（浅色模式） */
   --bg: var(--n-50);
@@ -90,11 +93,17 @@
   --axis-protan: #4b3df0;
   --axis-deutan: #0e8a99;
   --axis-tritan: #b25e00;
+  --ok: #0e8a99;   --ok-600: #0a6e7b;   --ok-soft: #10333a;
+  --warn: #e0a23b; --warn-600: #955000;  --warn-soft: #3a2a11;
+  --risk: #2f6f9e; --risk-600: #2a5f8a;  --risk-soft: #16293b;
 }
 [data-theme='dark'][data-cvd-safe='on'] {
   --axis-protan: #8e85ff;
   --axis-deutan: #3fbfcb;
   --axis-tritan: #e8a03c;
+  --ok: #3fbfcb;   --ok-600: #3fbfcb;   --ok-soft: #10333a;
+  --warn: #e8a03c; --warn-600: #e8a03c;  --warn-soft: #3a2a11;
+  --risk: #8e85ff; --risk-600: #8e85ff;  --risk-soft: #221e52;
 }
 
 /* ============================================================

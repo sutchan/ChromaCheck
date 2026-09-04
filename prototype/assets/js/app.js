@@ -1,4 +1,4 @@
-/* prototype/assets/js/app.js v0.1.0 — 原型外壳：状态 / 路由 / 设备与色觉模拟 / 判读串联 */
+/* prototype/assets/js/app.js v0.1.1 — 原型外壳：状态 / 路由 / 设备与色觉模拟 / 判读串联 */
 window.CC = window.CC || {};
 
 (function () {
@@ -90,8 +90,9 @@ window.CC = window.CC || {};
       ishihara: ish
     };
     if (CC.state.mode === 'advanced') {
-      res.pathTracking = CC.state.path.results.filter(Boolean);
-      res.hueArrangement = CC.state.hueResult || { totalErrorScore: 0, deviationDirection: 'none', normal: true };
+      var pathRes = CC.state.path.results.filter(Boolean);
+      if (pathRes.length) res.pathTracking = pathRes;
+      if (CC.state.hueResult) res.hueArrangement = CC.state.hueResult;
     }
     CC.state.result = res;
     CC.state.lastAnswers = answers;
