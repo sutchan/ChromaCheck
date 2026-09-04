@@ -1,6 +1,6 @@
-<!-- docs/SPEC.md v0.1.0 — ChromaCheck 项目规范总纲（单一事实来源） -->
+<!-- docs/SPEC.md v1.0.1 — ChromaCheck 项目规范总纲（单一事实来源） -->
 <!-- 地位：本规范为权威总纲。当与各分册（PRD/ARCHITECTURE/API/DATA-SPEC/DEPLOYMENT/TESTING/CONTRIBUTING/PRIVACY/ROADMAP）冲突时，以本规范为准。 -->
-<!-- 实现状态：当前为「文档 + 静态原型」阶段，应用代码（Next.js）尚未实现；原型已验证视觉与判读逻辑。目标版本 v1.0。 -->
+<!-- 实现状态：v1.0 已实现（Next.js 14 应用 + 石原氏检测 + 结果/历史/科普/隐私），原型作为设计验证参考。目标版本 v1.0.1。 -->
 
 # 色辨 ChromaCheck 项目规范（SPEC）
 
@@ -12,15 +12,15 @@
 | 文档 | 角色 | 状态 |
 |------|------|------|
 | `docs/SPEC.md`（本文件） | **权威总纲**：产品/架构/数据/算法/设计/合规/治理 | 生效 |
-| `docs/PRD.md` | 产品需求分册 | 待据本规范修订 |
-| `docs/ARCHITECTURE.md` | 架构分册 | 待据本规范修订 |
-| `docs/API.md` | 事件/分析 API 分册 | 待据本规范修订 |
-| `docs/DATA-SPEC.md` | 数据结构分册 | 待据本规范修订 |
-| `docs/DEPLOYMENT.md` | 部署分册 | 待据本规范修订 |
-| `docs/TESTING.md` | 测试分册 | 待据本规范修订 |
+| `docs/PRD.md` | 产品需求分册 | 已对齐 SPEC，生效 |
+| `docs/ARCHITECTURE.md` | 架构分册 | 已对齐 SPEC，生效 |
+| `docs/API.md` | 事件/分析 API 分册 | 已对齐 SPEC，生效 |
+| `docs/DATA-SPEC.md` | 数据结构分册 | 已对齐 SPEC，生效 |
+| `docs/DEPLOYMENT.md` | 部署分册 | 已对齐 SPEC，生效 |
+| `docs/TESTING.md` | 测试分册 | 已对齐 SPEC，生效 |
 | `.github/CONTRIBUTING.md` | 贡献约定分册（已归位 .github/） | 生效 |
-| `docs/PRIVACY.md` | 隐私政策分册 | 待据本规范修订 |
-| `docs/ROADMAP.md` | 路线图分册 | 待据本规范修订 |
+| `docs/PRIVACY.md` | 隐私政策分册 | 已对齐 SPEC，生效 |
+| `docs/ROADMAP.md` | 路线图分册 | 已对齐 SPEC，生效 |
 
 **实现状态声明（必须写入各文档顶部）**：ChromaCheck 目前仅完成文档体系与高保真静态原型（`prototype/`），**应用源码（Next.js）尚未编写**。按 README「快速开始」执行的 `npm install / npm run dev / npm test` 当前会失败，因其依赖尚未创建。请勿将规划中的目录结构误读为已存在代码。
 
@@ -37,32 +37,31 @@
 
 检测模式：`quick`（快速）/ `standard`（标准）/ `advanced`（进阶），对应题库子集与题量。
 
-## 2. 技术架构（规划目标）
+## 2. 技术架构（v1.0 已实现）
 
-> 本节描述**目标**技术栈与目录结构，标注「规划」以示尚未落地。
+> 本节描述 v1.0 实际落地的技术栈与目录结构，与真实实现一致（详见 README §技术栈）。
 
 ### 2.1 技术栈与选型
 - 框架：**Next.js 14（App Router）+ TypeScript（strict）**。
-- 样式：**Tailwind CSS + shadcn/ui + Radix UI**（无障碍基线）。
-- 图表：**Recharts**（维度对比）。
-- 交互：**@dnd-kit**（色相排列拖拽，v1.1）。
-- 导出：**html2canvas + jsPDF**（结果导出）。
+- 样式：**Tailwind CSS + 设计令牌（CSS 变量，支持深色与色觉安全模式）**。
+- 图表：**内联 SVG（自绘维度条形图）**，不引入图表库。
+- 导出：**Canvas（PNG）+ `window.print()`（PDF）**，不引入重型依赖。
 - 状态/存储：React 状态 + `localStorage`（隐私优先，无服务端状态）。
 
-### 2.2 目录结构（规划目标）
+### 2.2 目录结构（v1.0 已实现）
 ```
-app/            # Next.js App Router 路由与页面
-components/     # UI 组件（按 PRD/ARCHITECTURE 组件清单）
+app/              # Next.js App Router：layout/page/guide/test/result/learn/history/privacy + globals.css/icon.svg
+components/       # 按域：common/ home/ layout/ result/ test/
 lib/
-  scoring/      # 判读引擎（移植 prototype/assets/js/scoring.js 纯函数）
-  data/         # 题库与科普数据（移植 prototype/assets/js/data.js）
-  plates/       # 石原氏点阵生成（移植 prototype/assets/js/ishihara.js）
-  storage/      # localStorage 读写
-  analytics/    # 事件埋点
-types/          # 全局类型（以本文档 §5 为权威）
-public/         # 静态资源
+  questions.ts    # 题库数据
+  scoring.ts      # 判读引擎（移植 prototype/assets/js/scoring.js 真值）
+  ishihara.ts     # 石原氏点阵生成（移植 prototype/assets/js/ishihara.js 真值）
+  storage.ts      # localStorage 读写
+  learn-data.ts   # 科普文章数据
+  format.ts       # 格式化工具
+  types.ts        # 全局类型（以本文档 §5 为权威）
 ```
-> 迁移原则：原型 `prototype/assets/js/*.js` 中的纯逻辑（scoring/data/ishihara）应作为 `lib/` 实现的**参考真值**，移植时保持算法与字段一致。
+> 原型 `prototype/assets/js/*.js` 中的纯逻辑（scoring/data/ishihara）已作为 `lib/` 实现的**参考真值**完成移植，算法与字段保持一致。
 
 ### 2.3 运行形态
 纯前端、客户端渲染为主；无强制登录、无 PII 上传、无传统后端（与 PRD「隐私优先」一致）。**不承诺服务端并发能力**——PRD §4.1「支持 1000 并发用户」与纯前端架构矛盾，予以作废，改为「静态托管可水平扩展」表述。

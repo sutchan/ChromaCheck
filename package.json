@@ -1,6 +1,6 @@
 {
   "name": "chromacheck",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "private": true,
   "description": "色辨 ChromaCheck — 在线色觉检测 Web 应用（Next.js 14 + TS + Tailwind）",
   "scripts": {
@@ -8,7 +8,8 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
-    "type-check": "tsc --noEmit"
+    "type-check": "tsc --noEmit",
+    "test": "tsc --noEmit"
   },
   "dependencies": {
     "next": "14.2.15",

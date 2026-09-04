@@ -1,7 +1,7 @@
 # CI 工作流 — ChromaCheck
 # 规范依据：docs/SPEC.md §8.4 / docs/ARCHITECTURE.md §8.1 / docs/TESTING.md §7.1
-# 注：当前项目为「文档 + 静态原型」阶段，Next.js 应用骨架尚未创建（无 package.json）。
-#      本工作流结构已就绪，待应用骨架（package.json 及 lint/type-check/test/build 脚本）落地后自动生效。
+# 注：当前项目已为 Next.js 14 应用（package.json + lint/type-check/test/build 脚本齐备）。
+#     应用暂无独立单测套件，test 脚本以 tsc 类型检查作为正确性闸门；e2e 暂未配置。
 name: CI
 
 on:
@@ -39,4 +39,4 @@ jobs:
         run: npm run build
 
       - name: E2E tests
-        run: npx playwright test || echo "e2e 跳过：应用骨架未实现"
+        run: echo "E2E 跳过：当前版本未配置 e2e"

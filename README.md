@@ -2,7 +2,7 @@
 
 > 一眼辨色，科学筛查 — 在线色觉检测 Web 应用
 
-> **实现状态**：v1.0 已实现（Next.js 14 应用 + 石原氏检测 + 结果/历史/科普/隐私）。路径追踪与色相排列为 v1.1 规划。权威规范见 [docs/SPEC.md](docs/SPEC.md)。当前项目版本 **v1.0.0**（见 `VERSION`）。
+> **实现状态**：v1.0 已实现（Next.js 14 应用 + 石原氏检测 + 结果/历史/科普/隐私）。路径追踪与色相排列为 v1.1 规划。权威规范见 [docs/SPEC.md](docs/SPEC.md)。当前项目版本 **v1.0.1**（见 `VERSION`）。
 
 [![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
@@ -181,6 +181,7 @@ chromacheck/
 
 | 文档 | 说明 |
 |------|------|
+| [项目规范（权威总纲）](docs/SPEC.md) | 单一事实来源：产品/架构/数据/算法/设计/合规/治理 |
 | [产品需求文档 (PRD)](docs/PRD.md) | 产品定义、功能需求、非功能需求、用户流程、排期 |
 | [技术架构文档](docs/ARCHITECTURE.md) | 架构设计、技术选型、核心模块设计 |
 | [接口文档](docs/API.md) | API 路由设计、请求/响应规范 |
@@ -189,7 +190,8 @@ chromacheck/
 | [测试策略文档](docs/TESTING.md) | 单元/集成/手动测试计划 |
 | [隐私与合规文档](docs/PRIVACY.md) | 数据收集、存储、合规要求 |
 | [路线图文档](docs/ROADMAP.md) | 版本规划与未来方向 |
-| [贡献指南](.github/.github/CONTRIBUTING.md) | 开发流程、代码规范 |
+| [贡献指南](.github/CONTRIBUTING.md) | 开发流程、代码规范 |
+| [变更日志](CHANGELOG.md) | 版本变更记录 |
 
 ## 高保真原型
 

@@ -1,7 +1,7 @@
 # 色辨 ChromaCheck 数据规范文档
 
 > **规范遵循**：本文档为 [docs/SPEC.md](docs/SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。类型别名（ColorDeficiencyType / OverallResult / SeverityLevel / TestMode）以 SPEC §5.5 为权威定义。
-> **实现状态**：当前为「文档 + 高保真静态原型」阶段，Next.js 应用源码尚未实现。
+> **实现状态**：v1.0 已实现（Next.js 14 应用 + 石原氏检测 + 结果/历史/科普/隐私）。路径追踪与色相排列为 v1.1 规划。
 
 | 项目 | 内容 |
 |------|------|
