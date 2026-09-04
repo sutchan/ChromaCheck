@@ -1,7 +1,16 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.0.3`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.0.4`）。
+
+## [1.0.4] - 2026-09-04
+
+### 文档
+- 修复 `docs/SPEC.md` 内部版本引用脱节：§0 顶部注释「目标版本 v1.0.2」改为「当前版本 v1.0.4」；§8.2 版本单一来源处的「当前 `1.0.2`」「SPEC `v1.0.2`」同步为 `1.0.4`；底部版本声明 `v1.0.3`→`v1.0.4`。
+- `docs/API.md`：概述补充「v1.0 为纯前端、无服务端 API，本节为 v1.1+ 规划」标注（与 PRIVACY 口径一致）；`AnalyticsEventRequest.testType` 移除未实现的 `advanced`（对齐 SPEC §5.5）。
+- `docs/DATA-SPEC.md` §5 `TestResult` 对齐 SPEC §5.3 与 `lib/types.ts`：`testMode` 去 `advanced`，字段改为实际结构（`schema`/`version`/`createdAt`/`ishihara`/`analysis`/`confidenceNote`/`device`），路径追踪 / 色相排列标注为 v1.1 扩展；移除与代码不符的 `startTime`/`endTime`/`totalQuestions`/`ishiharaAssessment`/`overallAssessment` 旧字段。
+- `docs/ARCHITECTURE.md` §1.1：API 路由条目标注「v1.1 规划，v1.0 为纯前端、无服务端 API 路由」。
+- 版本单一来源同步至 `1.0.4`（`VERSION`、`package.json`、本文件）。
 
 ## [1.0.3] - 2026-09-04
 
@@ -46,6 +55,8 @@
 - 原型文件头标记 `v0.1.0` 为原型内部迭代号，不随项目版本号同步刷写。
 - 各文档头注释版本（v1.0.2）与 `VERSION` 的 `1.0.2` 一致。
 
+[1.0.4]: https://github.com/ChromaCheck/ChromaCheck/releases/tag/v1.0.4
+[1.0.3]: https://github.com/ChromaCheck/ChromaCheck/releases/tag/v1.0.3
 [1.0.2]: https://github.com/ChromaCheck/ChromaCheck/releases/tag/v1.0.2
 [1.0.1]: https://github.com/ChromaCheck/ChromaCheck/releases/tag/v1.0.1
 [1.0.0]: https://github.com/ChromaCheck/ChromaCheck/releases/tag/v1.0.0

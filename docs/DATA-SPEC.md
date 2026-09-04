@@ -224,33 +224,41 @@ interface HueArrangementResult {
 
 ## 5. 完整测试结果
 
+> 以下结构与 `docs/SPEC.md §5.3` 及 `lib/types.ts` 对齐（权威）。路径追踪 / 色相排列为 v1.1 扩展，v1.0 不产生。
+
 ```typescript
 interface TestResult {
-  /** 结果唯一标识 */
+  /** 结果唯一标识（crypto.randomUUID） */
   id: string;
-  /** 测试模式 */
-  testMode: 'quick' | 'standard' | 'advanced';
-  /** 开始时间 ISO 字符串 */
-  startTime: string;
-  /** 结束时间 ISO 字符串 */
-  endTime: string;
-  /** 总答题数 */
-  totalQuestions: number;
-  /** 答题记录 */
+  /** 结果结构标记，固定 'cc.result/v1' */
+  schema: string;
+  /** 结果结构版本，当前 '1.0.0' */
+  version: string;
+  /** ISO8601 完成时间 */
+  createdAt: string;
+  /** 测试模式；advanced 推迟至 v1.1 */
+  testMode: 'quick' | 'standard';
+  /** 综合判定 */
+  overall: OverallResult;
+  /** 疑似色觉异常类型（无则 null） */
+  type: ColorDeficiencyType | null;
+  /** 严重程度（无则 null） */
+  severity: SeverityLevel | null;
+  /** 置信度 0–100 */
+  confidence: number;
+  /** 作答总时长（毫秒） */
+  durationMs: number;
+  /** 逐题作答记录 */
   answers: AnswerRecord[];
-  /** 石原氏测试评估 */
-  ishiharaAssessment: IshiharaScoringResult;
-  /** 路径追踪结果（可选） */
-  pathTrackingResults?: PathTrackingResult[];
-  /** 色相排列结果（可选） */
-  hueArrangementResult?: HueArrangementResult;
-  /** 综合评估 */
-  overallAssessment: {
-    overall: OverallResult;
-    type?: ColorDeficiencyType;
-    severity?: SeverityLevel;
-    confidence: number;
-  };
+  /** 判读引擎输出（见 §4） */
+  ishihara: IshiharaScoringResult;
+  /** 文字解读 */
+  analysis: string;
+  /** 置信度说明 */
+  confidenceNote: string;
+  /** 设备/UA 摘要 */
+  device: string;
+  /** v1.1 扩展（当前未实现）：pathTracking? / hueArrangement? */
 }
 ```
 

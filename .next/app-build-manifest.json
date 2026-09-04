@@ -22,7 +22,7 @@
       "static/chunks/main-app-fe665f9e4d7ee998.js",
       "static/css/659121cf93017ab0.css",
       "static/chunks/972-6fb8305e14587aef.js",
-      "static/chunks/app/layout-b447d78cdcdab824.js"
+      "static/chunks/app/layout-14b4c5d506a74fcd.js"
     ],
     "/history/page": [
       "static/chunks/webpack-c81f7fd28659d64f.js",
@@ -30,7 +30,7 @@
       "static/chunks/117-6728b72e7684f257.js",
       "static/chunks/main-app-fe665f9e4d7ee998.js",
       "static/chunks/972-6fb8305e14587aef.js",
-      "static/chunks/app/history/page-bd5433bc40b0e818.js"
+      "static/chunks/app/history/page-9393db5c5ae34670.js"
     ],
     "/guide/page": [
       "static/chunks/webpack-c81f7fd28659d64f.js",
@@ -48,6 +48,13 @@
       "static/chunks/972-6fb8305e14587aef.js",
       "static/chunks/app/learn/page-58bd15fbf27fbf09.js"
     ],
+    "/privacy/page": [
+      "static/chunks/webpack-c81f7fd28659d64f.js",
+      "static/chunks/fd9d1056-f9341132f34b3e00.js",
+      "static/chunks/117-6728b72e7684f257.js",
+      "static/chunks/main-app-fe665f9e4d7ee998.js",
+      "static/chunks/app/privacy/page-ac190e7da4c2bd5d.js"
+    ],
     "/page": [
       "static/chunks/webpack-c81f7fd28659d64f.js",
       "static/chunks/fd9d1056-f9341132f34b3e00.js",
@@ -56,12 +63,12 @@
       "static/chunks/972-6fb8305e14587aef.js",
       "static/chunks/app/page-4c5bcaec8307d227.js"
     ],
-    "/privacy/page": [
+    "/test/ishihara/[mode]/page": [
       "static/chunks/webpack-c81f7fd28659d64f.js",
       "static/chunks/fd9d1056-f9341132f34b3e00.js",
       "static/chunks/117-6728b72e7684f257.js",
       "static/chunks/main-app-fe665f9e4d7ee998.js",
-      "static/chunks/app/privacy/page-ac190e7da4c2bd5d.js"
+      "static/chunks/app/test/ishihara/[mode]/page-08913436591122fb.js"
     ],
     "/result/[id]/page": [
       "static/chunks/webpack-c81f7fd28659d64f.js",
@@ -69,14 +76,7 @@
       "static/chunks/117-6728b72e7684f257.js",
       "static/chunks/main-app-fe665f9e4d7ee998.js",
       "static/chunks/972-6fb8305e14587aef.js",
-      "static/chunks/app/result/[id]/page-a2c96304691e22bf.js"
-    ],
-    "/test/ishihara/[mode]/page": [
-      "static/chunks/webpack-c81f7fd28659d64f.js",
-      "static/chunks/fd9d1056-f9341132f34b3e00.js",
-      "static/chunks/117-6728b72e7684f257.js",
-      "static/chunks/main-app-fe665f9e4d7ee998.js",
-      "static/chunks/app/test/ishihara/[mode]/page-769fa4448d908e80.js"
+      "static/chunks/app/result/[id]/page-21cd4c5eb8104467.js"
     ],
     "/test/page": [
       "static/chunks/webpack-c81f7fd28659d64f.js",

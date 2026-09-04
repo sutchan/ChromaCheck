@@ -13,7 +13,9 @@
 
 ## 1. 概述
 
-本项目采用**隐私优先**设计，核心检测功能完全在客户端运行，无需服务端 API。服务端 API 仅用于：
+> **规划状态说明**：本产品 v1.0 为**纯前端应用，无服务端 API 路由**（见 SPEC §2.3 与 PRIVACY §2.2「v1.0 实际无上报」）。本节描述的 API 为 **v1.1+ 规划**，仅在引入服务端能力（匿名上报 / 题库远程更新）时落地；v1.0 交付范围不包含下列接口。
+
+本项目采用**隐私优先**设计，核心检测功能完全在客户端运行，无需服务端 API。规划中的服务端 API 仅用于：
 
 1. 健康检查
 2. 匿名事件上报（需用户明确同意）
@@ -124,8 +126,8 @@ curl https://chromacheck.example.com/api/health
 interface AnalyticsEventRequest {
   /** 事件类型 */
   event: 'test_start' | 'test_complete' | 'result_view' | 'report_export' | 'learn_view';
-  /** 测试类型（如适用） */
-  testType?: 'quick' | 'standard' | 'advanced';
+  /** 测试类型（如适用）；advanced 为 v1.1 规划 */
+  testType?: 'quick' | 'standard';
   /** 测试时长（毫秒，如适用） */
   duration?: number;
   /** 检测结果（如适用） */
