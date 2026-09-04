@@ -93,16 +93,18 @@
 ### 2.2 目录结构说明
 
 ```
+> 注：下方为规划视角结构树（含 v1.1 路径追踪 / 色相排列）。v1.0 实际落地结构见 `README.md` 项目结构树（扁平 `lib/` + 五域 `components/`）。
+
 app/
 ├── layout.tsx              # 根布局：HTML 结构、全局 Provider、字体
 ├── page.tsx                # 首页：SSG，产品介绍 + CTA
 ├── globals.css             # 全局样式：Tailwind 指令 + CSS 变量 + 自定义样式
 ├── guide/page.tsx          # 检测前指引：CSR，用户确认检测条件
 ├── test/
-│   ├── page.tsx            # 测试模式选择：快速/标准/进阶
-│   ├── ishihara/page.tsx   # 石原氏测试：核心检测流程
-│   ├── path-tracking/page.tsx    # 路径追踪测试
-│   └── hue-arrangement/page.tsx  # 色相排列测试
+│   ├── page.tsx            # 测试模式选择：快速/标准（进阶 v1.1 规划）
+│   ├── ishihara/page.tsx   # 石原氏测试：核心检测流程（已实现）
+│   ├── path-tracking/page.tsx    # 路径追踪测试（v1.1 规划，未实现）
+│   └── hue-arrangement/page.tsx  # 色相排列测试（v1.1 规划，未实现）
 ├── result/page.tsx         # 结果展示：读取 URL state / localStorage
 ├── learn/
 │   ├── page.tsx            # 科普列表：SSG
@@ -168,7 +170,7 @@ types/
 
 ```typescript
 interface TestState {
-  testType: 'quick' | 'standard' | 'advanced';
+  testType: 'quick' | 'standard';  // advanced 推迟至 v1.1
   currentIndex: number;
   answers: Record<string, AnswerRecord>;
   startTime: string;
@@ -193,8 +195,8 @@ interface TestContextValue extends TestState {
 | `/guide` | CSR | 检测前指引 |
 | `/test` | CSR | 测试模式选择 |
 | `/test/ishihara` | CSR | 石原氏测试（`?mode=quick\|standard`） |
-| `/test/path-tracking` | CSR | 路径追踪测试 |
-| `/test/hue-arrangement` | CSR | 色相排列测试 |
+| `/test/path-tracking` | CSR | 路径追踪测试（v1.1 规划） |
+| `/test/hue-arrangement` | CSR | 色相排列测试（v1.1 规划） |
 | `/result?id=xxx` | CSR | 结果展示页 |
 | `/learn` | SSG | 科普文章列表 |
 | `/learn/[slug]` | SSG | 科普文章详情 |
@@ -441,7 +443,7 @@ interface AnalyticsEvent {
   event: 'page_view' | 'cta_click' | 'answer_submit' | 'test_complete'
        | 'share' | 'download' | 'test_error' | 'learn_view';
   timestamp: string;
-  mode?: 'quick' | 'standard' | 'advanced';
+  mode?: 'quick' | 'standard';  // advanced 为 v1.1 规划（分析功能本身 v1.1）
   // 不含用户身份信息；其余上下文字段按需扩展
 }
 

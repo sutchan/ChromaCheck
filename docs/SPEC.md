@@ -1,6 +1,6 @@
-<!-- docs/SPEC.md v1.0.1 — ChromaCheck 项目规范总纲（单一事实来源） -->
+<!-- docs/SPEC.md v1.0.3 — ChromaCheck 项目规范总纲（单一事实来源） -->
 <!-- 地位：本规范为权威总纲。当与各分册（PRD/ARCHITECTURE/API/DATA-SPEC/DEPLOYMENT/TESTING/CONTRIBUTING/PRIVACY/ROADMAP）冲突时，以本规范为准。 -->
-<!-- 实现状态：v1.0 已实现（Next.js 14 应用 + 石原氏检测 + 结果/历史/科普/隐私），原型作为设计验证参考。目标版本 v1.0.1。 -->
+<!-- 实现状态：v1.0 已实现（Next.js 14 应用 + 石原氏检测 + 结果/历史/科普/隐私），原型作为设计验证参考。目标版本 v1.0.2。 -->
 
 # 色辨 ChromaCheck 项目规范（SPEC）
 
@@ -22,7 +22,7 @@
 | `docs/PRIVACY.md` | 隐私政策分册 | 已对齐 SPEC，生效 |
 | `docs/ROADMAP.md` | 路线图分册 | 已对齐 SPEC，生效 |
 
-**实现状态声明（必须写入各文档顶部）**：ChromaCheck 目前仅完成文档体系与高保真静态原型（`prototype/`），**应用源码（Next.js）尚未编写**。按 README「快速开始」执行的 `npm install / npm run dev / npm test` 当前会失败，因其依赖尚未创建。请勿将规划中的目录结构误读为已存在代码。
+**实现状态声明（必须写入各文档顶部）**：ChromaCheck 已完成 v1.0 实现——Next.js 14 应用 + 石原氏检测 + 结果/历史/科普/隐私页均已落地，`npm install / npm run dev / npm run build / npm test` 均可正常执行（见 README「快速开始」）。路径追踪与色相排列（F4/F5）推迟至 v1.1，原型仅作设计验证参考。
 
 ## 1. 产品定位与功能范围
 
@@ -35,7 +35,7 @@
 - **纳入 v1.0（核心）**：首页、检测前指引、模式选择、石原氏测试、结果页、历史记录、科普列表与详情、**隐私政策页**（PRIVACY §6 要求，补入 PRD 功能架构）、结果导出（PDF/图片）、结果分享。
 - **排除 v1.0（推迟至 v1.1+）**：路径追踪测试（F4）、色相排列测试（F5）。二者已在原型中作演示，但 v1.0 不实现正式模块。
 
-检测模式：`quick`（快速）/ `standard`（标准）/ `advanced`（进阶），对应题库子集与题量。
+检测模式：`quick`（快速，10 题）/ `standard`（标准，24 题）。`advanced`（进阶）推迟至 v1.1。
 
 ## 2. 技术架构（v1.0 已实现）
 
@@ -162,39 +162,38 @@ interface IshiharaScoringResult {
   };
 }
 interface TestResult {
-  id: string;
-  mode: TestMode;
-  startTime: string;            // ISO8601
-  endTime: string;
-  device?: string;
-  ishihara: IshiharaScoringResult;
-  pathTracking?: { questionId: string; overlapScore: number; passed: boolean; target: string }[]; // v1.1
-  hueArrangement?: { totalErrorScore: number; deviationDirection: string; normal: boolean; cardErrors: number[] }; // v1.1
+  id: string;                       // crypto.randomUUID()
+  schema: string;                   // 固定 'cc.result/v1'
+  version: string;                  // 结果结构版本，当前 '1.0.0'
+  createdAt: string;                // ISO8601 完成时间
+  testMode: TestMode;               // 实际字段名（非 mode）
+  overall: OverallResult;
+  type: ColorDeficiencyType | null;
+  severity: SeverityLevel | null;
+  confidence: number;               // 0–100
+  durationMs: number;               // 作答总时长
+  answers: AnswerRecord[];          // 逐题作答（含 userAnswer/durationMs）
+  ishihara: IshiharaScoringResult;  // 判读引擎输出（见 §6）
+  analysis: string;                 // 文字解读
+  confidenceNote: string;           // 置信度说明
+  device: string;                   // 设备/UA 摘要
+  // v1.1 扩展（当前未实现）：pathTracking? / hueArrangement?
 }
 ```
 **决议**：采用 DATA-SPEC 结构（`testMode` + `ishiharaAssessment` 内聚 `correctCount`），废用 PRD 顶层 `correctCount` 与 `testType` 命名。
 
-### 5.4 本地存储 `LocalStorageData`
+### 5.4 本地存储（以 `lib/storage.ts` 实现为准）
+> v1.0 实际落地：使用三个独立的 `localStorage` 键，不聚合为单一 `LocalStorageData` 对象；无用户账号、无 PII、无分析开关（均推迟至 v1.1）。
+
 ```ts
-interface UserSettings {
-  theme: 'light' | 'dark' | 'system';   // 含 system（DATA-SPEC 为准，PRD 缺失）
-  analyticsEnabled: boolean;            // 数据分析开关（DATA-SPEC 为准，PRD 缺失）
-  // 其他设置按需扩展
+interface AppSettings {            // 键 cc.settings.v1
+  theme: 'light' | 'dark';        // 含深色；'system' 由 ThemeProvider 解析，不持久化
+  cvdSafe: boolean;               // 色觉安全模式开关
 }
-interface HistorySummary {
-  id: string; date: string; mode: TestMode;
-  overall: OverallResult; type: ColorDeficiencyType | null;
-  severity: SeverityLevel | null; confidence: number;
-  dims: [number, number, number]; // [protan, deutan, tritan]
-}
-interface LocalStorageData {
-  version: number;
-  user: { pseudonym?: string; email?: string };
-  settings: UserSettings;
-  history: HistorySummary[];      // 含 confidence（DATA-SPEC 为准）
-  lastResult?: TestResult;
-}
+// 键 cc.results.v1    → TestResult[]（保留最近 30 条，按 createdAt 倒序）
+// 键 cc.progress.v1   → { mode: TestMode; index: number; answers: AnswerRecord[]; startedAt: number }
 ```
+**决议**：DATA-SPEC 的 `UserSettings{theme: 'light'|'dark'|'system'; analyticsEnabled}`、`HistorySummary`、`LocalStorageData` 聚合结构与 v1.0 代码不符。v1.0 采用上述扁平结构；`system` 主题与 `analyticsEnabled` 留作 v1.1 规划（届时再抽象为聚合 `LocalStorageData`）。
 
 ### 5.5 枚举（统一别名，供全局复用）
 ```ts
@@ -203,9 +202,9 @@ type ColorDeficiencyType =
   | 'deuteranomaly' | 'tritanopia' | 'tritanomaly' | 'achromatopsia';
 type OverallResult = 'normal' | 'suspected_deficiency' | 'suspected_blindness' | 'inconclusive';
 type SeverityLevel = 'mild' | 'moderate' | 'severe';
-type TestMode = 'quick' | 'standard' | 'advanced';
+type TestMode = 'quick' | 'standard';  // v1.0 仅实现快速/标准；advanced 推迟至 v1.1
 ```
-**决议**：DATA-SPEC §4/§5 引用的 `ColorDeficiencyType`/`OverallResult`/`SeverityLevel` 在此统一定义，分册不得另起别名。
+**决议**：DATA-SPEC §4/§5 引用的 `ColorDeficiencyType`/`OverallResult`/`SeverityLevel` 在此统一定义，分册不得另起别名。（代码实现别名为 `DeficiencyType`/`Overall`/`Severity`，语义一致，分册以本文类型为准）。
 
 ### 5.6 分析事件 `AnalyticsEvent`（以 API §3.2 为准，含 `eventId`）
 ```ts
@@ -288,7 +287,7 @@ clamp(confidence, 0, 100)
 ### 8.2 版本管理
 - 每次修改 bump 最小版本（patch 优先；新功能 minor；破坏性 major）。
 - 源码文件头统一 `// path vX.Y.Z`；**仅被改动文件更新头注释，禁止全仓库批量刷写**。
-- 项目的**版本单一来源已确立**：仓库根 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.0.0`）为权威；每次发版须同步二者并新增 `CHANGELOG.md` 条目。各文档顶部"文档版本 v1.0"与 `1.0.0` 等价。原型文件头 `v0.1.0` 为原型内部迭代号，不随项目版本刷写（见 CHANGELOG 说明）。
+- 项目的**版本单一来源已确立**：仓库根 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.0.2`）为权威；每次发版须同步二者并新增 `CHANGELOG.md` 条目。各文档头注释版本（如 SPEC `v1.0.2`）与 `VERSION` 保持一致；分册"文档版本 v1.0"为文档初版标记，与项目发布版本分属两套体系。原型文件头 `v0.1.0` 为原型内部迭代号，不随项目版本刷写（见 CHANGELOG 说明）。
 - 文档版本当前统一标注 v1.0（产品目标）；原型文件头为 v0.1.0（原型阶段），二者分阶段对齐，不混用。
 
 ### 8.3 文档结构
@@ -298,12 +297,11 @@ clamp(confidence, 0, 100)
 
 ### 8.4 测试与质量门禁
 - 判读引擎（`lib/scoring/*`）为纯函数，须以 Vitest/Jest 单测覆盖，**覆盖率 ≥80%**（直接移植 scoring.js 后补齐）。
-- 实现阶段质量门禁：ESLint + Prettier + Stylelint；TS strict；无 `console.log`/`debugger`；CI（`.github/workflows/ci.yml`，当前未建，需创建）跑 test+lint+build。
+- 实现阶段质量门禁：ESLint + Prettier + Stylelint；TS strict；无 `console.log`/`debugger`；CI（`.github/workflows/ci.yml`，已建）跑 type-check + lint + build（e2e 安全跳过）。
 
 ## 9. 实现状态与待办（对齐 ROADMAP）
-- **已完成**：文档体系（9 分册）、高保真静态原型（3 页）、判读引擎与题库实证、设计系统令牌。
-- **待建（v1.0）**：Next.js 应用骨架、`lib/` 逻辑移植、组件实现、隐私政策页、导出/分享、CI。
-- **推迟（v1.1+）**：路径追踪测试、色相排列测试正式模块。
+- **已完成（v1.0）**：文档体系（9 分册 + SPEC 总纲）、高保真静态原型（4 页）、Next.js 14 应用骨架、石原氏检测全流程（`lib/` 题库/判读/点阵/存储移植 + `components/` 组件）、结果/历史/科普/隐私页、导出（PNG/打印/复制）/分享、CI。
+- **推迟（v1.1+）**：路径追踪测试（F4）、色相排列测试（F5）、`advanced` 进阶模式、匿名分析（`analyticsEnabled`）。
 
 ---
-*本文档为 ChromaCheck 权威规范总纲 v0.1.0（原型阶段）。分册应据本规范修订以消除前述字段/算法/范围冲突。*
+*本文档为 ChromaCheck 权威规范总纲 v1.0.3。分册应据本规范修订以消除前述字段/算法/范围冲突。*

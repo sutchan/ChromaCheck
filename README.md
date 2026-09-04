@@ -2,7 +2,7 @@
 
 > 一眼辨色，科学筛查 — 在线色觉检测 Web 应用
 
-> **实现状态**：v1.0 已实现（Next.js 14 应用 + 石原氏检测 + 结果/历史/科普/隐私）。路径追踪与色相排列为 v1.1 规划。权威规范见 [docs/SPEC.md](docs/SPEC.md)。当前项目版本 **v1.0.1**（见 `VERSION`）。
+> **实现状态**：v1.0 已实现（Next.js 14 应用 + 石原氏检测 + 结果/历史/科普/隐私）。路径追踪与色相排列为 v1.1 规划。权威规范见 [docs/SPEC.md](docs/SPEC.md)。当前项目版本 **v1.0.3**（见 `VERSION`）。
 
 [![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
@@ -90,90 +90,65 @@ npm run start
 # ESLint 检查
 npm run lint
 
-# Prettier 格式化
-npm run format
-
 # 类型检查
 npm run type-check
 ```
 
 ## 项目结构
 
+> 下方为 v1.0 实际落地结构（与 `docs/ARCHITECTURE.md` 一致）。`lib/` 为扁平模块（非分目录）；路径追踪 / 色相排列（v1.1）待建，故 `app/test/` 下暂无对应路由。
+
 ```
 chromacheck/
 ├── app/                          # Next.js App Router 页面
-│   ├── layout.tsx                # 根布局
-│   ├── page.tsx                  # 首页
-│   ├── globals.css               # 全局样式
-│   ├── guide/                    # 检测前指引
-│   │   └── page.tsx
-│   ├── test/                     # 检测模块
-│   │   ├── page.tsx              # 测试选择页
-│   │   ├── ishihara/             # 石原氏测试
-│   │   │   └── page.tsx
-│   │   ├── path-tracking/        # 路径追踪测试
-│   │   │   └── page.tsx
-│   │   └── hue-arrangement/      # 色相排列测试
-│   │       └── page.tsx
-│   ├── result/                   # 结果页
-│   │   └── page.tsx
-│   ├── learn/                    # 科普模块
-│   │   ├── page.tsx
-│   │   └── [slug]/
-│   │       └── page.tsx
-│   └── history/                  # 历史记录
-│       └── page.tsx
-├── components/                   # 可复用组件
-│   ├── ui/                       # shadcn/ui 基础组件
-│   ├── layout/                   # 布局组件（Navbar、Footer 等）
-│   ├── test/                     # 测试相关组件
-│   │   ├── IshiharaPlate.tsx
-│   │   ├── TestProgress.tsx
-│   │   ├── PathTrackingCanvas.tsx
-│   │   └── HueArrangementGrid.tsx
-│   ├── result/                   # 结果展示组件
-│   │   ├── ResultSummary.tsx
-│   │   ├── ResultChart.tsx
-│   │   └── AnswerDetail.tsx
-│   └── common/                   # 通用组件
-├── lib/                          # 业务逻辑与工具函数
-│   ├── questions/                # 题库数据
-│   │   ├── ishihara.ts
-│   │   ├── path-tracking.ts
-│   │   └── hue-arrangement.ts
-│   ├── scoring/                  # 判读算法
-│   │   ├── ishihara-scoring.ts
-│   │   ├── path-scoring.ts
-│   │   └── hue-scoring.ts
-│   ├── storage/                  # 本地存储
-│   │   └── localStorage.ts
-│   ├── export/                   # 报告导出
-│   │   └── report-export.ts
-│   └── utils.ts                  # 通用工具函数
-├── types/                        # TypeScript 类型定义
-│   ├── question.ts
-│   ├── result.ts
-│   └── storage.ts
-├── public/                       # 静态资源
-│   ├── plates/                   # 检测图资源
-│   ├── images/                   # 其他图片
-│   └── favicon.ico
-├── docs/                         # 项目文档
-│   ├── PRD.md                    # 产品需求文档
-│   ├── ARCHITECTURE.md           # 技术架构文档
-│   ├── API.md                    # 接口文档
-│   ├── DATA-SPEC.md              # 数据规范文档
-│   ├── DEPLOYMENT.md             # 部署文档
-│   ├── TESTING.md                # 测试策略文档
-│   ├── PRIVACY.md                # 隐私与合规文档
-│   └── ROADMAP.md                # 路线图文档
+│   ├── layout.tsx                # 根布局（含 ThemeProvider）
+│   ├── page.tsx                  # 首页（含色觉模拟 CvdSimulator）
+│   ├── not-found.tsx             # 404
+│   ├── globals.css               # 全局样式 + 设计令牌
+│   ├── icon.svg                  # 站点图标
+│   ├── guide/page.tsx            # 检测前指引
+│   ├── test/
+│   │   ├── page.tsx              # 模式选择（快速 / 标准）
+│   │   └── ishihara/[mode]/page.tsx   # 石原氏测试
+│   ├── result/[id]/page.tsx      # 结果页
+│   ├── learn/
+│   │   ├── page.tsx              # 科普列表
+│   │   └── [slug]/page.tsx       # 科普详情
+│   ├── history/page.tsx          # 历史记录
+│   └── privacy/page.tsx          # 隐私政策
+├── components/
+│   ├── common/                   # Callout、Icon
+│   ├── home/                     # CvdSimulator
+│   ├── layout/                   # Footer、Navbar、ThemeProvider、ThemeToggle
+│   ├── result/                   # AnswerReview、AxisChart、ReportActions、ResultSummary
+│   └── test/                     # IshiharaPlate、Numpad、TestProgress、TestRunner
+├── lib/
+│   ├── types.ts                  # 全局类型（以 docs/SPEC.md §5 为权威）
+│   ├── questions.ts              # 题库数据
+│   ├── scoring.ts                # 判读引擎
+│   ├── ishihara.ts              # 点阵生成与色觉模拟
+│   ├── storage.ts                # 本地存储
+│   ├── learn-data.ts             # 科普文章数据
+│   └── format.ts                 # 格式化工具
+├── docs/                         # 项目文档（SPEC.md 为权威总纲）
+│   ├── SPEC.md
+│   ├── PRD.md / ARCHITECTURE.md / API.md / DATA-SPEC.md
+│   ├── DEPLOYMENT.md / TESTING.md / PRIVACY.md / ROADMAP.md
+│   └── （贡献约定见 .github/CONTRIBUTING.md）
+├── prototype/                    # 高保真静态原型（设计验证参考）
+├── .github/
+│   ├── CONTRIBUTING.md
+│   └── workflows/ci.yml
 ├── .eslintrc.json                # ESLint 配置
-├── .prettierrc                   # Prettier 配置
+├── .gitignore
 ├── tailwind.config.ts            # Tailwind 配置
-├── postcss.config.js             # PostCSS 配置
+├── postcss.config.mjs            # PostCSS 配置
+├── next.config.mjs               # Next.js 配置
 ├── tsconfig.json                 # TypeScript 配置
-├── next.config.js                # Next.js 配置
 ├── package.json                  # 项目依赖
+├── package-lock.json
+├── VERSION                       # 版本单一来源
+├── LICENSE                       # MIT
 └── README.md                     # 项目说明（本文件）
 ```
 

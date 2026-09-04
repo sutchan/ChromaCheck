@@ -302,11 +302,11 @@ interface IshiharaQuestion {
 interface TestResult {
   id: string;
   userId: string | null;          // 匿名用户为 null
-  testMode: 'quick' | 'standard' | 'advanced';
+  testMode: 'quick' | 'standard';  // advanced 推迟至 v1.1
   startTime: string;              // ISO 时间
   endTime: string;
   ishihara: IshiharaScoringResult; // 含 overall/type/severity/confidence/dimensions，定义见 SPEC §5.3
-  advancedResults?: {
+  advancedResults?: {       // v1.1 规划（路径追踪 / 色相排列），v1.0 未实现
     pathTracking?: PathTrackingResult;
     hueArrangement?: HueArrangementResult;
   };
@@ -316,10 +316,12 @@ interface TestResult {
 ### 6.3 本地存储数据
 
 ```typescript
+// v1.0 实际以 docs/SPEC.md §5.4 为准：使用扁平键存储（cc.settings.v1 / cc.results.v1 / cc.progress.v1），无聚合 LocalStorageData。
+// 以下为 v1.1 规划结构（含 advanced 模式、soundEnabled/autoNext/analyticsEnabled/system 主题），仅供参考。
 interface LocalStorageData {
   version: string;
   currentTestProgress?: {
-    testMode: 'quick' | 'standard' | 'advanced';
+    testMode: 'quick' | 'standard' | 'advanced';  // advanced 为 v1.1 规划
     currentIndex: number;
     answers: Record<string, string>;
     startTime: string;
@@ -327,17 +329,17 @@ interface LocalStorageData {
   history: Array<{
     id: string;
     date: string;
-    testMode: 'quick' | 'standard' | 'advanced';
+    testMode: 'quick' | 'standard' | 'advanced';  // advanced 为 v1.1 规划
     overall: string;
     type?: string;
     severity?: string;
     confidence?: number;   // 0-100，以 SPEC §5.4 为准
   }>;
   settings: {
-    soundEnabled: boolean;
-    autoNext: boolean;
-    theme: 'light' | 'dark' | 'system';   // 含 system
-    analyticsEnabled: boolean;            // 匿名上报开关
+    soundEnabled: boolean;            // v1.1 规划
+    autoNext: boolean;               // v1.1 规划
+    theme: 'light' | 'dark' | 'system';   // system 为 v1.1 规划
+    analyticsEnabled: boolean;            // v1.1 规划（匿名上报开关）
   };
 }
 ```

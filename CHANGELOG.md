@@ -1,7 +1,14 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.0.2`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.0.3`）。
+
+## [1.0.3] - 2026-09-04
+
+### 文档
+- 修复文档与 v1.0.2 实际代码脱节：重写 README 项目结构树为真实扁平结构（`lib/` 扁平模块 + `components/` 五域），删除未安装的 Prettier `npm run format` 引用。
+- 同步 `docs/SPEC.md` 与代码：`§0` 移除「应用源码尚未编写 / npm 运行会失败」旧声明；`§5.3` 字段名 `mode`→`testMode` 并补全实字段；`§5.4` `AppSettings` 对齐代码（`theme` 仅 `light`/`dark` + `cvdSafe`，移除未实现的 `analyticsEnabled`/`system`）；`§5.5` `TestMode` 移除未实现的 `advanced`；`§8.4` 标注 CI 已建；`§9` 待建项改为已完成；底部版本 `v0.1.0`→`v1.0.3`。
+- 版本单一来源同步至 `1.0.3`（`VERSION`、`package.json`、本文件）。
 
 ## [1.0.2] - 2026-09-04
 
@@ -35,9 +42,9 @@
 - 版本单一来源：`VERSION` 与 `package.json.version`（当前 `1.0.0`）。
 
 ### 说明
-- 当前为「文档 + 静态原型」阶段，Next.js 应用源码尚未实现。
+- v1.0 应用已实现（Next.js 14 应用 + 高保真静态原型作为设计验证）；文档顶部"实现状态"均已更新为 v1.0 已实现。
 - 原型文件头标记 `v0.1.0` 为原型内部迭代号，不随项目版本号同步刷写。
-- 各文档顶部"文档版本 v1.0"与 `VERSION` 的 `1.0.0` 等价（v1.0 ≈ 1.0.0）。
+- 各文档头注释版本（v1.0.2）与 `VERSION` 的 `1.0.2` 一致。
 
 [1.0.2]: https://github.com/ChromaCheck/ChromaCheck/releases/tag/v1.0.2
 [1.0.1]: https://github.com/ChromaCheck/ChromaCheck/releases/tag/v1.0.1

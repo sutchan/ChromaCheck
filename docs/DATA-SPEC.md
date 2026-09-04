@@ -261,10 +261,11 @@ interface TestResult {
 ### 6.1 存储 Key 规范
 
 ```
-chromacheck:v1:settings       # 用户设置
-chromacheck:v1:history        # 检测历史（仅存摘要）
-chromacheck:v1:current_test   # 进行中的检测进度
-chromacheck:v1:result:{id}    # 单次检测完整结果
+cc.settings.v1      # 用户设置（AppSettings：theme + cvdSafe）
+cc.results.v1       # 检测历史（TestResult[]，保留最近 30 条）
+cc.progress.v1      # 进行中的检测进度（TestProgress）
+
+> v1.0 实际以 `lib/storage.ts` 与 `docs/SPEC.md §5.4` 为准：使用上述三个扁平键，无聚合 `LocalStorageData`、无 `soundEnabled`/`autoNext`/`analyticsEnabled`/`system` 主题（均推迟至 v1.1）。
 ```
 
 ### 6.2 用户设置（Settings）
@@ -287,7 +288,7 @@ interface UserSettings {
 ```typescript
 interface CurrentTestProgress {
   /** 测试模式 */
-  testMode: 'quick' | 'standard' | 'advanced';
+  testMode: 'quick' | 'standard';  // advanced 推迟至 v1.1
   /** 当前题目索引 */
   currentIndex: number;
   /** 已答题目 */
@@ -304,7 +305,7 @@ interface HistorySummary {
   id: string;
   /** 检测时间 ISO 字符串 */
   date: string;
-  testMode: 'quick' | 'standard' | 'advanced';
+  testMode: 'quick' | 'standard';  // advanced 推迟至 v1.1
   overall: OverallResult;
   type?: ColorDeficiencyType;
   severity?: SeverityLevel;
@@ -316,10 +317,10 @@ interface HistorySummary {
 
 | 项目 | 限制 |
 |------|------|
-| 历史记录条数 | 最多 20 条 |
-| 完整结果条数 | 最多 5 条 |
-| 总存储容量 | 1MB |
-| 超出策略 | 自动删除最旧记录 |
+| 历史记录条数 | 最多 30 条（TestResult[] 数组截断） |
+| 完整结果 | 并入历史数组（不单独存 result:{id}） |
+| 总存储容量 | 受浏览器 localStorage 配额约束 |
+| 超出策略 | 按 createdAt 倒序保留最近 30 条 |
 
 ---
 
