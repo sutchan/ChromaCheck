@@ -92,3 +92,43 @@
   .lib-toc { position: static; max-height: none; }
   .do-dont { grid-template-columns: 1fr; }
 }
+
+/* wireframes / design-system 专用补充 */
+.eyebrow {
+  display: inline-block; font-family: var(--font-mono); font-size: 11px;
+  letter-spacing: 0.18em; color: var(--brand); font-weight: 600; margin-bottom: var(--s-3);
+}
+.docs-hero-meta {
+  display: flex; gap: var(--s-3); align-items: center; margin-top: var(--s-5);
+  color: var(--fg-mute); font-size: var(--fs-sm);
+}
+.docs-foot {
+  border-top: 1px solid var(--border); padding: var(--s-7) var(--s-6);
+  display: flex; justify-content: space-between; flex-wrap: wrap; gap: 8px;
+  max-width: 1240px; margin: 0 auto; font-size: var(--fs-sm); color: var(--fg-soft);
+}
+.lib-toc a.is-active { color: var(--brand); font-weight: 600; }
+.lib-sec h3.spec-h { margin-top: var(--s-6); font-size: var(--fs-h4); }
+
+.hue-rail { display: flex; gap: 6px; align-items: center; flex-wrap: wrap; padding: 6px; background: var(--bg-sunken); border-radius: var(--r-md); }
+.hue-card {
+  width: 38px; height: 38px; border-radius: 8px; position: relative; cursor: pointer;
+  box-shadow: inset 0 0 0 1px rgba(0, 0, 0, 0.12); transition: transform var(--d-2) var(--ease);
+}
+.hue-card:hover { transform: translateY(-2px); }
+.hue-card i { position: absolute; left: 4px; top: 1px; font-style: normal; font-size: 9px; font-family: var(--font-mono); color: rgba(255, 255, 255, 0.85); }
+.hue-card.is-sel { box-shadow: 0 0 0 3px var(--brand); }
+.hue-card--fixed { cursor: default; opacity: 0.6; }
+
+/* 设计系统页：栅格示意 + 色觉模拟 */
+.grid-12 { display: grid; grid-template-columns: repeat(12, 1fr); }
+.grid-12 .gcell {
+  background: var(--brand-soft); color: var(--brand); text-align: center;
+  padding: 10px 0; border-radius: var(--r-sm); font-size: 12px; font-family: var(--font-mono);
+}
+.sim-grid { margin-top: var(--s-5); border: 1px solid var(--border); border-radius: var(--r-md); overflow: hidden; }
+.sim-row { display: grid; grid-template-columns: 120px repeat(5, 1fr); align-items: center; border-bottom: 1px solid var(--border); }
+.sim-row:last-child { border-bottom: 0; }
+.sim-row.sim-head { background: var(--bg-sunken); font-size: var(--fs-xs); color: var(--fg-mute); font-family: var(--font-mono); }
+.sim-name { padding: 10px 12px; font-size: var(--fs-sm); color: var(--fg-soft); }
+.sim-cell { height: 40px; }

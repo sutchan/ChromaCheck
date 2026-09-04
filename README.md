@@ -188,6 +188,28 @@ chromacheck/
 | [路线图文档](docs/ROADMAP.md) | 版本规划与未来方向 |
 | [贡献指南](docs/CONTRIBUTING.md) | 开发流程、代码规范 |
 
+## 高保真原型
+
+无需构建，直接在浏览器打开即可预览（纯静态 HTML + CSS + 原生 JS，无运行依赖）。三个页面互相链接，组成完整原型集：
+
+| 文件 | 说明 |
+|------|------|
+| [prototype/prototype.html](prototype/prototype.html) | 高保真可交互原型：完整视觉设计稿 + 动效 + 真实数据；支持桌面/平板/手机画框切换与色觉模拟 |
+| [prototype/wireframes.html](prototype/wireframes.html) | 组件库规范：基础组件 / 复合组件 / 业务组件 + 组件使用总规则与无障碍基线 |
+| [prototype/design-system.html](prototype/design-system.html) | 设计系统：色彩、字体、间距/圆角/阴影令牌与色觉模拟基线 |
+
+原型目录结构：
+
+```
+prototype/
+├── prototype.html               # 高保真可交互产品原型
+├── wireframes.html              # 组件库规范
+├── design-system.html           # 设计系统
+└── assets/
+    ├── css/                     # tokens / ui / screens / screens-test / docs
+    └── js/                      # 数据、判读、石原氏绘制、图表、屏幕渲染、组件目录、各页脚本
+```
+
 ## 开发规范
 
 ### Git 提交信息

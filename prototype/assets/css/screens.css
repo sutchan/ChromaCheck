@@ -147,3 +147,11 @@
   .section { padding: var(--s-8) var(--s-5); }
   .hero .trust { gap: var(--s-5); flex-wrap: wrap; }
 }
+
+/* 原型外壳：跳转到规范页的链接 */
+.proto-link {
+  color: #cdd6e2; text-decoration: none; font-size: 13px;
+  padding: 5px 10px; border: 1px solid #2b3645; border-radius: 6px;
+  transition: background var(--d-1) var(--ease), color var(--d-1) var(--ease);
+}
+.proto-link:hover { background: #222b36; color: #fff; }

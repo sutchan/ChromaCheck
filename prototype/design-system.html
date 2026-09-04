@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ChromaCheck · 设计系统</title>
+  <meta name="description" content="ChromaCheck 设计系统：色彩、字体、间距、阴影令牌与色觉模拟基线。" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/tokens.css" />
+  <link rel="stylesheet" href="assets/css/ui.css" />
+  <link rel="stylesheet" href="assets/css/docs.css" />
+</head>
+<body>
+  <header class="docs-top">
+    <a class="brand" href="prototype.html">
+      <span class="logo"><span class="logo__dots"></span></span>
+      <span class="brand-txt">ChromaCheck <small>色觉检测</small></span>
+    </a>
+    <nav>
+      <a href="prototype.html">高保真原型</a>
+      <a href="wireframes.html">组件库</a>
+      <a href="design-system.html" class="active">设计系统</a>
+    </nav>
+    <span class="docs-ver">v0.1.0</span>
+  </header>
+
+  <section class="docs-hero">
+    <div class="docs-hero-in">
+      <span class="eyebrow">DESIGN SYSTEM</span>
+      <h1>设计系统</h1>
+      <p>以"石原氏点阵 + 色觉仪器"为母题的设计令牌与原则。所有组件、屏幕均由此派生，保证跨页面视觉与无障碍的一致性。</p>
+    </div>
+  </section>
+
+  <div class="lib-wrap" style="grid-template-columns:1fr">
+    <main class="lib-content">
+
+      <section class="lib-sec" id="sec-color">
+        <h2><span>色彩体系</span> <small>Color</small></h2>
+        <p class="lib-desc">主色取自石原氏测验的暖陶红，中性走米纸暖灰以避免冷屏感；语义色与三轴色一一对应色觉类型。</p>
+
+        <h3 class="spec-h">品牌色</h3>
+        <div class="swatch-grid">
+          <div class="swatch"><div class="c" style="background:var(--brand)"></div><div class="m"><div class="n">--brand 主色</div><div class="v">#c4553b</div></div></div>
+          <div class="swatch"><div class="c" style="background:var(--brand-2)"></div><div class="m"><div class="n">--brand-2 浅主色</div><div class="v">#d98a6f</div></div></div>
+          <div class="swatch"><div class="c" style="background:var(--brand-soft)"></div><div class="m"><div class="n">--brand-soft 主色底</div><div class="v">#f8eae4</div></div></div>
+        </div>
+
+        <h3 class="spec-h">语义色</h3>
+        <div class="swatch-grid">
+          <div class="swatch"><div class="c" style="background:var(--ok)"></div><div class="m"><div class="n">--ok 通过</div><div class="v">#2e9e6b</div></div></div>
+          <div class="swatch"><div class="c" style="background:var(--warn)"></div><div class="m"><div class="n">--warn 注意</div><div class="v">#e0a23b</div></div></div>
+          <div class="swatch"><div class="c" style="background:var(--risk)"></div><div class="m"><div class="n">--risk 风险</div><div class="v">#c0392b</div></div></div>
+          <div class="swatch"><div class="c" style="background:var(--info)"></div><div class="m"><div class="n">--info 信息</div><div class="v">#2f6f9e</div></div></div>
+        </div>
+
+        <h3 class="spec-h">中性灰阶</h3>
+        <div class="swatch-grid">
+          <div class="swatch"><div class="c" style="background:var(--n-0)"></div><div class="m"><div class="n">--n-0</div><div class="v">#ffffff</div></div></div>
+          <div class="swatch"><div class="c" style="background:var(--n-50)"></div><div class="m"><div class="n">--n-50</div><div class="v">#f6f4ef</div></div></div>
+          <div class="swatch"><div class="c" style="background:var(--n-100)"></div><div class="m"><div class="n">--n-100</div><div class="v">#efe9db</div></div></div>
+          <div class="swatch"><div class="c" style="background:var(--n-300)"></div><div class="m"><div class="n">--n-300</div><div class="v">#c4bdb0</div></div></div>
+          <div class="swatch"><div class="c" style="background:var(--n-500)"></div><div class="m"><div class="n">--n-500</div><div class="v">#6b6356</div></div></div>
+          <div class="swatch"><div class="c" style="background:var(--n-700)"></div><div class="m"><div class="n">--n-700</div><div class="v">#2a2f37</div></div></div>
+        </div>
+
+        <h3 class="spec-h">三轴色 & 色觉友好三色</h3>
+        <div class="swatch-grid">
+          <div class="swatch"><div class="c" style="background:var(--axis-protan)"></div><div class="m"><div class="n">--axis-protan 红</div><div class="v">#c0392b</div></div></div>
+          <div class="swatch"><div class="c" style="background:var(--axis-deutan)"></div><div class="m"><div class="n">--axis-deutan 绿</div><div class="v">#2e9e6b</div></div></div>
+          <div class="swatch"><div class="c" style="background:var(--axis-tritan)"></div><div class="m"><div class="n">--axis-tritan 蓝</div><div class="v">#2f6f9e</div></div></div>
+          <div class="swatch"><div class="c" style="background:var(--cvd-blue)"></div><div class="m"><div class="n">--cvd-blue</div><div class="v">#2f6f9e</div></div></div>
+          <div class="swatch"><div class="c" style="background:var(--cvd-cyan)"></div><div class="m"><div class="n">--cvd-cyan</div><div class="v">#1fb6c9</div></div></div>
+          <div class="swatch"><div class="c" style="background:var(--cvd-amber)"></div><div class="m"><div class="n">--cvd-amber</div><div class="v">#e0a23b</div></div></div>
+        </div>
+      </section>
+
+      <section class="lib-sec" id="sec-type">
+        <h2><span>字体排印</span> <small>Typography</small></h2>
+        <p class="lib-desc">标题用 Archivo 收紧字距；数字与代码用 IBM Plex Mono 等宽以保证读数对齐；中文正文走系统无衬线。</p>
+        <div style="margin-top:var(--s-5)">
+          <div class="type-row"><div style="font-family:var(--font-display);font-size:44px;font-weight:800;letter-spacing:var(--ls-head)">Aa 色觉检测</div><div>Display · Archivo 800</div><div class="meta">44 / -0.02em</div></div>
+          <div class="type-row"><div style="font-family:var(--font-display);font-size:32px;font-weight:700">Aa 石原氏测验</div><div>H1 · Archivo 700</div><div class="meta">32 / -0.02em</div></div>
+          <div class="type-row"><div style="font-family:var(--font-display);font-size:24px;font-weight:700">Aa 检测报告</div><div>H2 · Archivo 700</div><div class="meta">24</div></div>
+          <div class="type-row"><div style="font-family:var(--font-display);font-size:18px;font-weight:600">Aa 实时重合度</div><div>H3 · Archivo 600</div><div class="meta">18</div></div>
+          <div class="type-row"><div style="font-family:var(--font-body);font-size:15px">中文正文 双色点阵构成的数字谜题</div><div>Body · 系统无衬线</div><div class="meta">15 / 1.6</div></div>
+          <div class="type-row"><div style="font-family:var(--font-mono);font-size:15px">0123456789</div><div>数字 · IBM Plex Mono</div><div class="meta">15 / 600</div></div>
+        </div>
+      </section>
+
+      <section class="lib-sec" id="sec-tokens">
+        <h2><span>间距 · 圆角 · 阴影</span> <small>Tokens</small></h2>
+        <p class="lib-desc">基于 4px 基线的间距阶梯；圆角与圆点语言呼应点阵；阴影分三档承担层级。</p>
+        <h3 class="spec-h">间距（4px 基线）</h3>
+        <div class="token-grid">
+          <div class="token-item"><div class="v">s-1 · 4px</div></div>
+          <div class="token-item"><div class="v">s-2 · 8px</div></div>
+          <div class="token-item"><div class="v">s-3 · 12px</div></div>
+          <div class="token-item"><div class="v">s-4 · 16px</div></div>
+          <div class="token-item"><div class="v">s-5 · 24px</div></div>
+          <div class="token-item"><div class="v">s-6 · 32px</div></div>
+          <div class="token-item"><div class="v">s-9 · 64px</div></div>
+          <div class="token-item"><div class="v">s-10 · 96px</div></div>
+        </div>
+        <h3 class="spec-h">圆角</h3>
+        <div class="token-grid">
+          <div class="token-item"><div class="v">r-xs · 6px</div></div>
+          <div class="token-item"><div class="v">r-sm · 8px</div></div>
+          <div class="token-item"><div class="v">r-md · 12px</div></div>
+          <div class="token-item"><div class="v">r-lg · 18px</div></div>
+          <div class="token-item"><div class="v">r-full · 999px</div></div>
+        </div>
+        <h3 class="spec-h">阴影</h3>
+        <div class="token-grid">
+          <div class="token-item"><div class="v">sh-1 · 卡片</div></div>
+          <div class="token-item"><div class="v">sh-2 · 悬停</div></div>
+          <div class="token-item"><div class="v">sh-3 · 画框</div></div>
+        </div>
+      </section>
+
+      <section class="lib-sec" id="sec-grid">
+        <h2><span>栅格与断点</span> <small>Grid</small></h2>
+        <p class="lib-desc">内容最大宽度 1240px，12 列流式栅格；以设备画框宽度（容器查询）触发断点而非窗口宽度。</p>
+        <div class="grid-12" style="margin-top:var(--s-5);gap:8px">
+          <span class="gcell">1</span><span class="gcell">2</span><span class="gcell">3</span><span class="gcell">4</span>
+          <span class="gcell">5</span><span class="gcell">6</span><span class="gcell">7</span><span class="gcell">8</span>
+          <span class="gcell">9</span><span class="gcell">10</span><span class="gcell">11</span><span class="gcell">12</span>
+        </div>
+        <table class="spec-table" style="margin-top:var(--s-5)">
+          <tbody>
+            <tr><td>画框 ≥ 1240</td><td>完整双栏 + 侧栏</td></tr>
+            <tr><td>画框 900 – 1240</td><td>双栏收为单栏，导航折叠</td></tr>
+            <tr><td>画框 ≤ 620</td><td>单列堆叠，触控目标放大</td></tr>
+          </tbody>
+        </table>
+      </section>
+
+      <section class="lib-sec" id="sec-cvd">
+        <h2><span>色觉模拟基线</span> <small>Color Vision</small></h2>
+        <p class="lib-desc">设计稿与组件均需通过下方模拟校验：任一色觉类型下，关键信息仍可读、状态仍可辨。请勿单靠红绿区分。</p>
+        <div class="sim-grid" id="sim-grid"></div>
+        <p class="a11y"><b>♿ 无障碍：</b>提供「色觉友好配色」开关，把红—绿状态替换为蓝—青—琥珀三色，确保红绿色觉差异者无障碍访问。</p>
+      </section>
+
+      <section class="lib-sec" id="sec-principles">
+        <h2><span>设计原则</span> <small>Principles</small></h2>
+        <div class="grid grid-2" style="margin-top:var(--s-5)">
+          <div class="card card--pad"><h4>点阵即语言</h4><p class="muted" style="margin-top:8px;font-size:13px">圆点、色块与网格贯穿 logo、图表与按钮，形成可识别的视觉指纹。</p></div>
+          <div class="card card--pad"><h4>状态不靠颜色</h4><p class="muted" style="margin-top:8px;font-size:13px">每个状态都有文字或图标兜底，色觉差异人群同样可辨。</p></div>
+          <div class="card card--pad"><h4>克制的动效</h4><p class="muted" style="margin-top:8px;font-size:13px">过渡统一缓动，仅用于引导注意，不制造等待焦虑。</p></div>
+          <div class="card card--pad"><h4>语义化结构</h4><p class="muted" style="margin-top:8px;font-size:13px">主要容器带语义 id，便于测试定位与读屏锚点。</p></div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <footer class="docs-foot">
+    <div>ChromaCheck 原型设计系统 · 设计令牌与原则</div>
+    <div class="muted">令牌以 tokens.css 为单一来源，组件库与设计系统均派生自此。</div>
+  </footer>
+
+  <script src="assets/js/design-system.js"></script>
+</body>
+</html>

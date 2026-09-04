@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ChromaCheck · 组件库规范</title>
+  <meta name="description" content="ChromaCheck 组件库规范：基础组件、复合组件、业务组件及使用规则。" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/tokens.css" />
+  <link rel="stylesheet" href="assets/css/ui.css" />
+  <link rel="stylesheet" href="assets/css/screens.css" />
+  <link rel="stylesheet" href="assets/css/screens-test.css" />
+  <link rel="stylesheet" href="assets/css/docs.css" />
+</head>
+<body>
+  <header class="docs-top">
+    <a class="brand" href="prototype.html">
+      <span class="logo"><span class="logo__dots"></span></span>
+      <span class="brand-txt">ChromaCheck <small>色觉检测</small></span>
+    </a>
+    <nav>
+      <a href="prototype.html">高保真原型</a>
+      <a href="wireframes.html" class="active">组件库</a>
+      <a href="design-system.html">设计系统</a>
+    </nav>
+    <span class="docs-ver">v0.1.0</span>
+  </header>
+
+  <section class="docs-hero">
+    <div class="docs-hero-in">
+      <span class="eyebrow">UI COMPONENT LIBRARY</span>
+      <h1>组件库规范</h1>
+      <p>统一的视觉与交互语言，覆盖基础组件、复合组件与业务组件三大类，并附组件使用总规则与无障碍基线。</p>
+      <div class="docs-hero-meta">
+        <span>3 大类</span><span>·</span><span id="lib-count">— 个组件</span><span>·</span><span>WCAG AA</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="lib-wrap">
+    <aside class="lib-toc" id="lib-toc"></aside>
+    <main class="lib-content" id="lib-content"></main>
+  </div>
+
+  <footer class="docs-foot">
+    <div>ChromaCheck 原型设计系统 · 组件库规范</div>
+    <div class="muted">仅供设计评审与原型演示，非最终产品。</div>
+  </footer>
+
+  <script src="assets/js/ishihara.js"></script>
+  <script src="assets/js/charts.js"></script>
+  <script src="assets/js/wireframes-catalog-base.js"></script>
+  <script src="assets/js/wireframes-catalog-comp.js"></script>
+  <script src="assets/js/wireframes-catalog-biz.js"></script>
+  <script src="assets/js/wireframes.js"></script>
+  <script>
+    document.getElementById('lib-count').textContent =
+      (window.CC_CATALOG ? window.CC_CATALOG.length : 0) + ' 个组件';
+  </script>
+</body>
+</html>
