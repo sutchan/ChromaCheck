@@ -2,7 +2,7 @@
 
 > 一眼辨色，科学筛查 — 在线色觉检测 Web 应用
 
-> **实现状态**：当前为「文档 + 高保真静态原型」阶段，应用源码（Next.js）**尚未实现**；下方"快速开始"依赖尚未创建，不可直接运行。权威规范见 [docs/SPEC.md](docs/SPEC.md)。
+> **实现状态**：当前为「文档 + 高保真静态原型」阶段，应用源码（Next.js）**尚未实现**；下方"快速开始"依赖尚未创建，不可直接运行。权威规范见 [docs/SPEC.md](docs/SPEC.md)。当前项目版本 **v1.0.0**（见 `VERSION`）。
 
 [![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
@@ -166,8 +166,7 @@ chromacheck/
 │   ├── DEPLOYMENT.md             # 部署文档
 │   ├── TESTING.md                # 测试策略文档
 │   ├── PRIVACY.md                # 隐私与合规文档
-│   ├── ROADMAP.md                # 路线图文档
-│   └── CONTRIBUTING.md           # 贡献指南
+│   └── ROADMAP.md                # 路线图文档
 ├── .eslintrc.json                # ESLint 配置
 ├── .prettierrc                   # Prettier 配置
 ├── tailwind.config.ts            # Tailwind 配置
@@ -190,7 +189,7 @@ chromacheck/
 | [测试策略文档](docs/TESTING.md) | 单元/集成/手动测试计划 |
 | [隐私与合规文档](docs/PRIVACY.md) | 数据收集、存储、合规要求 |
 | [路线图文档](docs/ROADMAP.md) | 版本规划与未来方向 |
-| [贡献指南](docs/CONTRIBUTING.md) | 开发流程、代码规范 |
+| [贡献指南](.github/CONTRIBUTING.md) | 开发流程、代码规范 |
 
 ## 高保真原型
 
