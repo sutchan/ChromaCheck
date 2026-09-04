@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<!-- prototype/prototype.html v0.1.0 — 高保真可交互原型：完整视觉设计稿 + 动效 + 真实数据 -->
+<html lang="zh-CN" data-theme="light" data-cvd-safe="off">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>色辨 ChromaCheck 原型 v0.1.0</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/tokens.css">
+<link rel="stylesheet" href="assets/css/ui.css">
+<link rel="stylesheet" href="assets/css/screens.css">
+<link rel="stylesheet" href="assets/css/screens-test.css">
+</head>
+<body>
+
+<!-- ============ 原型外壳（非产品界面） ============ -->
+<div id="proto-chrome">
+  <span class="brand-mark">
+    <span class="dots"><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i><i></i></span>
+    色辨 ChromaCheck <span class="chip chip--outline" style="color:#9aa6b5;border-color:#263140">原型 v0.1.0</span>
+  </span>
+  <span class="sep"></span>
+
+  <label class="ctl">页面
+    <select id="routeSel" aria-label="选择页面"></select>
+  </label>
+
+  <span class="sep"></span>
+  <span class="ctl">画框
+    <button id="btn-desktop">桌面 1440</button>
+    <button id="btn-tablet">平板 834</button>
+    <button id="btn-mobile">手机 390</button>
+  </span>
+
+  <span class="sep"></span>
+  <button id="btn-theme">浅色</button>
+
+  <span class="sep"></span>
+  <label class="ctl">色觉模拟
+    <select id="sel-cvd" aria-label="色觉模拟">
+      <option value="none">正常色觉</option>
+      <option value="protanopia">红色盲 Protanopia</option>
+      <option value="deuteranopia">绿色盲 Deuteranopia</option>
+      <option value="tritanopia">蓝色盲 Tritanopia</option>
+      <option value="achromatopsia">全色盲 Achromatopsia</option>
+    </select>
+  </label>
+  <button id="btn-safe" title="把数据可视化的红/绿/蓝三轴换成蓝—青—琥珀">色觉友好配色</button>
+
+  <span class="sep"></span>
+  <button id="btn-reset">重置状态</button>
+
+  <span class="hint-key">答题：数字键 0-9 · Enter 提交 · ← 退格</span>
+</div>
+
+<!-- ============ 产品画框 ============ -->
+<div id="stage">
+  <div id="frame" data-device="desktop" role="main"></div>
+</div>
+
+<div class="toast-stack" id="toast-stack" aria-live="polite"></div>
+
+<script src="assets/js/data.js"></script>
+<script src="assets/js/scoring.js"></script>
+<script src="assets/js/ishihara.js"></script>
+<script src="assets/js/charts.js"></script>
+<script src="assets/js/screens-main.js"></script>
+<script src="assets/js/screens-pages.js"></script>
+<script src="assets/js/screens-test.js"></script>
+<script src="assets/js/screens-advanced.js"></script>
+<script src="assets/js/screens-result.js"></script>
+<script src="assets/js/app.js"></script>
+</body>
+</html>

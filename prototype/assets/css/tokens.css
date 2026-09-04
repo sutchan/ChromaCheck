@@ -1,0 +1,197 @@
+/* prototype/assets/css/tokens.css v0.1.0 — 设计令牌：色彩 / 字体 / 间距 / 圆角 / 阴影 / 动效 */
+
+/* ============================================================
+   1. 中性色阶（冷灰，带蓝调，取自光学仪器外壳）
+   ============================================================ */
+:root {
+  color-scheme: light;
+
+  --n-0: #ffffff;
+  --n-50: #f4f6f8;
+  --n-100: #edf0f4;
+  --n-200: #e1e6ec;
+  --n-300: #cdd5df;
+  --n-400: #a3aebd;
+  --n-500: #7c8798;
+  --n-600: #5a6675;
+  --n-700: #3e4b5b;
+  --n-800: #232c37;
+  --n-900: #0e141b;
+
+  /* 2. 品牌色 —— 棱镜靛（刻意避让红绿混淆轴，红绿色盲用户亦可完整使用） */
+  --brand-50: #f4f3ff;
+  --brand-100: #e9e7fe;
+  --brand-200: #c6c1fc;
+  --brand-400: #6d63f5;
+  --brand-500: #4b3df0;
+  --brand-600: #3b2fe0;
+  --brand-700: #2f22c4;
+
+  /* 3. 语义色（始终与图标、文案三重编码，不单靠色相） */
+  --ok-100: #ddf2f4;   --ok-500: #0e8a99;   --ok-600: #0a6e7b;
+  --warn-100: #fdebdc; --warn-500: #b25e00; --warn-600: #955000;
+  --risk-100: #fae2e0; --risk-500: #c6433c; --risk-600: #a3342e;
+
+  /* 4. 数据轴色 —— 直接取自石原氏图谱的实际用色 */
+  --axis-protan: #c9543a;
+  --axis-deutan: #4f7c46;
+  --axis-tritan: #3d6fb4;
+
+  /* 5. 语义映射（浅色模式） */
+  --bg: var(--n-50);
+  --bg-elev: var(--n-0);
+  --bg-sunken: var(--n-100);
+  --fg: var(--n-900);
+  --fg-soft: var(--n-700);
+  --fg-mute: var(--n-500);
+  --border: #dee3ea;
+  --border-strong: var(--n-300);
+  --brand: var(--brand-500);
+  --brand-hover: var(--brand-600);
+  --brand-soft: var(--brand-100);
+  --on-brand: #ffffff;
+  --ok: var(--ok-500);     --ok-soft: var(--ok-100);
+  --warn: var(--warn-500); --warn-soft: var(--warn-100);
+  --risk: var(--risk-500); --risk-soft: var(--risk-100);
+  --shadow-color: 16 22 30;
+}
+
+/* ============================================================
+   6. 深色模式
+   ============================================================ */
+[data-theme='dark'] {
+  color-scheme: dark;
+
+  --bg: #0b0f15;
+  --bg-elev: #141a22;
+  --bg-sunken: #0f141b;
+  --fg: #e7ebf1;
+  --fg-soft: #a9b4c2;
+  --fg-mute: #7c8798;
+  --border: #232c37;
+  --border-strong: #33404e;
+  --brand: #8e85ff;
+  --brand-hover: #a49cff;
+  --brand-soft: #221e52;
+  --on-brand: #0b0f15;
+  --ok: #3fbfcb;   --ok-soft: #10333a;
+  --warn: #e8a03c; --warn-soft: #3a2a11;
+  --risk: #f08b84; --risk-soft: #3b1b1a;
+  --axis-protan: #e8795f;
+  --axis-deutan: #7fb877;
+  --axis-tritan: #6e9be0;
+  --shadow-color: 0 0 0;
+}
+
+/* ============================================================
+   7. 色觉友好配色（数据可视化专用，蓝—青—琥珀，全类型可辨）
+   ============================================================ */
+[data-cvd-safe='on'] {
+  --axis-protan: #4b3df0;
+  --axis-deutan: #0e8a99;
+  --axis-tritan: #b25e00;
+}
+[data-theme='dark'][data-cvd-safe='on'] {
+  --axis-protan: #8e85ff;
+  --axis-deutan: #3fbfcb;
+  --axis-tritan: #e8a03c;
+}
+
+/* ============================================================
+   8. 字体
+   ============================================================ */
+:root {
+  --font-sans: 'Archivo', 'PingFang SC', 'Hiragino Sans GB', 'Microsoft YaHei',
+    system-ui, -apple-system, 'Segoe UI', sans-serif;
+  --font-mono: 'IBM Plex Mono', 'SFMono-Regular', Consolas, 'Courier New', monospace;
+
+  --fs-display: clamp(38px, 4.6vw, 62px);
+  --fs-h1: clamp(28px, 3vw, 36px);
+  --fs-h2: clamp(22px, 2.2vw, 27px);
+  --fs-h3: 20px;
+  --fs-h4: 17px;
+  --fs-body: 15px;
+  --fs-sm: 13px;
+  --fs-xs: 12px;
+  --fs-mono: 13px;
+
+  --lh-tight: 1.16;
+  --lh-snug: 1.35;
+  --lh-body: 1.68;
+
+  --ls-display: -0.028em;
+  --ls-head: -0.014em;
+  --ls-cjk: 0.02em;
+  --ls-mono: 0.06em;
+}
+
+/* ============================================================
+   9. 间距 / 圆角 / 阴影 / 层级
+   ============================================================ */
+:root {
+  --s-1: 4px;  --s-2: 8px;  --s-3: 12px; --s-4: 16px;
+  --s-5: 20px; --s-6: 24px; --s-7: 32px; --s-8: 40px;
+  --s-9: 56px; --s-10: 72px; --s-11: 96px;
+
+  --r-xs: 3px;
+  --r-sm: 5px;
+  --r-md: 9px;
+  --r-lg: 14px;
+  --r-xl: 22px;
+  --r-full: 999px;
+
+  --sh-1: 0 1px 2px rgb(var(--shadow-color) / 0.06), 0 1px 3px rgb(var(--shadow-color) / 0.05);
+  --sh-2: 0 2px 4px rgb(var(--shadow-color) / 0.05), 0 10px 24px -12px rgb(var(--shadow-color) / 0.22);
+  --sh-3: 0 4px 8px rgb(var(--shadow-color) / 0.06), 0 24px 56px -20px rgb(var(--shadow-color) / 0.3);
+  --sh-focus: 0 0 0 3px rgb(75 61 240 / 0.3);
+
+  --z-chrome: 60;
+  --z-sticky: 40;
+  --z-overlay: 80;
+  --z-toast: 100;
+}
+
+/* ============================================================
+   10. 动效
+   ============================================================ */
+:root {
+  --ease: cubic-bezier(0.22, 1, 0.36, 1);
+  --ease-in-out: cubic-bezier(0.6, 0, 0.35, 1);
+  --d-1: 120ms;
+  --d-2: 180ms;
+  --d-3: 280ms;
+  --d-4: 480ms;
+  --d-5: 760ms;
+}
+
+@keyframes cc-rise {
+  from { opacity: 0; transform: translateY(14px); }
+  to   { opacity: 1; transform: none; }
+}
+@keyframes cc-fade { from { opacity: 0; } to { opacity: 1; } }
+@keyframes cc-pop {
+  0%   { transform: scale(0.6); opacity: 0; }
+  60%  { transform: scale(1.08); opacity: 1; }
+  100% { transform: scale(1); }
+}
+@keyframes cc-shimmer {
+  from { background-position: -180% 0; }
+  to   { background-position: 180% 0; }
+}
+@keyframes cc-pulse {
+  0%, 100% { box-shadow: 0 0 0 0 rgb(75 61 240 / 0.35); }
+  70%      { box-shadow: 0 0 0 12px rgb(75 61 240 / 0); }
+}
+
+.rise { animation: cc-rise var(--d-4) var(--ease) both; }
+.fade { animation: cc-fade var(--d-3) var(--ease) both; }
+.pop  { animation: cc-pop var(--d-3) var(--ease) both; }
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
