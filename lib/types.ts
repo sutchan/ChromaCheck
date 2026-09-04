@@ -1,5 +1,5 @@
 // lib/types.ts — ChromaCheck 领域类型
-// chromacheck v1.0.0
+// chromacheck v1.1.0
 
 export type PlateType =
   | 'demonstration'
@@ -73,6 +73,45 @@ export interface IshiharaResult {
   };
 }
 
+export interface PathTrackingQuestion {
+  /** 题目唯一标识 */
+  id: string;
+  /** 画布宽度（CSS 像素） */
+  width: number;
+  /** 画布高度（CSS 像素） */
+  height: number;
+  /** 标准路径点集（归一化坐标 0-1） */
+  standardPath: Array<{ x: number; y: number }>;
+  /** 背景干扰色点配置 */
+  backgroundDots: {
+    /** 颜色（异常者难区分的色相） */
+    color: string;
+    /** 半径范围 */
+    radiusRange: [number, number];
+    /** 密度（每 100x100px 的点数，规划字段，渲染由 seed 决定） */
+    density: number;
+  };
+  /** 路径色点颜色 */
+  pathDotColor: string;
+  /** 该题用于检测的异常类型 */
+  targets: Array<'protan' | 'deutan'>;
+  /** 标准路径形态：0=S 形, 1=螺旋, 2=之字形 */
+  kind: 0 | 1 | 2;
+  /** 确定性随机种子（渲染点阵用，保证每次渲染一致） */
+  seed: number;
+}
+
+export interface PathTrackingResult {
+  /** 题目 ID */
+  questionId: string;
+  /** 路径重合度 0-100 */
+  overlapScore: number;
+  /** 用户轨迹点（归一化 0-1） */
+  userPath: Array<{ x: number; y: number }>;
+  /** 是否通过（重合度 ≥ 70 视为正常） */
+  passed: boolean;
+}
+
 export interface TestResult {
   id: string;
   schema: string;
@@ -85,7 +124,10 @@ export interface TestResult {
   confidence: number;
   durationMs: number;
   answers: AnswerRecord[];
-  ishihara: IshiharaResult;
+  /** 石原氏判读结果；纯路径追踪测试为 undefined */
+  ishihara?: IshiharaResult;
+  /** 路径追踪判读结果（v1.1 扩展） */
+  pathTracking?: PathTrackingResult[];
   analysis: string;
   confidenceNote: string;
   device: string;

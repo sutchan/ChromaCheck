@@ -16,7 +16,7 @@ const OVERALL_TONE: Record<Overall, string> = {
 };
 
 export function ResultSummary({ result }: { result: TestResult }) {
-  const { ishihara, overall, type, severity, confidence, testMode, createdAt, durationMs, device } = result;
+  const { overall, type, severity, confidence, testMode, createdAt, durationMs, device } = result;
   const title = uiText.overall(overall);
   const sub = type ? `${uiText.type(type)}${severity ? ` · ${uiText.severity(severity)}` : ''}` : overall === 'normal' ? '未见明显异常' : '需进一步确认';
   return (
@@ -39,8 +39,14 @@ export function ResultSummary({ result }: { result: TestResult }) {
 
       <div className="grid-cards" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(140px,1fr))' }}>
         <div className="card" style={{ padding: 'var(--s-4)', boxShadow: 'none', background: 'var(--bg-sunken)' }}>
-          <div className="stat-k">正确题数</div>
-          <div className="stat-v">{ishihara.details.correctCount}/{ishihara.details.totalCount}</div>
+          <div className="stat-k">{result.ishihara ? '正确题数' : '通过题数'}</div>
+          <div className="stat-v">
+            {result.ishihara
+              ? `${result.ishihara.details.correctCount}/${result.ishihara.details.totalCount}`
+              : result.pathTracking
+                ? `${result.pathTracking.filter((r) => r.passed).length}/${result.pathTracking.length}`
+                : '—'}
+          </div>
         </div>
         <div className="card" style={{ padding: 'var(--s-4)', boxShadow: 'none', background: 'var(--bg-sunken)' }}>
           <div className="stat-k">用时</div>

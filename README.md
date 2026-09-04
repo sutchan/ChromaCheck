@@ -2,7 +2,7 @@
 
 > 一眼辨色，科学筛查 — 在线色觉检测 Web 应用
 
-> **实现状态**：v1.0 已实现（Next.js 14 应用 + 石原氏检测 + 结果/历史/科普/隐私）。路径追踪与色相排列为 v1.1 规划。权威规范见 [docs/SPEC.md](docs/SPEC.md)。当前项目版本 **v1.0.4**（见 `VERSION`）。
+> **实现状态**：v1.0 已实现（Next.js 14 应用 + 石原氏检测 + 结果/历史/科普/隐私）；路径追踪已于 v1.1 实现，色相排列为 v1.1 规划。权威规范见 [docs/SPEC.md](docs/SPEC.md)。当前项目版本 **v1.1.0**（见 `VERSION`）。
 
 [![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
@@ -24,12 +24,12 @@
 - 检测历史本地存储（无需注册，可查看/删除/清空）— **已实现**
 - 响应式设计（桌面 / 平板 / 手机）— **已实现**
 - 深色模式 + 色觉安全模式 — **已实现**
-- 路径追踪图测试（区分红/绿色盲类型）— *规划中（v1.1）*
+- 路径追踪描线测试（区分红/绿色盲类型）— **已实现（v1.1）**
 - 色相排列测试（简化版 Farnsworth-Munsell D15）— *规划中（v1.1）*
 
 ## 技术栈
 
-> v1.0 实际落地：以 Next.js + TypeScript + Tailwind 为核心，图表用内联 SVG、导出用 Canvas + 浏览器打印，不引入重型依赖。路径追踪 / 色相排列（v1.1）将按需引入 dnd-kit / 图表库。
+> v1.0 实际落地：以 Next.js + TypeScript + Tailwind 为核心，图表用内联 SVG、导出用 Canvas + 浏览器打印，不引入重型依赖。路径追踪（v1.1 已实现，纯 Canvas）无需额外依赖；色相排列（v1.1 规划）将按需引入 dnd-kit。
 
 | 类别 | 技术 | 版本 |
 |------|------|------|
@@ -96,7 +96,7 @@ npm run type-check
 
 ## 项目结构
 
-> 下方为 v1.0 实际落地结构（与 `docs/ARCHITECTURE.md` 一致）。`lib/` 为扁平模块（非分目录）；路径追踪 / 色相排列（v1.1）待建，故 `app/test/` 下暂无对应路由。
+> 下方为 v1.0 实际落地结构（与 `docs/ARCHITECTURE.md` 一致）。`lib/` 为扁平模块（非分目录）；路径追踪已于 v1.1 实现（`app/test/path-tracking/[mode]`），色相排列（v1.1）待建。
 
 ```
 chromacheck/

@@ -1,5 +1,5 @@
 // components/test/TestProgress.tsx — 检测进度
-// chromacheck v1.0.0
+// chromacheck v1.1.0
 'use client';
 
 import React from 'react';
@@ -9,15 +9,16 @@ import type { Question } from '@/lib/types';
 export interface TestProgressProps {
   index: number;
   total: number;
-  current: Question;
+  current?: Question;
+  label?: string;
 }
 
-export function TestProgress({ index, total, current }: TestProgressProps) {
+export function TestProgress({ index, total, current, label }: TestProgressProps) {
   const pct = Math.round((index / total) * 100);
   return (
     <div className="stack" style={{ gap: 'var(--s-2)' }}>
       <div className="row between">
-        <span className="chip">{TYPE_LABEL[current.type]}</span>
+        <span className="chip">{label ?? (current ? TYPE_LABEL[current.type] : '检测中')}</span>
         <span className="muted" style={{ fontSize: '0.9rem' }}>
           第 {index + 1} / {total} 题
         </span>

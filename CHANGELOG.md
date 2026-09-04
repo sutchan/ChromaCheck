@@ -1,7 +1,14 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.0.4`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.1.0`）。
+
+## [1.1.0] - 2026-09-04
+
+### 新增
+- 路径追踪检测模块（v1.1 首个功能）：新增 `/test/path-tracking/[mode]` 路由、`PathTrackingRunner` 与 `PathTrackingCanvas` 组件；移植原型 `renderPathField`/`standardPath` 为 `lib/ishihara.ts` 纯函数 `buildPathField`；新增 `lib/questions/path-tracking.ts` 题库（S 形/螺旋/之字形 3 题）与 `lib/path-scoring.ts`（重合度 IoU 评分 + 综合结果汇总）。
+- `TestResult` 扩展可选 `pathTracking` 字段，`ishihara` 改为可选；结果页、摘要、导出报告与历史均按测试类型守卫渲染。
+- 测试选择页新增「路径追踪」入口。
 
 ## [1.0.4] - 2026-09-04
 

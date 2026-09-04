@@ -1,5 +1,5 @@
 // components/result/ReportActions.tsx — 结果导出 / 分享
-// chromacheck v1.0.0
+// chromacheck v1.1.0
 'use client';
 
 import React, { useState } from 'react';
@@ -56,14 +56,17 @@ function drawReport(result: TestResult): HTMLCanvasElement {
   y += 40;
   ctx.fillText(`置信度 ${result.confidence}%  ·  ${uiText.mode(result.testMode)}`, 40, y);
 
-  // 维度条
+  // 维度条 / 路径重合度
   y += 60;
-  const dims = result.ishihara.dimensions;
-  const axes: [string, number, string][] = [
-    ['红色觉轴', dims.protan, '#d64550'],
-    ['绿色觉轴', dims.deutan, '#2f8f6b'],
-    ['蓝色觉轴', dims.tritan, '#2f6fb0'],
-  ];
+  const axes: [string, number, string][] = result.ishihara
+    ? [
+        ['红色觉轴', result.ishihara.dimensions.protan, '#d64550'],
+        ['绿色觉轴', result.ishihara.dimensions.deutan, '#2f8f6b'],
+        ['蓝色觉轴', result.ishihara.dimensions.tritan, '#2f6fb0'],
+      ]
+    : result.pathTracking
+      ? result.pathTracking.map((r, i) => [`路径${i + 1}`, r.overlapScore, r.passed ? '#2f8f6b' : '#d64550'])
+      : [];
   const bw = 200;
   const gap = 40;
   const baseY = y + 220;
@@ -114,9 +117,14 @@ export function ReportActions({ result }: { result: TestResult }) {
   }
 
   async function copyText() {
+    const dimText = result.ishihara
+      ? `维度：红${result.ishihara.dimensions.protan} 绿${result.ishihara.dimensions.deutan} 蓝${result.ishihara.dimensions.tritan}`
+      : result.pathTracking
+        ? `路径重合度：${result.pathTracking.map((r) => `${r.overlapScore}%`).join(' / ')}`
+        : '';
     const txt = `色辨 ChromaCheck 筛查结果：\n结论：${uiText.overall(result.overall)}\n${
       result.type ? `类型：${uiText.type(result.type)}（${uiText.severity(result.severity)}）\n` : ''
-    }置信度：${result.confidence}%\n维度：红${result.ishihara.dimensions.protan} 绿${result.ishihara.dimensions.deutan} 蓝${result.ishihara.dimensions.tritan}\n${result.analysis}`;
+    }置信度：${result.confidence}%\n${dimText}\n${result.analysis}`;
     try {
       await navigator.clipboard.writeText(txt);
       setCopied(true);

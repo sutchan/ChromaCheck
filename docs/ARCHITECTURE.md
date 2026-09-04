@@ -1,7 +1,7 @@
 # 色辨 ChromaCheck 技术架构文档
 
 > **规范遵循**：本文档为 [docs/SPEC.md](docs/SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。
-> **实现状态**：v1.0 已实现（Next.js 14 应用）。路径追踪与色相排列为 v1.1 规划；详见 §2 已实现结构。
+> **实现状态**：v1.0 已实现（Next.js 14 应用）。路径追踪已于 v1.1 实现；色相排列为 v1.1 规划；详见 §2 已实现结构。
 
 | 项目 | 内容 |
 |------|------|
@@ -103,7 +103,7 @@ app/
 ├── test/
 │   ├── page.tsx            # 测试模式选择：快速/标准（进阶 v1.1 规划）
 │   ├── ishihara/page.tsx   # 石原氏测试：核心检测流程（已实现）
-│   ├── path-tracking/page.tsx    # 路径追踪测试（v1.1 规划，未实现）
+│   ├── path-tracking/[mode]/page.tsx # 路径追踪测试（v1.1 已实现）
 │   └── hue-arrangement/page.tsx  # 色相排列测试（v1.1 规划，未实现）
 ├── result/page.tsx         # 结果展示：读取 URL state / localStorage
 ├── learn/
@@ -195,7 +195,7 @@ interface TestContextValue extends TestState {
 | `/guide` | CSR | 检测前指引 |
 | `/test` | CSR | 测试模式选择 |
 | `/test/ishihara` | CSR | 石原氏测试（`?mode=quick\|standard`） |
-| `/test/path-tracking` | CSR | 路径追踪测试（v1.1 规划） |
+| `/test/path-tracking/[mode]` | CSR | 路径追踪测试（v1.1 已实现） |
 | `/test/hue-arrangement` | CSR | 色相排列测试（v1.1 规划） |
 | `/result?id=xxx` | CSR | 结果展示页 |
 | `/learn` | SSG | 科普文章列表 |

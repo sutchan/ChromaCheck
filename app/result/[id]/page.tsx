@@ -10,6 +10,7 @@ import type { TestResult } from '@/lib/types';
 import { ResultSummary } from '@/components/result/ResultSummary';
 import { AxisChart } from '@/components/result/AxisChart';
 import { AnswerReview } from '@/components/result/AnswerReview';
+import { PathTrackingSummary } from '@/components/result/PathTrackingSummary';
 import { ReportActions } from '@/components/result/ReportActions';
 import { Callout } from '@/components/common/Callout';
 import { Icon } from '@/components/common/Icon';
@@ -58,20 +59,26 @@ export default function ResultPage() {
     <div className="wrap stack" id="result-page" style={{ paddingBlock: 'var(--s-6)', gap: 'var(--s-5)' }}>
       <ResultSummary result={result} />
 
-      <div className="grid-cards" style={{ gridTemplateColumns: 'minmax(280px, 1fr) minmax(280px, 1fr)', alignItems: 'start' }}>
-        <AxisChart dimensions={result.ishihara.dimensions} />
-        <div className="card stack" style={{ gap: 'var(--s-3)' }}>
-          <h3 style={{ margin: 0, fontSize: '1rem' }}>错误模式分析</h3>
-          {result.ishihara.details.errorPatterns.map((p, i) => (
-            <div key={i} className="row" style={{ gap: 'var(--s-2)', alignItems: 'flex-start' }}>
-              <Icon name={p.type === 'random' ? 'check' : 'alert'} size={18} style={{ color: p.type === 'random' ? 'var(--ok)' : 'var(--warn)', marginTop: 2 }} />
-              <span style={{ fontSize: '0.9rem' }}>{p.description}</span>
+      {result.ishihara ? (
+        <>
+          <div className="grid-cards" style={{ gridTemplateColumns: 'minmax(280px, 1fr) minmax(280px, 1fr)', alignItems: 'start' }}>
+            <AxisChart dimensions={result.ishihara.dimensions} />
+            <div className="card stack" style={{ gap: 'var(--s-3)' }}>
+              <h3 style={{ margin: 0, fontSize: '1rem' }}>错误模式分析</h3>
+              {result.ishihara.details.errorPatterns.map((p, i) => (
+                <div key={i} className="row" style={{ gap: 'var(--s-2)', alignItems: 'flex-start' }}>
+                  <Icon name={p.type === 'random' ? 'check' : 'alert'} size={18} style={{ color: p.type === 'random' ? 'var(--ok)' : 'var(--warn)', marginTop: 2 }} />
+                  <span style={{ fontSize: '0.9rem' }}>{p.description}</span>
+                </div>
+              ))}
             </div>
-          ))}
-        </div>
-      </div>
+          </div>
 
-      <AnswerReview answers={result.answers} />
+          <AnswerReview answers={result.answers} />
+        </>
+      ) : null}
+
+      {result.pathTracking ? <PathTrackingSummary results={result.pathTracking} /> : null}
 
       <ReportActions result={result} />
 
