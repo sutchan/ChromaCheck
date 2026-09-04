@@ -1,5 +1,5 @@
 // app/history/page.tsx — 历史记录
-// chromacheck v1.0.0
+// chromacheck v1.0.1
 'use client';
 
 import React, { useEffect, useState } from 'react';
@@ -33,7 +33,7 @@ export default function HistoryPage() {
   }
 
   return (
-    <div className="wrap stack" style={{ paddingBlock: 'var(--s-6)', gap: 'var(--s-5)' }}>
+    <div id="history-page" className="wrap stack" style={{ paddingBlock: 'var(--s-6)', gap: 'var(--s-5)' }}>
       <div className="row between" style={{ flexWrap: 'wrap', gap: 'var(--s-3)' }}>
         <div className="stack" style={{ gap: 4 }}>
           <h1 style={{ margin: 0 }}>历史记录</h1>

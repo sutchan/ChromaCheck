@@ -1,5 +1,5 @@
 // components/layout/ThemeToggle.tsx — 主题 / 色觉安全切换
-// chromacheck v1.0.0
+// chromacheck v1.0.1
 'use client';
 
 import React from 'react';
@@ -12,7 +12,7 @@ export function ThemeToggle() {
     <div className="row" style={{ gap: 'var(--s-2)' }}>
       <button
         type="button"
-        id="langBtn"
+        id="cvdSafeBtn"
         className="btn btn-ghost"
         style={{ height: 38, padding: '0 10px' }}
         aria-pressed={settings.cvdSafe}
@@ -24,7 +24,7 @@ export function ThemeToggle() {
       </button>
       <button
         type="button"
-        id="settingsBtn"
+        id="themeToggleBtn"
         className="btn btn-ghost"
         style={{ height: 38, width: 38, padding: 0 }}
         aria-label={settings.theme === 'light' ? '切换到深色' : '切换到浅色'}

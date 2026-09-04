@@ -1,5 +1,5 @@
 // app/test/page.tsx — 模式选择
-// chromacheck v1.0.0
+// chromacheck v1.0.1
 import React from 'react';
 import Link from 'next/link';
 import { Icon } from '@/components/common/Icon';
@@ -20,7 +20,7 @@ const MODES: {
 
 export default function TestSelectPage() {
   return (
-    <div className="wrap stack" style={{ paddingBlock: 'var(--s-7)', gap: 'var(--s-5)' }}>
+    <div id="test-select-page" className="wrap stack" style={{ paddingBlock: 'var(--s-7)', gap: 'var(--s-5)' }}>
       <div className="stack" style={{ gap: 'var(--s-2)', maxWidth: 640 }}>
         <span className="chip">开始检测</span>
         <h1 style={{ margin: 0 }}>选择检测模式</h1>

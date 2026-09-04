@@ -1,5 +1,5 @@
 // app/privacy/page.tsx — 隐私政策
-// chromacheck v1.0.0
+// chromacheck v1.0.1
 import React from 'react';
 import { Icon } from '@/components/common/Icon';
 import { Callout } from '@/components/common/Callout';
@@ -13,7 +13,7 @@ const PRINCIPLES = [
 
 export default function PrivacyPage() {
   return (
-    <div className="wrap stack" style={{ paddingBlock: 'var(--s-7)', gap: 'var(--s-5)', maxWidth: 860 }}>
+    <div id="privacy-page" className="wrap stack" style={{ paddingBlock: 'var(--s-7)', gap: 'var(--s-5)', maxWidth: 860 }}>
       <div className="stack" style={{ gap: 'var(--s-2)' }}>
         <span className="chip">隐私政策</span>
         <h1 style={{ margin: 0 }}>我们如何对待你的数据</h1>

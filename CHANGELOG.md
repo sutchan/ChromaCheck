@@ -1,7 +1,17 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.0.0`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.0.1`）。
+
+## [1.0.1] - 2026-09-04
+
+### 修复
+- 消除首屏主题闪烁：根布局注入阻塞脚本，首屏渲染前预置 `data-theme` 与 `cvd-safe`，避免已保存深色 / 色觉安全模式的用户先闪浅色。
+- 修正 `ThemeToggle` 语义化 id 误命名：`langBtn`→`cvdSafeBtn`、`settingsBtn`→`themeToggleBtn`。
+- 修正 `lib/format.ts` 设备识别正则误抓 OS 版本号，改为按浏览器 token 提取真实版本。
+- `TestRunner` 的「重新开始」补全重置 `reveal` 状态与单题计时起点 `qStartRef`。
+- 补充站点图标 `app/icon.svg` 与 metadata 的 `icons`/`openGraph`/`twitter`，消除 favicon 与社交分享图 404。
+- 为历史、科普、指引、隐私、模式选择、科普详情等页面根容器补齐语义化 `id`。
 
 ## [1.0.0] - 2026-09-04
 
@@ -17,4 +27,5 @@
 - 原型文件头标记 `v0.1.0` 为原型内部迭代号，不随项目版本号同步刷写。
 - 各文档顶部"文档版本 v1.0"与 `VERSION` 的 `1.0.0` 等价（v1.0 ≈ 1.0.0）。
 
+[1.0.1]: https://github.com/ChromaCheck/ChromaCheck/releases/tag/v1.0.1
 [1.0.0]: https://github.com/ChromaCheck/ChromaCheck/releases/tag/v1.0.0

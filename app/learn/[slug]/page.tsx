@@ -1,5 +1,5 @@
 // app/learn/[slug]/page.tsx — 科普详情
-// chromacheck v1.0.0
+// chromacheck v1.0.1
 import React from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -18,7 +18,7 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
   const next = ARTICLES[(idx + 1) % ARTICLES.length];
 
   return (
-    <article className="wrap stack" style={{ paddingBlock: 'var(--s-7)', gap: 'var(--s-4)', maxWidth: 760 }}>
+    <article id="learn-article-page" className="wrap stack" style={{ paddingBlock: 'var(--s-7)', gap: 'var(--s-4)', maxWidth: 760 }}>
       <Link href="/learn" className="muted row" style={{ gap: 6, fontSize: '0.88rem', width: 'fit-content' }}>
         <Icon name="arrowRight" size={16} style={{ transform: 'rotate(180deg)' }} /> 返回科普列表
       </Link>

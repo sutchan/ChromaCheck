@@ -1,5 +1,5 @@
 // app/learn/page.tsx — 科普列表
-// chromacheck v1.0.0
+// chromacheck v1.0.1
 import React from 'react';
 import Link from 'next/link';
 import { ARTICLES } from '@/lib/learn-data';
@@ -7,7 +7,7 @@ import { Icon } from '@/components/common/Icon';
 
 export default function LearnPage() {
   return (
-    <div className="wrap stack" style={{ paddingBlock: 'var(--s-7)', gap: 'var(--s-5)' }}>
+    <div id="learn-list-page" className="wrap stack" style={{ paddingBlock: 'var(--s-7)', gap: 'var(--s-5)' }}>
       <div className="stack" style={{ gap: 'var(--s-2)', maxWidth: 680 }}>
         <span className="chip">科普</span>
         <h1 style={{ margin: 0 }}>关于色觉，你需要知道的事</h1>

@@ -1,5 +1,5 @@
 // components/test/TestRunner.tsx — 石原氏检测流程编排
-// chromacheck v1.0.0
+// chromacheck v1.0.1
 'use client';
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -111,6 +111,9 @@ export function TestRunner({ mode }: { mode: TestMode }) {
     clearProgress();
     setAnswers([]);
     setIdx(0);
+    setReveal(null);
+    setFinished(false);
+    qStartRef.current = Date.now();
     startedAtRef.current = Date.now();
   }
 

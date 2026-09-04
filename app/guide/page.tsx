@@ -1,5 +1,5 @@
 // app/guide/page.tsx — 检测前指引
-// chromacheck v1.0.0
+// chromacheck v1.0.1
 import React from 'react';
 import Link from 'next/link';
 import { Icon } from '@/components/common/Icon';
@@ -14,7 +14,7 @@ const STEPS = [
 
 export default function GuidePage() {
   return (
-    <div className="wrap stack" style={{ paddingBlock: 'var(--s-7)', gap: 'var(--s-5)', maxWidth: 880 }}>
+    <div id="guide-page" className="wrap stack" style={{ paddingBlock: 'var(--s-7)', gap: 'var(--s-5)', maxWidth: 880 }}>
       <div className="stack" style={{ gap: 'var(--s-2)' }}>
         <span className="chip">检测前指引</span>
         <h1 style={{ margin: 0 }}>开始前，请先准备</h1>
