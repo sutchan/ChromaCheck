@@ -1,7 +1,7 @@
 # 色辨 ChromaCheck 测试策略文档
 
 > **规范遵循**：本文档为 [docs/SPEC.md](docs/SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。判读引擎测试以 SPEC §6 与 `prototype/assets/js/scoring.js` 为权威。
-> **实现状态**：当前为「文档 + 高保真静态原型」阶段，Next.js 应用源码尚未实现（§7 CI 待骨架就绪后启用）。
+> **实现状态**：v1.0 已实现，CI 工作流 `.github/workflows/ci.yml` 已随应用骨架启用；判读引擎测试以 SPEC §6 与 `lib/scoring.ts` 为权威。
 
 | 项目 | 内容 |
 |------|------|
