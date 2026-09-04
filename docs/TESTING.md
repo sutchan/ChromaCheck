@@ -1,5 +1,8 @@
 # 色辨 ChromaCheck 测试策略文档
 
+> **规范遵循**：本文档为 [docs/SPEC.md](docs/SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。判读引擎测试以 SPEC §6 与 `prototype/assets/js/scoring.js` 为权威。
+> **实现状态**：当前为「文档 + 高保真静态原型」阶段，Next.js 应用源码尚未实现（§7 CI 待骨架就绪后启用）。
+
 | 项目 | 内容 |
 |------|------|
 | 文档版本 | v1.0 |
@@ -203,7 +206,7 @@ test('完整检测流程', async ({ page }) => {
   await expect(page.getByRole('heading', { name: /一眼辨色/ })).toBeVisible();
 
   // 进入指引
-  await page.getByRole('link', { name: /开始免费检测/ }).click();
+  await page.getByRole('link', { name: /开始检测/ }).click();
   await expect(page).toHaveURL(/\/guide/);
 
   // 勾选并开始

@@ -1,0 +1,310 @@
+<!-- docs/SPEC.md v0.1.0 — ChromaCheck 项目规范总纲（单一事实来源） -->
+<!-- 地位：本规范为权威总纲。当与各分册（PRD/ARCHITECTURE/API/DATA-SPEC/DEPLOYMENT/TESTING/CONTRIBUTING/PRIVACY/ROADMAP）冲突时，以本规范为准。 -->
+<!-- 实现状态：当前为「文档 + 静态原型」阶段，应用代码（Next.js）尚未实现；原型已验证视觉与判读逻辑。目标版本 v1.0。 -->
+
+# 色辨 ChromaCheck 项目规范（SPEC）
+
+> 本文档整合 `docs/` 下各分册与原型（`prototype/`）的真实事实，作为后续实现的**单一事实来源（Single Source of Truth）**。
+> 各分册为本文档的子主题细化，若与本文档冲突，以本文档为准；分册应据本文档持续修订。
+
+## 0. 文档关系与实现状态
+
+| 文档 | 角色 | 状态 |
+|------|------|------|
+| `docs/SPEC.md`（本文件） | **权威总纲**：产品/架构/数据/算法/设计/合规/治理 | 生效 |
+| `docs/PRD.md` | 产品需求分册 | 待据本规范修订 |
+| `docs/ARCHITECTURE.md` | 架构分册 | 待据本规范修订 |
+| `docs/API.md` | 事件/分析 API 分册 | 待据本规范修订 |
+| `docs/DATA-SPEC.md` | 数据结构分册 | 待据本规范修订 |
+| `docs/DEPLOYMENT.md` | 部署分册 | 待据本规范修订 |
+| `docs/TESTING.md` | 测试分册 | 待据本规范修订 |
+| `docs/CONTRIBUTING.md` | 贡献约定分册 | 待据本规范修订 |
+| `docs/PRIVACY.md` | 隐私政策分册 | 待据本规范修订 |
+| `docs/ROADMAP.md` | 路线图分册 | 待据本规范修订 |
+
+**实现状态声明（必须写入各文档顶部）**：ChromaCheck 目前仅完成文档体系与高保真静态原型（`prototype/`），**应用源码（Next.js）尚未编写**。按 README「快速开始」执行的 `npm install / npm run dev / npm test` 当前会失败，因其依赖尚未创建。请勿将规划中的目录结构误读为已存在代码。
+
+## 1. 产品定位与功能范围
+
+### 1.1 目标与用户
+在线色觉筛查 Web 应用，提供石原氏测试、结果解读、历史记录与科普。定位为**筛查与科普工具，非医疗诊断**。核心用户：怀疑自身/家人有色觉异常者、职业体检前自查者、科普读者。
+
+### 1.2 功能范围（v1.0）
+遵循 ROADMAP §2.2 的边界，明确 v1.0 交付范围，**覆盖 PRD 与 ROADMAP 的冲突**：
+
+- **纳入 v1.0（核心）**：首页、检测前指引、模式选择、石原氏测试、结果页、历史记录、科普列表与详情、**隐私政策页**（PRIVACY §6 要求，补入 PRD 功能架构）、结果导出（PDF/图片）、结果分享。
+- **排除 v1.0（推迟至 v1.1+）**：路径追踪测试（F4）、色相排列测试（F5）。二者已在原型中作演示，但 v1.0 不实现正式模块。
+
+检测模式：`quick`（快速）/ `standard`（标准）/ `advanced`（进阶），对应题库子集与题量。
+
+## 2. 技术架构（规划目标）
+
+> 本节描述**目标**技术栈与目录结构，标注「规划」以示尚未落地。
+
+### 2.1 技术栈与选型
+- 框架：**Next.js 14（App Router）+ TypeScript（strict）**。
+- 样式：**Tailwind CSS + shadcn/ui + Radix UI**（无障碍基线）。
+- 图表：**Recharts**（维度对比）。
+- 交互：**@dnd-kit**（色相排列拖拽，v1.1）。
+- 导出：**html2canvas + jsPDF**（结果导出）。
+- 状态/存储：React 状态 + `localStorage`（隐私优先，无服务端状态）。
+
+### 2.2 目录结构（规划目标）
+```
+app/            # Next.js App Router 路由与页面
+components/     # UI 组件（按 PRD/ARCHITECTURE 组件清单）
+lib/
+  scoring/      # 判读引擎（移植 prototype/assets/js/scoring.js 纯函数）
+  data/         # 题库与科普数据（移植 prototype/assets/js/data.js）
+  plates/       # 石原氏点阵生成（移植 prototype/assets/js/ishihara.js）
+  storage/      # localStorage 读写
+  analytics/    # 事件埋点
+types/          # 全局类型（以本文档 §5 为权威）
+public/         # 静态资源
+```
+> 迁移原则：原型 `prototype/assets/js/*.js` 中的纯逻辑（scoring/data/ishihara）应作为 `lib/` 实现的**参考真值**，移植时保持算法与字段一致。
+
+### 2.3 运行形态
+纯前端、客户端渲染为主；无强制登录、无 PII 上传、无传统后端（与 PRD「隐私优先」一致）。**不承诺服务端并发能力**——PRD §4.1「支持 1000 并发用户」与纯前端架构矛盾，予以作废，改为「静态托管可水平扩展」表述。
+
+## 3. 设计系统规范
+
+### 3.1 令牌单一来源
+**`prototype/assets/css/tokens.css` 是设计令牌的单一来源**（色彩/字体/间距/圆角/阴影/动效）。实现阶段的 Tailwind 主题配置（`tailwind.config`）必须逐值映射该文件，禁止另行定义一套色板。
+
+### 3.2 字体
+- 无衬线/展示：`Archivo`（Google Fonts）；代码/数字：`IBM Plex Mono`。
+- 通过 `fonts.googleapis.com` 引入；离线/沙箱构建需本地回退（系统字体栈已在 tokens.css 定义）。
+
+### 3.3 色彩语义与色觉友好
+- 品牌色：**棱镜靛 `#4b3df0`**（刻意避开红绿混淆轴，红绿色盲用户可完整辨识）。
+- 数据轴色（取自石原氏图谱实际用色）：protan `#c9543a` / deutan `#4f7c46` / tritan `#3d6fb4`。
+- **色觉友好模式** `[data-cvd-safe='on']`：数据可视化改用蓝—青—琥珀（`#4b3df0`/`#0e8a99`/`#b25e00`），确保全类型色觉异常可辨。
+- **语义色（ok/warn/risk）必须与图标 + 文案三重编码**，不得仅靠色相传达状态（可达性硬约束）。
+- 深色模式：`[data-theme='dark']` 覆盖语义映射。
+
+### 3.4 动效与可达性
+- 动效：`cc-rise`/`cc-fade`/`cc-pop`（tokens.css §10）；统一缓动 `--ease`。
+- 必须尊重 `prefers-reduced-motion: reduce`（tokens.css 已全局降级）。
+- 无障碍：语义化 HTML、ARIA 属性、键盘可达、WCAG AA；主要容器与关键 DOM 须加语义化 `id`（见 §8.1）。
+
+## 4. 原型契约（CC.* 全局 API）
+
+原型以 `window.CC` 命名空间暴露真实逻辑，是判读与绘制的**参考真值**。
+
+### 4.1 数据层 `prototype/assets/js/data.js`
+- `CC.questions`：石原氏题库（24 题）。
+- `CC.typeLabel`：题型中文名。
+- `CC.rules`：判读规则参数（置信度/消失题/程度/维度/TES/路径重合阈值）。
+- `CC.history`：历史记录演示数据。
+- `CC.overallLabel` / `CC.typeText` / `CC.severityText` / `CC.modeText`：枚举展示文案。
+- `CC.demoResult` / `CC.demoAnswers`：完整结果演示。
+- `CC.hueCards` / `CC.hueShuffled`：色相排列色卡（Farnsworth-Munsell D15 sRGB 近似，15 色）。
+- `CC.articles`：科普文章列表。
+- `CC.routes`：页面路由清单（home/guide/select/ishihara/path/hue/result/history/learn/learnDetail）。
+
+### 4.2 判读引擎 `prototype/assets/js/scoring.js`
+- `CC.scoreIshihara(answers, questions)` → `IshiharaScoringResult`。
+- `CC.scoreHue(order)` → 色相排列 TES 结果。
+- `CC.scorePath(userPath, standardPath, tolerance?)` → 路径重合度（0–100，默认容差 0.055）。
+- `CC.isCorrect(q, userAnswer)` → 布尔。
+
+### 4.3 绘制与模拟 `prototype/assets/js/ishihara.js`
+- `CC.renderPlate(opts)`：生成石原氏点阵检测图。
+- `CC.renderPathField(opts)` → `{ W, H, path }`（`path` 为归一化坐标数组，用于 `scorePath` 重合度计算）。
+- `CC.simulate(hex, kind)`：色觉模拟（Viénot-Brettel 近似），`kind ∈ none|protanopia|deuteranopia|tritanopia|achromatopsia`。
+
+## 5. 数据模型（权威定义）
+
+> 本节为数据结构的**唯一权威**，解决 PRD §6 与 DATA-SPEC §2/§4/§5/§6 的字段与枚举冲突。优先采用原型真实字段；原型未含、规划必需的字段以「可选」标注。
+
+### 5.1 题库 `IshiharaQuestion`
+```ts
+type QuestionType =
+  | 'demonstration' | 'normal' | 'transformation'
+  | 'vanishing' | 'hidden' | 'classification';
+interface IshiharaQuestion {
+  id: string;          // 如 'ishihara-01'
+  plate: number;       // 图版号
+  type: QuestionType;  // 6 值枚举（原型实证，含 'normal'）
+  answer: string;      // 正常视觉应读数字（hidden 题为空串）
+  protan: string;      // 红色觉异常典型误读（空串=无）
+  deutan: string;      // 绿色觉异常典型误读（空串=无）
+  difficulty: 1 | 2 | 3;
+  quick: boolean;      // 是否纳入快速版
+  // 规划扩展（原型未含）：answerTritan?: string; inQuickSet?: boolean;
+}
+```
+**决议**：PRD 的 `timeLimit`/`suggestedTime`、DATA-SPEC 的 `tritanopiaAnswer`/`inQuickSet` 原型均未使用。v1.0 采用 `quick` 表达快速版纳入，废用 `timeLimit`/`inQuickSet`；三色弱题通过 `answerTritan?` 扩展支持，v1.0 暂不实现。
+
+### 5.2 答题记录 `AnswerRecord`
+```ts
+interface AnswerRecord {
+  questionId: string;
+  userAnswer: string;     // 用户原始输入（空串表示未作答/隐藏题留空）
+  durationMs: number;     // 作答用时（>0 有效）
+  correct: boolean;       // 由判读引擎计算（见 §6），解决 PRD 缺「是否正确」
+  expectedAnswer: string; // 冗余存正确答案，便于结果复核
+}
+```
+
+### 5.3 测试结果 `TestResult`
+```ts
+interface IshiharaScoringResult {
+  overall: OverallResult;
+  type: ColorDeficiencyType | null;
+  severity: SeverityLevel | null;
+  confidence: number;            // 0–100
+  dimensions: { protan: number; deutan: number; tritan: number }; // 0–100
+  details: {
+    correctCount: number;
+    totalCount: number;
+    errorPatterns: { type: string; questionCount: number; description: string }[];
+  };
+}
+interface TestResult {
+  id: string;
+  mode: TestMode;
+  startTime: string;            // ISO8601
+  endTime: string;
+  device?: string;
+  ishihara: IshiharaScoringResult;
+  pathTracking?: { questionId: string; overlapScore: number; passed: boolean; target: string }[]; // v1.1
+  hueArrangement?: { totalErrorScore: number; deviationDirection: string; normal: boolean; cardErrors: number[] }; // v1.1
+}
+```
+**决议**：采用 DATA-SPEC 结构（`testMode` + `ishiharaAssessment` 内聚 `correctCount`），废用 PRD 顶层 `correctCount` 与 `testType` 命名。
+
+### 5.4 本地存储 `LocalStorageData`
+```ts
+interface UserSettings {
+  theme: 'light' | 'dark' | 'system';   // 含 system（DATA-SPEC 为准，PRD 缺失）
+  analyticsEnabled: boolean;            // 数据分析开关（DATA-SPEC 为准，PRD 缺失）
+  // 其他设置按需扩展
+}
+interface HistorySummary {
+  id: string; date: string; mode: TestMode;
+  overall: OverallResult; type: ColorDeficiencyType | null;
+  severity: SeverityLevel | null; confidence: number;
+  dims: [number, number, number]; // [protan, deutan, tritan]
+}
+interface LocalStorageData {
+  version: number;
+  user: { pseudonym?: string; email?: string };
+  settings: UserSettings;
+  history: HistorySummary[];      // 含 confidence（DATA-SPEC 为准）
+  lastResult?: TestResult;
+}
+```
+
+### 5.5 枚举（统一别名，供全局复用）
+```ts
+type ColorDeficiencyType =
+  | 'protanopia' | 'protanomaly' | 'deuteranopia'
+  | 'deuteranomaly' | 'tritanopia' | 'tritanomaly' | 'achromatopsia';
+type OverallResult = 'normal' | 'suspected_deficiency' | 'suspected_blindness' | 'inconclusive';
+type SeverityLevel = 'mild' | 'moderate' | 'severe';
+type TestMode = 'quick' | 'standard' | 'advanced';
+```
+**决议**：DATA-SPEC §4/§5 引用的 `ColorDeficiencyType`/`OverallResult`/`SeverityLevel` 在此统一定义，分册不得另起别名。
+
+### 5.6 分析事件 `AnalyticsEvent`（以 API §3.2 为准，含 `eventId`）
+```ts
+type AnalyticsEventName =
+  | 'page_view' | 'cta_click' | 'answer_submit' | 'test_complete'
+  | 'share' | 'download' | 'test_error' | 'learn_view'; // 含 learn_view（API 增量）
+interface AnalyticsEvent {
+  eventId: string;          // API §3.2 字段，ARCHITECTURE §5.2 缺失，以 API 为准
+  event: AnalyticsEventName;
+  timestamp: string;
+  mode?: TestMode;
+  [context: string]: unknown;
+}
+```
+**决议**：统一采用 API §3.2 字段集（含 `eventId` 与 `learn_view`），ARCHITECTURE 据此修订。
+
+## 6. 判读算法（权威，以 `scoring.js` 实现为准）
+
+> 本节为算法唯一权威，解决 ARCHITECTURE §3.2 与 DATA-SPEC §7 的扣分/阈值矛盾。**参考实现：`prototype/assets/js/scoring.js`。**
+
+### 6.1 正确性判定 `isCorrect(q, ua)`
+- `hidden` 题：空答案（`ua.trim()===''`）为正确。
+- 其余题：空答案=false；否则 `ua === q.answer`。
+
+### 6.2 维度评分
+```
+wrong = total - correct
+base  = round(min(100, (wrong/total) * 130))
+protan = clamp(base + protanHit*8 - deutanHit*3, 0, 100)
+deutan = clamp(base + deutanHit*8 - protanHit*3, 0, 100)
+tritan = round(base * 0.35)
+```
+（`protanHit`/`deutanHit` = 转换/分类题中答案匹配对应异常典型值的计数）
+
+### 6.3 总体结论
+```
+if answered < total*0.5                          → inconclusive
+else if vanishWrong >= 4 || wrong >= 8           → suspected_blindness
+else if vanishWrong >= 2 || wrong >= 4
+        || hiddenRight >= ceil(hiddenTotal/2)    → suspected_deficiency
+if demoWrong>0 && protanHit===0 && deutanHit===0
+        && wrong < 4                             → inconclusive  // 演示题错且模式不稳定
+```
+
+### 6.4 类型与程度
+- 轴选择：`deutanHit >= protanHit` 选 deutan 轴，否则 protan 轴。
+- 类型：`suspected_blindness`→`*opia`，`suspected_deficiency`→`*anomaly`。
+- 程度：`rate = wrong/total`；`>=0.7` 重度，`>=0.4` 中度，否则轻度。
+
+### 6.5 置信度
+```
+confidence = 100
+           + demoWrong * (-25)        // 演示题错（DATA-SPEC -25 为准，非 ARCHITECTURE -20）
+           + fastCount * (-2)         // <1s 作答
+if protanHit>0 && deutanHit>0 → +(-15)   // 矛盾模式
+if answered < total*0.5         → +(-20) // 覆盖不足
+clamp(confidence, 0, 100)
+```
+**决议**：演示题扣分值以 DATA-SPEC `-25` 为准；ARCHITECTURE 的「设计题 -20」「答题数<50% -20 仅 DATA-SPEC 有」等差异，统一以本算法（覆盖 `demoWrong`/`fastCount`/矛盾/覆盖不足四因子）为权威。
+
+### 6.6 辅助评分
+- 路径重合 `scorePath`：容差默认 `0.055`，命中比例 ×100。
+- 色相排列 `scoreHue`：相邻位置偏差求和（首末位置偏差 `max(0,d-1)`，中间 `max(0,d-1)*2`），`TES < 20` 判正常。
+
+## 7. 隐私与合规基线（摘要，详见 `PRIVACY.md`）
+- 纯前端、localStorage 存储；**无强制登录、无 PII 上传、无服务端状态**。
+- 提供数据导出与删除入口；`analyticsEnabled` 默认关闭，开启后仅采集匿名事件。
+- 所有结果页/科普页显著标注**「筛查工具，非医疗诊断」**免责声明。
+- **v1.0 必须上线路由 `/privacy` 隐私政策页**（PRIVACY §6 要求；PRD 功能架构原缺，规范补入）。
+
+## 8. 代码与文档治理
+
+### 8.1 编码与命名（复用全局规则）
+- 组件 `PascalCase`，hooks/工具 `camelCase`（`useX`），配置/常量 `SCREAMING_SNAKE_CASE`，CSS `kebab-case`。
+- 关键逻辑加中文注释；TS `strict`，避免 `any`；正确捕获 Promise 异常。
+- **所有主要容器/关键 DOM 元素须加语义化 `id`**（如 `app-header`、`result-main`、`history-grid`、`privacy-page`），便于测试与无障碍。
+- 不得出现 XSS/密钥泄露/`console.log` 遗留。
+- **源文件单文件 ≤200 行须按职责拆分**（仅代码文件；文档不拆分，保持完整）。
+
+### 8.2 版本管理
+- 每次修改 bump 最小版本（patch 优先；新功能 minor；破坏性 major）。
+- 源码文件头统一 `// path vX.Y.Z`；**仅被改动文件更新头注释，禁止全仓库批量刷写**。
+- 项目的**版本单一来源**待定（当前无 `package.json`/`VERSION`）；实现阶段须确立 `package.json.version` 为权威，并同步 README 徽章、各文档头注释、CHANGELOG。
+- 文档版本当前统一标注 v1.0（产品目标）；原型文件头为 v0.1.0（原型阶段），二者分阶段对齐，不混用。
+
+### 8.3 文档结构
+- 9 份分册 + 本 SPEC；本 SPEC 为总纲，分册冲突以本规范为准。
+- 每文档顶部须含：路径与版本、实现状态声明、负责人（当前为 `—`，应补实）。
+- 变更须记录 CHANGELOG（实现阶段建立）。
+
+### 8.4 测试与质量门禁
+- 判读引擎（`lib/scoring/*`）为纯函数，须以 Vitest/Jest 单测覆盖，**覆盖率 ≥80%**（直接移植 scoring.js 后补齐）。
+- 实现阶段质量门禁：ESLint + Prettier + Stylelint；TS strict；无 `console.log`/`debugger`；CI（`.github/workflows/ci.yml`，当前未建，需创建）跑 test+lint+build。
+
+## 9. 实现状态与待办（对齐 ROADMAP）
+- **已完成**：文档体系（9 分册）、高保真静态原型（3 页）、判读引擎与题库实证、设计系统令牌。
+- **待建（v1.0）**：Next.js 应用骨架、`lib/` 逻辑移植、组件实现、隐私政策页、导出/分享、CI。
+- **推迟（v1.1+）**：路径追踪测试、色相排列测试正式模块。
+
+---
+*本文档为 ChromaCheck 权威规范总纲 v0.1.0（原型阶段）。分册应据本规范修订以消除前述字段/算法/范围冲突。*

@@ -1,5 +1,8 @@
 # 色辨 ChromaCheck 数据规范文档
 
+> **规范遵循**：本文档为 [docs/SPEC.md](docs/SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。类型别名（ColorDeficiencyType / OverallResult / SeverityLevel / TestMode）以 SPEC §5.5 为权威定义。
+> **实现状态**：当前为「文档 + 高保真静态原型」阶段，Next.js 应用源码尚未实现。
+
 | 项目 | 内容 |
 |------|------|
 | 文档版本 | v1.0 |
@@ -28,38 +31,30 @@
 interface IshiharaQuestion {
   /** 题目唯一标识，格式：ishihara-序号 */
   id: string;
-  /** 石原氏图编号 */
-  plateNumber: number;
-  /** 检测图资源路径（public/plates/ 下） */
-  imageUrl: string;
+  /** 石原氏图版号（原型字段 `plate`，早期文档误作 `plateNumber`） */
+  plate: number;
   /**
-   * 题目类型：
-   * - demonstration: 演示题，所有色觉正常者均应能看到
-   * - normal: 正常数字题
-   * - transformation: 转换题，正常和异常看到不同数字
-   * - vanishing: 消失题，正常可见、异常不可见
-   * - hidden: 隐藏题，异常可见、正常不可见
-   * - classification: 分类题，区分红色盲/绿色盲
+   * 题目类型（6 值枚举，定义见 docs/SPEC.md §5.1）：
+   * - demonstration: 演示题
+   * - normal: 常规数字题
+   * - transformation: 转换题（正常/异常看到不同数字）
+   * - vanishing: 消失题（正常可见、异常不可见）
+   * - hidden: 隐藏题（异常可见、正常不可见）
+   * - classification: 分类题（区分红/绿色盲）
    */
   type: 'demonstration' | 'normal' | 'transformation' | 'vanishing' | 'hidden' | 'classification';
-  /** 正常色觉答案 */
-  correctAnswer: string;
-  /** 红色盲者可能看到的答案 */
-  protanopiaAnswer?: string;
-  /** 绿色盲者可能看到的答案 */
-  deuteranopiaAnswer?: string;
-  /** 红色弱可能答案 */
-  protanomalyAnswer?: string;
-  /** 绿色弱可能答案 */
-  deuteranomalyAnswer?: string;
-  /** 蓝色盲可能答案 */
-  tritanopiaAnswer?: string;
+  /** 正常色觉应读数字；hidden 题为 ''（空串表示不可见） */
+  answer: string;
+  /** 红色觉异常典型误读（'' 表示无） */
+  protan?: string;
+  /** 绿色觉异常典型误读（'' 表示无） */
+  deutan?: string;
+  /** 蓝色觉异常典型误读（v1.0 暂未启用，保留扩展） */
+  answerTritan?: string;
   /** 难度等级 1-3 */
   difficulty: 1 | 2 | 3;
-  /** 是否属于快速版题库 */
-  inQuickSet: boolean;
-  /** 建议答题时长（秒），null 为不限 */
-  suggestedTime?: number;
+  /** 是否纳入快速版题库（原型字段 `quick`，早期文档误作 `inQuickSet`） */
+  quick: boolean;
 }
 ```
 
@@ -124,7 +119,7 @@ interface HueArrangementQuestion {
 interface AnswerRecord {
   /** 题目 ID */
   questionId: string;
-  /** 用户输入答案 */
+  /** 用户输入答案（空串表示未作答 / hidden 题留空） */
   userAnswer: string;
   /** 是否选择"看不清/无数字" */
   cannotSee: boolean;
@@ -132,6 +127,10 @@ interface AnswerRecord {
   durationMs: number;
   /** 答题时间戳 ISO 字符串 */
   timestamp: string;
+  /** 是否正确（由判读引擎计算，详见 docs/SPEC.md §6.1；原型无此字段，实现阶段补入） */
+  correct: boolean;
+  /** 冗余存正确答案，便于结果复核 */
+  expectedAnswer: string;
 }
 ```
 

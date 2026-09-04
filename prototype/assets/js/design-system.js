@@ -42,3 +42,87 @@
   }
   document.addEventListener('DOMContentLoaded', build);
 })();
+
+/* prototype/assets/js/design-system.js v0.1.0（续）— 图标库 + 动效令牌渲染 */
+(function () {
+  'use strict';
+
+  function renderIcons() {
+    var host = document.getElementById('icon-groups');
+    if (!host || !window.CC || !CC.ICON_GROUPS) return;
+    host.innerHTML = CC.ICON_GROUPS.map(function (g) {
+      var cells = g.keys.map(function (k) {
+        return '<div class="icon-cell" title="' + k + '">' +
+          CC.icon(k) + '<code>' + k + '</code></div>';
+      }).join('');
+      return '<div class="icon-group"><h4>' + g.name + '</h4><div class="icon-cell-row">' +
+        cells + '</div></div>';
+    }).join('');
+  }
+
+  function renderMotionTokens() {
+    var host = document.getElementById('motion-tokens');
+    if (!host) return;
+    var items = [
+      ['--ease', 'cubic-bezier(.22,1,.36,1)', '标准缓出'],
+      ['--ease-in-out', 'cubic-bezier(.6,0,.35,1)', '对称缓动'],
+      ['--d-1', '120ms', '超快 · 悬停'],
+      ['--d-2', '180ms', '快 · 微交互'],
+      ['--d-3', '280ms', '中 · 反馈'],
+      ['--d-4', '480ms', '慢 · 进入'],
+      ['--d-5', '760ms', '最慢 · 重屏']
+    ];
+    host.innerHTML = items.map(function (t) {
+      return '<div class="token-item"><div class="v">' + t[0] + '</div>' +
+        '<div class="muted" style="font-size:12px">' + t[1] + '</div>' +
+        '<div class="meta">' + t[2] + '</div></div>';
+    }).join('');
+  }
+
+  function renderMotionGrid() {
+    var host = document.getElementById('motion-grid');
+    if (!host) return;
+    var rows = [
+      ['cc-rise', '元素进入', '上移 14px + 淡入', '--d-4'],
+      ['cc-fade', '显隐切换', '纯透明度过渡', '--d-3'],
+      ['cc-pop', '强调出现', '缩放弹入（0.6→1.08→1）', '--d-3'],
+      ['cc-shimmer', '骨架加载', '高光自左向右扫过', '--d-5'],
+      ['cc-pulse', '引导注意', '聚焦环呼吸扩散', '--d-4']
+    ];
+    host.innerHTML = rows.map(function (r) {
+      return '<div class="motion-card"><div class="motion-tag">' + r[0] + '</div>' +
+        '<div class="motion-desc"><b>' + r[1] + '</b><span class="muted">' + r[2] + '</span></div>' +
+        '<code class="motion-dur">' + r[3] + '</code></div>';
+    }).join('');
+  }
+
+  function wireMotionDemos() {
+    var replay = document.getElementById('btn-replay');
+    if (replay) replay.addEventListener('click', function () {
+      var box = document.getElementById('rise-box');
+      box.classList.remove('rise'); void box.offsetWidth; box.classList.add('rise');
+    });
+    var prog = document.getElementById('btn-progress');
+    if (prog) prog.addEventListener('click', function () {
+      var fill = document.getElementById('bar-fill');
+      fill.style.width = '0%'; void fill.offsetWidth; fill.style.width = '100%';
+    });
+    var skel = document.getElementById('btn-skeleton');
+    if (skel) skel.addEventListener('click', function () {
+      var el = document.getElementById('skel');
+      el.classList.remove('is-on'); void el.offsetWidth; el.classList.add('is-on');
+    });
+    var pulse = document.getElementById('btn-pulse');
+    if (pulse) pulse.addEventListener('click', function () {
+      var dot = document.getElementById('pulse-dot');
+      dot.classList.remove('is-on'); void dot.offsetWidth; dot.classList.add('is-on');
+    });
+  }
+
+  document.addEventListener('DOMContentLoaded', function () {
+    renderIcons();
+    renderMotionTokens();
+    renderMotionGrid();
+    wireMotionDemos();
+  });
+})();

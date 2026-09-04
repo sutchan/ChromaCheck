@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ChromaCheck · 交互标准</title>
+  <meta name="description" content="ChromaCheck 交互标准：模式、反馈、错误与空状态的设计规范与可交互示例。" />
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;600;700;800&family=IBM+Plex+Mono:wght@500;600&display=swap" rel="stylesheet" />
+  <link rel="stylesheet" href="assets/css/tokens.css" />
+  <link rel="stylesheet" href="assets/css/ui.css" />
+  <link rel="stylesheet" href="assets/css/docs.css" />
+</head>
+<body>
+  <header class="docs-top">
+    <a class="brand" href="prototype.html">
+      <span class="logo"><span class="logo__dots"></span></span>
+      <span class="brand-txt">ChromaCheck <small>色觉检测</small></span>
+    </a>
+    <nav>
+      <a href="prototype.html">高保真原型</a>
+      <a href="wireframes.html">组件库</a>
+      <a href="design-system.html">设计系统</a>
+      <a href="interaction.html" class="active">交互标准</a>
+    </nav>
+    <span class="docs-ver">v0.1.0</span>
+  </header>
+
+  <section class="docs-hero">
+    <div class="docs-hero-in">
+      <span class="eyebrow">INTERACTION STANDARDS</span>
+      <h1>交互标准</h1>
+      <p>把设计系统落到行为层：统一的模式、反馈、错误处理与空状态，保证各页面体验一致、可预期、可访问。</p>
+      <div class="docs-hero-meta">
+        <span>4 类规范</span><span>·</span><span>可交互示例</span><span>·</span><span>WCAG AA</span>
+      </div>
+    </div>
+  </section>
+
+  <div class="lib-wrap" style="grid-template-columns:1fr">
+    <main class="lib-content">
+
+      <!-- ============ 模式 ============ -->
+      <section class="lib-sec" id="sec-pattern">
+        <h2><span>模式</span> <small>Patterns</small></h2>
+        <p class="lib-desc">跨页面复用的结构性交互方式。每个模式都定义「何时用、怎么用、不要怎么用」。</p>
+
+        <article class="pat">
+          <h3 class="pat-h">导航与路由</h3>
+          <p class="pat-rule">检测流程用线性分步（引导 → 逐题 → 结果）。同层视图用标签切换；跨页跳转保留「返回」。当前步骤高亮且带有文字/序号，不只靠颜色。</p>
+          <div class="demo">
+            <div class="tabs" id="tabs-nav" role="tablist">
+              <button class="tab is-active" data-tab="p1" role="tab">概览</button>
+              <button class="tab" data-tab="p2" role="tab">检测</button>
+              <button class="tab" data-tab="p3" role="tab">报告</button>
+            </div>
+            <div class="tab-panel is-active" data-panel="p1">引导页 · 说明检测目的与耗时</div>
+            <div class="tab-panel" data-panel="p2">逐题页 · 石原氏点阵 + 数字键盘</div>
+            <div class="tab-panel" data-panel="p3">报告页 · 三轴维度与建议</div>
+          </div>
+        </article>
+
+        <article class="pat">
+          <h3 class="pat-h">输入模式（数字键盘）</h3>
+          <p class="pat-rule">答案输入用自定义数字键盘而非系统键盘，避免移动端遮挡；支持物理键盘 0-9、Enter 提交、← 退格。答案回显带光标态。</p>
+          <div class="demo">
+            <div class="answer-display" id="kp-display" aria-live="polite">—</div>
+            <div class="keypad" id="kp">
+              <button class="key" data-k="1">1</button><button class="key" data-k="2">2</button>
+              <button class="key" data-k="3">3</button><button class="key" data-k="4">4</button>
+              <button class="key" data-k="5">5</button><button class="key" data-k="6">6</button>
+              <button class="key" data-k="7">7</button><button class="key" data-k="8">8</button>
+              <button class="key" data-k="9">9</button>
+              <button class="key key--del" data-k="del">←</button>
+              <button class="key" data-k="0">0</button>
+              <button class="key key--ok" data-k="ok">↵</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="pat">
+          <h3 class="pat-h">选择模式（单选芯片）</h3>
+          <p class="pat-rule">互斥选项用芯片（chip）单选，选中态用填充 + 对勾双编码；键盘可用方向键在组内移动，并暴露 <code>aria-checked</code>。</p>
+          <div class="demo">
+            <div class="chip-row" id="mode-chips" role="radiogroup" aria-label="检测模式">
+              <button class="chip is-sel" data-mode="quick" role="radio" aria-checked="true">快速版</button>
+              <button class="chip" data-mode="standard" role="radio" aria-checked="false">标准版</button>
+              <button class="chip" data-mode="advanced" role="radio" aria-checked="false">进阶版</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="pat">
+          <h3 class="pat-h">加载占位</h3>
+          <p class="pat-rule">内容未就绪用骨架屏（shimmer），比转圈更可预期；&gt;400ms 才显示，避免闪烁。骨架结构须贴近真实布局。</p>
+          <div class="demo">
+            <button class="btn" id="btn-skel2">触发骨架加载</button>
+            <div class="skel skel--block" id="skel2" style="margin-top:12px">
+              <span class="skel-line" style="width:40%"></span>
+              <span class="skel-line"></span>
+              <span class="skel-line" style="width:80%"></span>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- ============ 反馈 ============ -->
+      <section class="lib-sec" id="sec-feedback">
+        <h2><span>反馈</span> <small>Feedback</small></h2>
+        <p class="lib-desc">用户每次操作都应在 100ms 内获得可见反馈；结果性反馈带语义色与图标，并进入 <code>aria-live</code> 区域。</p>
+
+        <article class="pat">
+          <h3 class="pat-h">Toast 提示</h3>
+          <p class="pat-rule">轻量、自动消失（4s）、不阻断。四类：成功/信息/警告/错误，分别配色 + 图标 + 文案。批量同类只展示一条。</p>
+          <div class="demo">
+            <div class="demo-btns">
+              <button class="btn btn--ok" data-toast="ok">成功</button>
+              <button class="btn" data-toast="info">信息</button>
+              <button class="btn btn--warn" data-toast="warn">警告</button>
+              <button class="btn btn--risk" data-toast="risk">错误</button>
+            </div>
+            <div class="toast-stack demo-toast" id="toast-stack" aria-live="polite"></div>
+          </div>
+        </article>
+
+        <article class="pat">
+          <h3 class="pat-h">进度与完成</h3>
+          <p class="pat-rule">多步任务显示进度（题号 / 百分比）；完成态用对勾 + 文字收尾，不依赖颜色判断成败。</p>
+          <div class="demo">
+            <button class="btn" id="btn-prog2">运行进度</button>
+            <div class="bar" style="margin-top:12px"><span class="bar-fill" id="bar-fill2"></span></div>
+            <div class="done-line" id="done-line" hidden><span class="icon icon--sm" id="done-ic"></span> 检测完成 · 已生成报告</div>
+          </div>
+        </article>
+
+        <article class="pat">
+          <h3 class="pat-h">即时确认</h3>
+          <p class="pat-rule">保存/提交后直接在控件旁给出内联确认，比 Toast 更贴近操作点。</p>
+          <div class="demo">
+            <button class="btn" id="btn-confirm">保存设置</button>
+            <span class="confirm" id="confirm-line" hidden><span class="icon icon--sm" id="confirm-ic"></span> 已保存</span>
+          </div>
+        </article>
+      </section>
+
+      <!-- ============ 错误 ============ -->
+      <section class="lib-sec" id="sec-error">
+        <h2><span>错误</span> <small>Errors</small></h2>
+        <p class="lib-desc">错误用「问题 + 原因 + 怎么做」三段式；禁止只有红字。阻断式错误提供重试入口，且可 Esc 关闭。</p>
+
+        <article class="pat">
+          <h3 class="pat-h">表单内联错误</h3>
+          <p class="pat-rule">字段级错误就近展示，关联 <code>aria-describedby</code>；错误图标 + 文字，输入聚焦时自动滚动到首个错误。</p>
+          <div class="demo">
+            <label class="field">
+              <span class="field-label">昵称</span>
+              <input class="field-input is-err" id="err-input" value="色" aria-invalid="true" aria-describedby="err-msg" />
+              <span class="field-err" id="err-msg"><span class="icon icon--sm" id="err-ic"></span> 至少 2 个字符，仅支持中英文与数字</span>
+            </label>
+          </div>
+        </article>
+
+        <article class="pat">
+          <h3 class="pat-h">阻断式错误（模态）</h3>
+          <p class="pat-rule">影响整条任务的错误用模态呈现，含标题、说明、主操作（重试/关闭）；焦点被困在模态内，Esc 关闭。</p>
+          <div class="demo">
+            <button class="btn btn--risk" id="btn-err-modal">模拟上传失败</button>
+            <div class="modal-mask" id="err-modal" hidden>
+              <div class="modal" role="dialog" aria-modal="true" aria-labelledby="err-modal-t">
+                <div class="modal-ic"><span class="icon icon--lg" id="modal-ic"></span></div>
+                <h4 id="err-modal-t">上传失败</h4>
+                <p class="muted">网络中断导致报告未能保存，可重试或稍后从本地草稿恢复。</p>
+                <div class="modal-actions">
+                  <button class="btn" id="btn-err-close">关闭</button>
+                  <button class="btn btn--primary" id="btn-err-retry">重试</button>
+                </div>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="pat">
+          <h3 class="pat-h">无结果 / 网络错误</h3>
+          <p class="pat-rule">列表为空或请求失败，给出状态卡 + 原因 + 可操作按钮（重试/返回），不显示空白崩溃页。</p>
+          <div class="demo">
+            <div class="state-card state--error">
+              <span class="icon icon--lg" id="net-ic"></span>
+              <h4>无法连接服务器</h4>
+              <p class="muted">请检查网络后重试；本地草稿仍可查看。</p>
+              <button class="btn btn--primary">重试</button>
+            </div>
+          </div>
+        </article>
+      </section>
+
+      <!-- ============ 空状态 ============ -->
+      <section class="lib-sec" id="sec-empty">
+        <h2><span>空状态</span> <small>Empty States</small></h2>
+        <p class="lib-desc">空不是「无内容」，而是引导下一步的机会：图标 + 一句说明 + 一个主行动，必要时给次要操作。</p>
+
+        <article class="pat">
+          <h3 class="pat-h">无历史记录</h3>
+          <div class="demo">
+            <div class="state-card">
+              <span class="icon icon--lg" id="empty-hist-ic"></span>
+              <h4>还没有检测记录</h4>
+              <p class="muted">完成一次检测后，历史会按时间线展示在这里。</p>
+              <button class="btn btn--primary">开始第一次检测</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="pat">
+          <h3 class="pat-h">首次使用引导</h3>
+          <div class="demo">
+            <div class="state-card">
+              <span class="icon icon--lg" id="empty-first-ic"></span>
+              <h4>欢迎使用 色辨</h4>
+              <p class="muted">3 分钟、24 道题，了解你的色觉类型与强弱分布。</p>
+              <div class="state-actions">
+                <button class="btn btn--primary">开始引导</button>
+                <button class="btn">看演示</button>
+              </div>
+            </div>
+          </div>
+        </article>
+
+        <article class="pat">
+          <h3 class="pat-h">筛选无结果</h3>
+          <div class="demo">
+            <div class="state-card state--muted">
+              <span class="icon icon--lg" id="empty-filter-ic"></span>
+              <h4>没有匹配的记录</h4>
+              <p class="muted">当前筛选条件下无结果，试着放宽时间范围。</p>
+              <button class="btn">清除筛选</button>
+            </div>
+          </div>
+        </article>
+
+        <article class="pat">
+          <h3 class="pat-h">离线</h3>
+          <div class="demo">
+            <div class="state-card state--warn">
+              <span class="icon icon--lg" id="empty-offline-ic"></span>
+              <h4>当前处于离线</h4>
+              <p class="muted">已完成检测将保存在本地，联网后自动同步。</p>
+              <button class="btn btn--primary">查看本地草稿</button>
+            </div>
+          </div>
+        </article>
+      </section>
+
+    </main>
+  </div>
+
+  <footer class="docs-foot">
+    <div>ChromaCheck 原型设计系统 · 交互标准</div>
+    <div class="muted">与组件库、设计系统同源派生，仅供设计评审与原型演示。</div>
+  </footer>
+
+  <script src="assets/js/icons.js"></script>
+  <script src="assets/js/interaction.js"></script>
+</body>
+</html>

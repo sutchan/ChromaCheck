@@ -1,0 +1,42 @@
+# CI 工作流 — ChromaCheck
+# 规范依据：docs/SPEC.md §8.4 / docs/ARCHITECTURE.md §8.1 / docs/TESTING.md §7.1
+# 注：当前项目为「文档 + 静态原型」阶段，Next.js 应用骨架尚未创建（无 package.json）。
+#      本工作流结构已就绪，待应用骨架（package.json 及 lint/type-check/test/build 脚本）落地后自动生效。
+name: CI
+
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
+
+jobs:
+  build-and-test:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          cache: npm
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Lint
+        run: npm run lint
+
+      - name: Type check
+        run: npx tsc --noEmit
+
+      - name: Unit tests
+        run: npm test
+
+      - name: Build
+        run: npm run build
+
+      - name: E2E tests
+        run: npx playwright test

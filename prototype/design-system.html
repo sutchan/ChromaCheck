@@ -22,6 +22,7 @@
       <a href="prototype.html">高保真原型</a>
       <a href="wireframes.html">组件库</a>
       <a href="design-system.html" class="active">设计系统</a>
+      <a href="interaction.html">交互标准</a>
     </nav>
     <span class="docs-ver">v0.1.0</span>
   </header>
@@ -142,6 +143,47 @@
         <p class="lib-desc">设计稿与组件均需通过下方模拟校验：任一色觉类型下，关键信息仍可读、状态仍可辨。请勿单靠红绿区分。</p>
         <div class="sim-grid" id="sim-grid"></div>
         <p class="a11y"><b>♿ 无障碍：</b>提供「色觉友好配色」开关，把红—绿状态替换为蓝—青—琥珀三色，确保红绿色觉差异者无障碍访问。</p>
+      </section>
+
+      <section class="lib-sec" id="sec-icons">
+        <h2><span>图标</span> <small>Icons</small></h2>
+        <p class="lib-desc">统一 24×24 线性图标，描边 1.8、颜色继承文字（currentColor），因此色觉差异人群同样可辨。默认 1.25em，可用 <code>.icon--sm</code> / <code>.icon--lg</code> 调整；仅用于表意，纯装饰图标加 <code>aria-hidden</code>。</p>
+        <div class="icon-groups" id="icon-groups"></div>
+        <h3 class="spec-h">用法</h3>
+        <div class="code-block"><code>CC.icon('palette')</code> → 返回内联 <code>&lt;svg class="icon"&gt;</code><br><code>&lt;span class="icon icon--lg"&gt;…&lt;/span&gt;</code> → 容器内直接放置 SVG</div>
+        <p class="a11y"><b>♿ 无障碍：</b>图标不可单独承担语义——按钮须同时有文字或 <code>aria-label</code>；状态类图标（成功/警告/错误）永远配合同色系文字与形状（✓ / ! / ✕）三重编码。</p>
+      </section>
+
+      <section class="lib-sec" id="sec-motion">
+        <h2><span>动效</span> <small>Motion</small></h2>
+        <p class="lib-desc">动效仅用于引导注意与建立因果，不制造等待焦虑。统一缓动曲线与四级时长；尊重 <code>prefers-reduced-motion</code>，系统开启减弱动效时全部降级为瞬时。</p>
+
+        <h3 class="spec-h">缓动与时长令牌</h3>
+        <div class="token-grid" id="motion-tokens"></div>
+
+        <h3 class="spec-h">动效类型</h3>
+        <div class="motion-grid" id="motion-grid"></div>
+
+        <h3 class="spec-h">动效演示</h3>
+        <div class="motion-demos">
+          <div class="motion-demo">
+            <button class="btn btn--primary" id="btn-replay" data-demo="rise">重新播放 · 进入</button>
+            <div class="rise-box" id="rise-box">cc-rise · 上移淡入</div>
+          </div>
+          <div class="motion-demo">
+            <button class="btn" id="btn-progress" data-demo="progress">运行进度</button>
+            <div class="bar"><span class="bar-fill" id="bar-fill"></span></div>
+          </div>
+          <div class="motion-demo">
+            <button class="btn" id="btn-skeleton" data-demo="skeleton">加载骨架</button>
+            <div class="skel" id="skel"><span class="skel-line"></span><span class="skel-line"></span></div>
+          </div>
+          <div class="motion-demo">
+            <button class="btn" id="btn-pulse" data-demo="pulse">脉冲引导</button>
+            <span class="pulse-dot" id="pulse-dot"></span>
+          </div>
+        </div>
+        <p class="a11y"><b>♿ 无障碍：</b>动效时长 ≤ 760ms；<code>transform</code> / <code>opacity</code> 之外的属性动画（如 height/width）仅在非首屏使用；闪烁频率低于 3Hz，避免光敏风险。</p>
       </section>
 
       <section class="lib-sec" id="sec-principles">

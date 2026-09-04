@@ -2,6 +2,8 @@
 
 > 一眼辨色，科学筛查 — 在线色觉检测 Web 应用
 
+> **实现状态**：当前为「文档 + 高保真静态原型」阶段，应用源码（Next.js）**尚未实现**；下方"快速开始"依赖尚未创建，不可直接运行。权威规范见 [docs/SPEC.md](docs/SPEC.md)。
+
 [![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3-38bdf8)](https://tailwindcss.com/)
@@ -40,6 +42,8 @@
 | 部署 | Vercel | — |
 
 详细技术架构见 [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md)。
+
+项目规范（权威总纲，各分册冲突以之为准）：[docs/SPEC.md](docs/SPEC.md)。
 
 ## 快速开始
 
@@ -196,18 +200,20 @@ chromacheck/
 |------|------|
 | [prototype/prototype.html](prototype/prototype.html) | 高保真可交互原型：完整视觉设计稿 + 动效 + 真实数据；支持桌面/平板/手机画框切换与色觉模拟 |
 | [prototype/wireframes.html](prototype/wireframes.html) | 组件库规范：基础组件 / 复合组件 / 业务组件 + 组件使用总规则与无障碍基线 |
-| [prototype/design-system.html](prototype/design-system.html) | 设计系统：色彩、字体、间距/圆角/阴影令牌与色觉模拟基线 |
+| [prototype/design-system.html](prototype/design-system.html) | 设计系统：色彩、字体、间距/圆角/阴影、图标、动效令牌与色觉模拟基线 |
+| [prototype/interaction.html](prototype/interaction.html) | 交互标准：模式 / 反馈 / 错误 / 空状态的可交互规范 |
 
 原型目录结构：
 
 ```
 prototype/
-├── prototype.html               # 高保真可交互产品原型
-├── wireframes.html              # 组件库规范
-├── design-system.html           # 设计系统
+├── prototype.html               # 高保真可交互产品原型（真实数据）
+├── wireframes.html              # 组件库规范（基础/复合/业务组件）
+├── design-system.html           # 设计系统（色彩/字体/间距/图标/动效）
+├── interaction.html             # 交互标准（模式/反馈/错误/空状态）
 └── assets/
     ├── css/                     # tokens / ui / screens / screens-test / docs
-    └── js/                      # 数据、判读、石原氏绘制、图表、屏幕渲染、组件目录、各页脚本
+    └── js/                      # 数据、判读、石原氏绘制、图表、屏幕渲染、图标库、组件目录、各页脚本
 ```
 
 ## 开发规范

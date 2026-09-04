@@ -1,5 +1,8 @@
 # 色辨 ChromaCheck 产品需求文档（PRD）
 
+> **规范遵循**：本文档为 [docs/SPEC.md](docs/SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。
+> **实现状态**：当前为「文档 + 高保真静态原型」阶段，Next.js 应用源码尚未实现。
+
 | 项目 | 内容 |
 |------|------|
 | 产品名称 | 色辨 ChromaCheck |
@@ -128,7 +131,7 @@
 | 数据记录 | 每题：题目 ID、用户答案、正确答案、是否正确、答题时长、是否选择"看不清" |
 | 验收标准 | 图片加载无闪烁；输入支持键盘回车提交；进度条实时更新；移动端数字键盘友好 |
 
-#### F4. 路径追踪图测试（进阶）
+#### F4. 路径追踪图测试（进阶，v1.1+ 实现，见 SPEC §1.2）
 
 | 字段 | 说明 |
 |------|------|
@@ -138,7 +141,7 @@
 | 交互 | 用户在图上描绘路径，系统比对路径与标准答案的重合度 |
 | 验收标准 | 支持鼠标和触摸操作；轨迹平滑无明显卡顿；清除后可重画 |
 
-#### F5. 色相排列测试（进阶，可选）
+#### F5. 色相排列测试（进阶，v1.1+ 实现，见 SPEC §1.2）
 
 | 字段 | 说明 |
 |------|------|
@@ -198,7 +201,7 @@
 | 检测图加载时间 | < 500ms（预加载下一题） |
 | 结果计算时间 | < 500ms |
 | 页面切换动画 | < 300ms，流畅无卡顿 |
-| 并发支持 | 首阶段支持 1000 并发用户 |
+| 部署形态 | 纯前端静态托管，可水平扩展（无服务端状态，不承诺服务端并发能力） |
 
 ### 4.2 兼容性需求
 
@@ -275,40 +278,34 @@
 
 ### 6.1 检测题库数据结构
 
+> 字段名与枚举以 [docs/SPEC.md §5.1](docs/SPEC.md) 为权威（原型 `prototype/assets/js/data.js` 实证）。
+
 ```typescript
 interface IshiharaQuestion {
   id: string;                    // 题目唯一标识
-  plateNumber: number;           // 石原氏图编号
-  imageUrl: string;              // 图片路径
-  type: 'demonstration' | 'normal' | 'transformation' | 'vanishing';
-  correctAnswer: string;         // 正常色觉答案（数字）
-  protanopiaAnswer?: string;     // 红色盲者可能看到的答案
-  deuteranopiaAnswer?: string;   // 绿色盲者可能看到的答案
-  protanomalyAnswer?: string;    // 红色弱可能答案
-  deuteranomalyAnswer?: string;  // 绿色弱可能答案
-  difficulty: 1 | 2 | 3;         // 难度等级
-  timeLimit?: number;             // 建议答题时长（秒），null 为不限
+  plate: number;                 // 石原氏图版号
+  type: 'demonstration' | 'normal' | 'transformation' | 'vanishing' | 'hidden' | 'classification'; // 6 值枚举
+  answer: string;                // 正常色觉答案（数字）；hidden 题为 ''
+  protan?: string;               // 红色觉异常典型误读
+  deutan?: string;               // 绿色觉异常典型误读
+  answerTritan?: string;         // 蓝色觉异常典型误读（v1.0 暂未启用）
+  difficulty: 1 | 2 | 3;
+  quick: boolean;                // 是否纳入快速版
 }
 ```
 
 ### 6.2 检测结果数据结构
 
+> 字段以 [docs/SPEC.md §5.3](docs/SPEC.md) 为权威（TestResult 内聚 `ishihara` 评分对象，含 `correctCount`）。
+
 ```typescript
 interface TestResult {
   id: string;
   userId: string | null;          // 匿名用户为 null
-  testType: 'quick' | 'standard' | 'advanced';
+  testMode: 'quick' | 'standard' | 'advanced';
   startTime: string;              // ISO 时间
   endTime: string;
-  totalQuestions: number;
-  correctCount: number;
-  answers: AnswerRecord[];
-  assessment: {
-    overall: 'normal' | 'suspected_deficiency' | 'suspected_blindness' | 'inconclusive';
-    type?: 'protanopia' | 'deuteranopia' | 'protanomaly' | 'deuteranomaly' | 'tritanopia' | 'achromatopsia';
-    severity?: 'mild' | 'moderate' | 'severe';
-    confidence: number;           // 0-100
-  };
+  ishihara: IshiharaScoringResult; // 含 overall/type/severity/confidence/dimensions，定义见 SPEC §5.3
   advancedResults?: {
     pathTracking?: PathTrackingResult;
     hueArrangement?: HueArrangementResult;
@@ -322,7 +319,7 @@ interface TestResult {
 interface LocalStorageData {
   version: string;
   currentTestProgress?: {
-    testType: string;
+    testMode: 'quick' | 'standard' | 'advanced';
     currentIndex: number;
     answers: Record<string, string>;
     startTime: string;
@@ -330,15 +327,17 @@ interface LocalStorageData {
   history: Array<{
     id: string;
     date: string;
-    testType: string;
+    testMode: 'quick' | 'standard' | 'advanced';
     overall: string;
     type?: string;
     severity?: string;
+    confidence?: number;   // 0-100，以 SPEC §5.4 为准
   }>;
   settings: {
     soundEnabled: boolean;
     autoNext: boolean;
-    theme: 'light' | 'dark';
+    theme: 'light' | 'dark' | 'system';   // 含 system
+    analyticsEnabled: boolean;            // 匿名上报开关
   };
 }
 ```

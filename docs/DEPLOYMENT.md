@@ -1,5 +1,8 @@
 # 色辨 ChromaCheck 部署文档
 
+> **规范遵循**：本文档为 [docs/SPEC.md](docs/SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。
+> **实现状态**：部署流程为 Next.js 应用规划目标，当前静态原型可单独托管；应用源码尚未实现。
+
 | 项目 | 内容 |
 |------|------|
 | 文档版本 | v1.0 |
@@ -27,10 +30,13 @@
 
 ### 2.2 部署步骤
 
-1. **推送代码到 Git 仓库**：
+1. **推送代码到 Git 仓库**（若尚未初始化本地仓库）：
+
+   > 注意：本项目**已使用 Git 管理**，请勿执行 `git init`（会重置仓库、丢失历史）。仅当从零开始才需 `git init`。
 
    ```bash
-   git init
+   # 若本地尚无仓库才初始化（已有则跳过此步）：
+   # git init
    git add .
    git commit -m "chore: initial commit"
    git remote add origin <repository-url>

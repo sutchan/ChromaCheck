@@ -1,5 +1,8 @@
 # 色辨 ChromaCheck 技术架构文档
 
+> **规范遵循**：本文档为 [docs/SPEC.md](docs/SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。
+> **实现状态**：当前为「文档 + 高保真静态原型」阶段，Next.js 应用源码尚未实现（§1 为规划目标）。
+
 | 项目 | 内容 |
 |------|------|
 | 文档版本 | v1.0 |
@@ -247,7 +250,7 @@ export const ishiharaQuestions: IshiharaQuestion[] = [
 
 export const getQuickSet = (): IshiharaQuestion[] => {
   // 从完整题库中筛选快速版题目（10题）
-  return ishiharaQuestions.filter(q => q.quickSet === true);
+  return ishiharaQuestions.filter(q => q.quick === true);
 };
 
 export const getStandardSet = (): IshiharaQuestion[] => {
@@ -265,27 +268,31 @@ export const getStandardSet = (): IshiharaQuestion[] => {
 输入：用户答案数组（每题：题目ID、用户答案、答题时长）
 输出：评估结果（总体结论、异常类型、程度、置信度）
 
-判读逻辑：
+判读逻辑（详见 docs/SPEC.md §6，以 prototype/assets/js/scoring.js 真值为准）：
 1. 演示题校验：若演示题答错，标记"未理解测试要求"，降低置信度。
-2. 设计题校验：若正常色觉必答题答错，标记"可能未认真作答"，降低置信度。
-3. 按题目类型分组统计：
+2. 按题目类型分组统计：
    - vanishing 题（正常可见，异常不可见）：答错数 → 异常程度
    - transformation 题（正常和异常看到不同数字）：答案匹配哪种异常 → 异常类型
    - hidden 题（异常可见，正常不可见）：答对 → 提示异常
-4. 综合评分：
+3. 综合评分：
    - 红色盲/红色弱评分：protan 相关题目错误模式
    - 绿色盲/绿色弱评分：deutan 相关题目错误模式
    - 蓝色盲评分：tritan 相关题目
-5. 程度判定：
-   - 错误数 >= 阈值1 且 transformation 题匹配 → 色盲
-   - 错误数 >= 阈值2 且部分匹配 → 色弱
-   - 错误数 < 阈值 → 正常
-6. 置信度计算：
-   - 基础分 100
-   - 演示题错误 -20
-   - 设计题错误 -20
+4. 总体结论：
+   - 答题覆盖 < 50% → inconclusive
+   - vanishing 错误 >= 4 或总错误 >= 8 → suspected_blindness
+   - vanishing 错误 >= 2 或总错误 >= 4 或 hidden 答对 >= 半数 → suspected_deficiency
+   - 演示题错且 protan/deutan 匹配均为 0 且错误 < 4 → inconclusive
+5. 类型与程度（详见 SPEC §6.4）：
+   - 轴选择：deutanHit >= protanHit 选 deutan 轴，否则 protan 轴
+   - 类型：suspected_blindness → *opia，suspected_deficiency → *anomaly
+   - 程度：错误率 >= 0.7 重度，>= 0.4 中度，否则轻度
+6. 置信度计算（详见 SPEC §6.5）：
+   - 基础 100
+   - 演示题错误 -25
    - 答题过快（< 1s）每题 -2
-   - 答题矛盾（同类型题答案不一致）-15
+   - 答题矛盾（protan 与 deutan 命中并存）-15
+   - 答题覆盖不足（< 50%）-20
    - 最低 0
 ```
 
@@ -428,14 +435,14 @@ chromacheck:v1:result:{id}    # 单次检测完整结果（临时，结果页读
 ### 5.2 事件上报接口
 
 ```typescript
-// POST /api/analytics/event
+// POST /api/analytics/event —— 字段以 docs/API.md §3.2 与 docs/SPEC.md §5.6 为权威
 interface AnalyticsEvent {
-  event: 'test_start' | 'test_complete' | 'result_view' | 'report_export';
-  testType?: string;
-  duration?: number;
-  resultOverall?: string;
+  eventId: string;          // 事件唯一 ID
+  event: 'page_view' | 'cta_click' | 'answer_submit' | 'test_complete'
+       | 'share' | 'download' | 'test_error' | 'learn_view';
   timestamp: string;
-  // 不含用户身份信息
+  mode?: 'quick' | 'standard' | 'advanced';
+  // 不含用户身份信息；其余上下文字段按需扩展
 }
 
 // 响应
