@@ -1,6 +1,6 @@
 {
   "name": "chromacheck",
-  "version": "1.2.3",
+  "version": "1.2.4",
   "private": true,
   "description": "色辨 ChromaCheck — 在线色觉检测 Web 应用（Next.js 14 + TS + Tailwind）",
   "scripts": {

@@ -85,10 +85,8 @@
 | Next.js 14 App Router | SSR/SSG/CSR 混合渲染、文件路由、内置优化、Vercel 原生部署 | Nuxt.js、Remix、纯 React + Vite |
 | TypeScript | 类型安全、减少运行时错误、IDE 智能提示、题库/结果数据结构复杂 | JavaScript |
 | Tailwind CSS | 原子化 CSS、开发效率高、 bundle 体积小、设计系统一致性 | CSS Modules、styled-components |
-| shadcn/ui | 基于 Radix UI，可访问性好，组件可定制，非黑盒 | Ant Design、MUI、Chakra UI |
-| Recharts | 基于 SVG，与 React 集成好，支持响应式，bundle 适中 | ECharts、Chart.js、D3.js |
-| @dnd-kit | 现代拖拽库，支持触摸和键盘，无障碍友好 | react-beautiful-dnd（已停止维护）、react-dnd |
-| Canvas API | 路径追踪测试需要精确的像素级绘制和交互 | SVG（性能较差） |
+| Canvas API | 路径追踪等需像素级绘制与交互（离屏 canvas 缓存） | SVG（性能较差） |
+| 内联 SVG | 结果图表（雷达/条形）与检测图零依赖自绘，无额外 bundle | Recharts、ECharts（引入额外依赖） |
 
 ### 2.2 目录结构说明
 
@@ -139,31 +137,12 @@ docs/                         # 项目文档（SPEC.md 为权威总纲）
 
 | 状态类型 | 管理方式 | 说明 |
 |----------|----------|------|
-| 检测进行中状态 | React Context (`TestContext`) | 当前题目索引、答案、开始时间等，仅在检测流程内共享 |
+| 检测进行中状态 | React 组件本地状态（useState / useReducer） | 当前题目索引、答案等，仅在检测流程内共享 |
 | 结果数据 | URL Search Params + localStorage | 检测完成后将结果 ID 存入 URL，结果页从 localStorage 读取详情 |
 | UI 状态（主题、设置） | React Context (`SettingsContext`) | 深色模式、音效开关等，持久化到 localStorage |
 | 组件局部状态 | `useState` / `useReducer` | 输入框值、展开/收起等 |
 
-**TestContext 数据结构**：
 
-```typescript
-interface TestState {
-  testType: 'quick' | 'standard';  // advanced 推迟至 v1.1
-  currentIndex: number;
-  answers: Record<string, AnswerRecord>;
-  startTime: string;
-  isCompleted: boolean;
-}
-
-interface TestContextValue extends TestState {
-  setAnswer: (questionId: string, answer: AnswerRecord) => void;
-  goTo: (index: number) => void;
-  next: () => void;
-  prev: () => void;
-  complete: () => void;
-  reset: () => void;
-}
-```
 
 ### 2.4 路由设计
 
@@ -189,7 +168,7 @@ interface TestContextValue extends TestState {
 
 2. **代码分割**：
    - 每个页面自动代码分割。
-   - 重型库（jsPDF、html2canvas、@dnd-kit）动态导入（`next/dynamic`）。
+   - 重型交互组件（如路径追踪画布、色相排列网格）按需动态导入（`next/dynamic`）。
    - 结果图表组件懒加载。
 
 3. **字体优化**：

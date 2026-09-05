@@ -1,7 +1,13 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.2.3`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.2.4`）。
+
+## [1.2.4] - 2026-09-05
+
+### 文档
+- 清理 `docs/ARCHITECTURE.md` 规划残留（与真实依赖/状态管理对齐，经 `package.json` 与代码核验）：§2.1 技术选型表删除虚构的 `shadcn/ui`、`Recharts`、`@dnd-kit`，新增「内联 SVG（零依赖自绘图表）」行；§2.3 状态管理将检测流程由虚构的 `TestContext` 改为组件本地状态（useState/useReducer），并删除 `TestContext` 数据结构接口代码块；§2.5 去除虚构的 `jsPDF`/`html2canvas`/`@dnd-kit` 动态导入。
+- 版本单一来源同步至 `1.2.4`（`VERSION`、`package.json`、本文件）。
 
 ## [1.2.3] - 2026-09-05
 
