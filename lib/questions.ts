@@ -1,5 +1,5 @@
 // lib/questions.ts — 石原氏题库（移植自 prototype/data.js）
-// chromacheck v1.0.0
+// chromacheck v1.5.0
 import type { Question, TestMode } from './types';
 
 export const QUESTIONS: Question[] = [
@@ -27,6 +27,20 @@ export const QUESTIONS: Question[] = [
   { id: 'ishihara-22', plate: 22, type: 'transformation', answer: '8', protan: '3', deutan: '3', difficulty: 2, quick: false },
   { id: 'ishihara-23', plate: 23, type: 'normal', answer: '2', protan: '2', deutan: '2', difficulty: 1, quick: false },
   { id: 'ishihara-24', plate: 24, type: 'normal', answer: '5', protan: '5', deutan: '5', difficulty: 1, quick: false },
+  { id: 'ishihara-25', plate: 25, type: 'transformation', answer: '8', protan: '3', deutan: '3', difficulty: 2, quick: false },
+  { id: 'ishihara-26', plate: 26, type: 'transformation', answer: '29', protan: '70', deutan: '70', difficulty: 2, quick: false },
+  { id: 'ishihara-27', plate: 27, type: 'transformation', answer: '74', protan: '21', deutan: '21', difficulty: 2, quick: false },
+  { id: 'ishihara-28', plate: 28, type: 'vanishing', answer: '6', protan: '', deutan: '', difficulty: 1, quick: false },
+  { id: 'ishihara-29', plate: 29, type: 'vanishing', answer: '2', protan: '', deutan: '', difficulty: 1, quick: false },
+  { id: 'ishihara-30', plate: 30, type: 'vanishing', answer: '45', protan: '', deutan: '', difficulty: 2, quick: false },
+  { id: 'ishihara-31', plate: 31, type: 'vanishing', answer: '73', protan: '', deutan: '', difficulty: 2, quick: false },
+  { id: 'ishihara-32', plate: 32, type: 'hidden', answer: '', protan: '5', deutan: '5', difficulty: 3, quick: false },
+  { id: 'ishihara-33', plate: 33, type: 'hidden', answer: '', protan: '29', deutan: '29', difficulty: 3, quick: false },
+  { id: 'ishihara-34', plate: 34, type: 'classification', answer: '16', protan: '2', deutan: '5', difficulty: 3, quick: false },
+  { id: 'ishihara-35', plate: 35, type: 'classification', answer: '73', protan: '5', deutan: '6', difficulty: 3, quick: false },
+  { id: 'ishihara-36', plate: 36, type: 'classification', answer: '35', protan: '5', deutan: '3', difficulty: 3, quick: false },
+  { id: 'ishihara-37', plate: 37, type: 'demonstration', answer: '7', protan: '7', deutan: '7', difficulty: 1, quick: false },
+  { id: 'ishihara-38', plate: 38, type: 'normal', answer: '9', protan: '9', deutan: '9', difficulty: 1, quick: false },
 ];
 
 export const TYPE_LABEL: Record<Question['type'], string> = {

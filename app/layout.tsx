@@ -1,5 +1,5 @@
 // app/layout.tsx — 根布局
-// chromacheck v1.0.1
+// chromacheck v1.5.0
 import React from 'react';
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     template: '%s · 色辨 ChromaCheck',
   },
   description:
-    '基于石原氏检测原理的在线色觉筛查工具：快速版 10 题、标准版 24 题，即时生成判读结果与维度分析。结果仅供参考，不能替代专业眼科诊断。',
+    '基于石原氏检测原理的在线色觉筛查工具：快速版 10 题、标准版 38 题，即时生成判读结果与维度分析。结果仅供参考，不能替代专业眼科诊断。',
   applicationName: 'ChromaCheck',
   keywords: ['色觉', '色盲', '色弱', '石原氏', 'Ishihara', '在线筛查', 'ChromaCheck'],
   metadataBase: new URL('https://chromacheck.app'),
@@ -23,7 +23,7 @@ export const metadata: Metadata = {
     locale: 'zh_CN',
     siteName: 'ChromaCheck',
     title: '色辨 ChromaCheck — 在线色觉筛查',
-    description: '基于石原氏检测原理的在线色觉筛查工具：快速版 10 题、标准版 24 题，即时生成判读结果与维度分析。',
+    description: '基于石原氏检测原理的在线色觉筛查工具：快速版 10 题、标准版 38 题，即时生成判读结果与维度分析。',
     url: 'https://chromacheck.app',
   },
   twitter: {

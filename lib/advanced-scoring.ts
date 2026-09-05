@@ -1,5 +1,5 @@
 // lib/advanced-scoring.ts — 进阶版三模块联合判读（v1.3）
-// chromacheck v1.3.0
+// chromacheck v1.5.0
 import type {
   AnswerRecord,
   DeficiencyType,
@@ -107,7 +107,7 @@ export function computeAdvancedResult(inputs: {
   const s = severity === 'mild' ? '（轻度）' : severity === 'moderate' ? '（中度）' : severity === 'severe' ? '（重度）' : '';
   const analysis =
     overall === 'normal'
-      ? `进阶联合检测（石原氏 24 题 + 路径追踪 + 色相排列）${crossNote}在线筛查不能替代专业眼科检查，如仍有疑虑请就医复查。`
+      ? `进阶联合检测（石原氏 38 题 + 路径追踪 + 色相排列）${crossNote}在线筛查不能替代专业眼科检查，如仍有疑虑请就医复查。`
       : overall === 'inconclusive'
         ? `进阶联合检测${crossNote}建议调整环境光线后重新检测。`
         : `三模块联合判读提示${t}${s}。${crossNote}这可能影响相关色彩的日常辨色表现，建议在职业选择与安全场景中多加留意，必要时前往正规医院眼科复查。`;

@@ -1,5 +1,5 @@
 // app/page.tsx — 首页
-// chromacheck v1.0.0
+// chromacheck v1.5.0
 import React from 'react';
 import Link from 'next/link';
 import { IshiharaPlate } from '@/components/test/IshiharaPlate';
@@ -10,7 +10,7 @@ import { QUESTIONS } from '@/lib/questions';
 
 const FEATURES = [
   { icon: 'eye', title: '科学原理', text: '基于石原氏等亮度检测图，仅靠色相差异构成数字，能分辨红绿与蓝黄异常。' },
-  { icon: 'clock', title: '快速筛查', text: '快速版 10 题约 3 分钟，标准版 24 题约 8 分钟，随时在浏览器完成。' },
+  { icon: 'clock', title: '快速筛查', text: '快速版 10 题约 3 分钟，标准版 38 题约 12 分钟，随时在浏览器完成。' },
   { icon: 'chart', title: '维度分析', text: '输出红 / 绿 / 蓝三轴异常倾向与置信度，比“通过 / 不通过”更有信息量。' },
   { icon: 'shield', title: '隐私优先', text: '检测数据与历史仅存于本机浏览器，不上传服务器，可随时查看与删除。' },
 ];

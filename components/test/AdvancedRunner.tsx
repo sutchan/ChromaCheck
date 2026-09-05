@@ -1,5 +1,5 @@
 // components/test/AdvancedRunner.tsx — 进阶版联合检测编排（石原氏 + 路径追踪 + 色相排列）
-// chromacheck v1.4.0
+// chromacheck v1.5.0
 'use client';
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -20,7 +20,7 @@ import { HueArrangementGrid } from './HueArrangementGrid';
 import { useSettings } from '@/components/layout/ThemeProvider';
 import { Callout } from '@/components/common/Callout';
 
-const PHASES = ['石原氏检测（24 题）', '路径追踪（3 题）', '色相排列（D15）'] as const;
+const PHASES = ['石原氏检测（38 题）', '路径追踪（3 题）', '色相排列（D15）'] as const;
 
 export function AdvancedRunner() {
   const router = useRouter();

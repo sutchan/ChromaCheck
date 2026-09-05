@@ -1,7 +1,17 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.4.0`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.5.0`）。
+
+## [1.5.0] - 2026-09-05
+
+### 新增
+- 石原氏题库扩充至 38 板完整图谱（ROADMAP P1）：`lib/questions.ts` 在原有 24 题基础上新增 14 道检测图（plate 25–38，覆盖转换/消失/隐藏/分类/演示/常规题型），异常轴区分度与判读稳定性提升。
+- 快速版维持 10 题核心集不变；标准版与进阶版（advanced）检测量由 24 题升级为 38 题。
+
+### 文档
+- 应用内与文档中「标准版 24 题」全部同步为「38 题」（模式选择页、首页、layout 元信息、进阶联合判读文案、SPEC/PRD/ROADMAP/README）。
+- 版本单一来源同步至 `1.5.0`（`VERSION`、`package.json`、各改动文件头注释）。
 
 ## [1.4.0] - 2026-09-05
 
