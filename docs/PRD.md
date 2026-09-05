@@ -302,7 +302,7 @@ interface IshiharaQuestion {
 interface TestResult {
   id: string;
   userId: string | null;          // 匿名用户为 null
-  testMode: 'quick' | 'standard';  // advanced 推迟至 v1.1
+  testMode: 'quick' | 'standard' | 'advanced';  // advanced 已于 v1.3 实现
   startTime: string;              // ISO 时间
   endTime: string;
   ishihara: IshiharaScoringResult; // 含 overall/type/severity/confidence/dimensions，定义见 SPEC §5.3
@@ -321,7 +321,7 @@ interface TestResult {
 interface LocalStorageData {
   version: string;
   currentTestProgress?: {
-    testMode: 'quick' | 'standard' | 'advanced';  // advanced 为 v1.1 规划
+    testMode: 'quick' | 'standard' | 'advanced';  // advanced 已于 v1.3 实现
     currentIndex: number;
     answers: Record<string, string>;
     startTime: string;
@@ -329,7 +329,7 @@ interface LocalStorageData {
   history: Array<{
     id: string;
     date: string;
-    testMode: 'quick' | 'standard' | 'advanced';  // advanced 为 v1.1 规划
+    testMode: 'quick' | 'standard' | 'advanced';  // advanced 已于 v1.3 实现
     overall: string;
     type?: string;
     severity?: string;

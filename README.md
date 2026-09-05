@@ -2,7 +2,7 @@
 
 > 一眼辨色，科学筛查 — 在线色觉检测 Web 应用
 
-> **实现状态**：v1.0 已实现（Next.js 14 应用 + 石原氏检测 + 结果/历史/科普/隐私）；路径追踪已于 v1.1 实现，色相排列（D15）已于 v1.2 实现。权威规范见 [docs/SPEC.md](docs/SPEC.md)。当前项目版本 **v1.2.4**（见 `VERSION`）。
+> **实现状态**：v1.0 已实现（Next.js 14 应用 + 石原氏检测 + 结果/历史/科普/隐私）；路径追踪已于 v1.1 实现，色相排列（D15）已于 v1.2 实现，进阶联合判读（advanced）已于 v1.3 实现。权威规范见 [docs/SPEC.md](docs/SPEC.md)。当前项目版本 **v1.3.0**（见 `VERSION`）。
 
 [![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
@@ -26,6 +26,7 @@
 - 深色模式 + 色觉安全模式 — **已实现**
 - 路径追踪描线测试（区分红/绿色盲类型）— **已实现（v1.1）**
 - 色相排列测试（简化版 Farnsworth-Munsell D15）— **已实现（v1.2）**
+- 进阶联合检测（石原氏 + 路径追踪 + 色相排列交叉验证）— **已实现（v1.3）**
 
 ## 技术栈
 
@@ -96,7 +97,7 @@ npm run type-check
 
 ## 项目结构
 
-> 下方为实际落地结构（与 `docs/ARCHITECTURE.md` 一致）。`lib/` 为主模块 + `lib/questions/` 子目录；路径追踪已于 v1.1 实现（`app/test/path-tracking/[mode]`），色相排列已于 v1.2 实现（`app/test/hue-arrangement/[mode]`）。
+> 下方为实际落地结构（与 `docs/ARCHITECTURE.md` 一致）。`lib/` 为主模块 + `lib/questions/` 子目录；路径追踪已于 v1.1 实现（`app/test/path-tracking/[mode]`），色相排列已于 v1.2 实现（`app/test/hue-arrangement/[mode]`），进阶联合判读已于 v1.3 实现（`app/test/advanced`）。
 
 ```
 chromacheck/
@@ -108,10 +109,11 @@ chromacheck/
 │   ├── icon.svg                  # 站点图标
 │   ├── guide/page.tsx            # 检测前指引
 │   ├── test/
-│   │   ├── page.tsx              # 模式选择（快速 / 标准 / 路径追踪 / 色相排列）
+│   │   ├── page.tsx              # 模式选择（快速 / 标准 / 路径追踪 / 色相排列 / 进阶联合）
 │   │   ├── ishihara/[mode]/page.tsx   # 石原氏测试
 │   │   ├── path-tracking/[mode]/page.tsx   # 路径追踪测试（v1.1）
-│   │   └── hue-arrangement/[mode]/page.tsx # 色相排列测试（v1.2）
+│   │   ├── hue-arrangement/[mode]/page.tsx # 色相排列测试（v1.2）
+│   │   └── advanced/page.tsx     # 进阶联合检测（v1.3）
 │   ├── result/[id]/page.tsx      # 结果页
 │   ├── learn/
 │   │   ├── page.tsx              # 科普列表
@@ -123,7 +125,7 @@ chromacheck/
 │   ├── home/                     # CvdSimulator
 │   ├── layout/                   # Footer、Navbar、ThemeProvider、ThemeToggle
 │   ├── result/                   # AnswerReview、AxisChart、ReportActions、ResultSummary、PathTrackingSummary、HueArrangementSummary
-│   └── test/                     # IshiharaPlate、Numpad、TestProgress、TestRunner、PathTrackingCanvas、PathTrackingRunner、HueArrangementGrid、HueArrangementRunner
+│   └── test/                     # IshiharaPlate、Numpad、TestProgress、IshiharaFlow、TestRunner、PathTrackingCanvas、PathTrackingRunner、HueArrangementGrid、HueArrangementRunner、AdvancedRunner
 ├── lib/
 │   ├── types.ts                  # 全局类型（以 docs/SPEC.md §5 为权威）
 │   ├── questions.ts              # 石原氏题库数据
@@ -131,6 +133,7 @@ chromacheck/
 │   ├── scoring.ts                # 判读引擎
 │   ├── path-scoring.ts           # 路径追踪判读（v1.1）
 │   ├── hue-scoring.ts            # 色相排列 TES 判读（v1.2）
+│   ├── advanced-scoring.ts       # 进阶联合判读（v1.3）
 │   ├── ishihara.ts              # 点阵生成与色觉模拟
 │   ├── storage.ts                # 本地存储
 │   ├── learn-data.ts             # 科普文章数据

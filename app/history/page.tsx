@@ -1,5 +1,5 @@
 // app/history/page.tsx — 历史记录
-// chromacheck v1.2.0
+// chromacheck v1.3.0
 'use client';
 
 import React, { useEffect, useState } from 'react';
@@ -71,7 +71,15 @@ export default function HistoryPage() {
               <Link href={`/result/${r.id}`} className="stack" style={{ gap: 4, flex: 1, minWidth: 220, color: 'var(--fg)' }}>
                 <div className="row" style={{ gap: 'var(--s-2)', flexWrap: 'wrap' }}>
                   <span className={`chip ${TONE[r.overall]}`}>{uiText.overall(r.overall)}</span>
-                  <span className="chip">{r.hueArrangement ? '色相排列' : r.pathTracking ? '路径追踪' : '石原氏'}</span>
+                  <span className="chip">
+                    {r.ishihara && r.pathTracking && r.hueArrangement
+                      ? '进阶联合'
+                      : r.hueArrangement
+                        ? '色相排列'
+                        : r.pathTracking
+                          ? '路径追踪'
+                          : '石原氏'}
+                  </span>
                   {r.type && <span className="chip">{uiText.type(r.type)}</span>}
                   <span className="chip">置信度 {r.confidence}%</span>
                 </div>

@@ -1,5 +1,5 @@
 // lib/types.ts — ChromaCheck 领域类型
-// chromacheck v1.2.0
+// chromacheck v1.3.0
 
 export type PlateType =
   | 'demonstration'
@@ -29,7 +29,7 @@ export type Overall =
 
 export type AxisKey = 'protan' | 'deutan' | 'tritan';
 
-export type TestMode = 'quick' | 'standard';
+export type TestMode = 'quick' | 'standard' | 'advanced';
 
 export interface Question {
   id: string;

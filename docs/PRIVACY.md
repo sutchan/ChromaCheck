@@ -41,7 +41,7 @@
 | 数据 | 说明 | 是否含身份信息 |
 |------|------|----------------|
 | 事件类型 | test_start / test_complete 等 | 否 |
-| 测试类型 | quick / standard（v1.1 拟增 advanced） | 否 |
+| 测试类型 | quick / standard / advanced（v1.3） | 否 |
 | 测试时长 | 毫秒数 | 否 |
 | 结果摘要 | normal / suspected_* | 否 |
 | 事件时间 | ISO 时间戳 | 否 |

@@ -1,5 +1,5 @@
 // lib/scoring.ts — 判读引擎（移植自 prototype/scoring.js，纯函数）
-// chromacheck v1.0.0
+// chromacheck v1.3.0
 import type {
   AnswerRecord,
   DeficiencyType,
@@ -35,7 +35,7 @@ const OVERALL_LABEL: Record<Overall, string> = {
   inconclusive: '结果不确定',
 };
 
-const MODE_TEXT: Record<TestMode, string> = { quick: '快速版', standard: '标准版' };
+const MODE_TEXT: Record<TestMode, string> = { quick: '快速版', standard: '标准版', advanced: '进阶版' };
 
 export const uiText = {
   type: (t: DeficiencyType) => (t ? TYPE_TEXT[t] : ''),

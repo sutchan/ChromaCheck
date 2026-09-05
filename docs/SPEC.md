@@ -22,7 +22,7 @@
 | `docs/PRIVACY.md` | 隐私政策分册 | 已对齐 SPEC，生效 |
 | `docs/ROADMAP.md` | 路线图分册 | 已对齐 SPEC，生效 |
 
-**实现状态声明（必须写入各文档顶部）**：ChromaCheck 已完成 v1.0 实现——Next.js 14 应用 + 石原氏检测 + 结果/历史/科普/隐私页均已落地，`npm install / npm run dev / npm run build / npm test` 均可正常执行（见 README「快速开始」）。路径追踪（F4）已于 v1.1 实现，色相排列（F5）已于 v1.2 实现；原型仅作设计验证参考。
+**实现状态声明（必须写入各文档顶部）**：ChromaCheck 已完成 v1.0 实现——Next.js 14 应用 + 石原氏检测 + 结果/历史/科普/隐私页均已落地，`npm install / npm run dev / npm run build / npm test` 均可正常执行（见 README「快速开始」）。路径追踪（F4）已于 v1.1 实现，色相排列（F5）已于 v1.2 实现，进阶联合判读（advanced）已于 v1.3 实现；原型仅作设计验证参考。
 
 ## 1. 产品定位与功能范围
 
@@ -35,7 +35,7 @@
 - **纳入 v1.0（核心）**：首页、检测前指引、模式选择、石原氏测试、结果页、历史记录、科普列表与详情、**隐私政策页**（PRIVACY §6 要求，补入 PRD 功能架构）、结果导出（PDF/图片）、结果分享。
 - **排除 v1.0（推迟至 v1.1+）**：路径追踪测试（F4）、色相排列测试（F5）。二者已在原型中作演示，但 v1.0 不实现正式模块。（路径追踪已于 v1.1 实现，色相排列已于 v1.2 实现）
 
-检测模式：`quick`（快速，10 题）/ `standard`（标准，24 题）。`advanced`（进阶）推迟至 v1.1。
+检测模式：`quick`（快速，10 题）/ `standard`（标准，24 题）/ `advanced`（进阶联合，v1.3 实现）。
 
 ## 2. 技术架构（v1.0 已实现）
 
@@ -229,7 +229,7 @@ type ColorDeficiencyType =
   | 'deuteranomaly' | 'tritanopia' | 'tritanomaly' | 'achromatopsia';
 type OverallResult = 'normal' | 'suspected_deficiency' | 'suspected_blindness' | 'inconclusive';
 type SeverityLevel = 'mild' | 'moderate' | 'severe';
-type TestMode = 'quick' | 'standard';  // v1.0 仅实现快速/标准；advanced 推迟至 v1.1
+type TestMode = 'quick' | 'standard' | 'advanced';  // advanced（进阶联合）已于 v1.3 实现
 ```
 **决议**：DATA-SPEC §4/§5 引用的 `ColorDeficiencyType`/`OverallResult`/`SeverityLevel` 在此统一定义，分册不得另起别名。（代码实现别名为 `DeficiencyType`/`Overall`/`Severity`，语义一致，分册以本文类型为准）。
 
@@ -328,7 +328,7 @@ clamp(confidence, 0, 100)
 
 ## 9. 实现状态与待办（对齐 ROADMAP）
 - **已完成（v1.0）**：文档体系（9 分册 + SPEC 总纲）、高保真静态原型（4 页）、Next.js 14 应用骨架、石原氏检测全流程（`lib/` 题库/判读/点阵/存储移植 + `components/` 组件）、结果/历史/科普/隐私页、导出（PNG/打印/复制）/分享、CI。
-- **推迟**：`advanced` 进阶模式、匿名分析（`analyticsEnabled`）。（路径追踪 F4 已于 v1.1 实现，色相排列 F5 已于 v1.2 实现）
+- **推迟**：匿名分析（`analyticsEnabled`）。（路径追踪 F4 已于 v1.1、色相排列 F5 已于 v1.2、进阶联合判读 advanced 已于 v1.3 实现）
 
 ---
 *本文档为 ChromaCheck 权威规范总纲 v1.0.4。分册应据本规范修订以消除前述字段/算法/范围冲突。*

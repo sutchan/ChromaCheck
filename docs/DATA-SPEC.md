@@ -236,7 +236,7 @@ interface TestResult {
   version: string;
   /** ISO8601 完成时间 */
   createdAt: string;
-  /** 测试模式；advanced 推迟至 v1.1 */
+  /** 测试模式：quick / standard / advanced（v1.3 已实现） */
   testMode: 'quick' | 'standard';
   /** 综合判定 */
   overall: OverallResult;
@@ -296,7 +296,7 @@ interface UserSettings {
 ```typescript
 interface CurrentTestProgress {
   /** 测试模式 */
-  testMode: 'quick' | 'standard';  // advanced 推迟至 v1.1
+  testMode: 'quick' | 'standard' | 'advanced';  // advanced 已于 v1.3 实现
   /** 当前题目索引 */
   currentIndex: number;
   /** 已答题目 */
@@ -313,7 +313,7 @@ interface HistorySummary {
   id: string;
   /** 检测时间 ISO 字符串 */
   date: string;
-  testMode: 'quick' | 'standard';  // advanced 推迟至 v1.1
+  testMode: 'quick' | 'standard' | 'advanced';  // advanced 已于 v1.3 实现
   overall: OverallResult;
   type?: ColorDeficiencyType;
   severity?: SeverityLevel;

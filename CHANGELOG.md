@@ -1,7 +1,22 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.2.4`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.3.0`）。
+
+## [1.3.0] - 2026-09-05
+
+### 新增
+- 进阶联合检测（advanced 模式）：新增 `/test/advanced` 路由与 `AdvancedRunner` 组件，依次完成石原氏 24 题、路径追踪 3 题与色相排列 D15 三模块，联合判读交叉验证：
+  - 三模块一致正常 → 置信度上调并注明交叉验证；
+  - 石原氏异常且进阶模块方向一致 → 置信度上调；
+  - 石原氏正常 / 样本不足但进阶模块异常 → 倾向疑似色弱（轻度，置信度下调）；
+  - 结果分歧时在分析中注明建议复查。
+- 新增 `lib/advanced-scoring.ts` 联合判读模块；`TestMode` 扩展 `'advanced'`；`uiText.mode` 补充「进阶版」。
+- 从 `TestRunner` 抽取可复用 `IshiharaFlow` 答题流程组件（标准模式对外行为与持久化语义不变）；模式选择页启用「进阶版」入口；历史记录标签新增「进阶联合」。
+
+### 文档
+- SPEC / DATA-SPEC / PRD / PRIVACY / API / ARCHITECTURE / ROADMAP 实现状态声明同步（advanced 标注为 v1.3 已实现，推迟项仅剩匿名分析）。
+- 版本单一来源同步至 `1.3.0`（`VERSION`、`package.json`、本文件）。
 
 ## [1.2.4] - 2026-09-05
 
