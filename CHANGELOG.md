@@ -1,7 +1,24 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.5.1`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.6.0`）。
+
+## [1.6.0] - 2026-09-05
+
+### 新增（SEO 搜索引擎优化 / GEO 生成式引擎优化）
+- `app/robots.ts`：自动生成 `robots.txt`，指向 sitemap，并屏蔽私有页面 `/result/`、`/history/`。
+- `app/sitemap.ts`：自动生成 `sitemap.xml`，覆盖首页、各入口页与全部科普文章。
+- `app/llms.txt/route.ts`：新增 `llms.txt`（GEO 约定），向生成式引擎提供站点索引、科普清单与关键事实的纯文本摘要；根布局 `<head>` 增加 `<link rel="alternate" href="/llms.txt">`。
+- `components/seo/JsonLd.tsx`：通用 JSON-LD 注入组件。
+- `app/layout.tsx`：注入 `WebApplication` 结构化数据（schema.org），并完善 `metadata`（robots 指令、`category`、`alternates.canonical`、`authors`、静态 SVG 社交分享图）。
+- `components/home/HomeFaq.tsx` + 首页：新增常见问题区块与 `FAQPage` 结构化数据，提供可被引用的事实性问答。
+- `app/learn/[slug]/page.tsx`：科普详情新增 `Article` 与 `BreadcrumbList` 结构化数据，并补全 per-page `metadata`。
+- `app/learn/page.tsx`、`app/test/page.tsx`、`app/guide/page.tsx`、`app/privacy/page.tsx`：补全 per-page `metadata`（标题、描述、关键词、canonical、OG）。
+- `app/result/[id]/layout.tsx`、`app/history/layout.tsx`：私有页面增加 `noindex` 声明。
+- `public/og-default.svg`：1200×630 品牌社交分享图。
+
+### 文档
+- 版本单一来源同步至 `1.6.0`（`VERSION`、`package.json`、各改动文件头注释）。
 
 ## [1.5.1] - 2026-09-05
 

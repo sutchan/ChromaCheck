@@ -1,10 +1,26 @@
 // app/test/page.tsx — 模式选择
-// chromacheck v1.5.0
+// chromacheck v1.6.0
 import React from 'react';
 import Link from 'next/link';
+import type { Metadata } from 'next';
 import { Icon } from '@/components/common/Icon';
 import { Callout } from '@/components/common/Callout';
 import type { TestMode } from '@/lib/types';
+
+export const metadata: Metadata = {
+  title: '选择检测模式',
+  description: 'ChromaCheck 提供快速版（10 题）、标准版（38 题）、路径追踪、色相排列与进阶联合五种色觉检测模式，纯本地检测，结果即时生成。',
+  keywords: ['色觉检测', '石原氏测试', '色盲测试', '色弱测试', '在线筛查'],
+  alternates: { canonical: '/test' },
+  openGraph: {
+    type: 'website',
+    title: '选择检测模式 · 色辨 ChromaCheck',
+    description: '快速版、标准版、路径追踪、色相排列与进阶联合五类色觉检测。',
+    url: 'https://chromacheck.app/test',
+    siteName: 'ChromaCheck',
+    locale: 'zh_CN',
+  },
+};
 
 const MODES: {
   mode: TestMode | 'advanced' | 'path' | 'hue';

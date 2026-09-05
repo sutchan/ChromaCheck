@@ -1,0 +1,26 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="ChromaCheck — 在线色觉筛查">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1f7a8c"/>
+      <stop offset="1" stop-color="#14566a"/>
+    </linearGradient>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <g fill="#ffffff">
+    <rect x="72" y="72" width="40" height="40" rx="12"/>
+    <text x="128" y="103" font-family="Segoe UI, Helvetica, Arial, sans-serif" font-size="34" font-weight="700">ChromaCheck</text>
+  </g>
+  <g fill="#ffffff" font-family="Segoe UI, Helvetica, Arial, sans-serif">
+    <text x="72" y="330" font-size="64" font-weight="800">Online Color</text>
+    <text x="72" y="404" font-size="64" font-weight="800">Vision Screening</text>
+    <text x="74" y="452" font-size="28" opacity="0.85">Ishihara · Path Tracing · Hue Arrangement</text>
+  </g>
+  <g>
+    <circle cx="100" cy="540" r="28" fill="#e76f51"/>
+    <circle cx="166" cy="540" r="28" fill="#2a9d8f"/>
+    <circle cx="232" cy="540" r="28" fill="#e9c46a"/>
+    <circle cx="298" cy="540" r="28" fill="#264653"/>
+    <circle cx="364" cy="540" r="28" fill="#f4a261"/>
+    <circle cx="430" cy="540" r="28" fill="#8ab17d"/>
+  </g>
+</svg>

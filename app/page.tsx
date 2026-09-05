@@ -1,11 +1,12 @@
 // app/page.tsx — 首页
-// chromacheck v1.5.0
+// chromacheck v1.6.0
 import React from 'react';
 import Link from 'next/link';
 import { IshiharaPlate } from '@/components/test/IshiharaPlate';
 import { CvdSimulator } from '@/components/home/CvdSimulator';
 import { Icon } from '@/components/common/Icon';
 import { Callout } from '@/components/common/Callout';
+import { HomeFaq } from '@/components/home/HomeFaq';
 import { QUESTIONS } from '@/lib/questions';
 
 const FEATURES = [
@@ -78,6 +79,9 @@ export default function HomePage() {
       <section className="wrap">
         <CvdSimulator />
       </section>
+
+      {/* 常见问题（含 FAQPage 结构化数据） */}
+      <HomeFaq />
     </div>
   );
 }
