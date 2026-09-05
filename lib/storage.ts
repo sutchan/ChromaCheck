@@ -1,5 +1,5 @@
 // lib/storage.ts — 本地存储（历史 / 设置 / 进度），SSR 安全
-// chromacheck v1.3.0
+// chromacheck v1.4.0
 import type { AppSettings, TestResult } from './types';
 
 const K = {

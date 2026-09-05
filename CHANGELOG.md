@@ -1,7 +1,24 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.3.0`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.4.0`）。
+
+## [1.4.0] - 2026-09-05
+
+### 新增
+- 趣味性体验包（SPEC §3.5，原型已验证，应用侧落地）：
+  - 进度点阵仪式感（`components/test/FunBits.tsx` `ProgressDots`）：24 圆点三态（已完成/当前/未到），每完成 8 题触发脉冲 + 「已完成 N / 24 版」轻提示；硬约束：不表达对错。
+  - 章末轻科普过渡（`ChapterCard`）：题型分 3 章（暖身/主体/深水），章节交替处插入过渡卡，回车或按钮继续。
+  - 中性提交反馈：提交后恒显「✓ 已记录」420ms 缓冲（不随开关关闭）。
+  - 色觉人格分享卡（`lib/sharecard.ts` + 结果页「分享卡 PNG」按钮）：Canvas 手绘雷达 + 称号 + 三轴条，本地 `toDataURL` 导出 PNG，零依赖。
+  - 换一双眼睛（`components/result/EyesSwitcher.tsx`）：第 4 版转换图（标准答案 29）五种色觉视角切换，复用 `IshiharaPlate` 的 `cvd` 参数。
+  - 三轴互动科普（`components/result/DimScenes.tsx`）：点维度条展开日常生活影响，含 `aria-expanded` 键盘可达。
+  - 旅人隐喻称号（`lib/fun.ts` `TITLES`）：去污名化，仅本机展示。
+  - `趣味`总开关（`AppSettings.funMode`，默认开）：导航栏 `ThemeToggle` 处切换，关闭后称号/章末过渡/里程碑仪式感回退中性，中性反馈恒开。
+- 抽离 `lib/fun.ts` 集中趣味数据（章节/称号/三轴科普），`AppSettings` 新增 `funMode` 字段（`lib/types.ts`、`lib/storage.ts` 默认值 `true`）。
+
+### 文档
+- SPEC §3.5 / ROADMAP 趣味性体验包标注为 v1.4 已实现；README/页脚/版本单一来源同步至 `1.4.0`。
 
 ## [1.3.0] - 2026-09-05
 

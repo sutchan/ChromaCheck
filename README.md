@@ -2,7 +2,7 @@
 
 > 一眼辨色，科学筛查 — 在线色觉检测 Web 应用
 
-> **实现状态**：v1.0 已实现（Next.js 14 应用 + 石原氏检测 + 结果/历史/科普/隐私）；路径追踪已于 v1.1 实现，色相排列（D15）已于 v1.2 实现，进阶联合判读（advanced）已于 v1.3 实现。权威规范见 [docs/SPEC.md](docs/SPEC.md)。当前项目版本 **v1.3.0**（见 `VERSION`）。
+> **实现状态**：v1.0 已实现（Next.js 14 应用 + 石原氏检测 + 结果/历史/科普/隐私）；路径追踪已于 v1.1 实现，色相排列（D15）已于 v1.2 实现，进阶联合判读（advanced）已于 v1.3 实现，趣味性体验包（进度点阵/章末科普/分享卡/换一双眼睛/三轴科普/旅人称号）已于 v1.4 实现。权威规范见 [docs/SPEC.md](docs/SPEC.md)。当前项目版本 **v1.4.0**（见 `VERSION`）。
 
 [![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
@@ -27,6 +27,7 @@
 - 路径追踪描线测试（区分红/绿色盲类型）— **已实现（v1.1）**
 - 色相排列测试（简化版 Farnsworth-Munsell D15）— **已实现（v1.2）**
 - 进阶联合检测（石原氏 + 路径追踪 + 色相排列交叉验证）— **已实现（v1.3）**
+- 趣味性体验包：进度点阵仪式感、章末轻科普过渡、中性提交反馈、色觉人格分享卡（Canvas PNG）、换一双眼睛（五种色觉视角）、三轴互动科普、旅人隐喻称号 — **已实现（v1.4）**；`趣味`开关可统一关闭（不影响判读）
 
 ## 技术栈
 
@@ -124,8 +125,8 @@ chromacheck/
 │   ├── common/                   # Callout、Icon
 │   ├── home/                     # CvdSimulator
 │   ├── layout/                   # Footer、Navbar、ThemeProvider、ThemeToggle
-│   ├── result/                   # AnswerReview、AxisChart、ReportActions、ResultSummary、PathTrackingSummary、HueArrangementSummary
-│   └── test/                     # IshiharaPlate、Numpad、TestProgress、IshiharaFlow、TestRunner、PathTrackingCanvas、PathTrackingRunner、HueArrangementGrid、HueArrangementRunner、AdvancedRunner
+│   ├── result/                   # AnswerReview、AxisChart、ReportActions、ResultSummary、PathTrackingSummary、HueArrangementSummary、EyesSwitcher、DimScenes
+│   └── test/                     # IshiharaPlate、Numpad、TestProgress、IshiharaFlow、FunBits、TestRunner、PathTrackingCanvas、PathTrackingRunner、HueArrangementGrid、HueArrangementRunner、AdvancedRunner
 ├── lib/
 │   ├── types.ts                  # 全局类型（以 docs/SPEC.md §5 为权威）
 │   ├── questions.ts              # 石原氏题库数据
@@ -134,6 +135,8 @@ chromacheck/
 │   ├── path-scoring.ts           # 路径追踪判读（v1.1）
 │   ├── hue-scoring.ts            # 色相排列 TES 判读（v1.2）
 │   ├── advanced-scoring.ts       # 进阶联合判读（v1.3）
+│   ├── fun.ts                    # 趣味性数据（章节/旅人称号/三轴科普，v1.4）
+│   ├── sharecard.ts              # 色觉人格分享卡 Canvas 绘制（v1.4）
 │   ├── ishihara.ts              # 点阵生成与色觉模拟
 │   ├── storage.ts                # 本地存储
 │   ├── learn-data.ts             # 科普文章数据

@@ -1,5 +1,5 @@
 // lib/types.ts — ChromaCheck 领域类型
-// chromacheck v1.3.0
+// chromacheck v1.4.0
 
 export type PlateType =
   | 'demonstration'
