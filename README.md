@@ -2,7 +2,7 @@
 
 > 一眼辨色，科学筛查 — 在线色觉检测 Web 应用
 
-> **实现状态**：v1.0 已实现（Next.js 14 应用 + 石原氏检测 + 结果/历史/科普/隐私）；路径追踪已于 v1.1 实现，色相排列（D15）已于 v1.2 实现。权威规范见 [docs/SPEC.md](docs/SPEC.md)。当前项目版本 **v1.2.1**（见 `VERSION`）。
+> **实现状态**：v1.0 已实现（Next.js 14 应用 + 石原氏检测 + 结果/历史/科普/隐私）；路径追踪已于 v1.1 实现，色相排列（D15）已于 v1.2 实现。权威规范见 [docs/SPEC.md](docs/SPEC.md)。当前项目版本 **v1.2.2**（见 `VERSION`）。
 
 [![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)

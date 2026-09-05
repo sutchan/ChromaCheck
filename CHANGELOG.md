@@ -1,7 +1,14 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.2.1`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.2.2`）。
+
+## [1.2.2] - 2026-09-05
+
+### 文档
+- 同步文档至 v1.2 实际实现（色相排列 D15 检测）：`docs/ARCHITECTURE.md` 结构树与路由表将 `hue-arrangement` 由「v1.1 规划，未实现」更正为「v1.2 已实现」，并补齐 `ishihara`/`hue-arrangement` 的 `[mode]` 动态路由段；`docs/SPEC.md` §5.3 与 `docs/PRD.md` 的 `TestResult` 注释将 `pathTracking`/`hueArrangement` 标注为已实现（v1.1 / v1.2）；`docs/API.md` 实现状态同步。
+- 项目地址 `https://github.com/sutchan/ChromaCheck` 已在 README 与页脚正确引用。
+- 版本单一来源同步至 `1.2.2`（`VERSION`、`package.json`、本文件）。
 
 ## [1.2.1] - 2026-09-05
 

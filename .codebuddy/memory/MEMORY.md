@@ -1,9 +1,9 @@
 # 记忆索引
 
 ## 项目：ChromaCheck（e:/Github/ChromaCheck）
-- 已从「纯文档 + 静态原型」进入**应用开发阶段**，v1.0.0 已实现（2026-09-04），当前版本 **v1.2.1**（2026-09-05）。
+- 已从「纯文档 + 静态原型」进入**应用开发阶段**，v1.0.0 已实现（2026-09-04），当前版本 **v1.2.2**（2026-09-05）。
 - 应用技术栈：Next.js 14 (App Router) + React 18 + TypeScript(strict) + Tailwind 3，纯本地、无后端、无重型依赖；图表用内联 SVG，报告导出用 Canvas(PNG)+`window.print()`(PDF)。
-- 版本单一来源：`VERSION`(=1.2.1) 与 `package.json` version 一致；原型文件头原为 v0.1.0，与正式应用版本解耦。
+- 版本单一来源：`VERSION`(=1.2.2) 与 `package.json` version 一致；原型文件头原为 v0.1.0，与正式应用版本解耦。
 - **已实现页面/功能**：v1.0 首页(含色觉模拟 CvdSimulator)、检测前指引、模式选择(快速10题/标准24题)、石原氏测试(`/test/ishihara/[mode]`)、结果页(`/result/[id]`)、历史、科普列表+详情、隐私政策；v1.1 路径追踪(`/test/path-tracking/[mode]`)；v1.2 色相排列 D15(`/test/hue-arrangement/[mode]`)。GitHub 仓库：https://github.com/sutchan/ChromaCheck（页脚与 README 联系方式已链入）。
 - **规划中**：`advanced` 联合判读模式（三模块联合）、匿名分析 analyticsEnabled。
 - 色相排列模块（v1.2 已实现）架构：`lib/questions/hue-arrangement.ts`（D15 sRGB 15 卡 + `shuffledOrder` mulberry32 确定性打乱，初始种子 20260905 防 SSR 闪烁）；评分 `lib/hue-scoring.ts`（TES：seq=[0,...order,14]，首末权重1/中间2，max(0,d-1)×权重；<20 正常/20-40 轻度/>40 明显；偏差方向 min(卡号)≤5→tritan 否则默认 deutan，注明不足以临床分型）；交互 `HueArrangementGrid`（点击选中+交换，role=listbox）；**测试中不显示实时 TES**（防用户凑分，原型演示有显示但正式应用刻意去掉）。

@@ -306,7 +306,7 @@ interface TestResult {
   startTime: string;              // ISO 时间
   endTime: string;
   ishihara: IshiharaScoringResult; // 含 overall/type/severity/confidence/dimensions，定义见 SPEC §5.3
-  advancedResults?: {       // v1.1 规划（路径追踪 / 色相排列），v1.0 未实现
+  advancedResults?: {       // v1.1/v1.2 已实现（路径追踪 v1.1 / 色相排列 v1.2）
     pathTracking?: PathTrackingResult;
     hueArrangement?: HueArrangementResult;
   };

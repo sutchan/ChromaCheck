@@ -204,7 +204,7 @@ interface TestResult {
   analysis: string;                 // 文字解读
   confidenceNote: string;           // 置信度说明
   device: string;                   // 设备/UA 摘要
-  // v1.1 扩展（当前未实现）：pathTracking? / hueArrangement?
+  // v1.1/v1.2 扩展（已实现）：pathTracking?（v1.1 已实现）/ hueArrangement?（v1.2 已实现）
 }
 ```
 **决议**：采用 DATA-SPEC 结构（`testMode` + `ishiharaAssessment` 内聚 `correctCount`），废用 PRD 顶层 `correctCount` 与 `testType` 命名。
