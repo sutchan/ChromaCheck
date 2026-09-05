@@ -164,4 +164,6 @@ export interface TestResult {
 export interface AppSettings {
   theme: 'light' | 'dark';
   cvdSafe: boolean;
+  /** 趣味体验开关（称号 / 章末过渡 / 里程碑仪式感），默认开 */
+  funMode: boolean;
 }

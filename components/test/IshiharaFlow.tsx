@@ -1,12 +1,14 @@
 // components/test/IshiharaFlow.tsx — 石原氏答题流程（独立组件，供标准/进阶模式复用）
-// chromacheck v1.3.0
+// chromacheck v1.4.0
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
 import type { AnswerRecord, Question } from '@/lib/types';
+import { CHAPTERS, chapterOf } from '@/lib/fun';
 import { IshiharaPlate } from './IshiharaPlate';
 import { TestProgress } from './TestProgress';
 import { Numpad } from './Numpad';
+import { ProgressDots, ChapterCard } from './FunBits';
 import { Icon } from '@/components/common/Icon';
 
 function figureText(q: Question): string {
@@ -17,12 +19,15 @@ function figureText(q: Question): string {
 export function IshiharaFlow({
   questions,
   initial,
+  funMode = false,
   onProgress,
   onDone,
 }: {
   questions: Question[];
   /** 恢复进行中的进度（index 为下一题索引） */
   initial?: { index: number; answers: AnswerRecord[] };
+  /** 趣味体验开关（控制章末过渡与里程碑仪式感；中性反馈恒开） */
+  funMode?: boolean;
   /** 每次作答后回调（index 为下一题索引），由外层决定是否持久化 */
   onProgress?: (index: number, answers: AnswerRecord[]) => void;
   /** 全部作答完成 */
@@ -33,13 +38,22 @@ export function IshiharaFlow({
   const [input, setInput] = useState('');
   const [answers, setAnswers] = useState<AnswerRecord[]>(initial?.answers ?? []);
   const [reveal, setReveal] = useState<null | { correct: boolean; expected: string }>(null);
+  const [recorded, setRecorded] = useState(false);
+  const [milestone, setMilestone] = useState<string | null>(null);
+  const [pulse, setPulse] = useState(false);
+  const [pausedChapter, setPausedChapter] = useState<number | null>(null);
   const qStartRef = useRef<number>(Date.now());
+  const timersRef = useRef<number[]>([]);
 
   useEffect(() => {
     qStartRef.current = Date.now();
     setInput('');
     setReveal(null);
+    setRecorded(false);
   }, [idx]);
+
+  // 卸载时清理待推进定时器
+  useEffect(() => () => timersRef.current.forEach((t) => window.clearTimeout(t)), []);
 
   const q = questions[idx];
   if (!q) return null;
@@ -52,16 +66,35 @@ export function IshiharaFlow({
     return { questionId: q.id, userAnswer, durationMs: Date.now() - qStartRef.current };
   }
 
-  function advance(next: AnswerRecord[]) {
-    if (idx + 1 >= total) {
-      onDone(next);
-      return;
+  /** 记录后统一走 420ms 中性反馈缓冲，再推进（章末可能插入过渡卡） */
+  function commitAndAdvance(next: AnswerRecord[]) {
+    setRecorded(true);
+    const answered = next.length;
+    if (funMode && answered % 8 === 0 && answered < total) {
+      setMilestone(`已完成 ${answered} / ${total} 版`);
+      setPulse(true);
+      timersRef.current.push(window.setTimeout(() => setMilestone(null), 2200));
     }
-    setIdx(idx + 1);
+    timersRef.current.push(
+      window.setTimeout(() => {
+        setPulse(false);
+        if (idx + 1 >= total) {
+          onDone(next);
+          return;
+        }
+        const nextQ = questions[idx + 1];
+        if (funMode && chapterOf(q.type) !== chapterOf(nextQ.type)) {
+          setIdx(idx + 1);
+          setPausedChapter(chapterOf(nextQ.type));
+          return;
+        }
+        setIdx(idx + 1);
+      }, 420),
+    );
   }
 
   function submit() {
-    if (input.trim() === '') return;
+    if (input.trim() === '' || recorded || pausedChapter !== null) return;
     const rec = record(input.trim());
     const isDemo = q.type === 'demonstration';
     const correct = q.type === 'hidden' ? rec.userAnswer === '' : rec.userAnswer === q.answer;
@@ -72,10 +105,11 @@ export function IshiharaFlow({
       setReveal({ correct, expected: q.answer });
       return;
     }
-    advance(next);
+    commitAndAdvance(next);
   }
 
   function markUnclear() {
+    if (recorded || pausedChapter !== null) return;
     const rec = record('');
     const next = [...answers, rec];
     setAnswers(next);
@@ -84,12 +118,31 @@ export function IshiharaFlow({
       setReveal({ correct: false, expected: q.answer });
       return;
     }
-    advance(next);
+    commitAndAdvance(next);
+  }
+
+  if (pausedChapter !== null) {
+    return (
+      <ChapterCard
+        chapter={CHAPTERS[pausedChapter]}
+        chapterNo={pausedChapter}
+        total={total}
+        index={idx}
+        onContinue={() => setPausedChapter(null)}
+      />
+    );
   }
 
   return (
     <div className="stack" id="ishihara-flow" style={{ gap: 'var(--s-4)' }}>
       <TestProgress index={idx} total={total} current={q} />
+
+      <div className="row between" style={{ flexWrap: 'wrap', gap: 'var(--s-2)' }}>
+        <ProgressDots total={total} index={idx} pulse={pulse} id="progress-dots" />
+        {milestone ? (
+          <span className="chip chip-ok" role="status" style={{ fontSize: '0.8rem' }}>{milestone}</span>
+        ) : null}
+      </div>
 
       <div className="card stack" style={{ alignItems: 'center', gap: 'var(--s-4)' }}>
         <IshiharaPlate type={q.type} text={figureText(q)} seed={q.plate} maxWidth={400} />
@@ -108,8 +161,14 @@ export function IshiharaFlow({
             图上的数字是 <b style={{ fontFamily: 'var(--font-mono)', fontSize: '1.1rem' }}>{reveal.expected || '（无数字）'}</b>
             。演示题用于校准，不计入判读结果。
           </p>
-          <button type="button" className="btn btn-primary btn-block" onClick={() => advance(answers)}>
-            继续 <Icon name="arrowRight" size={18} />
+          <button type="button" className="btn btn-primary btn-block" onClick={() => setIdx(idx + 1 < total ? idx + 1 : idx)}>
+            {idx + 1 < total ? (
+              <>
+                继续 <Icon name="arrowRight" size={18} />
+              </>
+            ) : (
+              '完成作答'
+            )}
           </button>
         </div>
       ) : (
@@ -117,19 +176,20 @@ export function IshiharaFlow({
           <input
             id="answer"
             className="field"
-            value={input}
+            value={recorded ? '✓ 已记录' : input}
             inputMode="numeric"
             placeholder="输入数字"
             aria-label="你看到的数字"
+            disabled={recorded}
             onChange={(e) => setInput(e.target.value.replace(/\D/g, '').slice(0, 3))}
             onKeyDown={(e) => e.key === 'Enter' && submit()}
           />
           <Numpad onDigit={appendDigit} onBackspace={() => setInput((p) => p.slice(0, -1))} onClear={() => setInput('')} />
           <div className="row" style={{ gap: 'var(--s-3)' }}>
-            <button type="button" className="btn btn-primary" style={{ flex: 1 }} onClick={submit} disabled={input.trim() === ''}>
+            <button type="button" className="btn btn-primary" style={{ flex: 1 }} onClick={submit} disabled={input.trim() === '' || recorded}>
               提交
             </button>
-            <button type="button" className="btn btn-ghost" style={{ flex: 1 }} onClick={markUnclear}>
+            <button type="button" className="btn btn-ghost" style={{ flex: 1 }} onClick={markUnclear} disabled={recorded}>
               看不清 / 无数字
             </button>
           </div>

@@ -1,5 +1,5 @@
 // components/result/ReportActions.tsx — 结果导出 / 分享
-// chromacheck v1.2.0
+// chromacheck v1.4.0
 'use client';
 
 import React, { useState } from 'react';
@@ -7,6 +7,8 @@ import Link from 'next/link';
 import { uiText } from '@/lib/scoring';
 import type { TestResult } from '@/lib/types';
 import { D15_CAPS, D15_FIXED } from '@/lib/questions/hue-arrangement';
+import { computeRadar, drawShareCard, exportShareCard } from '@/lib/sharecard';
+import { useSettings } from '@/components/layout/ThemeProvider';
 import { Icon } from '@/components/common/Icon';
 
 function wrap(ctx: CanvasRenderingContext2D, text: string, maxW: number): string[] {
@@ -130,6 +132,24 @@ function drawReport(result: TestResult): HTMLCanvasElement {
 
 export function ReportActions({ result }: { result: TestResult }) {
   const [copied, setCopied] = useState(false);
+  const { settings } = useSettings();
+
+  /** 色觉人格分享卡（v1.4 趣味体验）：实时绘制并导出 PNG */
+  function exportShareCardPng() {
+    if (!result.ishihara) return;
+    const radar = computeRadar(result.ishihara, result.answers);
+    const c = document.createElement('canvas');
+    drawShareCard(c, {
+      ish: result.ishihara,
+      radarValues: radar.values,
+      radarLabels: radar.labels,
+      dateText: result.createdAt.slice(0, 10),
+      funMode: settings.funMode,
+      type: result.type,
+      overall: result.overall,
+    });
+    exportShareCard(c);
+  }
 
   function exportPng() {
     const c = drawReport(result);
@@ -172,6 +192,11 @@ export function ReportActions({ result }: { result: TestResult }) {
         <button type="button" className="btn btn-ghost" onClick={copyText}>
           <Icon name="info" size={18} /> {copied ? '已复制' : '复制结果'}
         </button>
+        {result.ishihara ? (
+          <button type="button" id="shareCardBtn" className="btn btn-ghost" onClick={exportShareCardPng}>
+            <Icon name="share" size={18} /> 分享卡 PNG
+          </button>
+        ) : null}
       </div>
       <div className="row" style={{ gap: 'var(--s-3)', flexWrap: 'wrap' }}>
         <Link href="/test" className="btn btn-ghost">

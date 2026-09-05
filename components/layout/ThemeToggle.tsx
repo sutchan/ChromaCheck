@@ -1,5 +1,5 @@
-// components/layout/ThemeToggle.tsx — 主题 / 色觉安全切换
-// chromacheck v1.0.1
+// components/layout/ThemeToggle.tsx — 主题 / 色觉安全 / 趣味体验切换
+// chromacheck v1.4.0
 'use client';
 
 import React from 'react';
@@ -7,7 +7,7 @@ import { useSettings } from './ThemeProvider';
 import { Icon } from '@/components/common/Icon';
 
 export function ThemeToggle() {
-  const { settings, toggleTheme, toggleCvdSafe } = useSettings();
+  const { settings, toggleTheme, toggleCvdSafe, toggleFun } = useSettings();
   return (
     <div className="row" style={{ gap: 'var(--s-2)' }}>
       <button
@@ -21,6 +21,17 @@ export function ThemeToggle() {
       >
         <Icon name="eye" size={18} />
         <span style={{ fontSize: '0.85rem' }}>色觉安全</span>
+      </button>
+      <button
+        type="button"
+        id="funModeBtn"
+        className="btn btn-ghost"
+        style={{ height: 38, padding: '0 10px' }}
+        aria-pressed={settings.funMode}
+        title="趣味体验：称号、章末过渡与里程碑仪式感（不影响判读）"
+        onClick={toggleFun}
+      >
+        <span style={{ fontSize: '0.85rem' }}>趣味{settings.funMode ? '开' : '关'}</span>
       </button>
       <button
         type="button"

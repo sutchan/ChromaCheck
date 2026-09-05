@@ -1,5 +1,5 @@
 // components/test/TestRunner.tsx — 石原氏检测流程编排（基于可复用 IshiharaFlow）
-// chromacheck v1.3.0
+// chromacheck v1.4.0
 'use client';
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -10,10 +10,12 @@ import { computeResult } from '@/lib/scoring';
 import { saveResult, saveProgress, loadProgress, clearProgress } from '@/lib/storage';
 import { detectDevice } from '@/lib/format';
 import { IshiharaFlow } from './IshiharaFlow';
+import { useSettings } from '@/components/layout/ThemeProvider';
 import { Callout } from '@/components/common/Callout';
 
 export function TestRunner({ mode }: { mode: TestMode }) {
   const router = useRouter();
+  const { settings } = useSettings();
   const questions = useMemo(() => getQuestions(mode), [mode]);
   const [runKey, setRunKey] = useState(0);
   const [initial, setInitial] = useState<{ index: number; answers: AnswerRecord[] } | undefined>(undefined);
@@ -61,6 +63,7 @@ export function TestRunner({ mode }: { mode: TestMode }) {
         key={runKey}
         questions={questions}
         initial={initial}
+        funMode={settings.funMode}
         onProgress={(index, answers) => saveProgress({ mode, index, answers, startedAt: startedAtRef.current })}
         onDone={handleDone}
       />

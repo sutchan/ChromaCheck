@@ -1,5 +1,5 @@
 // app/result/[id]/page.tsx — 结果页
-// chromacheck v1.2.0
+// chromacheck v1.4.0
 'use client';
 
 import React, { useEffect, useState } from 'react';
@@ -12,6 +12,8 @@ import { AxisChart } from '@/components/result/AxisChart';
 import { AnswerReview } from '@/components/result/AnswerReview';
 import { PathTrackingSummary } from '@/components/result/PathTrackingSummary';
 import { HueArrangementSummary } from '@/components/result/HueArrangementSummary';
+import { EyesSwitcher } from '@/components/result/EyesSwitcher';
+import { DimScenes } from '@/components/result/DimScenes';
 import { ReportActions } from '@/components/result/ReportActions';
 import { Callout } from '@/components/common/Callout';
 import { Icon } from '@/components/common/Icon';
@@ -76,6 +78,9 @@ export default function ResultPage() {
           </div>
 
           <AnswerReview answers={result.answers} />
+
+          <EyesSwitcher />
+          <DimScenes />
         </>
       ) : null}
 

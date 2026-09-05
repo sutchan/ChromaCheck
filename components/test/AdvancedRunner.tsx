@@ -1,5 +1,5 @@
 // components/test/AdvancedRunner.tsx — 进阶版联合检测编排（石原氏 + 路径追踪 + 色相排列）
-// chromacheck v1.3.0
+// chromacheck v1.4.0
 'use client';
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -17,12 +17,14 @@ import { detectDevice } from '@/lib/format';
 import { IshiharaFlow } from './IshiharaFlow';
 import { PathTrackingCanvas } from './PathTrackingCanvas';
 import { HueArrangementGrid } from './HueArrangementGrid';
+import { useSettings } from '@/components/layout/ThemeProvider';
 import { Callout } from '@/components/common/Callout';
 
 const PHASES = ['石原氏检测（24 题）', '路径追踪（3 题）', '色相排列（D15）'] as const;
 
 export function AdvancedRunner() {
   const router = useRouter();
+  const { settings } = useSettings();
   const ishiharaQuestions = useMemo(() => getQuestions('standard'), []);
   const pathQuestions = useMemo(() => getPathQuestions('standard'), []);
   const hueQuestion = useMemo(() => getHueQuestions('standard')[0], []);
@@ -98,7 +100,7 @@ export function AdvancedRunner() {
       </div>
 
       {phase === 0 ? (
-        <IshiharaFlow key={`ishihara-${runKey}`} questions={ishiharaQuestions} onDone={onIshiharaDone} />
+        <IshiharaFlow key={`ishihara-${runKey}`} questions={ishiharaQuestions} funMode={settings.funMode} onDone={onIshiharaDone} />
       ) : null}
 
       {phase === 1 && currentPathQ ? (

@@ -12,7 +12,7 @@ function isBrowser(): boolean {
   return typeof window !== 'undefined' && typeof window.localStorage !== 'undefined';
 }
 
-const DEFAULT_SETTINGS: AppSettings = { theme: 'light', cvdSafe: false };
+const DEFAULT_SETTINGS: AppSettings = { theme: 'light', cvdSafe: false, funMode: true };
 
 export function loadSettings(): AppSettings {
   if (!isBrowser()) return { ...DEFAULT_SETTINGS };
