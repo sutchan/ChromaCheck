@@ -1,5 +1,5 @@
 // app/test/page.tsx — 模式选择
-// chromacheck v1.0.1
+// chromacheck v1.2.0
 import React from 'react';
 import Link from 'next/link';
 import { Icon } from '@/components/common/Icon';
@@ -7,7 +7,7 @@ import { Callout } from '@/components/common/Callout';
 import type { TestMode } from '@/lib/types';
 
 const MODES: {
-  mode: TestMode | 'advanced' | 'path';
+  mode: TestMode | 'advanced' | 'path' | 'hue';
   title: string;
   desc: string;
   meta: string;
@@ -17,7 +17,8 @@ const MODES: {
   { mode: 'quick', title: '快速版', desc: '10 道核心题目，3 分钟左右，适合初次自测与定期复检。', meta: '约 3 分钟 · 10 题', enabled: true, href: '/test/ishihara/quick' },
   { mode: 'standard', title: '标准版', desc: '完整 24 题，覆盖转换、消失、隐藏与分类题型，结果更稳定。', meta: '约 8 分钟 · 24 题', enabled: true, href: '/test/ishihara/standard' },
   { mode: 'path', title: '路径追踪', desc: '沿嵌入色点连成的路径描线，辅助判断红/绿色觉异常（v1.1 新增）。', meta: '约 2 分钟 · 描线', enabled: true, href: '/test/path-tracking/standard' },
-  { mode: 'advanced', title: '进阶版', desc: '石原氏 + 路径追踪 + 色相排列三模块联合判读（规划中）。', meta: '规划中 · v1.1+', enabled: false, href: '' },
+  { mode: 'hue', title: '色相排列', desc: '将 15 张色卡按色彩渐变顺序排列，评估辨色精度（D15 简化版，v1.2 新增）。', meta: '约 3 分钟 · 排列', enabled: true, href: '/test/hue-arrangement/standard' },
+  { mode: 'advanced', title: '进阶版', desc: '石原氏 + 路径追踪 + 色相排列三模块联合判读（规划中）。', meta: '规划中 · v1.2+', enabled: false, href: '' },
 ];
 
 export default function TestSelectPage() {

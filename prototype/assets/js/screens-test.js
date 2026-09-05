@@ -1,4 +1,4 @@
-/* prototype/assets/js/screens-test.js v0.1.1 — 石原氏数字图检测屏（可真实作答） */
+/* prototype/assets/js/screens-test.js v0.1.2 — 石原氏数字图检测屏（可真实作答 / 章末过渡 / 中性反馈） */
 window.CC = window.CC || {};
 CC.screens = CC.screens || {};
 
@@ -7,10 +7,9 @@ CC.screens = CC.screens || {};
   var esc = CC.view.esc;
 
   function pdotClass(i) {
+    /* 进度点阵只表达「已完成 / 当前 / 未到」，不暴露对错（防答题数据污染） */
     if (i === CC.state.test.index) return 'pdot is-current';
-    var rec = CC.state.test.answers[CC.state.test.set[i].id];
-    if (!rec) return 'pdot';
-    return rec.correct ? 'pdot is-done' : 'pdot is-wrong';
+    return CC.state.test.answers[CC.state.test.set[i].id] ? 'pdot is-done' : 'pdot';
   }
 
   function elapsed() {
@@ -22,6 +21,26 @@ CC.screens = CC.screens || {};
     title: '石原氏测试',
     render: function () {
       var t = CC.state.test;
+
+      /* 章末过渡卡（趣味体验开启时，章节交替处插入轻科普） */
+      if (t.pauseChapter != null) {
+        var ch = CC.chapters[t.pauseChapter];
+        return '<div class="test-shell">' +
+          CC.view.nav('select') +
+          '<div class="chapter-card rise" id="chapter-card" role="status" aria-label="章节过渡">' +
+            '<span class="chapter-card__ic">' + ch.icon + '</span>' +
+            '<p class="eyebrow">第 ' + (t.pauseChapter + 1) + ' / 3 章</p>' +
+            '<h2>' + ch.name + '</h2>' +
+            '<p class="soft">' + ch.copy + '</p>' +
+            '<div class="pdots chapter-pdots">' + t.set.map(function (_, i) {
+              return '<span class="' + pdotClass(i) + '"></span>';
+            }).join('') + '</div>' +
+            '<button class="btn btn--primary btn--lg" id="ch-go">继续检测</button>' +
+            '<span class="muted" style="font-size:12px;margin-top:12px">回车键也可继续</span>' +
+          '</div>' +
+          '</div>';
+      }
+
       var q = t.set[t.index];
       var rec = t.answers[q.id];
       var buf = CC.state.buffer || '';
@@ -32,7 +51,7 @@ CC.screens = CC.screens || {};
         '<div class="test-top">' +
           '<button class="btn btn--ghost btn--sm" data-go="select">退出</button>' +
           '<span class="idx mono">第 <strong>' + String(t.index + 1).padStart(2, '0') + '</strong> / ' + t.set.length + ' 版</span>' +
-          '<div class="pdots" id="pdots">' + t.set.map(function (_, i) {
+          '<div class="pdots' + (t.pulse ? ' is-milestone' : '') + '" id="pdots">' + t.set.map(function (_, i) {
             return '<span class="' + pdotClass(i) + '" data-jump="' + i + '" title="第 ' + (i + 1) + ' 版"></span>';
           }).join('') + '</div>' +
           '<div class="spacer"></div>' +
@@ -92,6 +111,20 @@ CC.screens = CC.screens || {};
 
     mount: function (root) {
       var t = CC.state.test;
+
+      /* 章末过渡卡：继续按钮 + 回车继续 */
+      if (t.pauseChapter != null) {
+        function goOn() {
+          document.removeEventListener('keydown', CC.state._keyHandler);
+          t.pauseChapter = null;
+          CC.go('ishihara');
+        }
+        CC.state._keyHandler = function (e) { if (e.key === 'Enter') goOn(); };
+        document.addEventListener('keydown', CC.state._keyHandler);
+        root.querySelector('#ch-go').addEventListener('click', goOn);
+        return;
+      }
+
       var q = t.set[t.index];
 
       CC.renderPlate(root.querySelector('#plate-canvas'), {
@@ -101,6 +134,7 @@ CC.screens = CC.screens || {};
 
       var disp = root.querySelector('#answer-display');
       t.enterAt = Date.now();
+      t.pulse = false;
       var timer = setInterval(function () {
         var c = root.querySelector('#clock');
         if (c) c.textContent = elapsed();
@@ -127,7 +161,15 @@ CC.screens = CC.screens || {};
 
       function advance() {
         clearInterval(timer);
+        t.locked = false;
         if (t.index < t.set.length - 1) {
+          var nextQ = t.set[t.index + 1];
+          if (CC.fun() && CC.chapterOf(q.type) !== CC.chapterOf(nextQ.type)) {
+            t.index++;
+            t.pauseChapter = CC.chapterOf(nextQ.type);
+            CC.go('ishihara');
+            return;
+          }
           t.index++;
           CC.go('ishihara');
         } else if (CC.state.mode === 'advanced') {
@@ -137,20 +179,37 @@ CC.screens = CC.screens || {};
         }
       }
 
+      /** 提交一题：记录 → 中性反馈（✓ 已记录，无对错信息）→ 里程碑仪式感 → 推进 */
+      function submit(value, cannotSee) {
+        if (t.locked) return;
+        commit(value, cannotSee);
+        t.locked = true;
+        disp.innerHTML = '<span class="commit-ok">✓ 已记录</span>';
+        disp.classList.remove('is-empty');
+        var answered = Object.keys(t.answers).length;
+        if (CC.fun() && answered > 0 && answered % 8 === 0 && answered < t.set.length) {
+          CC.toast('已完成 ' + answered + ' / ' + t.set.length + ' 版');
+          t.pulse = true;
+        }
+        setTimeout(advance, 420);
+      }
+
       root.querySelector('#keypad').addEventListener('click', function (e) {
         var b = e.target.closest('[data-key]');
         if (!b) return;
         var k = b.getAttribute('data-key');
+        if (t.locked) return;
         if (k === 'bs') setBuf((CC.state.buffer || '').slice(0, -1));
-        else if (k === 'none') { commit('', true); advance(); }
-        else if (k === 'ok') { commit(CC.state.buffer || '', false); advance(); }
+        else if (k === 'none') submit('', true);
+        else if (k === 'ok') submit(CC.state.buffer || '', false);
         else setBuf((CC.state.buffer || '') + k);
       });
 
       CC.state._keyHandler = function (e) {
+        if (t.locked) return;
         if (e.key >= '0' && e.key <= '9') setBuf((CC.state.buffer || '') + e.key);
         else if (e.key === 'Backspace') setBuf((CC.state.buffer || '').slice(0, -1));
-        else if (e.key === 'Enter') { commit(CC.state.buffer || '', false); advance(); }
+        else if (e.key === 'Enter') submit(CC.state.buffer || '', false);
       };
       document.addEventListener('keydown', CC.state._keyHandler);
 

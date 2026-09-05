@@ -1,7 +1,28 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.1.1`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.2.1`）。
+
+## [1.2.1] - 2026-09-05
+
+### 文档
+- 完善根目录 `.gitignore`：补齐 Next.js 标准忽略集（依赖、构建产物 `.next`/`.out`、类型检查缓存 `*.tsbuildinfo`/`next-env.d.ts`、调试日志、环境变量与密钥、测试覆盖率、托管平台 `.vercel`/`.turbo`/`.netlify`、编辑器/系统文件），并保留 `prototype/`、`docs/`、`.codebuddy/` 等应跟踪目录。
+- 版本单一来源同步至 `1.2.1`（`VERSION`、`package.json`、本文件）。
+
+## [1.2.0] - 2026-09-05
+
+### 新增
+- 色相排列检测模块（简化版 Farnsworth-Munsell D15）：新增 `/test/hue-arrangement/[mode]` 路由、`HueArrangementRunner` 与 `HueArrangementGrid` 组件（点击选中 + 点击交换，两端参考卡固定，初始排列确定性生成避免 SSR 闪烁）；移植原型 `CC.hueCards` 为 `lib/questions/hue-arrangement.ts`（D15 sRGB 色卡 + 种子打乱）；新增 `lib/hue-scoring.ts`（TES 相邻位置误差评分、偏差方向启发式、综合结果汇总）。
+- `TestResult` 扩展可选 `hueArrangement` 字段；结果页新增色相排列摘要（TES、偏差方向、最终排列色条），结果总览统计位与历史标签按测试类型守卫渲染。
+- PNG 导出报告为色相排列绘制最终排列色卡条；复制文本包含 TES 结果。
+- 应用页脚新增 GitHub 仓库链接（`https://github.com/sutchan/ChromaCheck`）。
+
+### 修复
+- 应用页脚版本号由陈旧的 v1.0.0 同步为当前版本。
+
+### 文档
+- README 实现状态、功能清单、项目结构树与联系方式同步 v1.2.0；SPEC / DATA-SPEC / ARCHITECTURE / PRD / ROADMAP 实现状态声明同步（色相排列标注为 v1.2 已实现）。
+- 版本单一来源同步至 `1.2.0`（`VERSION`、`package.json`、本文件）。
 
 ## [1.1.1] - 2026-09-04
 

@@ -1,5 +1,5 @@
 // lib/types.ts — ChromaCheck 领域类型
-// chromacheck v1.1.0
+// chromacheck v1.2.0
 
 export type PlateType =
   | 'demonstration'
@@ -112,6 +112,32 @@ export interface PathTrackingResult {
   passed: boolean;
 }
 
+export interface HueArrangementQuestion {
+  /** 题目唯一标识 */
+  id: string;
+  /** 色卡数量（含首尾固定参考卡） */
+  cardCount: 17;
+  /** 15 张可移动色卡 sRGB 颜色（按正确渐变顺序） */
+  cards: string[];
+  /** 首尾固定参考卡颜色 */
+  fixedColors: [string, string];
+}
+
+export interface HueArrangementResult {
+  /** 题目 ID */
+  questionId: string;
+  /** 用户最终排列（可移动色卡索引序列，0-14） */
+  order: number[];
+  /** 总误差分数（TES） */
+  totalErrorScore: number;
+  /** 相邻色卡位置误差 */
+  cardErrors: number[];
+  /** 偏差方向（提示异常类型；D-15 排列不足以临床分型） */
+  deviationDirection: 'protan' | 'deutan' | 'tritan' | 'none';
+  /** TES < 20 视为正常 */
+  normal: boolean;
+}
+
 export interface TestResult {
   id: string;
   schema: string;
@@ -128,6 +154,8 @@ export interface TestResult {
   ishihara?: IshiharaResult;
   /** 路径追踪判读结果（v1.1 扩展） */
   pathTracking?: PathTrackingResult[];
+  /** 色相排列（D15）判读结果（v1.2 扩展） */
+  hueArrangement?: HueArrangementResult;
   analysis: string;
   confidenceNote: string;
   device: string;

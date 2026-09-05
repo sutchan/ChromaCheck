@@ -1,4 +1,4 @@
-/* prototype/assets/css/screens-test.css v0.1.0 — 检测三屏 / 结果页 / 图表 */
+/* prototype/assets/css/screens-test.css v0.1.1 — 检测三屏 / 结果页 / 图表 / 趣味组件 */
 
 /* ---------- 检测通用 ---------- */
 .test-shell { display: flex; flex-direction: column; min-height: 640px; }
@@ -118,4 +118,58 @@
 @container (max-width: 620px) {
   .hist-row { grid-template-columns: 1fr auto; row-gap: 8px; }
   .path-canvas-wrap canvas { width: 92vw; }
+  .share-modal .share-preview canvas { width: 240px; }
 }
+
+/* ============================================================
+   趣味性设计（进度点阵仪式感 / 章末过渡 / 分享卡 / 换一双眼睛 / 三轴科普）
+   ============================================================ */
+
+/* 中性提交反馈（不含对错信息） */
+.commit-ok { color: var(--ok-600); font-weight: 600; animation: cc-pop var(--d-2) var(--ease) both; }
+
+/* 里程碑脉冲：每 8 题触发一次 */
+.pdots.is-milestone { animation: cc-pulse var(--d-4) var(--ease) 2; }
+
+/* 章末过渡卡 */
+.chapter-card {
+  max-width: 520px; margin: 8vh auto; padding: var(--s-8) var(--s-7);
+  text-align: center; display: grid; justify-items: center; gap: var(--s-4);
+  background: var(--bg-elev); border: 1px solid var(--border); border-radius: var(--r-xl); box-shadow: var(--sh-3);
+}
+.chapter-card__ic {
+  display: grid; place-items: center; width: 64px; height: 64px; border-radius: var(--r-full);
+  background: var(--brand-soft); color: var(--brand); font-size: 28px;
+}
+.chapter-card h2 { font-size: var(--fs-h2); }
+.chapter-card .soft { max-width: 36ch; }
+.chapter-pdots { max-width: 360px; justify-content: center; }
+
+/* 旅人称号行 */
+.title-line { display: flex; align-items: center; gap: var(--s-3); margin-top: var(--s-4); flex-wrap: wrap; }
+.title-desc { font-size: var(--fs-sm); color: var(--fg-soft); }
+
+/* 三轴维度条可点击 + 科普展开区 */
+.dim-row--btn { text-align: left; cursor: pointer; border: 0; background: transparent; font: inherit; }
+.dim-row--btn .chev { color: var(--fg-mute); font-size: 18px; transition: transform var(--d-2) var(--ease); }
+.dim-row--btn[aria-expanded='true'] .chev { transform: rotate(90deg); color: var(--brand); }
+.dim-row--btn:hover .nm { color: var(--brand); }
+.dim-scene { margin-top: var(--s-4); padding: var(--s-4) var(--s-5); border-radius: var(--r-md); background: var(--bg-sunken); animation: cc-rise var(--d-3) var(--ease) both; }
+.dim-scene h5 { font-size: var(--fs-sm); margin-bottom: 8px; }
+.dim-scene ul { margin: 0; padding-left: 18px; font-size: var(--fs-sm); color: var(--fg-soft); display: grid; gap: 6px; }
+
+/* 换一双眼睛 */
+.eyes-stage { display: grid; place-items: center; margin: var(--s-5) 0 var(--s-4); }
+.eyes-stage canvas { width: min(340px, 100%); border-radius: var(--r-full); box-shadow: var(--sh-2); }
+.eye-chip { height: 32px; padding: 0 var(--s-4); cursor: pointer; }
+.eye-chip.is-sel { background: var(--brand); color: var(--on-brand); border-color: var(--brand); }
+
+/* 分享卡模态 */
+.modal-card { padding: var(--s-6); }
+.share-modal { width: min(420px, calc(100vw - 32px)); text-align: center; }
+.share-preview { display: grid; place-items: center; }
+.share-preview canvas { width: 280px; border-radius: var(--r-md); box-shadow: var(--sh-2); }
+
+/* 设置面板 */
+.settings-modal { width: min(440px, calc(100vw - 32px)); }
+.settings-actions { display: flex; justify-content: flex-end; gap: var(--s-3); border-top: 1px solid var(--border); padding-top: var(--s-4); }

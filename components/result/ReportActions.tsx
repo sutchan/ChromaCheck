@@ -1,11 +1,12 @@
 // components/result/ReportActions.tsx — 结果导出 / 分享
-// chromacheck v1.1.0
+// chromacheck v1.2.0
 'use client';
 
 import React, { useState } from 'react';
 import Link from 'next/link';
 import { uiText } from '@/lib/scoring';
 import type { TestResult } from '@/lib/types';
+import { D15_CAPS, D15_FIXED } from '@/lib/questions/hue-arrangement';
 import { Icon } from '@/components/common/Icon';
 
 function wrap(ctx: CanvasRenderingContext2D, text: string, maxW: number): string[] {
@@ -56,37 +57,60 @@ function drawReport(result: TestResult): HTMLCanvasElement {
   y += 40;
   ctx.fillText(`置信度 ${result.confidence}%  ·  ${uiText.mode(result.testMode)}`, 40, y);
 
-  // 维度条 / 路径重合度
+  // 维度条 / 路径重合度 / 色相排列色卡条
   y += 60;
-  const axes: [string, number, string][] = result.ishihara
-    ? [
-        ['红色觉轴', result.ishihara.dimensions.protan, '#d64550'],
-        ['绿色觉轴', result.ishihara.dimensions.deutan, '#2f8f6b'],
-        ['蓝色觉轴', result.ishihara.dimensions.tritan, '#2f6fb0'],
-      ]
-    : result.pathTracking
-      ? result.pathTracking.map((r, i) => [`路径${i + 1}`, r.overlapScore, r.passed ? '#2f8f6b' : '#d64550'])
-      : [];
-  const bw = 200;
-  const gap = 40;
-  const baseY = y + 220;
-  axes.forEach(([label, v, color], i) => {
-    const x = 60 + i * (bw + gap);
-    ctx.fillStyle = '#eef0f3';
-    ctx.fillRect(x, y, bw, 220);
-    ctx.fillStyle = color;
-    const h = (v / 100) * 220;
-    ctx.fillRect(x, baseY - h, bw, h);
-    ctx.fillStyle = '#14202b';
-    ctx.font = '700 26px Archivo, sans-serif';
-    ctx.textAlign = 'center';
-    ctx.fillText(String(v), x + bw / 2, y + 30);
+  if (result.hueArrangement) {
+    const hue = result.hueArrangement;
     ctx.fillStyle = '#6e7c87';
     ctx.font = '500 18px Archivo, sans-serif';
-    ctx.fillText(label, x + bw / 2, baseY + 28);
-    ctx.textAlign = 'left';
-  });
-  y = baseY + 80;
+    ctx.fillText('色卡排列（左参考 → 右参考）', 40, y);
+    y += 20;
+    const strip = [D15_FIXED[0], ...hue.order.map((i) => D15_CAPS[i]), D15_FIXED[1]];
+    const cw = 44;
+    strip.forEach((col, i) => {
+      ctx.fillStyle = col;
+      ctx.fillRect(40 + i * (cw + 6), y, cw, cw);
+    });
+    y += cw + 24;
+    ctx.fillStyle = '#14202b';
+    ctx.font = '700 24px Archivo, sans-serif';
+    ctx.fillText(
+      `TES ${hue.totalErrorScore}（${hue.totalErrorScore < 20 ? '排列正常' : hue.totalErrorScore <= 40 ? '轻度偏差' : '明显偏差'}）`,
+      40,
+      y,
+    );
+    y += 50;
+  } else {
+    const axes: [string, number, string][] = result.ishihara
+      ? [
+          ['红色觉轴', result.ishihara.dimensions.protan, '#d64550'],
+          ['绿色觉轴', result.ishihara.dimensions.deutan, '#2f8f6b'],
+          ['蓝色觉轴', result.ishihara.dimensions.tritan, '#2f6fb0'],
+        ]
+      : result.pathTracking
+        ? result.pathTracking.map((r, i) => [`路径${i + 1}`, r.overlapScore, r.passed ? '#2f8f6b' : '#d64550'])
+        : [];
+    const bw = 200;
+    const gap = 40;
+    const baseY = y + 220;
+    axes.forEach(([label, v, color], i) => {
+      const x = 60 + i * (bw + gap);
+      ctx.fillStyle = '#eef0f3';
+      ctx.fillRect(x, y, bw, 220);
+      ctx.fillStyle = color;
+      const h = (v / 100) * 220;
+      ctx.fillRect(x, baseY - h, bw, h);
+      ctx.fillStyle = '#14202b';
+      ctx.font = '700 26px Archivo, sans-serif';
+      ctx.textAlign = 'center';
+      ctx.fillText(String(v), x + bw / 2, y + 30);
+      ctx.fillStyle = '#6e7c87';
+      ctx.font = '500 18px Archivo, sans-serif';
+      ctx.fillText(label, x + bw / 2, baseY + 28);
+      ctx.textAlign = 'left';
+    });
+    y = baseY + 80;
+  }
 
   // 分析文字
   ctx.fillStyle = '#14202b';
@@ -121,7 +145,9 @@ export function ReportActions({ result }: { result: TestResult }) {
       ? `维度：红${result.ishihara.dimensions.protan} 绿${result.ishihara.dimensions.deutan} 蓝${result.ishihara.dimensions.tritan}`
       : result.pathTracking
         ? `路径重合度：${result.pathTracking.map((r) => `${r.overlapScore}%`).join(' / ')}`
-        : '';
+        : result.hueArrangement
+          ? `色相排列 TES：${result.hueArrangement.totalErrorScore}（${result.hueArrangement.normal ? '排列正常' : result.hueArrangement.totalErrorScore <= 40 ? '轻度偏差' : '明显偏差'}）`
+          : '';
     const txt = `色辨 ChromaCheck 筛查结果：\n结论：${uiText.overall(result.overall)}\n${
       result.type ? `类型：${uiText.type(result.type)}（${uiText.severity(result.severity)}）\n` : ''
     }置信度：${result.confidence}%\n${dimText}\n${result.analysis}`;

@@ -1,5 +1,5 @@
 // components/result/ResultSummary.tsx — 判读总览
-// chromacheck v1.0.0
+// chromacheck v1.2.0
 'use client';
 
 import React from 'react';
@@ -39,13 +39,15 @@ export function ResultSummary({ result }: { result: TestResult }) {
 
       <div className="grid-cards" style={{ gridTemplateColumns: 'repeat(auto-fit,minmax(140px,1fr))' }}>
         <div className="card" style={{ padding: 'var(--s-4)', boxShadow: 'none', background: 'var(--bg-sunken)' }}>
-          <div className="stat-k">{result.ishihara ? '正确题数' : '通过题数'}</div>
+          <div className="stat-k">{result.hueArrangement ? 'TES 得分' : result.ishihara ? '正确题数' : '通过题数'}</div>
           <div className="stat-v">
             {result.ishihara
               ? `${result.ishihara.details.correctCount}/${result.ishihara.details.totalCount}`
               : result.pathTracking
                 ? `${result.pathTracking.filter((r) => r.passed).length}/${result.pathTracking.length}`
-                : '—'}
+                : result.hueArrangement
+                  ? result.hueArrangement.totalErrorScore
+                  : '—'}
           </div>
         </div>
         <div className="card" style={{ padding: 'var(--s-4)', boxShadow: 'none', background: 'var(--bg-sunken)' }}>

@@ -1,5 +1,5 @@
 // components/layout/Footer.tsx — 页脚
-// chromacheck v1.0.0
+// chromacheck v1.2.0
 import React from 'react';
 import Link from 'next/link';
 
@@ -21,10 +21,11 @@ export function Footer() {
             <Link href="/test" className="muted" style={{ fontSize: '0.9rem' }}>开始检测</Link>
             <Link href="/learn" className="muted" style={{ fontSize: '0.9rem' }}>科普文章</Link>
             <Link href="/privacy" className="muted" style={{ fontSize: '0.9rem' }}>隐私政策</Link>
+            <a href="https://github.com/sutchan/ChromaCheck" target="_blank" rel="noreferrer" className="muted" style={{ fontSize: '0.9rem' }} aria-label="ChromaCheck GitHub 仓库">GitHub</a>
           </div>
         </div>
         <div className="muted" style={{ fontSize: '0.82rem', borderTop: '1px solid var(--border)', paddingTop: 'var(--s-4)' }}>
-          © {new Date().getFullYear()} ChromaCheck · v1.0.0 · 仅供教育与筛查用途
+          © {new Date().getFullYear()} ChromaCheck · v1.2.0 · 仅供教育与筛查用途
         </div>
       </div>
     </footer>

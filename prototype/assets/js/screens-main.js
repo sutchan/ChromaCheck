@@ -1,4 +1,4 @@
-/* prototype/assets/js/screens-main.js v0.1.2 — 视图骨架 / 首页 / 检测前指引 / 模式选择 */
+/* prototype/assets/js/screens-main.js v0.1.3 — 视图骨架 / 首页 / 检测前指引 / 模式选择 */
 window.CC = window.CC || {};
 CC.screens = CC.screens || {};
 
@@ -25,7 +25,7 @@ CC.screens = CC.screens || {};
           return '<a data-go="' + l[0] + '" class="' + (active === l[0] ? 'is-active' : '') + '">' + l[1] + '</a>';
         }).join('') + '</nav>' +
         '<div class="spacer"></div>' +
-        '<button class="btn btn--ghost btn--sm" data-act="toast" data-msg="设置面板在实现版本中提供：音效、自动下一题、主题">设置</button>' +
+        '<button class="btn btn--ghost btn--sm" data-act="settings">设置</button>' +
         '<button class="btn btn--primary btn--sm" data-go="guide">开始检测</button>' +
         '</header>';
     },

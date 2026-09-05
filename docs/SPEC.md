@@ -1,6 +1,6 @@
-<!-- docs/SPEC.md v1.0.4 — ChromaCheck 项目规范总纲（单一事实来源） -->
+<!-- docs/SPEC.md v1.0.5 — ChromaCheck 项目规范总纲（单一事实来源） -->
 <!-- 地位：本规范为权威总纲。当与各分册（PRD/ARCHITECTURE/API/DATA-SPEC/DEPLOYMENT/TESTING/CONTRIBUTING/PRIVACY/ROADMAP）冲突时，以本规范为准。 -->
-<!-- 实现状态：v1.0 已实现（Next.js 14 应用 + 石原氏检测 + 结果/历史/科普/隐私），原型作为设计验证参考。当前版本 v1.0.4。 -->
+<!-- 实现状态：v1.0 已实现（Next.js 14 应用 + 石原氏检测 + 结果/历史/科普/隐私），原型作为设计验证参考。当前版本 v1.0.5。 -->
 
 # 色辨 ChromaCheck 项目规范（SPEC）
 
@@ -22,7 +22,7 @@
 | `docs/PRIVACY.md` | 隐私政策分册 | 已对齐 SPEC，生效 |
 | `docs/ROADMAP.md` | 路线图分册 | 已对齐 SPEC，生效 |
 
-**实现状态声明（必须写入各文档顶部）**：ChromaCheck 已完成 v1.0 实现——Next.js 14 应用 + 石原氏检测 + 结果/历史/科普/隐私页均已落地，`npm install / npm run dev / npm run build / npm test` 均可正常执行（见 README「快速开始」）。路径追踪与色相排列（F4/F5）推迟至 v1.1，原型仅作设计验证参考。
+**实现状态声明（必须写入各文档顶部）**：ChromaCheck 已完成 v1.0 实现——Next.js 14 应用 + 石原氏检测 + 结果/历史/科普/隐私页均已落地，`npm install / npm run dev / npm run build / npm test` 均可正常执行（见 README「快速开始」）。路径追踪（F4）已于 v1.1 实现，色相排列（F5）已于 v1.2 实现；原型仅作设计验证参考。
 
 ## 1. 产品定位与功能范围
 
@@ -33,7 +33,7 @@
 遵循 ROADMAP §2.2 的边界，明确 v1.0 交付范围，**覆盖 PRD 与 ROADMAP 的冲突**：
 
 - **纳入 v1.0（核心）**：首页、检测前指引、模式选择、石原氏测试、结果页、历史记录、科普列表与详情、**隐私政策页**（PRIVACY §6 要求，补入 PRD 功能架构）、结果导出（PDF/图片）、结果分享。
-- **排除 v1.0（推迟至 v1.1+）**：路径追踪测试（F4）、色相排列测试（F5）。二者已在原型中作演示，但 v1.0 不实现正式模块。
+- **排除 v1.0（推迟至 v1.1+）**：路径追踪测试（F4）、色相排列测试（F5）。二者已在原型中作演示，但 v1.0 不实现正式模块。（路径追踪已于 v1.1 实现，色相排列已于 v1.2 实现）
 
 检测模式：`quick`（快速，10 题）/ `standard`（标准，24 题）。`advanced`（进阶）推迟至 v1.1。
 
@@ -87,6 +87,30 @@ lib/
 - 必须尊重 `prefers-reduced-motion: reduce`（tokens.css 已全局降级）。
 - 无障碍：语义化 HTML、ARIA 属性、键盘可达、WCAG AA；主要容器与关键 DOM 须加语义化 `id`（见 §8.1）。
 
+### 3.5 趣味性设计规范（v0.1 原型已实现）
+
+> 目标：降低弃测率 + 提升报告传播性；科普为加分项。**明确不做留存钩子**（成人色觉终身稳定，「复测提醒」会暗示色觉恶化、制造焦虑，与去污名化原则冲突）。
+
+**红线（硬约束）**
+1. **答题中永不显示对错**——任何对错暗示都会污染后续答题与判读数据。进度点阵只表达「已完成 / 当前 / 未到」三态；逐题明细的对错染色仅允许出现在结果页。
+2. **不引入积分/排行榜/每日挑战**——刷分会诱导乱答，损害判读数据可信度。
+3. **无障碍零豁免**——趣味元素同样通过五种色觉模拟校验、遵循「状态不靠颜色」三重编码、尊重 `prefers-reduced-motion`。
+4. **称号去污名化**——旅人隐喻（如「全谱旅人」「森林色偏航的旅人」），仅本机展示，不默认公开。
+
+**功能清单（7 项，均受「趣味体验」开关控制¹）**
+
+| # | 功能 | 位置 | 说明 |
+|---|------|------|------|
+| 1 | 进度点阵仪式感 | 答题页 | 24 圆点母题进度条；每完成 8 题触发脉冲 + 「已完成 N / 24 版」轻提示 |
+| 2 | 章末轻科普过渡 | 答题页 | 题型分 3 章（热身/主体/深水），章节交替处插入过渡卡（`CC.chapters`），回车或按钮继续 |
+| 3 | 中性提交反馈 | 答题页 | 提交后「✓ 已记录」+ 420ms 缓冲（¹恒开，不随开关关闭） |
+| 4 | 色觉人格分享卡 | 结果页 | Canvas 手绘（`sharecard.js`）：雷达 + 称号 + 三轴条，本地 `toDataURL` 导出 PNG，零依赖 |
+| 5 | 换一双眼睛 | 结果页 | 第 4 版转换图（标准答案 29）五种色觉视角切换，复用 `CC.renderPlate` 的 `cvd` 参数（键名须用 `CVD_MATRIX` 的 `protanopia/deuteranopia/tritanopia/achromatopsia`） |
+| 6 | 三轴互动科普 | 结果页 | 点维度条展开日常生活影响（`CC.dimScenes`），`aria-expanded` 状态可键盘操作 |
+| 7 | 「趣味体验」总开关 | 设置面板 | 导航栏「设置」模态；`localStorage` 键 `cc.funMode`，默认开；关闭后称号/人格化文案回退中性措辞 |
+
+¹ 开关控制范围：称号与人格化文案（#4/#5 之外的文案）、章末过渡（#2）、里程碑仪式感（#1）。中性反馈（#3）属于基础体验，恒开。
+
 ## 4. 原型契约（CC.* 全局 API）
 
 原型以 `window.CC` 命名空间暴露真实逻辑，是判读与绘制的**参考真值**。
@@ -99,6 +123,9 @@ lib/
 - `CC.overallLabel` / `CC.typeText` / `CC.severityText` / `CC.modeText`：枚举展示文案。
 - `CC.demoResult` / `CC.demoAnswers`：完整结果演示。
 - `CC.hueCards` / `CC.hueShuffled`：色相排列色卡（Farnsworth-Munsell D15 sRGB 近似，15 色）。
+- 趣味性数据（§3.5）：`CC.chapters` + `CC.chapterOf(type)`（章节文案与题型归属）、`CC.titles`（旅人称号，键为 ColorDeficiencyType / `normal` / `inconclusive`）、`CC.dimScenes`（三轴日常场景科普）。
+- `app.js`：`CC.fun()` / `CC.setFun(on)`（趣味开关读写 + localStorage `cc.funMode`）。
+- `sharecard.js`：`CC.drawShareCard(canvas, ish, radarValues, radarLabels, dateText)` / `CC.exportShareCard(canvas)`（Canvas 分享卡与 PNG 导出）。
 - `CC.articles`：科普文章列表。
 - `CC.routes`：页面路由清单（home/guide/select/ishihara/path/hue/result/history/learn/learnDetail）。
 
@@ -301,7 +328,7 @@ clamp(confidence, 0, 100)
 
 ## 9. 实现状态与待办（对齐 ROADMAP）
 - **已完成（v1.0）**：文档体系（9 分册 + SPEC 总纲）、高保真静态原型（4 页）、Next.js 14 应用骨架、石原氏检测全流程（`lib/` 题库/判读/点阵/存储移植 + `components/` 组件）、结果/历史/科普/隐私页、导出（PNG/打印/复制）/分享、CI。
-- **推迟（v1.1+）**：路径追踪测试（F4）、色相排列测试（F5）、`advanced` 进阶模式、匿名分析（`analyticsEnabled`）。
+- **推迟**：`advanced` 进阶模式、匿名分析（`analyticsEnabled`）。（路径追踪 F4 已于 v1.1 实现，色相排列 F5 已于 v1.2 实现）
 
 ---
 *本文档为 ChromaCheck 权威规范总纲 v1.0.4。分册应据本规范修订以消除前述字段/算法/范围冲突。*

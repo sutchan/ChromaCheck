@@ -1,4 +1,4 @@
-/* prototype/assets/js/app.js v0.1.1 — 原型外壳：状态 / 路由 / 设备与色觉模拟 / 判读串联 */
+/* prototype/assets/js/app.js v0.1.2 — 原型外壳：状态 / 路由 / 设备与色觉模拟 / 判读串联 / 设置 */
 window.CC = window.CC || {};
 
 (function () {
@@ -9,11 +9,21 @@ window.CC = window.CC || {};
   CC.state = {
     route: 'home', device: 'desktop', theme: 'light', cvd: 'none', cvdSafe: 'off',
     mode: 'standard', guideReady: false, cat: '全部', articleIdx: 0,
+    funMode: true,
     history: CC.history.slice(),
     test: { set: [], index: 0, answers: {}, start: 0 },
     path: { index: 0, results: [] },
     hue: { order: CC.hueShuffled.slice(), pick: null },
     result: null, lastAnswers: null, hueResult: null, buffer: ''
+  };
+
+  /* ---------- 趣味体验开关（localStorage 持久化，默认开） ---------- */
+  try { CC.state.funMode = localStorage.getItem('cc.funMode') !== 'off'; } catch (err) { /* 隐私模式忽略 */ }
+  CC.fun = function () { return !!CC.state.funMode; };
+  CC.setFun = function (on) {
+    CC.state.funMode = !!on;
+    try { localStorage.setItem('cc.funMode', on ? 'on' : 'off'); } catch (err) { /* 忽略 */ }
+    CC.rerender();
   };
 
   var q = function (id) { return document.getElementById(id); };
@@ -135,7 +145,45 @@ window.CC = window.CC || {};
     }
     var t = e.target.closest('[data-act="toast"]');
     if (t) CC.toast(t.getAttribute('data-msg'));
+    var st = e.target.closest('[data-act="settings"]');
+    if (st) openSettings();
   });
+
+  /* ---------- 设置面板（模态） ---------- */
+  function openSettings() {
+    var old = document.getElementById('cc-settings');
+    if (old) old.remove();
+    var mask = document.createElement('div');
+    mask.className = 'modal-mask';
+    mask.id = 'cc-settings';
+    mask.innerHTML =
+      '<div class="modal-card settings-modal" role="dialog" aria-modal="true" aria-labelledby="settings-title">' +
+        '<div class="card-body">' +
+          '<h3 id="settings-title" style="margin-bottom:8px">设置</h3>' +
+          '<p class="muted" style="font-size:13px;margin-bottom:20px">原型阶段仅提供以下选项，全部数据只存在本机。</p>' +
+          '<label class="check" style="font-size:14px">' +
+            '<input type="checkbox" id="set-fun"' + (CC.fun() ? ' checked' : '') + '><span class="box"></span>' +
+            '<span>趣味体验<span class="muted" style="font-weight:400">——检测称号、章节过渡与进度仪式感；关闭后回退中性措辞</span></span>' +
+          '</label>' +
+        '</div>' +
+        '<div class="settings-actions">' +
+          '<button class="btn" id="set-close">关闭</button>' +
+          '<button class="btn btn--primary" id="set-save">保存</button>' +
+        '</div>' +
+      '</div>';
+    document.body.appendChild(mask);
+    function close() { mask.remove(); }
+    mask.addEventListener('click', function (e) { if (e.target === mask) close(); });
+    document.getElementById('set-close').addEventListener('click', close);
+    document.getElementById('set-save').addEventListener('click', function () {
+      CC.setFun(document.getElementById('set-fun').checked);
+      close();
+      CC.toast('设置已保存');
+    });
+    document.addEventListener('keydown', function escClose(e) {
+      if (e.key === 'Escape') { close(); document.removeEventListener('keydown', escClose); }
+    });
+  }
 
   /* ---------- 外壳控件 ---------- */
   function bindChrome() {

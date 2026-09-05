@@ -1,5 +1,5 @@
 // app/result/[id]/page.tsx — 结果页
-// chromacheck v1.0.0
+// chromacheck v1.2.0
 'use client';
 
 import React, { useEffect, useState } from 'react';
@@ -11,6 +11,7 @@ import { ResultSummary } from '@/components/result/ResultSummary';
 import { AxisChart } from '@/components/result/AxisChart';
 import { AnswerReview } from '@/components/result/AnswerReview';
 import { PathTrackingSummary } from '@/components/result/PathTrackingSummary';
+import { HueArrangementSummary } from '@/components/result/HueArrangementSummary';
 import { ReportActions } from '@/components/result/ReportActions';
 import { Callout } from '@/components/common/Callout';
 import { Icon } from '@/components/common/Icon';
@@ -79,6 +80,8 @@ export default function ResultPage() {
       ) : null}
 
       {result.pathTracking ? <PathTrackingSummary results={result.pathTracking} /> : null}
+
+      {result.hueArrangement ? <HueArrangementSummary result={result.hueArrangement} /> : null}
 
       <ReportActions result={result} />
 
