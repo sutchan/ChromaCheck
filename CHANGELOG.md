@@ -1,7 +1,13 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.2.2`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.2.3`）。
+
+## [1.2.3] - 2026-09-05
+
+### 文档
+- 重写 `docs/ARCHITECTURE.md` §2.2 目录结构树，消除蓝图残留：移除虚构的 `components/ui/`（shadcn）、`common/Seo.tsx`、顶层 `types/` 目录，以及 `lib/questions`、`lib/scoring`、`lib/storage`、`lib/export` 子目录划分；改为与 `README.md` 一致的真实扁平结构（`lib/` 主模块 + `lib/questions/` 子题库、五域 `components/`）。同步补全 `app/` 真实条目（`not-found.tsx`、`icon.svg`、`result/[id]`、`privacy` 等）与组件真实清单。
+- 版本单一来源同步至 `1.2.3`（`VERSION`、`package.json`、本文件）。
 
 ## [1.2.2] - 2026-09-05
 

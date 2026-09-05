@@ -93,66 +93,44 @@
 ### 2.2 目录结构说明
 
 ```
-> 注：下方为规划视角结构树（含 v1.1 路径追踪 / 色相排列）。v1.0 实际落地结构见 `README.md` 项目结构树（扁平 `lib/` + 五域 `components/`）。
+> 下方为实际落地结构（与 `README.md` 项目结构树一致）。
 
-app/
-├── layout.tsx              # 根布局：HTML 结构、全局 Provider、字体
-├── page.tsx                # 首页：SSG，产品介绍 + CTA
-├── globals.css             # 全局样式：Tailwind 指令 + CSS 变量 + 自定义样式
-├── guide/page.tsx          # 检测前指引：CSR，用户确认检测条件
+app/                          # Next.js App Router 页面
+├── layout.tsx                # 根布局（含 ThemeProvider）
+├── page.tsx                  # 首页（含色觉模拟 CvdSimulator）
+├── not-found.tsx             # 404
+├── globals.css               # 全局样式 + 设计令牌
+├── icon.svg                  # 站点图标
+├── guide/page.tsx            # 检测前指引
 ├── test/
-│   ├── page.tsx            # 测试模式选择：快速/标准（进阶 v1.1 规划）
-│   ├── ishihara/[mode]/page.tsx   # 石原氏测试：核心检测流程（已实现）
-│   ├── path-tracking/[mode]/page.tsx # 路径追踪测试（v1.1 已实现）
-│   └── hue-arrangement/[mode]/page.tsx  # 色相排列测试（v1.2 已实现）
-├── result/page.tsx         # 结果展示：读取 URL state / localStorage
+│   ├── page.tsx              # 模式选择（快速 / 标准 / 路径追踪 / 色相排列）
+│   ├── ishihara/[mode]/page.tsx   # 石原氏测试
+│   ├── path-tracking/[mode]/page.tsx   # 路径追踪测试（v1.1）
+│   └── hue-arrangement/[mode]/page.tsx # 色相排列测试（v1.2）
+├── result/[id]/page.tsx      # 结果页
 ├── learn/
-│   ├── page.tsx            # 科普列表：SSG
-│   └── [slug]/page.tsx     # 科普详情：SSG，generateStaticParams
-└── history/page.tsx        # 历史记录：CSR，读取 localStorage
-
+│   ├── page.tsx              # 科普列表
+│   └── [slug]/page.tsx       # 科普详情
+├── history/page.tsx          # 历史记录
+└── privacy/page.tsx          # 隐私政策
 components/
-├── ui/                     # shadcn/ui 生成的基础组件（Button、Card、Dialog 等）
-├── layout/
-│   ├── Navbar.tsx          # 顶部导航栏
-│   ├── Footer.tsx          # 页脚
-│   └── Container.tsx       # 内容容器
-├── test/
-│   ├── IshiharaPlate.tsx       # 石原氏检测图展示组件
-│   ├── TestProgress.tsx        # 测试进度条
-│   ├── AnswerInput.tsx         # 答案输入组件（数字键盘）
-│   ├── PathTrackingCanvas.tsx  # 路径追踪画布
-│   └── HueArrangementGrid.tsx  # 色相排列网格
-├── result/
-│   ├── ResultSummary.tsx   # 结果总览卡片
-│   ├── ResultChart.tsx     # 结果图表（雷达图/条形图）
-│   ├── AnswerDetail.tsx    # 答题明细（可展开）
-│   └── ReportExport.tsx    # 报告导出按钮组
-└── common/
-    ├── Logo.tsx            # 品牌 Logo
-    ├── ThemeToggle.tsx     # 深色模式切换
-    └── Seo.tsx             # SEO 元数据组件
-
+├── common/                   # Callout、Icon
+├── home/                     # CvdSimulator
+├── layout/                   # Footer、Navbar、ThemeProvider、ThemeToggle
+├── result/                   # AnswerReview、AxisChart、ReportActions、ResultSummary、PathTrackingSummary、HueArrangementSummary
+└── test/                     # IshiharaPlate、Numpad、TestProgress、TestRunner、PathTrackingCanvas、PathTrackingRunner、HueArrangementGrid、HueArrangementRunner
 lib/
-├── questions/
-│   ├── ishihara.ts         # 石原氏题库数据（24题 + 快速版10题）
-│   ├── path-tracking.ts    # 路径追踪题库
-│   └── hue-arrangement.ts  # 色相排列色卡数据
-├── scoring/
-│   ├── ishihara-scoring.ts # 石原氏判读算法
-│   ├── path-scoring.ts     # 路径追踪判读
-│   ├── hue-scoring.ts      # 色相排列判读（TES 计算）
-│   └── index.ts            # 综合判读入口
-├── storage/
-│   └── localStorage.ts     # localStorage 封装（带版本管理、加密）
-├── export/
-│   └── report-export.ts    # 报告导出逻辑（PNG/PDF）
-└── utils.ts                # 通用工具函数（cn、formatDate 等）
-
-types/
-├── question.ts             # 题目相关类型
-├── result.ts               # 结果相关类型
-└── storage.ts              # 存储相关类型
+├── types.ts                  # 全局类型（以 docs/SPEC.md §5 为权威）
+├── questions.ts              # 石原氏题库数据
+├── questions/                # 子题库（path-tracking.ts、hue-arrangement.ts）
+├── scoring.ts                # 判读引擎
+├── path-scoring.ts           # 路径追踪判读（v1.1）
+├── hue-scoring.ts            # 色相排列 TES 判读（v1.2）
+├── ishihara.ts               # 点阵生成与色觉模拟
+├── storage.ts                # 本地存储
+├── learn-data.ts             # 科普文章数据
+└── format.ts                 # 格式化工具
+docs/                         # 项目文档（SPEC.md 为权威总纲）
 ```
 
 ### 2.3 状态管理
