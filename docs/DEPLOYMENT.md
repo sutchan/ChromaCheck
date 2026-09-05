@@ -66,6 +66,7 @@
    |--------|------|--------|
    | `NEXT_PUBLIC_APP_NAME` | 应用名称 | 色辨 ChromaCheck |
    | `NEXT_PUBLIC_APP_URL` | 应用 URL | https://chromacheck.example.com |
+   | `NEXT_PUBLIC_GA_ID` | Google Analytics 4 衡量 ID（置空即停用心智统计） | G-0F9QWS1PDX |
    | `NEXT_PUBLIC_ANALYTICS_ENABLED` | 是否启用分析 | false |
 
    > 注意：环境变量应在 Production 和 Preview 环境中分别配置。
@@ -246,6 +247,7 @@ ufw deny 3000/tcp  # 3000 端口仅内网访问
 |--------|------|------|
 | `NEXT_PUBLIC_APP_NAME` | 是 | 应用名称 |
 | `NEXT_PUBLIC_APP_URL` | 是 | 应用公开 URL |
+| `NEXT_PUBLIC_GA_ID` | 否 | Google Analytics 4 衡量 ID（默认 G-0F9QWS1PDX，置空即停用；仅生产环境加载） |
 | `NEXT_PUBLIC_ANALYTICS_ENABLED` | 否 | 匿名分析开关（默认 false） |
 | `NEXT_PUBLIC_SENTRY_DSN` | 否 | Sentry 错误监控 DSN |
 | `NEXT_PUBLIC_VERCEL_ANALYTICS_ID` | 否 | Vercel Analytics ID |

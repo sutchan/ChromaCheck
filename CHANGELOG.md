@@ -1,7 +1,18 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.5.0`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.5.1`）。
+
+## [1.5.1] - 2026-09-05
+
+### 新增
+- 接入 Google Analytics 4 匿名访问统计（衡量 ID `G-0F9QWS1PDX`）：新增 `lib/analytics.ts`（衡量 ID 单一来源 + `pageview`/`trackEvent` 上报辅助）与 `components/analytics/GoogleAnalytics.tsx`（`next/script` 注入 gtag.js，并随 App Router 路由变化补报 page_view）；根布局 `app/layout.tsx` 挂载该组件。
+- 仅生产环境加载统计脚本；支持环境变量 `NEXT_PUBLIC_GA_ID` 覆盖，置为空字符串即全局停用。
+
+### 文档
+- `app/privacy/page.tsx`：新增「6. 匿名访问统计（Google Analytics）」，并更正「不嵌入追踪脚本 / 未启用匿名统计上报」的旧表述。
+- `docs/PRIVACY.md` §2.2 更新为 GA4 实际采集范围与不上报清单，并标注 `analyticsEnabled` 服务端事件上报仍未实现。
+- 版本单一来源同步至 `1.5.1`（`VERSION`、`package.json`、改动文件头注释）。
 
 ## [1.5.0] - 2026-09-05
 

@@ -1,11 +1,12 @@
 // app/layout.tsx — 根布局
-// chromacheck v1.5.0
+// chromacheck v1.5.1
 import React from 'react';
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { ThemeProvider } from '@/components/layout/ThemeProvider';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
+import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics';
 
 export const metadata: Metadata = {
   title: {
@@ -63,6 +64,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               "(function(){try{var s=localStorage.getItem('cc.settings.v1');if(s&&JSON.parse(s).cvdSafe)document.body.classList.add('cvd-safe');}catch(e){}})();",
           }}
         />
+        <GoogleAnalytics />
         <ThemeProvider>
           <Navbar />
           <main id="main-content">{children}</main>

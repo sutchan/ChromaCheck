@@ -414,6 +414,8 @@ interface AnalyticsEvent {
 - 不上报 User-Agent 等可识别信息。
 - 仅上报聚合统计所需的最少字段。
 
+> **v1.5.1 实际**：服务端上报接口与 `analyticsEnabled` 开关均未实现（无服务端）。当前唯一统计为前端 Google Analytics 4：由 `components/analytics/GoogleAnalytics.tsx` 注入 gtag.js，衡量 ID 与上报辅助集中于 `lib/analytics.ts`，仅生产环境加载，采集匿名页面浏览指标，不含检测内容与 PII。
+
 ---
 
 ## 6. 安全设计
@@ -519,9 +521,10 @@ jobs:
 
 ### 9.1 性能监控
 
+- **Google Analytics 4**（v1.5.1 已接入）：匿名页面浏览与访问量，衡量 ID 见 `lib/analytics.ts`，仅生产环境加载。
 - **Vercel Analytics**：页面访问量、PV/UV、跳出率。
 - **Web Vitals**：LCP、FID、CLS 指标采集（`next/web-vitals`）。
-- **自定义指标**：检测完成率、平均检测时长、报告导出率。
+- **自定义指标**：检测完成率、平均检测时长、报告导出率（`lib/analytics.ts` 的 `trackEvent` 已预留，暂未埋点）。
 
 ### 9.2 错误监控
 

@@ -1,11 +1,12 @@
 # 记忆索引
 
 ## 项目：ChromaCheck（e:/Github/ChromaCheck）
-- 已从「纯文档 + 静态原型」进入**应用开发阶段**，v1.0.0 已实现（2026-09-04），当前版本 **v1.5.0**（2026-09-05；注意会话间隙用户会自行 bump/提交，改版本前必须重读 VERSION 并 `git status --short --untracked-files=all` 确认新建文件是否已被中间会话提交）。
+- 已从「纯文档 + 静态原型」进入**应用开发阶段**，v1.0.0 已实现（2026-09-04），当前版本 **v1.5.1**（2026-09-05；注意会话间隙用户会自行 bump/提交，改版本前必须重读 VERSION 并 `git status --short --untracked-files=all` 确认新建文件是否已被中间会话提交）。
 - 应用技术栈：Next.js 14 (App Router) + React 18 + TypeScript(strict) + Tailwind 3，纯本地、无后端、无重型依赖；图表用内联 SVG，报告导出用 Canvas(PNG)+`window.print()`(PDF)。
-- 版本单一来源：`VERSION`(=1.5.0) 与 `package.json` version 一致；原型文件头原为 v0.1.0，与正式应用版本解耦。
+- 版本单一来源：`VERSION`(=1.5.1) 与 `package.json` version 一致；原型文件头原为 v0.1.0，与正式应用版本解耦。
 - **已实现页面/功能**：v1.0 首页(含色觉模拟 CvdSimulator)、检测前指引、模式选择(快速10题/标准38题)、石原氏测试(`/test/ishihara/[mode]`)、结果页(`/result/[id]`)、历史、科普列表+详情、隐私政策；v1.1 路径追踪(`/test/path-tracking/[mode]`)；v1.2 色相排列 D15(`/test/hue-arrangement/[mode]`)；v1.3 进阶联合判读(`/test/advanced`)；**v1.4 趣味性体验包**（`lib/fun.ts` 趣味数据+`lib/sharecard.ts` Canvas 分享卡、`components/test/FunBits.tsx` 进度点阵/章末过渡、`components/result/EyesSwitcher.tsx` 换一双眼睛、`components/result/DimScenes.tsx` 三轴科普；`AppSettings.funMode` 开关经 `ThemeToggle`「趣味开/关」控制，中性反馈恒开）。GitHub 仓库：https://github.com/sutchan/ChromaCheck（页脚与 README 联系方式已链入）。
-- **规划中**：匿名分析 analyticsEnabled（与本地优先隐私口径冲突，默认不做）；ROADMAP P1 分享卡片社交优化 / 屏幕校准指引；P2 英文版 / PWA。
+- **v1.5.1 起接入 Google Analytics 4**：衡量 ID `G-0F9QWS1PDX`，单一来源 `lib/analytics.ts`（`NEXT_PUBLIC_GA_ID` 可覆盖，置空即停用；**仅生产环境加载**）；`components/analytics/GoogleAnalytics.tsx` 为客户端组件（`next/script` afterInteractive 注入 gtag.js，`usePathname` 变化补报 page_view），挂载于 `app/layout.tsx` body 首位；`trackEvent` 已预留但未埋点——检测内容/判读结果一律不上报。
+- **规划中**：`analyticsEnabled` 服务端匿名事件上报（仍推迟，无服务端）；ROADMAP P1 分享卡片社交优化 / 屏幕校准指引；P2 英文版 / PWA。
 - 色相排列模块（v1.2 已实现）架构：`lib/questions/hue-arrangement.ts`（D15 sRGB 15 卡 + `shuffledOrder` mulberry32 确定性打乱，初始种子 20260905 防 SSR 闪烁）；评分 `lib/hue-scoring.ts`（TES：seq=[0,...order,14]，首末权重1/中间2，max(0,d-1)×权重；<20 正常/20-40 轻度/>40 明显；偏差方向 min(卡号)≤5→tritan 否则默认 deutan，注明不足以临床分型）；交互 `HueArrangementGrid`（点击选中+交换，role=listbox）；**测试中不显示实时 TES**（防用户凑分，原型演示有显示但正式应用刻意去掉）。
 - 路径追踪模块（v1.1 已实现）架构：题库 `lib/questions/path-tracking.ts`（3 题，kind 0/1/2，复用 `standardPath`）；渲染用 `lib/ishihara.ts` 的 `buildPathField`（离屏 canvas 缓存于 `PathTrackingCanvas`）；评分 `lib/path-scoring.ts`（`pathOverlap` IoU + `computePathResult`）；`TestResult.ishihara` 改为可选、`pathTracking?: PathTrackingResult[]` 新增；结果页/摘要/导出/历史均按测试类型守卫渲染。
 - 数据/算法权威来源（应用从原型移植）：`prototype/assets/js/data.js`(24题)、`scoring.js`(判读)、`ishihara.js`(点阵绘制/色觉模拟)。移植后位于 `lib/questions.ts` `lib/scoring.ts` `lib/ishihara.ts` `components/test/IshiharaPlate.tsx`。

@@ -2,7 +2,7 @@
 
 > 一眼辨色，科学筛查 — 在线色觉检测 Web 应用
 
-> **实现状态**：v1.0 已实现（Next.js 14 应用 + 石原氏检测 + 结果/历史/科普/隐私）；路径追踪已于 v1.1 实现，色相排列（D15）已于 v1.2 实现，进阶联合判读（advanced）已于 v1.3 实现，趣味性体验包（进度点阵/章末科普/分享卡/换一双眼睛/三轴科普/旅人称号）已于 v1.4 实现。权威规范见 [docs/SPEC.md](docs/SPEC.md)。当前项目版本 **v1.5.0**（见 `VERSION`）；38 板完整石原氏图谱已于 v1.5 实现。
+> **实现状态**：v1.0 已实现（Next.js 14 应用 + 石原氏检测 + 结果/历史/科普/隐私）；路径追踪已于 v1.1 实现，色相排列（D15）已于 v1.2 实现，进阶联合判读（advanced）已于 v1.3 实现，趣味性体验包（进度点阵/章末科普/分享卡/换一双眼睛/三轴科普/旅人称号）已于 v1.4 实现。权威规范见 [docs/SPEC.md](docs/SPEC.md)。当前项目版本 **v1.5.1**（见 `VERSION`）；38 板完整石原氏图谱已于 v1.5 实现，Google Analytics 匿名访问统计已于 v1.5.1 接入。
 
 [![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
@@ -103,7 +103,7 @@ npm run type-check
 ```
 chromacheck/
 ├── app/                          # Next.js App Router 页面
-│   ├── layout.tsx                # 根布局（含 ThemeProvider）
+│   ├── layout.tsx                # 根布局（含 ThemeProvider、GoogleAnalytics）
 │   ├── page.tsx                  # 首页（含色觉模拟 CvdSimulator）
 │   ├── not-found.tsx             # 404
 │   ├── globals.css               # 全局样式 + 设计令牌
@@ -125,6 +125,7 @@ chromacheck/
 │   ├── common/                   # Callout、Icon
 │   ├── home/                     # CvdSimulator
 │   ├── layout/                   # Footer、Navbar、ThemeProvider、ThemeToggle
+│   ├── analytics/                # GoogleAnalytics（GA4 脚本注入与路由上报，v1.5.1）
 │   ├── result/                   # AnswerReview、AxisChart、ReportActions、ResultSummary、PathTrackingSummary、HueArrangementSummary、EyesSwitcher、DimScenes
 │   └── test/                     # IshiharaPlate、Numpad、TestProgress、IshiharaFlow、FunBits、TestRunner、PathTrackingCanvas、PathTrackingRunner、HueArrangementGrid、HueArrangementRunner、AdvancedRunner
 ├── lib/
@@ -137,6 +138,7 @@ chromacheck/
 │   ├── advanced-scoring.ts       # 进阶联合判读（v1.3）
 │   ├── fun.ts                    # 趣味性数据（章节/旅人称号/三轴科普，v1.4）
 │   ├── sharecard.ts              # 色觉人格分享卡 Canvas 绘制（v1.4）
+│   ├── analytics.ts              # GA4 衡量 ID 与上报辅助（v1.5.1）
 │   ├── ishihara.ts              # 点阵生成与色觉模拟
 │   ├── storage.ts                # 本地存储
 │   ├── learn-data.ts             # 科普文章数据
@@ -253,6 +255,7 @@ docker run -p 3000:3000 chromacheck
 - 检测结果可能受屏幕显示、环境光线等因素影响。
 - 如检测结果异常，建议前往正规医院眼科进行专业检查。
 - 用户检测数据默认仅存储于本地浏览器，不会上传至服务器。
+- 本站使用 Google Analytics 统计匿名访问量（不含答题记录与判读结果），可用浏览器脚本拦截插件屏蔽。
 
 ## License
 
