@@ -5,10 +5,16 @@
 
 ## [1.7.2] - 2026-09-06
 
-### 修正（文档版本同步与可访问性）
+### 修正（文档版本同步、可访问性、代码拆分）
 - 修正文档与代码版本脱节：`README.md` 状态行「当前项目版本」由 `v1.7.0` 同步为 `v1.7.2`（对齐 `VERSION`）；`docs/SPEC.md` §8.2 版本单一来源说明确认为 `1.7.2`。
 - `app/page.tsx` 首页根容器补齐语义化 `id="home-page"`，与结果 / 指引 / 历史等页面一致。
-- 版本单一来源同步至 `1.7.2`（`VERSION`、`package.json`、改动文件头注释 `app/page.tsx`）。
+- 拆分 5 个超 200 行源文件以符合「单文件 ≤200 行」规范（保持公开 API / 导出契约不变）：
+  - `lib/sharecard.ts` 抽 Canvas 绘制原语至 `lib/sharecard-canvas.ts`；
+  - `components/result/ReportActions.tsx` 抽报告绘制 `drawReport` 至 `lib/report-canvas.ts`；
+  - `lib/ishihara.ts` 抽路径追踪（`standardPath` / `buildPathField` / `Path*`）至 `lib/path-field.ts`；
+  - `components/test/IshiharaFlow.tsx` 抽答题状态与逻辑至 `components/test/useIshiharaFlow.ts`；
+  - `lib/scoring.ts` 抽判读文案映射（`uiText` / 类型标签）至 `lib/scoring-text.ts`，并 re-export `uiText`。
+- 版本单一来源同步至 `1.7.2`（`VERSION`、`package.json`、改动文件头注释）。
 
 ## [1.7.1] - 2026-09-06
 

@@ -1,4 +1,4 @@
-/* prototype/assets/js/screens-advanced.js v0.1.1 — 路径追踪 / 色相排列（D15） */
+/* prototype/assets/js/screens-advanced.js v0.1.2 — 路径追踪 / 色相排列（D15） */
 window.CC = window.CC || {};
 CC.screens = CC.screens || {};
 
@@ -78,6 +78,7 @@ CC.screens = CC.screens || {};
       cv.addEventListener('mousedown', down);
       cv.addEventListener('mousemove', move);
       window.addEventListener('mouseup', up);
+      p._cleanup = function () { window.removeEventListener('mouseup', up); };
       cv.addEventListener('touchstart', down, { passive: false });
       cv.addEventListener('touchmove', move, { passive: false });
       cv.addEventListener('touchend', up);
@@ -94,6 +95,13 @@ CC.screens = CC.screens || {};
         if (p.index < 2) { p.index++; CC.go('path'); }
         else { CC.finishTest(); }
       });
+    },
+
+    unmount: function () {
+      if (CC.state.path && CC.state.path._cleanup) {
+        CC.state.path._cleanup();
+        CC.state.path._cleanup = null;
+      }
     }
   };
 

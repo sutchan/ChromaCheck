@@ -1,4 +1,4 @@
-/* prototype/assets/js/screens-test.js v0.1.2 — 石原氏数字图检测屏（可真实作答 / 章末过渡 / 中性反馈） */
+/* prototype/assets/js/screens-test.js v0.1.3 — 石原氏数字图检测屏（可真实作答 / 章末过渡 / 中性反馈） */
 window.CC = window.CC || {};
 CC.screens = CC.screens || {};
 
@@ -127,10 +127,15 @@ CC.screens = CC.screens || {};
 
       var q = t.set[t.index];
 
-      CC.renderPlate(root.querySelector('#plate-canvas'), {
-        text: q.answer || q.protan || '', type: q.type, seed: q.plate,
-        cvd: 'none', animate: true
-      });
+      var drawPlate = function () {
+        CC.renderPlate(root.querySelector('#plate-canvas'), {
+          text: q.answer || q.protan || '', type: q.type, seed: q.plate,
+          cvd: 'none', animate: true
+        });
+      };
+      /* 等字体就绪再绘制数字蒙版，避免 Archivo 未加载导致点阵数字变形（FOUT） */
+      if (document.fonts && document.fonts.ready) document.fonts.ready.then(drawPlate);
+      else drawPlate();
 
       var disp = root.querySelector('#answer-display');
       t.enterAt = Date.now();

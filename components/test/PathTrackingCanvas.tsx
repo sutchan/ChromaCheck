@@ -3,7 +3,8 @@
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
-import { buildPathField, simulate, type PathField } from '@/lib/ishihara';
+import { buildPathField, type PathField } from '@/lib/path-field';
+import { simulate } from '@/lib/ishihara';
 import type { PathTrackingQuestion } from '@/lib/types';
 import { Icon } from '@/components/common/Icon';
 

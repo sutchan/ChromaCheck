@@ -16,6 +16,7 @@ export interface IshiharaFlowApi {
   milestone: string | null;
   pulse: boolean;
   pausedChapter: number | null;
+  setInput: (v: string) => void;
   appendDigit: (d: string) => void;
   backspace: () => void;
   clearInput: () => void;
@@ -139,6 +140,7 @@ export function useIshiharaFlow(opts: {
     milestone,
     pulse,
     pausedChapter,
+    setInput,
     appendDigit,
     backspace: () => setInput((p) => p.slice(0, -1)),
     clearInput: () => setInput(''),
@@ -160,6 +162,7 @@ function emptyApi(total: number): IshiharaFlowApi {
     milestone: null,
     pulse: false,
     pausedChapter: null,
+    setInput: () => {},
     appendDigit: () => {},
     backspace: () => {},
     clearInput: () => {},

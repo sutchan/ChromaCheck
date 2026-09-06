@@ -1,4 +1,4 @@
-/* prototype/assets/js/screens-result.js v0.1.2 — 结果页（维度评分 / 雷达 / 明细 / 建议 / 分享卡 / 换一双眼睛） */
+/* prototype/assets/js/screens-result.js v0.1.3 — 结果页（维度评分 / 雷达 / 明细 / 建议 / 分享卡 / 换一双眼睛） */
 window.CC = window.CC || {};
 CC.screens = CC.screens || {};
 
@@ -33,7 +33,7 @@ CC.screens = CC.screens || {};
         d.protan, d.deutan, d.tritan,
         tt ? Math.round((tw / tt) * 100) : 0,
         vt ? Math.round((vw / vt) * 100) : 0,
-        res.ishihara.dimensions.deutan
+        Math.round((d.protan + d.deutan + d.tritan) / 3)
       ],
       labels: ['红轴', '绿轴', '蓝轴', '转换题', '消失题', '综合']
     };

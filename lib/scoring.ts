@@ -1,5 +1,5 @@
 // lib/scoring.ts — 判读引擎（移植自 prototype/scoring.js，纯函数）
-// chromacheck v1.7.0
+// chromacheck v1.7.2
 import type {
   AnswerRecord,
   DeficiencyType,
@@ -10,38 +10,13 @@ import type {
   TestMode,
   TestResult,
 } from './types';
+import { TYPE_TEXT, SEVERITY_TEXT, OVERALL_LABEL, MODE_TEXT, uiText } from './scoring-text';
+
+export { uiText };
 
 const RULES = {
   confidence: { base: 100, demoWrong: -25, tooFast: -2, contradiction: -15, lowCoverage: -20, min: 0 },
   vanishing: { mild: 2, blind: 4 },
-};
-
-const TYPE_TEXT: Record<string, string> = {
-  protanopia: '红色盲',
-  protanomaly: '红色弱',
-  deuteranopia: '绿色盲',
-  deuteranomaly: '绿色弱',
-  tritanopia: '蓝色盲',
-  tritanomaly: '蓝色弱',
-  achromatopsia: '全色盲',
-};
-
-const SEVERITY_TEXT: Record<string, string> = { mild: '轻度', moderate: '中度', severe: '重度' };
-
-const OVERALL_LABEL: Record<Overall, string> = {
-  normal: '色觉正常',
-  suspected_deficiency: '疑似色弱',
-  suspected_blindness: '疑似色盲',
-  inconclusive: '结果不确定',
-};
-
-const MODE_TEXT: Record<TestMode, string> = { quick: '快速版', standard: '标准版', advanced: '进阶版' };
-
-export const uiText = {
-  type: (t: DeficiencyType) => (t ? TYPE_TEXT[t] : ''),
-  severity: (s: Severity) => (s ? SEVERITY_TEXT[s] : ''),
-  overall: (o: Overall) => OVERALL_LABEL[o],
-  mode: (m: TestMode) => MODE_TEXT[m],
 };
 
 function clamp(v: number, lo: number, hi: number) {

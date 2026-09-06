@@ -1,7 +1,7 @@
 // lib/questions/path-tracking.ts — 路径追踪题库（v1.1）
 // chromacheck v1.7.1
 import type { PathTrackingQuestion, TestMode } from '../types';
-import { standardPath } from '../ishihara';
+import { standardPath } from '../path-field';
 
 const GREEN = '#8fa05a';
 const PATH_COLOR = '#c4553b';
