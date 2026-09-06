@@ -4,7 +4,7 @@
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import type { AnswerRecord, PathTrackingResult } from '@/lib/types';
+import type { AnswerRecord, PathTrackingResult, Scene } from '@/lib/types';
 import { getQuestions } from '@/lib/questions';
 import { getPathQuestions } from '@/lib/questions/path-tracking';
 import { getHueQuestions } from '@/lib/questions/hue-arrangement';
@@ -22,7 +22,7 @@ import { Callout } from '@/components/common/Callout';
 
 const PHASES = ['石原氏检测（38 题）', '路径追踪（3 题）', '色相排列（D15）'] as const;
 
-export function AdvancedRunner() {
+export function AdvancedRunner({ scene = 'general' }: { scene?: Scene }) {
   const router = useRouter();
   const { settings } = useSettings();
   const ishiharaQuestions = useMemo(() => getQuestions('standard'), []);
@@ -63,7 +63,7 @@ export function AdvancedRunner() {
       pathResults,
       pathQuestions,
       hueResult: scoreHueQuestion(hueQuestion, order),
-      opts: { startedAt: startedAtRef.current, endedAt: Date.now(), device: detectDevice() },
+      opts: { startedAt: startedAtRef.current, endedAt: Date.now(), device: detectDevice(), scene },
     });
     saveResult(result);
     clearProgress();

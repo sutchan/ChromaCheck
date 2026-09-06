@@ -1,5 +1,5 @@
 // app/guide/page.tsx — 检测前指引
-// chromacheck v1.6.0
+// chromacheck v1.7.0
 import React from 'react';
 import Link from 'next/link';
 import type { Metadata } from 'next';
@@ -26,6 +26,13 @@ const STEPS = [
   { icon: 'eye', title: '眼睛与距离', text: '摘除有色眼镜与美瞳；若平时戴矫正眼镜，请正常佩戴。眼睛与屏幕保持约 40–50cm。' },
   { icon: 'clock', title: '状态', text: '疲劳、熬夜或饮酒后辨色能力会下降。请在一次精神较好的时段完成，中途尽量不中断。' },
   { icon: 'info', title: '作答方式', text: '凭第一直觉说出图中数字，不要反复猜测或放大查看。看不清就选“看不清 / 无数字”。' },
+];
+
+const CALIBRATION = [
+  { title: '关闭护眼 / 夜间模式', text: '关闭系统的“护眼模式”“夜览”“蓝光过滤”或任何屏幕色彩滤镜。这类滤镜会显著改变红绿呈现，直接造成假阳性。' },
+  { title: '使用标准色温与亮度', text: '将屏幕亮度调到日常阅读水平（约 60–80%），避免过暗或过曝；若显示器支持，选择 sRGB 模式而非广色域“鲜艳”模式。' },
+  { title: '控制环境光', text: '在均匀白光下进行，避免暖黄台灯或阳光直射屏幕造成偏色。屏幕表面无强反光。' },
+  { title: '先用演示题自检', text: '进入检测后，第 1 题为演示题，用于确认你能看清并正常输入；若演示题都难以辨认，请先调整环境再继续。' },
 ];
 
 export default function GuidePage() {
@@ -55,8 +62,27 @@ export default function GuidePage() {
         本检测为筛查用途，不能替代专业眼科诊断。若你已出现日常辨色困难，建议直接前往正规医院眼科检查。
       </Callout>
 
+      <div className="stack" style={{ gap: 'var(--s-3)' }}>
+        <h2 style={{ margin: 0, fontSize: '1.25rem' }}>屏幕校准提示</h2>
+        <p className="muted" style={{ margin: 0 }}>
+          屏幕未校准、开启色彩滤镜或环境光偏色，都会让红绿色觉异常被误判或漏判。开始检测前请逐项确认：
+        </p>
+        <div className="grid-cards">
+          {CALIBRATION.map((c) => (
+            <div key={c.title} className="card stack" style={{ gap: 'var(--s-2)' }}>
+              <h3 style={{ margin: 0, fontSize: '1.02rem' }}>{c.title}</h3>
+              <p className="muted" style={{ margin: 0, fontSize: '0.92rem' }}>{c.text}</p>
+            </div>
+          ))}
+        </div>
+        <Callout tone="info" icon="info">
+          未校准屏幕上的结论仅供参考。若你有意报考驾照或从事对色觉有要求的职业，请以公安交管部门指定体检机构或正规医院眼科的结论为准。
+        </Callout>
+      </div>
+
       <div className="row" style={{ gap: 'var(--s-3)' }}>
         <Link href="/test" className="btn btn-primary">选择检测模式 <Icon name="arrowRight" size={18} /></Link>
+        <Link href="/test?scene=driver" className="btn btn-ghost">驾驶 / 职业体检准备</Link>
         <Link href="/" className="btn btn-ghost">返回首页</Link>
       </div>
     </div>

@@ -162,7 +162,11 @@ function buildAnalysis(result: IshiharaResult, mode: TestMode): { analysis: stri
   } else {
     const t = type ? TYPE_TEXT[type] : '色觉异常';
     const s = severity ? SEVERITY_TEXT[severity] : '';
-    analysis = `你的结果提示${t}${s ? `（${s}）` : ''}。在转换题与分类题中，部分答案与${t}的典型表现一致；消失题中也有数字难以辨认的情况。这可能影响对红/绿相关色彩的区分，建议在职业选择与日常安全场景中多加留意。`;
+    const isBlindness = type && type.endsWith('opia');
+    const clarify = isBlindness
+      ? '需注意：色盲与色弱性质不同，本次属「色盲」范畴。'
+      : '需注意：色弱（异常三色视觉）与色盲（二色视觉）不同，法规通常仅限制色盲，色弱一般不影响驾驶资格，但以体检机构结论为准。';
+    analysis = `你的结果提示${t}${s ? `（${s}）` : ''}。在转换题与分类题中，部分答案与${t}的典型表现一致；消失题中也有数字难以辨认的情况。这可能影响对红/绿相关色彩的区分，建议在职业选择与日常安全场景中多加留意。${clarify}`;
   }
   return { analysis: `${uiText.mode(mode)} · ${analysis}`, confidenceNote: note };
 }
@@ -170,7 +174,7 @@ function buildAnalysis(result: IshiharaResult, mode: TestMode): { analysis: stri
 export function computeResult(
   answers: AnswerRecord[],
   questions: Question[],
-  opts: { testMode: TestMode; startedAt: number; endedAt: number; device: string },
+  opts: { testMode: TestMode; startedAt: number; endedAt: number; device: string; scene?: import('./types').Scene },
 ): TestResult {
   const ishihara = scoreIshihara(answers, questions);
   const { analysis, confidenceNote } = buildAnalysis(ishihara, opts.testMode);
@@ -190,5 +194,6 @@ export function computeResult(
     analysis,
     confidenceNote,
     device: opts.device,
+    scene: opts.scene ?? 'general',
   };
 }

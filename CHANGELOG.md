@@ -1,7 +1,28 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.6.0`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.7.0`）。
+
+## [1.7.0] - 2026-09-06
+
+### 新增（驾驶员场景色觉检测改进，对应 `docs/TASKS.md` T1–T6）
+- **T1 驾照辨色力参考栏**：`lib/license.ts` 新增 `mapToLicense()`，依据《机动车驾驶证申领和使用规定》（公安部令第 172 号）第十二条「无红绿色盲」，将检测结果映射为合规结论 + 免责声明；`components/result/DriverCompliance.tsx` 在结果页渲染该参考栏（语义化 `id="driver-compliance"`）。
+- **T2 信号灯辨识专项检测**：新增 `lib/questions/signal.ts`（9 题：红/绿/黄单灯辨色 + 信号含义）、`lib/signal-scoring.ts`（`scoreSignal`：辨色类任务须全对才算通过）、`components/test/SignalRunner.tsx` 与 `app/test/signal/page.tsx`；结果仅作驾驶场景参考，不计入历史。
+- **T4 屏幕校准提示**：`app/guide/page.tsx` 新增「屏幕校准提示」区块（关闭护眼/夜间滤镜、标准色温亮度、控制环境光、演示题自检）与未校准免责提示。
+- **T5 图版明度控制**：`lib/ishihara.ts` 的 `PALETTE` 重设计为判别型图版（转换/消失/隐藏/分类）采用「等亮度、异色相」配色，避免异常视觉仅凭亮度误读数字。
+- **T6 严肃场景隐藏趣味模块**：`lib/types.ts` 新增 `Scene` 与 `TestResult.scene`；`?scene=driver` 经 `searchParams` 传入 `TestRunner` / `AdvancedRunner` 并写入结果；结果页在 driver 场景下隐藏「换眼睛」「三轴科普」等趣味元素，分享卡去除称号（`ReportActions` 新增 `plain`）。
+
+### 修正 / 澄清
+- **T3 色弱 vs 色盲语义澄清**：`lib/scoring.ts` 判读文案区分 dichromacy（色盲）与 anomalous（色弱），并明确「色弱一般不影响驾驶资格」；`DriverCompliance` 补充说明「色弱≠色盲、不代表不合格」。
+- `app/test/page.tsx` 新增「驾驶 / 职业体检准备」入口（标准版驾驶场景 + 信号灯辨识，附场景参数）。
+- `app/sitemap.ts` 纳入 `/test/signal`。
+
+## [1.6.1] - 2026-09-06
+
+### 文档
+- 新增 `docs/TASKS.md`：驾驶员场景色觉检测改进任务清单（基于 v1.6.0 检测覆盖度评估，含 P0/P1/P2 六级任务 T1–T6、验收标准与关联文档）。
+- `docs/ROADMAP.md` §3.2 挂接驾驶员专项任务（P0 合规映射 + P1 色弱/色盲语义澄清），引用 `docs/TASKS.md`。
+- 版本单一来源同步至 `1.6.1`（`VERSION`、`package.json`、本文件）。
 
 ## [1.6.0] - 2026-09-05
 

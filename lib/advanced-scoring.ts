@@ -8,6 +8,7 @@ import type {
   Overall,
   PathTrackingQuestion,
   PathTrackingResult,
+  Scene,
   Severity,
   TestResult,
 } from './types';
@@ -59,7 +60,7 @@ export function computeAdvancedResult(inputs: {
   pathResults: PathTrackingResult[];
   pathQuestions: PathTrackingQuestion[];
   hueResult: HueArrangementResult;
-  opts: { startedAt: number; endedAt: number; device: string };
+  opts: { startedAt: number; endedAt: number; device: string; scene?: Scene };
 }): TestResult {
   const { ishihara, answers, pathResults, pathQuestions, hueResult, opts } = inputs;
   const pathAvg = pathResults.length
@@ -131,5 +132,6 @@ export function computeAdvancedResult(inputs: {
     analysis,
     confidenceNote,
     device: opts.device,
+    scene: opts.scene ?? 'general',
   };
 }

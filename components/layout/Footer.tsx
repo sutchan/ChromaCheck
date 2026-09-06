@@ -25,7 +25,7 @@ export function Footer() {
           </div>
         </div>
         <div className="muted" style={{ fontSize: '0.82rem', borderTop: '1px solid var(--border)', paddingTop: 'var(--s-4)' }}>
-          © {new Date().getFullYear()} ChromaCheck · v1.4.0 · 仅供教育与筛查用途
+          © {new Date().getFullYear()} ChromaCheck · v1.7.0 · 仅供教育与筛查用途
         </div>
       </div>
     </footer>

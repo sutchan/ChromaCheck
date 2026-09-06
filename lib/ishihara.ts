@@ -1,5 +1,5 @@
 // lib/ishihara.ts — 点阵图数学与色觉模拟（移植自 prototype/ishihara.js，纯函数无 DOM）
-// chromacheck v1.1.0
+// chromacheck v1.7.0
 
 export const CVD_MATRIX: Record<string, number[]> = {
   none: [1, 0, 0, 0, 1, 0, 0, 0, 1],
@@ -11,13 +11,18 @@ export const CVD_MATRIX: Record<string, number[]> = {
 
 export type PaletteKey = 'demonstration' | 'normal' | 'transformation' | 'vanishing' | 'hidden' | 'classification';
 
+// PALETTE：判别型图版（transformation/vanishing/hidden/classification）采用「等亮度、异色相」配色——
+// 图点（红系）与背景点（绿系）相对亮度接近（ΔL 极小），异常视觉无法借亮度线索读出数字，
+// 仅正常视觉能凭红/绿色相差异辨识（贴近真版石原氏图编码）。demonstration/normal 为全员可读题，保留对比度。
 export const PALETTE: Record<PaletteKey, { fig: string[]; bg: string[] }> = {
   demonstration: { fig: ['#3e7cb1', '#4a88bd'], bg: ['#d8c79c', '#c9b98d', '#e0d3ae', '#bda97c'] },
   normal: { fig: ['#3e7cb1', '#37719f'], bg: ['#d8c79c', '#c9b98d', '#e2d5b2', '#bda97c'] },
-  transformation: { fig: ['#c4553b', '#cf6a45'], bg: ['#8fa05a', '#a9b581', '#c3c8a8', '#6f7f4a', '#d3cdbb'] },
-  vanishing: { fig: ['#d97b45', '#cf7a52'], bg: ['#93a45e', '#a7b47a', '#c0c2a4', '#75864c'] },
-  hidden: { fig: ['#b9a87e', '#c2b189'], bg: ['#c6b48a', '#d0bf98', '#bda97c'] },
-  classification: { fig: ['#c4553b', '#b84f38'], bg: ['#8fa05a', '#a9b581', '#c3c8a8', '#6f7f4a'] },
+  // 红系图点 L≈0.13–0.14，绿系背景 L≈0.15–0.16，亮度差远小于色相差
+  transformation: { fig: ['#c0392b', '#b83227'], bg: ['#2e7d32', '#2f8f4e', '#357a38'] },
+  vanishing: { fig: ['#c0392b', '#cf4434'], bg: ['#2e7d32', '#2f8f4e'] },
+  // hidden：图点（红系）与背景（绿系）等亮度 → 正常视觉看不到数字、答「无数字」；异常视觉借色相看到数字
+  hidden: { fig: ['#c0392b', '#b83227'], bg: ['#2e7d32', '#2f8f4e'] },
+  classification: { fig: ['#c0392b', '#b83227'], bg: ['#2e7d32', '#2f8f4e', '#357a38'] },
 };
 
 export function hexToRgb(hex: string): [number, number, number] {

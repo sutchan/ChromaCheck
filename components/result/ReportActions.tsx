@@ -1,5 +1,5 @@
 // components/result/ReportActions.tsx — 结果导出 / 分享
-// chromacheck v1.4.0
+// chromacheck v1.7.0
 'use client';
 
 import React, { useState } from 'react';
@@ -130,7 +130,7 @@ function drawReport(result: TestResult): HTMLCanvasElement {
   return c;
 }
 
-export function ReportActions({ result }: { result: TestResult }) {
+export function ReportActions({ result, plain = false }: { result: TestResult; plain?: boolean }) {
   const [copied, setCopied] = useState(false);
   const { settings } = useSettings();
 
@@ -144,7 +144,7 @@ export function ReportActions({ result }: { result: TestResult }) {
       radarValues: radar.values,
       radarLabels: radar.labels,
       dateText: result.createdAt.slice(0, 10),
-      funMode: settings.funMode,
+      funMode: !plain && settings.funMode,
       type: result.type,
       overall: result.overall,
     });
@@ -192,7 +192,7 @@ export function ReportActions({ result }: { result: TestResult }) {
         <button type="button" className="btn btn-ghost" onClick={copyText}>
           <Icon name="info" size={18} /> {copied ? '已复制' : '复制结果'}
         </button>
-        {result.ishihara ? (
+        {result.ishihara && !plain ? (
           <button type="button" id="shareCardBtn" className="btn btn-ghost" onClick={exportShareCardPng}>
             <Icon name="share" size={18} /> 分享卡 PNG
           </button>

@@ -1,5 +1,5 @@
 // app/test/page.tsx — 模式选择
-// chromacheck v1.6.0
+// chromacheck v1.7.0
 import React from 'react';
 import Link from 'next/link';
 import type { Metadata } from 'next';
@@ -75,6 +75,38 @@ export default function TestSelectPage() {
       <Callout icon="info">
         检测前请阅读<Link href="/guide">《检测前指引》</Link>，确保光线、距离与状态都合适，结果才更可信。
       </Callout>
+
+      <div className="stack" style={{ gap: 'var(--s-3)' }}>
+        <div className="row" style={{ gap: 'var(--s-2)', flexWrap: 'wrap', alignItems: 'center' }}>
+          <Icon name="device" size={20} style={{ color: 'var(--brand)' }} />
+          <h2 style={{ margin: 0, fontSize: '1.2rem' }}>驾驶 / 职业体检准备</h2>
+        </div>
+        <p className="muted" style={{ margin: 0 }}>
+          以下入口针对报考驾照、从事对色觉有要求的职业等场景：报告将对照驾照辨色力要求给出参考，并隐藏趣味元素。建议先做屏幕校准。
+        </p>
+        <div className="grid-cards">
+          <Link href="/test/ishihara/standard?scene=driver" style={{ color: 'inherit' }}>
+            <div className="card stack" style={{ gap: 'var(--s-3)', height: '100%' }}>
+              <div className="row between">
+                <h3 style={{ margin: 0 }}>标准版（驾驶场景）</h3>
+                <Icon name="arrowRight" size={20} />
+              </div>
+              <p className="muted" style={{ margin: 0, flex: 1 }}>完整 38 题检测，结果页附「驾照辨色力参考」与免责声明。</p>
+              <span className="muted" style={{ fontSize: '0.85rem' }}>约 12 分钟 · 38 题</span>
+            </div>
+          </Link>
+          <Link href="/test/signal" style={{ color: 'inherit' }}>
+            <div className="card stack" style={{ gap: 'var(--s-3)', height: '100%' }}>
+              <div className="row between">
+                <h3 style={{ margin: 0 }}>信号灯辨识</h3>
+                <Icon name="arrowRight" size={20} />
+              </div>
+              <p className="muted" style={{ margin: 0, flex: 1 }}>模拟路口与夜间行车的红 / 绿 / 黄信号辨识，验证驾驶辨色能力。</p>
+              <span className="muted" style={{ fontSize: '0.85rem' }}>约 3 分钟 · 9 题</span>
+            </div>
+          </Link>
+        </div>
+      </div>
     </div>
   );
 }

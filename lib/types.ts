@@ -1,5 +1,8 @@
 // lib/types.ts — ChromaCheck 领域类型
-// chromacheck v1.4.0
+// chromacheck v1.7.0
+
+/** 检测场景：general 通用自测 / driver 驾驶·职业体检准备（隐藏趣味元素） */
+export type Scene = 'general' | 'driver';
 
 export type PlateType =
   | 'demonstration'
@@ -159,6 +162,8 @@ export interface TestResult {
   analysis: string;
   confidenceNote: string;
   device: string;
+  /** 检测场景：driver 为驾驶/职业体检准备入口，结果仅含科学判读、隐藏趣味元素 */
+  scene?: Scene;
 }
 
 export interface AppSettings {

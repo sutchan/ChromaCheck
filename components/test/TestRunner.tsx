@@ -1,11 +1,11 @@
 // components/test/TestRunner.tsx — 石原氏检测流程编排（基于可复用 IshiharaFlow）
-// chromacheck v1.4.0
+// chromacheck v1.7.0
 'use client';
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { getQuestions } from '@/lib/questions';
-import type { AnswerRecord, TestMode } from '@/lib/types';
+import type { AnswerRecord, Scene, TestMode } from '@/lib/types';
 import { computeResult } from '@/lib/scoring';
 import { saveResult, saveProgress, loadProgress, clearProgress } from '@/lib/storage';
 import { detectDevice } from '@/lib/format';
@@ -13,7 +13,7 @@ import { IshiharaFlow } from './IshiharaFlow';
 import { useSettings } from '@/components/layout/ThemeProvider';
 import { Callout } from '@/components/common/Callout';
 
-export function TestRunner({ mode }: { mode: TestMode }) {
+export function TestRunner({ mode, scene = 'general' }: { mode: TestMode; scene?: Scene }) {
   const router = useRouter();
   const { settings } = useSettings();
   const questions = useMemo(() => getQuestions(mode), [mode]);
@@ -37,6 +37,7 @@ export function TestRunner({ mode }: { mode: TestMode }) {
       startedAt: startedAtRef.current,
       endedAt,
       device: detectDevice(),
+      scene,
     });
     saveResult(result);
     clearProgress();

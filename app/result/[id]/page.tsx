@@ -14,6 +14,7 @@ import { PathTrackingSummary } from '@/components/result/PathTrackingSummary';
 import { HueArrangementSummary } from '@/components/result/HueArrangementSummary';
 import { EyesSwitcher } from '@/components/result/EyesSwitcher';
 import { DimScenes } from '@/components/result/DimScenes';
+import { DriverCompliance } from '@/components/result/DriverCompliance';
 import { ReportActions } from '@/components/result/ReportActions';
 import { Callout } from '@/components/common/Callout';
 import { Icon } from '@/components/common/Icon';
@@ -58,9 +59,13 @@ export default function ResultPage() {
     );
   }
 
+  const isDriver = result.scene === 'driver';
+
   return (
     <div className="wrap stack" id="result-page" style={{ paddingBlock: 'var(--s-6)', gap: 'var(--s-5)' }}>
       <ResultSummary result={result} />
+
+      <DriverCompliance result={result} />
 
       {result.ishihara ? (
         <>
@@ -79,8 +84,8 @@ export default function ResultPage() {
 
           <AnswerReview answers={result.answers} />
 
-          <EyesSwitcher />
-          <DimScenes />
+          {!isDriver && <EyesSwitcher />}
+          {!isDriver && <DimScenes />}
         </>
       ) : null}
 
@@ -88,7 +93,11 @@ export default function ResultPage() {
 
       {result.hueArrangement ? <HueArrangementSummary result={result.hueArrangement} /> : null}
 
-      <ReportActions result={result} />
+      {isDriver ? (
+        <Callout icon="info">驾驶 / 职业体检准备场景：本报告仅含科学判读，已隐藏趣味元素。</Callout>
+      ) : null}
+
+      <ReportActions result={result} plain={isDriver} />
 
       <Callout tone="warn" icon="shield">
         本筛查为教育与自我了解用途，不能替代专业眼科诊断。若日常生活中频繁出现辨色困难，或职业/体检有要求，请前往正规医院眼科进行进一步检查。
