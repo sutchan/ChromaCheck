@@ -426,7 +426,7 @@ interface LocalStorageData {
 
 1. Ishihara, S. (1917). *Tests for colour-blindness*. Tokyo: Hongo Harukicho.
 2. 中华人民共和国国家标准 GB/T 27896-2011《色盲检查图》
-3. 《机动车驾驶证申领和使用规定》（公安部令第 162 号）色觉相关条款
+3. 《机动车驾驶证申领和使用规定》（公安部令第 172 号，2024-12 修订）色觉相关条款
 4. American Optometric Association. (2020). *Color Vision Deficiency*.
 
 ---

@@ -1,5 +1,5 @@
 // lib/scoring.ts — 判读引擎（移植自 prototype/scoring.js，纯函数）
-// chromacheck v1.3.0
+// chromacheck v1.7.0
 import type {
   AnswerRecord,
   DeficiencyType,
@@ -110,11 +110,12 @@ export function scoreIshihara(answers: AnswerRecord[], questions: Question[]): I
   };
 
   let overall: Overall = 'normal';
+  const wrongRate = wrong / Math.max(answered, 1);
   if (answered < total * 0.5) overall = 'inconclusive';
-  else if (vanishWrong >= 4 || wrong >= 8) overall = 'suspected_blindness';
-  else if (vanishWrong >= 2 || wrong >= 4 || hiddenRight >= Math.ceil(hiddenTotal / 2))
+  else if (vanishWrong >= 4 || wrongRate >= 0.6) overall = 'suspected_blindness';
+  else if (vanishWrong >= 2 || wrongRate >= 0.3 || hiddenRight >= Math.ceil(hiddenTotal / 2))
     overall = 'suspected_deficiency';
-  if (demoWrong > 0 && protanHit === 0 && deutanHit === 0 && wrong < 4) overall = 'inconclusive';
+  if (demoWrong > 0 && protanHit === 0 && deutanHit === 0 && wrongRate < 0.3) overall = 'inconclusive';
 
   let type: DeficiencyType = null;
   let severity: Severity = null;

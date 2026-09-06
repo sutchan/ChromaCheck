@@ -1,5 +1,5 @@
 // app/not-found.tsx — 404
-// chromacheck v1.0.0
+// chromacheck v1.7.0
 import React from 'react';
 import Link from 'next/link';
 import { Icon } from '@/components/common/Icon';

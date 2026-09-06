@@ -1,5 +1,5 @@
 // app/layout.tsx — 根布局
-// chromacheck v1.6.0
+// chromacheck v1.7.0
 import React from 'react';
 import type { Metadata, Viewport } from 'next';
 import './globals.css';

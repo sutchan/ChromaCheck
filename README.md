@@ -126,8 +126,8 @@ chromacheck/
 │   ├── home/                     # CvdSimulator
 │   ├── layout/                   # Footer、Navbar、ThemeProvider、ThemeToggle
 │   ├── analytics/                # GoogleAnalytics（GA4 脚本注入与路由上报，v1.5.1）
-│   ├── result/                   # AnswerReview、AxisChart、ReportActions、ResultSummary、PathTrackingSummary、HueArrangementSummary、EyesSwitcher、DimScenes
-│   └── test/                     # IshiharaPlate、Numpad、TestProgress、IshiharaFlow、FunBits、TestRunner、PathTrackingCanvas、PathTrackingRunner、HueArrangementGrid、HueArrangementRunner、AdvancedRunner
+│   ├── result/                   # AnswerReview、AxisChart、ReportActions、ResultSummary、PathTrackingSummary、HueArrangementSummary、EyesSwitcher、DimScenes、DriverCompliance
+│   └── test/                     # IshiharaPlate、Numpad、TestProgress、IshiharaFlow、FunBits、TestRunner、PathTrackingCanvas、PathTrackingRunner、HueArrangementGrid、HueArrangementRunner、AdvancedRunner、SignalRunner
 ├── lib/
 │   ├── types.ts                  # 全局类型（以 docs/SPEC.md §5 为权威）
 │   ├── questions.ts              # 石原氏题库数据

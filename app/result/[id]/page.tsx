@@ -1,5 +1,5 @@
 // app/result/[id]/page.tsx — 结果页
-// chromacheck v1.4.0
+// chromacheck v1.7.0
 'use client';
 
 import React, { useEffect, useState } from 'react';

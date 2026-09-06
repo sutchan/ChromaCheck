@@ -1,5 +1,5 @@
 // app/page.tsx — 首页
-// chromacheck v1.6.0
+// chromacheck v1.7.0
 import React from 'react';
 import Link from 'next/link';
 import { IshiharaPlate } from '@/components/test/IshiharaPlate';

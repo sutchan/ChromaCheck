@@ -1,5 +1,5 @@
 // components/layout/ThemeProvider.tsx — 主题 / 色觉安全 / 趣味体验设置
-// chromacheck v1.4.0
+// chromacheck v1.7.0
 'use client';
 
 import React, { createContext, useCallback, useContext, useEffect, useState } from 'react';

@@ -1,6 +1,6 @@
 'use client';
 // components/analytics/GoogleAnalytics.tsx — GA4 脚本注入与路由级页面浏览上报
-// chromacheck v1.5.1
+// chromacheck v1.7.0
 import Script from 'next/script';
 import { useEffect } from 'react';
 import { usePathname } from 'next/navigation';

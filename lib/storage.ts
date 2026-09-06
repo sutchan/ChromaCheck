@@ -1,5 +1,5 @@
 // lib/storage.ts — 本地存储（历史 / 设置 / 进度），SSR 安全
-// chromacheck v1.4.0
+// chromacheck v1.7.0
 import type { AppSettings, TestResult } from './types';
 
 const K = {
@@ -39,11 +39,25 @@ export function saveResult(r: TestResult): void {
   window.localStorage.setItem(K.results, JSON.stringify(arr.slice(0, 30)));
 }
 
+function isTestResult(x: unknown): x is TestResult {
+  if (!x || typeof x !== 'object') return false;
+  const r = x as Record<string, unknown>;
+  return (
+    typeof r.id === 'string' &&
+    typeof r.createdAt === 'string' &&
+    typeof r.overall === 'string' &&
+    (r.type === null || typeof r.type === 'string')
+  );
+}
+
 export function listResults(): TestResult[] {
   if (!isBrowser()) return [];
   try {
     const raw = window.localStorage.getItem(K.results);
-    return raw ? (JSON.parse(raw) as TestResult[]) : [];
+    if (!raw) return [];
+    const parsed = JSON.parse(raw);
+    if (!Array.isArray(parsed)) return [];
+    return parsed.filter(isTestResult);
   } catch {
     return [];
   }

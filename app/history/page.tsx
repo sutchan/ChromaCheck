@@ -1,5 +1,5 @@
 // app/history/page.tsx — 历史记录
-// chromacheck v1.3.0
+// chromacheck v1.7.0
 'use client';
 
 import React, { useEffect, useState } from 'react';
@@ -21,6 +21,7 @@ const TONE: Record<Overall, string> = {
 export default function HistoryPage() {
   const [items, setItems] = useState<TestResult[]>([]);
   const [loaded, setLoaded] = useState(false);
+  const [confirming, setConfirming] = useState(false);
 
   useEffect(() => {
     setItems(listResults());
@@ -39,20 +40,36 @@ export default function HistoryPage() {
           <h1 style={{ margin: 0 }}>历史记录</h1>
           <span className="muted" style={{ fontSize: '0.9rem' }}>仅保存于本设备浏览器，最多保留最近 30 次。</span>
         </div>
-        {items.length > 0 && (
+        {items.length > 0 && !confirming && (
           <button
             type="button"
             className="btn btn-ghost"
             style={{ fontSize: '0.85rem' }}
-            onClick={() => {
-              if (confirm('确定清空全部历史记录？')) {
-                clearResults();
-                setItems([]);
-              }
-            }}
+            onClick={() => setConfirming(true)}
           >
             <Icon name="trash" size={16} /> 清空
           </button>
+        )}
+        {confirming && (
+          <div className="row" style={{ gap: 'var(--s-2)', flexWrap: 'wrap', alignItems: 'center' }}>
+            <span className="muted" style={{ fontSize: '0.85rem' }}>确定清空全部历史记录？</span>
+            <button
+              type="button"
+              className="btn btn-primary"
+              style={{ fontSize: '0.85rem' }}
+              onClick={() => { clearResults(); setItems([]); setConfirming(false); }}
+            >
+              确认清空
+            </button>
+            <button
+              type="button"
+              className="btn btn-ghost"
+              style={{ fontSize: '0.85rem' }}
+              onClick={() => setConfirming(false)}
+            >
+              取消
+            </button>
+          </div>
         )}
       </div>
 

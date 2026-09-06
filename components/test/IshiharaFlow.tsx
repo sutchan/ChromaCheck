@@ -1,5 +1,5 @@
 // components/test/IshiharaFlow.tsx — 石原氏答题流程（独立组件，供标准/进阶模式复用）
-// chromacheck v1.4.0
+// chromacheck v1.7.0
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
@@ -100,7 +100,7 @@ export function IshiharaFlow({
     const correct = q.type === 'hidden' ? rec.userAnswer === '' : rec.userAnswer === q.answer;
     const next = [...answers, rec];
     setAnswers(next);
-    onProgress?.(isDemo ? idx : idx + 1, next);
+    onProgress?.(idx + 1, next);
     if (isDemo) {
       setReveal({ correct, expected: q.answer });
       return;
@@ -113,7 +113,7 @@ export function IshiharaFlow({
     const rec = record('');
     const next = [...answers, rec];
     setAnswers(next);
-    onProgress?.(q.type === 'demonstration' ? idx : idx + 1, next);
+    onProgress?.(idx + 1, next);
     if (q.type === 'demonstration') {
       setReveal({ correct: false, expected: q.answer });
       return;
