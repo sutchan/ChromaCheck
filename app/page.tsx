@@ -1,5 +1,5 @@
 // app/page.tsx — 首页
-// chromacheck v1.7.0
+// chromacheck v1.7.2
 import React from 'react';
 import Link from 'next/link';
 import { IshiharaPlate } from '@/components/test/IshiharaPlate';
@@ -25,7 +25,7 @@ const STEPS = [
 export default function HomePage() {
   const hero = QUESTIONS[0];
   return (
-    <div className="stack" style={{ gap: 'var(--s-8)', paddingBlock: 'var(--s-7)' }}>
+    <div className="stack" id="home-page" style={{ gap: 'var(--s-8)', paddingBlock: 'var(--s-7)' }}>
       {/* Hero */}
       <section className="wrap grid-cards" style={{ gridTemplateColumns: 'minmax(280px,1fr) minmax(280px,420px)', alignItems: 'center', gap: 'var(--s-7)' }}>
         <div className="stack" style={{ gap: 'var(--s-4)' }}>
