@@ -1,7 +1,15 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.7.0`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.7.1`）。
+
+## [1.7.1] - 2026-09-06
+
+### 优化（清理冗余代码与文件）
+- 删除 `lib/analytics.ts` 中零引用的 `trackEvent`（其依赖的服务端事件上报尚未实现，GA4 页面统计由 `pageview` 覆盖）。
+- 删除 `lib/advanced-scoring.ts` 中未使用的局部常量 `PATH_PASS`。
+- 收敛仅模块内部使用、无外部引用的导出（去掉 `export` 关键字，收窄公共 API 面）：`lib/ishihara.ts` 的 `CVD_MATRIX`/`hexToRgb`/`rgbToCss`、`lib/hue-scoring.ts` 的 `TES_NORMAL`/`scoreHueArrangement`、`lib/fun.ts` 的 `TITLES`、`lib/path-scoring.ts` 的 `pathOverlap`、`lib/questions/hue-arrangement.ts` 的 `HUE_QUESTION`、`lib/questions/path-tracking.ts` 的 `PATH_QUESTIONS`。
+- `docs/ARCHITECTURE.md` 补充消歧说明：`prototype/` 为独立设计参考、非应用运行依赖。
 
 ## [1.7.0] - 2026-09-06
 

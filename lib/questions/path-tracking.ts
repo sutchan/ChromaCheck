@@ -1,5 +1,5 @@
 // lib/questions/path-tracking.ts — 路径追踪题库（v1.1）
-// chromacheck v1.1.0
+// chromacheck v1.7.1
 import type { PathTrackingQuestion, TestMode } from '../types';
 import { standardPath } from '../ishihara';
 
@@ -14,7 +14,7 @@ const RAW: Seed[] = [
   { id: 'path-3', width: 700, height: 520, backgroundDots: { color: GREEN, radiusRange: [7, 11.5], density: 0 }, pathDotColor: PATH_COLOR, targets: ['protan', 'deutan'], kind: 2, seed: 37 },
 ];
 
-export const PATH_QUESTIONS: PathTrackingQuestion[] = RAW.map((q) => ({
+const PATH_QUESTIONS: PathTrackingQuestion[] = RAW.map((q) => ({
   ...q,
   standardPath: standardPath(q.kind),
 }));

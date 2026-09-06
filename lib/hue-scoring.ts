@@ -1,5 +1,5 @@
 // lib/hue-scoring.ts — 色相排列（D15）判读（v1.2）
-// chromacheck v1.2.0
+// chromacheck v1.7.1
 import type {
   DeficiencyType,
   HueArrangementQuestion,
@@ -11,7 +11,7 @@ import type {
 } from './types';
 
 /** TES 判读阈值：< 20 正常；20–40 轻度偏差；> 40 明显偏差 */
-export const TES_NORMAL = 20;
+const TES_NORMAL = 20;
 export const TES_MILD = 40;
 
 function clamp(v: number, lo: number, hi: number) {
@@ -49,7 +49,7 @@ function deviationAxis(order: number[], errs: number[]): 'protan' | 'deutan' | '
 }
 
 /** 对一次排列评分（不含 questionId） */
-export function scoreHueArrangement(order: number[]): Omit<HueArrangementResult, 'questionId'> {
+function scoreHueArrangement(order: number[]): Omit<HueArrangementResult, 'questionId'> {
   const cardErrors = capErrors(order);
   const totalErrorScore = cardErrors.reduce((s, e) => s + e, 0);
   const normal = totalErrorScore < TES_NORMAL;

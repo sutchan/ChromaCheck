@@ -1,5 +1,5 @@
 // lib/analytics.ts — Google Analytics 4 接入配置与上报辅助（单一来源）
-// chromacheck v1.5.1
+// chromacheck v1.7.1
 
 /**
  * GA4 衡量 ID 的唯一来源。
@@ -32,12 +32,3 @@ export function pageview(path: string): void {
   });
 }
 
-/** 上报自定义匿名事件；禁止传入检测内容、判读结果与任何身份信息。 */
-export function trackEvent(
-  name: string,
-  params?: Record<string, string | number>,
-): void {
-  const target = window as unknown as GtagWindow;
-  if (typeof target.gtag !== 'function') return;
-  target.gtag('event', name, params ?? {});
-}

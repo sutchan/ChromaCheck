@@ -1,6 +1,6 @@
-<!-- docs/SPEC.md v1.0.5 — ChromaCheck 项目规范总纲（单一事实来源） -->
+<!-- docs/SPEC.md v1.0.6 — ChromaCheck 项目规范总纲（单一事实来源） -->
 <!-- 地位：本规范为权威总纲。当与各分册（PRD/ARCHITECTURE/API/DATA-SPEC/DEPLOYMENT/TESTING/CONTRIBUTING/PRIVACY/ROADMAP）冲突时，以本规范为准。 -->
-<!-- 实现状态：v1.0 已实现（Next.js 14 应用 + 石原氏检测 + 结果/历史/科普/隐私），原型作为设计验证参考。当前版本 v1.0.5。 -->
+<!-- 实现状态：v1.0 已实现（Next.js 14 应用 + 石原氏检测 + 结果/历史/科普/隐私），原型作为设计验证参考。当前版本 v1.0.6。 -->
 
 # 色辨 ChromaCheck 项目规范（SPEC）
 
@@ -37,6 +37,8 @@
 
 检测模式：`quick`（快速，10 题）/ `standard`（标准，38 题）/ `advanced`（进阶联合，v1.3 实现）。
 
+- **信号灯辨识（驾驶场景专项，已实现）**：独立路由 `/test/signal`，模拟路口与夜间行车的红/绿/黄信号辨色与信号含义识别。与 `TestMode` 枚举**解耦**——其结果为瞬时判读，不计入 `TestResult`、不写入历史，仅作驾驶场景参考（详见 §5.7 / §6.7）。
+
 ## 2. 技术架构（v1.0 已实现）
 
 > 本节描述 v1.0 实际落地的技术栈与目录结构，与真实实现一致（详见 README §技术栈）。
@@ -60,6 +62,8 @@ lib/
   learn-data.ts   # 科普文章数据
   format.ts       # 格式化工具
   types.ts        # 全局类型（以本文档 §5 为权威）
+  questions/signal.ts # 信号灯辨识题库（驾驶场景专项）
+  signal-scoring.ts   # 信号灯辨识判读
 ```
 > 原型 `prototype/assets/js/*.js` 中的纯逻辑（scoring/data/ishihara）已作为 `lib/` 实现的**参考真值**完成移植，算法与字段保持一致。
 
@@ -248,6 +252,32 @@ interface AnalyticsEvent {
 ```
 **决议**：统一采用 API §3.2 字段集（含 `eventId` 与 `learn_view`），ARCHITECTURE 据此修订。
 
+### 5.7 信号灯辨识（驾驶场景专项，结果不计入 TestResult）
+> 与 `TestMode` 枚举解耦，为独立专项检测；判读结果仅在会话内展示，不写 `TestResult`、不进历史、不入 `localStorage`。
+
+```ts
+type SignalTaskKind = 'light' | 'meaning';   // light=辨色 / meaning=信号含义识别
+interface SignalOption { label: string; value: string }
+interface SignalTask {
+  id: string;
+  kind: SignalTaskKind;
+  prompt: string;
+  color?: string;          // 待辨识灯色（展示用；meaning 题留空）
+  options: SignalOption[]; // light 题固定 COLORS3：红/绿/黄
+  answer: string;          // 正确选项 value
+}
+interface SignalTaskResult { id: string; userAnswer: string; correct: boolean }
+interface SignalTestResult {
+  overall: 'pass' | 'fail';   // light 类全对则 pass
+  correct: number;
+  total: number;
+  colorOk: boolean;           // light 类（辨色）是否全对
+  tasks: SignalTaskResult[];
+  note: string;
+}
+```
+**决议**：信号灯辨识为驾驶场景专项（数字等效 lantern test），题库 9 题（6 辨色 + 3 含义）；结果不持久化、不进入 `TestResult` 聚合结构（§5.3），与历史/分享链路解耦。
+
 ## 6. 判读算法（权威，以 `scoring.js` 实现为准）
 
 > 本节为算法唯一权威，解决 ARCHITECTURE §3.2 与 DATA-SPEC §7 的扣分/阈值矛盾。**参考实现：`prototype/assets/js/scoring.js`。**
@@ -296,6 +326,13 @@ clamp(confidence, 0, 100)
 - 路径重合 `scorePath`：容差默认 `0.055`，命中比例 ×100。
 - 色相排列 `scoreHue`：相邻位置偏差求和（首末位置偏差 `max(0,d-1)`，中间 `max(0,d-1)*2`），`TES < 20` 判正常。
 
+### 6.7 信号灯辨识判读（`scoreSignal`）
+- 逐题判定 `correct = (userAnswer === answer)`。
+- **light 类（辨色）须全部正确**才 `colorOk = true`；`overall = colorOk ? 'pass' : 'fail'`。
+- **meaning 类（信号含义）错误反映认知而非辨色**，计入 `correct` 但不直接判不合格（不否决 `colorOk`）。
+- `note`：通过→「符合安全驾驶信号辨色基本要求」；未通过→「建议正规医院眼科确认，以体检机构结论为准」。
+- 结果仅在会话内展示，**不写入 `TestResult`、不进历史**（与 §5.7 一致）。
+
 ## 7. 隐私与合规基线（摘要，详见 `PRIVACY.md`）
 - 纯前端、localStorage 存储；**无强制登录、无 PII 上传、无服务端状态**。
 - 提供数据导出与删除入口。**v1.5.1 起接入 Google Analytics 4 匿名访问统计**（衡量 ID 见 `lib/analytics.ts`，仅生产环境加载，不含检测内容与 PII）；`analyticsEnabled` 服务端事件上报**仍未实现**。
@@ -314,7 +351,7 @@ clamp(confidence, 0, 100)
 ### 8.2 版本管理
 - 每次修改 bump 最小版本（patch 优先；新功能 minor；破坏性 major）。
 - 源码文件头统一 `// path vX.Y.Z`；**仅被改动文件更新头注释，禁止全仓库批量刷写**。
-- 项目的**版本单一来源已确立**：仓库根 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.0.4`）为权威；每次发版须同步二者并新增 `CHANGELOG.md` 条目。各文档头注释版本（如 SPEC `v1.0.4`）与 `VERSION` 保持一致；分册"文档版本 v1.0"为文档初版标记，与项目发布版本分属两套体系。原型文件头 `v0.1.0` 为原型内部迭代号，不随项目版本刷写（见 CHANGELOG 说明）。
+- 项目的**版本单一来源已确立**：仓库根 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.7.0`）为权威；每次发版须同步二者并新增 `CHANGELOG.md` 条目。各文档头注释版本（如 SPEC `v1.0.6`）与 `VERSION` 保持一致；分册"文档版本 v1.0"为文档初版标记，与项目发布版本分属两套体系。原型文件头 `v0.1.0` 为原型内部迭代号，不随项目版本刷写（见 CHANGELOG 说明）。
 - 文档版本当前统一标注 v1.0（产品目标）；原型文件头为 v0.1.0（原型阶段），二者分阶段对齐，不混用。
 
 ### 8.3 文档结构
@@ -329,6 +366,7 @@ clamp(confidence, 0, 100)
 ## 9. 实现状态与待办（对齐 ROADMAP）
 - **已完成（v1.0）**：文档体系（9 分册 + SPEC 总纲）、高保真静态原型（4 页）、Next.js 14 应用骨架、石原氏检测全流程（`lib/` 题库/判读/点阵/存储移植 + `components/` 组件）、结果/历史/科普/隐私页、导出（PNG/打印/复制）/分享、CI。
 - **推迟**：`analyticsEnabled` 服务端匿名事件上报。（匿名访问统计 GA4 已于 v1.5.1 实现）（路径追踪 F4 已于 v1.1、色相排列 F5 已于 v1.2、进阶联合判读 advanced 已于 v1.3 实现）
+- **信号灯辨识（驾驶场景专项）**：独立路由 `/test/signal` 已实现（题库 9 题 + `scoreSignal` 判读），结果不计入历史，与 `TestMode` 枚举解耦。
 
 ---
-*本文档为 ChromaCheck 权威规范总纲 v1.0.4。分册应据本规范修订以消除前述字段/算法/范围冲突。*
+*本文档为 ChromaCheck 权威规范总纲 v1.0.6。分册应据本规范修订以消除前述字段/算法/范围冲突。*

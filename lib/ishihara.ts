@@ -1,7 +1,7 @@
 // lib/ishihara.ts — 点阵图数学与色觉模拟（移植自 prototype/ishihara.js，纯函数无 DOM）
-// chromacheck v1.7.0
+// chromacheck v1.7.1
 
-export const CVD_MATRIX: Record<string, number[]> = {
+const CVD_MATRIX: Record<string, number[]> = {
   none: [1, 0, 0, 0, 1, 0, 0, 0, 1],
   protanopia: [0.567, 0.433, 0, 0.558, 0.442, 0, 0, 0.242, 0.758],
   deuteranopia: [0.625, 0.375, 0, 0.7, 0.3, 0, 0, 0.3, 0.7],
@@ -25,12 +25,12 @@ export const PALETTE: Record<PaletteKey, { fig: string[]; bg: string[] }> = {
   classification: { fig: ['#c0392b', '#b83227'], bg: ['#2e7d32', '#2f8f4e', '#357a38'] },
 };
 
-export function hexToRgb(hex: string): [number, number, number] {
+function hexToRgb(hex: string): [number, number, number] {
   const h = hex.replace('#', '');
   return [parseInt(h.slice(0, 2), 16), parseInt(h.slice(2, 4), 16), parseInt(h.slice(4, 6), 16)];
 }
 
-export function rgbToCss(r: number, g: number, b: number): string {
+function rgbToCss(r: number, g: number, b: number): string {
   return `rgb(${Math.round(r)},${Math.round(g)},${Math.round(b)})`;
 }
 

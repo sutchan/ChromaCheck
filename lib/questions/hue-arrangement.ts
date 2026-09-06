@@ -1,5 +1,5 @@
 // lib/questions/hue-arrangement.ts — 色相排列（D15）题库（v1.2）
-// chromacheck v1.2.0
+// chromacheck v1.7.1
 import type { HueArrangementQuestion, TestMode } from '../types';
 
 /**
@@ -47,7 +47,7 @@ export function shuffledOrder(seed: number): number[] {
   return arr.every((v, i) => v === i) ? shuffledOrder(seed + 1) : arr;
 }
 
-export const HUE_QUESTION: HueArrangementQuestion = {
+const HUE_QUESTION: HueArrangementQuestion = {
   id: 'hue-1',
   cardCount: 17,
   cards: D15_CAPS,

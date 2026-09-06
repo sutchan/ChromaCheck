@@ -1,5 +1,5 @@
 // lib/fun.ts — 趣味性数据与文案（移植自 prototype data.js §6.5，受「趣味体验」开关控制）
-// chromacheck v1.4.0
+// chromacheck v1.7.1
 import type { AxisKey, DeficiencyType, Overall, PlateType } from './types';
 
 /** 边界：答题中永不显示对错；称号为旅人隐喻、去污名化，仅本机展示，可随开关关闭。 */
@@ -29,7 +29,7 @@ export interface FunTitle {
   desc: string;
 }
 
-export const TITLES: Record<string, FunTitle> = {
+const TITLES: Record<string, FunTitle> = {
   normal: { name: '全谱旅人', desc: '三条色轴都走得稳，世界的色谱在你脚下完整铺开。' },
   protanomaly: { name: '暖色缓行的旅人', desc: '暖色段的路标要更近才看清，但方向从不迷。' },
   protanopia: { name: '暖雾旅人', desc: '红与深绿的岔路并成一条，你靠明暗与位置照样走得稳。' },

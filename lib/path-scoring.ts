@@ -1,5 +1,5 @@
 // lib/path-scoring.ts — 路径追踪判读（v1.1）
-// chromacheck v1.1.0
+// chromacheck v1.7.1
 import type {
   DeficiencyType,
   Overall,
@@ -31,7 +31,7 @@ function minDist(p: { x: number; y: number }, pts: { x: number; y: number }[]): 
 }
 
 /** 计算用户轨迹与标准路径的重合度（IoU 思路）0-100 */
-export function pathOverlap(std: { x: number; y: number }[], user: { x: number; y: number }[]): number {
+function pathOverlap(std: { x: number; y: number }[], user: { x: number; y: number }[]): number {
   if (user.length < 2) return 0;
   const S = resample(std, 80);
   const U = resample(user, 80);

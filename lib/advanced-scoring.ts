@@ -1,5 +1,5 @@
 // lib/advanced-scoring.ts — 进阶版三模块联合判读（v1.3）
-// chromacheck v1.5.0
+// chromacheck v1.7.1
 import type {
   AnswerRecord,
   DeficiencyType,
@@ -13,9 +13,6 @@ import type {
   TestResult,
 } from './types';
 import { TES_MILD } from './hue-scoring';
-
-/** 路径追踪单题通过阈值（与 lib/path-scoring.ts 一致） */
-const PATH_PASS = 70;
 
 function clamp(v: number, lo: number, hi: number) {
   return Math.max(lo, Math.min(hi, v));
