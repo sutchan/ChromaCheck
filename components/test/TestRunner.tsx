@@ -1,5 +1,5 @@
 // components/test/TestRunner.tsx — 石原氏检测流程编排（基于可复用 IshiharaFlow）
-// chromacheck v1.7.0
+// chromacheck v1.7.3
 'use client';
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -19,6 +19,7 @@ export function TestRunner({ mode, scene = 'general' }: { mode: TestMode; scene?
   const questions = useMemo(() => getQuestions(mode), [mode]);
   const [runKey, setRunKey] = useState(0);
   const [initial, setInitial] = useState<{ index: number; answers: AnswerRecord[] } | undefined>(undefined);
+  const [mounted, setMounted] = useState(false);
   const startedAtRef = useRef<number>(Date.now());
 
   useEffect(() => {
@@ -27,6 +28,7 @@ export function TestRunner({ mode, scene = 'general' }: { mode: TestMode; scene?
       setInitial({ index: p.index, answers: p.answers });
       startedAtRef.current = p.startedAt ?? Date.now();
     }
+    setMounted(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -60,14 +62,20 @@ export function TestRunner({ mode, scene = 'general' }: { mode: TestMode; scene?
         </button>
       </div>
 
-      <IshiharaFlow
-        key={runKey}
-        questions={questions}
-        initial={initial}
-        funMode={settings.funMode}
-        onProgress={(index, answers) => saveProgress({ mode, index, answers, startedAt: startedAtRef.current })}
-        onDone={handleDone}
-      />
+      {mounted ? (
+        <IshiharaFlow
+          key={runKey}
+          questions={questions}
+          initial={initial}
+          funMode={settings.funMode}
+          onProgress={(index, answers) => saveProgress({ mode, index, answers, startedAt: startedAtRef.current })}
+          onDone={handleDone}
+        />
+      ) : (
+        <div className="card stack" style={{ alignItems: 'center', gap: 'var(--s-4)', minHeight: 320 }} aria-hidden>
+          <p className="muted" style={{ margin: 0 }}>正在恢复进度…</p>
+        </div>
+      )}
 
       <Callout icon="info">保持环境光线充足，眼睛与屏幕约 40–50cm。每题凭第一直觉作答，不要反复猜测。</Callout>
     </section>

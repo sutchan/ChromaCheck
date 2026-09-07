@@ -1,7 +1,23 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.7.2`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.7.3`）。
+
+## [1.7.3] - 2026-09-07
+
+### 修正（答题流程与进阶模式恢复）
+- 修复演示题作为最后一题时 `advanceFromReveal` 永不调用 `onDone`、测试卡死无法完成的问题（现末题直接提交结果）。
+- 修复「恢复进度」功能整体失效：进度经 `useEffect` 异步写入 `initial`，而 `useIshiharaFlow` 的 `useState(initial?.index ?? 0)` 仅在首挂载生效，导致恢复总是从第一题开始。改用挂载门控（`mounted`），确保 `IshiharaFlow` 首挂载即带正确 `initial`。
+- 修复进阶联合检测中途刷新后石原氏作答进度丢失：进阶模式现持久化并恢复石原氏阶段进度（`initial` 接入 `IshiharaFlow`，完成即清进度），与标准 / 快速版一致。
+
+### 优化（SEO / 站点结构）
+- 为 `/test/ishihara/[mode]`、`/test/hue-arrangement/[mode]`、`/test/path-tracking/[mode]`、`/test/advanced` 补充 `generateMetadata`（标题 / 描述 / canonical / OG）。
+- 为色相排列与路径追踪动态路由补充 `generateStaticParams`。
+- `app/sitemap.ts` 补全 `/test/ishihara/{quick,standard}`、`/test/advanced`、`/test/hue-arrangement/standard`、`/test/path-tracking/standard`。
+- 新增 `app/loading.tsx` 路由级加载骨架。
+
+### 版本同步
+- 版本单一来源同步至 `1.7.3`（`VERSION`、`package.json`、改动文件头注释、`README.md` 状态行）。
 
 ## [1.7.2] - 2026-09-06
 

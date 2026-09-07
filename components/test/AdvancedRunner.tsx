@@ -1,5 +1,5 @@
 // components/test/AdvancedRunner.tsx — 进阶版联合检测编排（石原氏 + 路径追踪 + 色相排列）
-// chromacheck v1.5.0
+// chromacheck v1.7.3
 'use client';
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -12,7 +12,7 @@ import { scoreIshihara } from '@/lib/scoring';
 import { scorePathTracking } from '@/lib/path-scoring';
 import { scoreHueQuestion } from '@/lib/hue-scoring';
 import { computeAdvancedResult } from '@/lib/advanced-scoring';
-import { saveResult, loadProgress, clearProgress } from '@/lib/storage';
+import { saveResult, loadProgress, saveProgress, clearProgress } from '@/lib/storage';
 import { detectDevice } from '@/lib/format';
 import { IshiharaFlow } from './IshiharaFlow';
 import { PathTrackingCanvas } from './PathTrackingCanvas';
@@ -31,18 +31,24 @@ export function AdvancedRunner({ scene = 'general' }: { scene?: Scene }) {
   const [phase, setPhase] = useState(0);
   const [runKey, setRunKey] = useState(0);
   const [ishiharaAnswers, setIshiharaAnswers] = useState<AnswerRecord[] | null>(null);
+  const [ishiharaInitial, setIshiharaInitial] = useState<{ index: number; answers: AnswerRecord[] } | undefined>(undefined);
+  const [mounted, setMounted] = useState(false);
   const [pathResults, setPathResults] = useState<PathTrackingResult[]>([]);
   const startedAtRef = useRef<number>(Date.now());
 
   useEffect(() => {
     const p = loadProgress();
-    if (p && p.mode === 'advanced') {
+    if (p && p.mode === 'advanced' && p.index < ishiharaQuestions.length) {
       startedAtRef.current = p.startedAt ?? Date.now();
+      setIshiharaInitial({ index: p.index, answers: p.answers });
     }
+    setMounted(true);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   function onIshiharaDone(answers: AnswerRecord[]) {
+    clearProgress();
+    setIshiharaInitial(undefined);
     setIshiharaAnswers(answers);
     setPhase(1);
   }
@@ -74,6 +80,7 @@ export function AdvancedRunner({ scene = 'general' }: { scene?: Scene }) {
     clearProgress();
     setPhase(0);
     setIshiharaAnswers(null);
+    setIshiharaInitial(undefined);
     setPathResults([]);
     setRunKey((k) => k + 1);
     startedAtRef.current = Date.now();
@@ -100,7 +107,20 @@ export function AdvancedRunner({ scene = 'general' }: { scene?: Scene }) {
       </div>
 
       {phase === 0 ? (
-        <IshiharaFlow key={`ishihara-${runKey}`} questions={ishiharaQuestions} funMode={settings.funMode} onDone={onIshiharaDone} />
+        mounted ? (
+          <IshiharaFlow
+            key={`ishihara-${runKey}`}
+            questions={ishiharaQuestions}
+            initial={ishiharaInitial}
+            funMode={settings.funMode}
+            onProgress={(index, answers) => saveProgress({ mode: 'advanced', index, answers, startedAt: startedAtRef.current })}
+            onDone={onIshiharaDone}
+          />
+        ) : (
+          <div className="card stack" style={{ alignItems: 'center', gap: 'var(--s-4)', minHeight: 320 }} aria-hidden>
+            <p className="muted" style={{ margin: 0 }}>正在恢复进度…</p>
+          </div>
+        )
       ) : null}
 
       {phase === 1 && currentPathQ ? (

@@ -1,5 +1,5 @@
 // components/test/useIshiharaFlow.ts — 石原氏答题流程状态与逻辑（供标准/进阶模式复用）
-// chromacheck v1.7.2
+// chromacheck v1.7.3
 'use client';
 
 import { useEffect, useRef, useState } from 'react';
@@ -127,7 +127,11 @@ export function useIshiharaFlow(opts: {
   }
 
   function advanceFromReveal() {
-    setIdx(idx + 1 < total ? idx + 1 : idx);
+    if (idx + 1 >= total) {
+      onDone(answers);
+      return;
+    }
+    setIdx(idx + 1);
   }
 
   return {
