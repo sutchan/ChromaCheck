@@ -1,7 +1,18 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.7.3`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.7.4`）。
+
+## [1.7.4] - 2026-09-07
+
+### 优化（审查修复）
+- 字体改为 `next/font/google` 自托管（Archivo / IBM Plex Mono），消除 `no-page-custom-font` 告警并去除运行时外部字体请求；同步移除手动 `<link>` 预连接。
+- 移除根级 `app/loading.tsx` 全局加载骨架，避免每次路由切换闪现骨架屏。
+- 首页 Hero 图版改用 `lib/questions.ts` 导出的 `HERO_PLATE` 常量，避免直接依赖完整题库导入。
+- 新增 `lib/site.ts` 集中 `SITE_URL`，统一 `sitemap.ts` / `robots.ts` / `learn/[slug]` / 根布局的结构化数据域名来源。
+
+### 版本同步
+- 版本单一来源同步至 `1.7.4`（`VERSION`、`package.json`、改动文件头注释）。
 
 ## [1.7.3] - 2026-09-07
 

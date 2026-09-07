@@ -1,5 +1,5 @@
 // app/page.tsx — 首页
-// chromacheck v1.7.2
+// chromacheck v1.7.4
 import React from 'react';
 import Link from 'next/link';
 import { IshiharaPlate } from '@/components/test/IshiharaPlate';
@@ -7,7 +7,7 @@ import { CvdSimulator } from '@/components/home/CvdSimulator';
 import { Icon } from '@/components/common/Icon';
 import { Callout } from '@/components/common/Callout';
 import { HomeFaq } from '@/components/home/HomeFaq';
-import { QUESTIONS } from '@/lib/questions';
+import { HERO_PLATE } from '@/lib/questions';
 
 const FEATURES = [
   { icon: 'eye', title: '科学原理', text: '基于石原氏等亮度检测图，仅靠色相差异构成数字，能分辨红绿与蓝黄异常。' },
@@ -23,7 +23,7 @@ const STEPS = [
 ];
 
 export default function HomePage() {
-  const hero = QUESTIONS[0];
+  const hero = HERO_PLATE;
   return (
     <div className="stack" id="home-page" style={{ gap: 'var(--s-8)', paddingBlock: 'var(--s-7)' }}>
       {/* Hero */}

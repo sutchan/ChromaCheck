@@ -1,5 +1,5 @@
 // lib/questions.ts — 石原氏题库（移植自 prototype/data.js）
-// chromacheck v1.5.0
+// chromacheck v1.7.4
 import type { Question, TestMode } from './types';
 
 export const QUESTIONS: Question[] = [
@@ -42,6 +42,9 @@ export const QUESTIONS: Question[] = [
   { id: 'ishihara-37', plate: 37, type: 'demonstration', answer: '7', protan: '7', deutan: '7', difficulty: 1, quick: false },
   { id: 'ishihara-38', plate: 38, type: 'normal', answer: '9', protan: '9', deutan: '9', difficulty: 1, quick: false },
 ];
+
+// 首页 Hero 展示用图版（题库首题，确定性，无需依赖完整题库导入）
+export const HERO_PLATE = QUESTIONS[0];
 
 export const TYPE_LABEL: Record<Question['type'], string> = {
   demonstration: '演示题',

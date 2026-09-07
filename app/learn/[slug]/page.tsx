@@ -1,5 +1,5 @@
 // app/learn/[slug]/page.tsx — 科普详情
-// chromacheck v1.6.0
+// chromacheck v1.7.4
 import React from 'react';
 import Link from 'next/link';
 import { notFound } from 'next/navigation';
@@ -8,7 +8,9 @@ import { ARTICLES, getArticle } from '@/lib/learn-data';
 import { Icon } from '@/components/common/Icon';
 import { JsonLd } from '@/components/seo/JsonLd';
 
-const BASE = 'https://chromacheck.app';
+import { SITE_URL } from '@/lib/site';
+
+const BASE = SITE_URL;
 
 export function generateStaticParams() {
   return ARTICLES.map((a) => ({ slug: a.slug }));

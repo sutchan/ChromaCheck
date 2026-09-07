@@ -1,9 +1,10 @@
 // app/sitemap.ts — 站点地图（静态路由 + 科普文章）
-// chromacheck v1.7.3
+// chromacheck v1.7.4
 import type { MetadataRoute } from 'next';
 import { ARTICLES } from '@/lib/learn-data';
+import { SITE_URL } from '@/lib/site';
 
-const BASE = 'https://chromacheck.app';
+const BASE = SITE_URL;
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const now = new Date();

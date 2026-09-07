@@ -1,16 +1,32 @@
 // app/layout.tsx — 根布局
-// chromacheck v1.7.0
+// chromacheck v1.7.4
 import React from 'react';
 import type { Metadata, Viewport } from 'next';
+import { Archivo, IBM_Plex_Mono } from 'next/font/google';
 import './globals.css';
+import { SITE_URL } from '@/lib/site';
 import { ThemeProvider } from '@/components/layout/ThemeProvider';
 import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics';
 import { JsonLd } from '@/components/seo/JsonLd';
 
+// 自托管字体（next/font），消除 no-page-custom-font 告警并避免运行时外部字体请求
+const archivo = Archivo({
+  subsets: ['latin'],
+  weight: ['400', '500', '600', '700', '800'],
+  variable: '--font-sans',
+  display: 'swap',
+});
+const plexMono = IBM_Plex_Mono({
+  subsets: ['latin'],
+  weight: ['400', '500', '600'],
+  variable: '--font-mono',
+  display: 'swap',
+});
+
 export const metadata: Metadata = {
-  metadataBase: new URL('https://chromacheck.app'),
+  metadataBase: new URL(SITE_URL),
   title: {
     default: '色辨 ChromaCheck — 在线色觉筛查',
     template: '%s · 色辨 ChromaCheck',
@@ -42,7 +58,7 @@ export const metadata: Metadata = {
     siteName: 'ChromaCheck',
     title: '色辨 ChromaCheck — 在线色觉筛查',
     description: '基于石原氏检测原理的在线色觉筛查工具：快速版 10 题、标准版 38 题，即时生成判读结果与维度分析。',
-    url: 'https://chromacheck.app',
+    url: SITE_URL,
     images: [
       { url: '/og-default.svg', width: 1200, height: 630, alt: 'ChromaCheck 在线色觉筛查' },
     ],
@@ -64,7 +80,7 @@ const webAppLd = {
   '@type': 'WebApplication',
   name: '色辨 ChromaCheck',
   alternateName: 'ChromaCheck',
-  url: 'https://chromacheck.app',
+  url: SITE_URL,
   description:
     '基于石原氏等亮度检测原理的在线色觉筛查工具，提供快速版、标准版、路径追踪、色相排列与进阶联合判读，结果仅存于本机浏览器。',
   applicationCategory: 'HealthApplication',
@@ -78,7 +94,7 @@ const webAppLd = {
   publisher: {
     '@type': 'Organization',
     name: 'ChromaCheck',
-    url: 'https://chromacheck.app',
+    url: SITE_URL,
   },
 };
 
@@ -90,19 +106,18 @@ export const viewport: Viewport = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="zh-CN" data-theme="light" suppressHydrationWarning>
+    <html
+      lang="zh-CN"
+      data-theme="light"
+      suppressHydrationWarning
+      className={`${archivo.variable} ${plexMono.variable}`}
+    >
       <head>
         <script
           dangerouslySetInnerHTML={{
             __html:
               "(function(){try{var s=localStorage.getItem('cc.settings.v1');var t=s?JSON.parse(s).theme:'light';document.documentElement.setAttribute('data-theme',t==='dark'?'dark':'light');}catch(e){document.documentElement.setAttribute('data-theme','light');}})();",
           }}
-        />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
-        <link
-          href="https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500;600&display=swap"
-          rel="stylesheet"
         />
         <link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt" />
       </head>
