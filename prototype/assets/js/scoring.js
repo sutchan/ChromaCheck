@@ -1,4 +1,4 @@
-/* prototype/assets/js/scoring.js v0.1.0 — 判读引擎（纯函数，对应 lib/scoring/*） */
+/* prototype/assets/js/scoring.js v0.1.1 — 判读引擎（纯函数，对齐 lib/scoring.ts：错误率阈值） */
 window.CC = window.CC || {};
 
 (function () {
@@ -65,12 +65,13 @@ window.CC = window.CC || {};
       tritan: clamp(Math.round(base * 0.35), 0, 100)
     };
 
-    // 总体结论
+    // 总体结论（对齐 app/lib/scoring.ts：改用错误率阈值，兼容任意题量）
     var overall = 'normal';
+    var wrongRate = wrong / Math.max(answered, 1);
     if (answered < total * 0.5) overall = 'inconclusive';
-    else if (vanishWrong >= 4 || wrong >= 8) overall = 'suspected_blindness';
-    else if (vanishWrong >= 2 || wrong >= 4 || hiddenRight >= Math.ceil(hiddenTotal / 2)) overall = 'suspected_deficiency';
-    if (demoWrong > 0 && protanHit === 0 && deutanHit === 0 && wrong < 4) overall = 'inconclusive';
+    else if (vanishWrong >= 4 || wrongRate >= 0.6) overall = 'suspected_blindness';
+    else if (vanishWrong >= 2 || wrongRate >= 0.3 || hiddenRight >= Math.ceil(hiddenTotal / 2)) overall = 'suspected_deficiency';
+    if (demoWrong > 0 && protanHit === 0 && deutanHit === 0 && wrongRate < 0.3) overall = 'inconclusive';
 
     // 类型与程度
     var type = null, severity = null;
@@ -101,35 +102,61 @@ window.CC = window.CC || {};
     };
   }
 
-  /** 色相排列 TES：相邻位置偏差求和 */
-  function scoreHue(order) {
+  /** 色相排列 TES：相邻位置偏差求和（order 已含固定两端 0/14） */
+  function scoreHue(seq) {
     var errs = [], tes = 0;
-    for (var i = 0; i < order.length - 1; i++) {
-      var d = Math.abs(order[i] - order[i + 1]);
-      var e = i === 0 || i === order.length - 2 ? Math.max(0, d - 1) : Math.max(0, d - 1) * 2;
+    for (var i = 0; i < seq.length - 1; i++) {
+      var d = Math.abs(seq[i] - seq[i + 1]);
+      var e = i === 0 || i === seq.length - 2 ? Math.max(0, d - 1) : Math.max(0, d - 1) * 2;
       errs.push(e); tes += e;
     }
     var T = CC.rules.tes;
+    var direction = 'none';
+    if (tes >= T.normal) {
+      var redGreen = 0, blueYellow = 0;
+      for (var j = 0; j < seq.length - 1; j++) {
+        if (Math.min(seq[j], seq[j + 1]) <= 5) blueYellow += errs[j];
+        else redGreen += errs[j];
+      }
+      direction = redGreen >= blueYellow ? 'deutan' : 'tritan';
+    }
     return {
       totalErrorScore: tes, cardErrors: errs,
-      deviationDirection: tes < T.normal ? 'none' : 'deutan',
+      deviationDirection: direction,
       normal: tes < T.normal
     };
   }
 
-  /** 路径重合度：用户轨迹点落在标准路径容差内的比例 */
+  /** 路径重合度：用户轨迹与标准路径的 IoU（对齐 lib/path-scoring.ts） */
   function scorePath(userPath, standardPath, tolerance) {
-    if (!userPath.length) return 0;
-    var tol = tolerance || 0.055, hit = 0;
-    standardPath.forEach(function (p) {
-      var best = Infinity;
-      userPath.forEach(function (u) {
-        var d = Math.hypot(u.x - p.x, u.y - p.y);
-        if (d < best) best = d;
-      });
-      if (best <= tol) hit++;
-    });
-    return Math.round((hit / standardPath.length) * 100);
+    if (!userPath || userPath.length < 2) return 0;
+    var TOL = tolerance || 0.07;
+    var S = resample(standardPath, 80);
+    var U = resample(userPath, 80);
+    function minDist(p, pts) {
+      var m = Infinity;
+      for (var k = 0; k < pts.length; k++) {
+        var d = Math.hypot(p.x - pts[k].x, p.y - pts[k].y);
+        if (d < m) m = d;
+      }
+      return m;
+    }
+    var cov = 0;
+    S.forEach(function (p) { if (minDist(p, U) <= TOL) cov++; });
+    cov /= S.length;
+    var prec = 0;
+    U.forEach(function (p) { if (minDist(p, S) <= TOL) prec++; });
+    prec /= U.length;
+    if (cov + prec - cov * prec <= 0) return 0;
+    return Math.round(((cov * prec) / (cov + prec - cov * prec)) * 100);
+  }
+
+  /** 等距重采样到 n 个点（对齐 lib/path-scoring.ts） */
+  function resample(path, n) {
+    if (path.length < 2) return path.slice();
+    var out = [];
+    for (var i = 0; i < n; i++) out.push(path[Math.round((i / (n - 1)) * (path.length - 1))]);
+    return out;
   }
 
   function clamp(v, lo, hi) { return Math.max(lo, Math.min(hi, v)); }

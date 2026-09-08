@@ -54,7 +54,7 @@ window.CC = window.CC || {};
     root.innerHTML = s.render();
     if (s.mount) s.mount(root);
     q('routeSel').value = CC.state.route;
-    document.title = s.title + ' · 色辨 ChromaCheck 原型 v0.1.1';
+    document.title = s.title + ' · 色辨 ChromaCheck 原型 v0.1.2';
     fit();
     window.scrollTo({ top: 0, behavior: 'auto' });
   };
