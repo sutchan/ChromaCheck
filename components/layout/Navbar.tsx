@@ -1,5 +1,5 @@
 // components/layout/Navbar.tsx — 顶部导航
-// chromacheck v1.0.0
+// chromacheck v1.7.5
 'use client';
 
 import React from 'react';
@@ -12,8 +12,6 @@ const LINKS = [
   { href: '/', label: '首页', exact: true },
   { href: '/test', label: '开始检测', exact: false },
   { href: '/history', label: '历史', exact: false },
-  { href: '/learn', label: '科普', exact: false },
-  { href: '/privacy', label: '隐私', exact: false },
 ];
 
 export function Navbar() {
