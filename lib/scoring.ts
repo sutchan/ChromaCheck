@@ -88,7 +88,11 @@ export function scoreIshihara(answers: AnswerRecord[], questions: Question[]): I
   const wrongRate = wrong / Math.max(answered, 1);
   if (answered < total * 0.5) overall = 'inconclusive';
   else if (vanishWrong >= 4 || wrongRate >= 0.6) overall = 'suspected_blindness';
-  else if (vanishWrong >= 2 || wrongRate >= 0.3 || hiddenRight >= Math.ceil(hiddenTotal / 2))
+  else if (
+    vanishWrong >= 2 ||
+    wrongRate >= 0.3 ||
+    (hiddenTotal > 0 && hiddenRight >= Math.ceil(hiddenTotal / 2))
+  )
     overall = 'suspected_deficiency';
   if (demoWrong > 0 && protanHit === 0 && deutanHit === 0 && wrongRate < 0.3) overall = 'inconclusive';
 

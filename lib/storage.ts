@@ -1,5 +1,5 @@
 // lib/storage.ts — 本地存储（历史 / 设置 / 进度），SSR 安全
-// chromacheck v1.7.0
+// chromacheck v1.7.6
 import type { AppSettings, TestResult } from './types';
 
 const K = {
@@ -25,9 +25,19 @@ export function loadSettings(): AppSettings {
   }
 }
 
+/** 写入降级：配额满 / 隐私模式禁用时静默失败，避免打断检测提交流程 */
+function safeSet(key: string, value: string): boolean {
+  try {
+    window.localStorage.setItem(key, value);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
 export function saveSettings(s: AppSettings): void {
   if (!isBrowser()) return;
-  window.localStorage.setItem(K.settings, JSON.stringify(s));
+  safeSet(K.settings, JSON.stringify(s));
 }
 
 export function saveResult(r: TestResult): void {
@@ -36,7 +46,7 @@ export function saveResult(r: TestResult): void {
   const map = new Map(all.map((x) => [x.id, x]));
   map.set(r.id, r);
   const arr = Array.from(map.values()).sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
-  window.localStorage.setItem(K.results, JSON.stringify(arr.slice(0, 30)));
+  safeSet(K.results, JSON.stringify(arr.slice(0, 30)));
 }
 
 function isTestResult(x: unknown): x is TestResult {
@@ -70,12 +80,16 @@ export function getResult(id: string): TestResult | undefined {
 export function deleteResult(id: string): void {
   if (!isBrowser()) return;
   const arr = listResults().filter((r) => r.id !== id);
-  window.localStorage.setItem(K.results, JSON.stringify(arr));
+  safeSet(K.results, JSON.stringify(arr));
 }
 
 export function clearResults(): void {
   if (!isBrowser()) return;
-  window.localStorage.removeItem(K.results);
+  try {
+    window.localStorage.removeItem(K.results);
+  } catch {
+    /* 忽略：同 clearProgress */
+  }
 }
 
 export interface TestProgress {
@@ -85,16 +99,29 @@ export interface TestProgress {
   startedAt: number;
 }
 
+function isProgress(x: unknown): x is TestProgress {
+  if (!x || typeof x !== 'object') return false;
+  const p = x as Record<string, unknown>;
+  return (
+    typeof p.mode === 'string' &&
+    typeof p.index === 'number' &&
+    Array.isArray(p.answers) &&
+    typeof p.startedAt === 'number'
+  );
+}
+
 export function saveProgress(p: TestProgress): void {
   if (!isBrowser()) return;
-  window.localStorage.setItem(K.progress, JSON.stringify(p));
+  safeSet(K.progress, JSON.stringify(p));
 }
 
 export function loadProgress(): TestProgress | null {
   if (!isBrowser()) return null;
   try {
     const raw = window.localStorage.getItem(K.progress);
-    return raw ? (JSON.parse(raw) as TestProgress) : null;
+    if (!raw) return null;
+    const parsed: unknown = JSON.parse(raw);
+    return isProgress(parsed) ? parsed : null;
   } catch {
     return null;
   }
@@ -102,5 +129,9 @@ export function loadProgress(): TestProgress | null {
 
 export function clearProgress(): void {
   if (!isBrowser()) return;
-  window.localStorage.removeItem(K.progress);
+  try {
+    window.localStorage.removeItem(K.progress);
+  } catch {
+    /* 忽略：removeItem 极少失败，失败不影响流程 */
+  }
 }
