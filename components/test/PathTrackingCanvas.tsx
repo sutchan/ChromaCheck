@@ -93,7 +93,7 @@ export function PathTrackingCanvas({ question, onResult }: Props) {
   function onMove(e: React.PointerEvent<HTMLCanvasElement>) {
     if (!drawing.current) return;
     ptsRef.current.push(toNorm(e));
-    render();
+    scheduleRender();
   }
 
   function onUp() {

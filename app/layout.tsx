@@ -128,6 +128,9 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               "(function(){try{var s=localStorage.getItem('cc.settings.v1');if(s&&JSON.parse(s).cvdSafe)document.body.classList.add('cvd-safe');}catch(e){}})();",
           }}
         />
+        <a href="#main-content" className="skip-link">
+          跳到主内容
+        </a>
         <JsonLd data={webAppLd} />
         <GoogleAnalytics />
         <ThemeProvider>

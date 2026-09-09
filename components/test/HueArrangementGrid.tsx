@@ -48,14 +48,14 @@ export function HueArrangementGrid({
         </p>
       </div>
 
-      <div className="row" id="hue-grid" role="listbox" aria-label="色相排列色卡" style={{ gap: 'var(--s-2)', flexWrap: 'wrap', alignItems: 'stretch' }}>
+      {/* 原生 button 天然键盘可用；用 group + aria-pressed 表达选中态，避免未实现键盘模式的 listbox 误用 */}
+      <div className="row" id="hue-grid" role="group" aria-label="色相排列色卡" style={{ gap: 'var(--s-2)', flexWrap: 'wrap', alignItems: 'stretch' }}>
         <FixedCard color={fixedLeft} position="左" />
         {order.map((capId, slot) => (
           <button
             type="button"
             key={slot}
-            role="option"
-            aria-selected={pick === slot}
+            aria-pressed={pick === slot}
             aria-label={`第 ${slot + 1} 位色卡`}
             className="stack"
             onClick={() => clickSlot(slot)}

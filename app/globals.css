@@ -1,5 +1,5 @@
 /* app/globals.css — ChromaCheck 设计令牌与基础样式（移植自 prototype 设计系统） */
-/* chromacheck v1.0.0 */
+/* chromacheck v1.7.7 */
 
 @tailwind base;
 @tailwind components;
@@ -158,6 +158,23 @@
     outline: none;
     box-shadow: var(--sh-focus);
     border-radius: var(--r-sm);
+  }
+  /* 跳转主内容链接：仅键盘聚焦时可见（WCAG 2.4.1） */
+  .skip-link {
+    position: absolute;
+    left: -9999px;
+    top: 0;
+    z-index: 100;
+    padding: var(--s-2) var(--s-4);
+    background: var(--bg-elev);
+    color: var(--brand);
+    border-radius: 0 0 var(--r-sm) 0;
+    box-shadow: var(--sh-1);
+    font-weight: 600;
+  }
+  .skip-link:focus {
+    left: 0;
+    text-decoration: none;
   }
 }
 
@@ -350,6 +367,18 @@
   }
   .between {
     justify-content: space-between;
+  }
+}
+
+/* 尊重系统「减弱动态效果」偏好（WCAG 2.3.3）：关停装饰性动画与过渡 */
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
   }
 }
 

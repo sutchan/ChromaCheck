@@ -1,7 +1,7 @@
-// lib/storage.test.ts v1.7.6
+// lib/storage.test.ts v1.7.7
 /**
- * 浏览器存储封装需真实 DOM（jsdom 提供 window.localStorage）
- * @vitest-environment jsdom
+ * storage 封装仅依赖标准 Storage API：由 vitest.setup.ts 注入内存版
+ * localStorage（window 指向 globalThis），纯 node 环境即可完整覆盖读写与降级路径。
  */
 import { describe, it, expect, beforeEach, vi } from 'vitest';
 import {
@@ -20,7 +20,7 @@ function result(id: string, createdAt: string): TestResult {
   };
 }
 
-/** jsdom 环境下的存储引用（经 window 访问，规避 Node 实验性 localStorage 全局） */
+/** 存储引用（经 window 访问，与 storage.ts 内部判据保持一致） */
 const store = () => window.localStorage;
 
 beforeEach(() => {
