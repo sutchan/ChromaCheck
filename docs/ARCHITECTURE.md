@@ -344,24 +344,28 @@ export interface IshiharaScoringResult {
 
 ### 4.1 本地存储设计
 
-**存储 Key 规范**：
+实现位于 `lib/storage.ts`，全部数据仅存于用户浏览器 localStorage（SSR 环境直接返回空值，不触库）。
+
+**存储 Key 规范**（单一来源 `lib/storage.ts` 的 `K` 常量）：
 
 ```
-chromacheck:v1:settings       # 用户设置
-chromacheck:v1:history        # 检测历史（仅存摘要，不存原始答案）
-chromacheck:v1:current_test   # 进行中的检测进度
-chromacheck:v1:result:{id}    # 单次检测完整结果（临时，结果页读取后可保留）
+cc.settings.v1     # 用户设置（AppSettings：主题 / 色觉安全 / 趣味模式）
+cc.results.v1      # 检测结果列表（倒序数组，每条含完整判读分析）
+cc.progress.v1     # 进行中的检测进度（模式 / 题号 / 答题记录 / 开始时间）
 ```
 
-**存储容量控制**：
-- 历史记录最多保留 20 条，超出自动删除最旧的。
-- 完整结果数据最多保留 5 条。
-- 总存储量控制在 1MB 以内。
+**容量与写入策略**：
+- 结果列表最多保留 30 条，超出自动淘汰最旧（`saveResult` 按 `createdAt` 降序后截断）。
+- 写路径统一走 `safeSet`：配额满（QuotaExceededError）或隐私模式禁用时静默失败并返回 `false`，绝不打断检测提交流程。
+- 总存储量远小于 1MB 配额（结果记录为轻量 JSON）。
 
-**数据加密**：
-- 不存储个人身份信息，无需强加密。
-- 使用 Base64 编码避免 JSON 特殊字符问题。
-- 版本号前缀，便于未来迁移。
+**读取容错（运行时校验）**：
+- JSON 解析失败 → 返回空数组 / 默认设置 / `null`，不抛出。
+- 结构不符的条目逐条过滤（`isTestResult` / `isProgress` 类型守卫），避免脏数据污染下游。
+- 删除 / 清空操作同样包裹 try/catch，失败不影响页面流程。
+
+**隐私**：
+- 不存储个人身份信息，无需强加密；数据直接以 JSON 序列化存储，`v1` 后缀便于未来迁移。
 
 ### 4.2 可选服务端存储（远期）
 

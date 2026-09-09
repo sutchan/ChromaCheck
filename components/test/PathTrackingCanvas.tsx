@@ -1,5 +1,5 @@
 // components/test/PathTrackingCanvas.tsx — 路径追踪画布 + 描线交互
-// chromacheck v1.1.0
+// chromacheck v1.7.7
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
@@ -19,6 +19,7 @@ export function PathTrackingCanvas({ question, onResult }: Props) {
   const fieldRef = useRef<PathField | null>(null);
   const drawing = useRef(false);
   const ptsRef = useRef<{ x: number; y: number }[]>([]);
+  const rafRef = useRef<number | null>(null);
   const [userPath, setUserPath] = useState<{ x: number; y: number }[]>([]);
 
   function render() {
@@ -39,6 +40,15 @@ export function PathTrackingCanvas({ question, onResult }: Props) {
       for (let i = 1; i < up.length; i++) ctx.lineTo(up[i].x * fieldRef.current!.W, up[i].y * fieldRef.current!.H);
       ctx.stroke();
     }
+  }
+
+  /** rAF 节流：合并同一帧内的多次 pointermove，只做一次重绘 */
+  function scheduleRender() {
+    if (rafRef.current !== null) return;
+    rafRef.current = requestAnimationFrame(() => {
+      rafRef.current = null;
+      render();
+    });
   }
 
   useEffect(() => {
@@ -73,6 +83,14 @@ export function PathTrackingCanvas({ question, onResult }: Props) {
     render();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [question.id]);
+
+  // 卸载时取消未执行的重绘，避免操作已卸载的 canvas
+  useEffect(
+    () => () => {
+      if (rafRef.current !== null) cancelAnimationFrame(rafRef.current);
+    },
+    [],
+  );
 
   function toNorm(e: React.PointerEvent<HTMLCanvasElement>) {
     const canvas = canvasRef.current!;

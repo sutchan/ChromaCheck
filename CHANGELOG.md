@@ -1,7 +1,37 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.7.5`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.7.7`）。
+
+## [1.7.7] - 2026-09-09
+
+### 修正（测试环境）
+- 修复 Node 26 实验性 `localStorage` 与 DOM 模拟环境冲突导致 storage 用例全挂的问题：新增 `vitest.setup.ts` 注入内存版 `Storage`（`window` 指向 `globalThis`），全部用例统一跑 node 环境，移除 `jsdom` / `happy-dom` 依赖。
+
+### 优化（可访问性与性能）
+- `app/globals.css` 新增 `prefers-reduced-motion: reduce` 支持，尊重系统「减弱动态效果」偏好（WCAG 2.3.3）。
+- 版本展示防脱节：`Footer` 版本号改为直读 `package.json`，不再硬编码。
+
+### 版本同步
+- 版本单一来源同步至 `1.7.7`（`VERSION`、`package.json`、改动文件头注释、README 状态行）。
+- 同步 `docs/ARCHITECTURE.md` §4.1 存储规格与实际实现对齐（Key 规范 / 30 条上限 / safeSet 降级 / 运行时校验）。
+
+## [1.7.6] - 2026-09-09
+
+### 修正（判读引擎与存储健壮性）
+- 修复石原氏判读误报：无隐含题时满分不再误判为「可疑色觉异常」（`scoring.ts` 增加 `hiddenTotal > 0` 前置条件）。
+- `lib/storage.ts` 写路径统一 `safeSet` 降级（配额满 / 隐私模式静默失败），读取增加运行时校验（`isTestResult` / `isProgress` 类型守卫），损坏数据不再抛错。
+
+### 新增（测试）
+- 初始化 Vitest 测试套件：判读引擎全量单测（scoring / hue / path / signal / advanced，39 例）+ storage 13 例。
+
+### 安全
+- `next.config.mjs` 新增安全响应头：CSP、X-Frame-Options、X-Content-Type-Options、Referrer-Policy、Permissions-Policy。
+
+### 优化（可访问性与性能）
+- `HueArrangementGrid` 修复 `listbox` ARIA 误用（未实现键盘模式），改用 `group` + `aria-pressed`。
+- `PathTrackingCanvas` 指针移动事件加 `requestAnimationFrame` 节流，消除高频重绘卡顿。
+- `app/layout.tsx` 新增「跳到主内容」skip link（WCAG 2.4.1）。
 
 ## [1.7.5] - 2026-09-08
 
