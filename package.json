@@ -4,9 +4,9 @@
   "private": true,
   "description": "色辨 ChromaCheck — 在线色觉检测 Web 应用（Next.js 14 + TS + Tailwind）",
   "scripts": {
-    "dev": "next dev",
+    "dev": "next dev -p 3000 -H 0.0.0.0",
     "build": "next build",
-    "start": "next start",
+    "start": "next start -p 3000 -H 0.0.0.0",
     "lint": "next lint",
     "type-check": "tsc --noEmit",
     "test": "vitest run",

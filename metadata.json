@@ -1,0 +1,6 @@
+{
+  "name": "ChromaCheck",
+  "description": "基于石原氏检测原理的在线色觉筛查工具",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
