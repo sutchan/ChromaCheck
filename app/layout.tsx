@@ -1,5 +1,5 @@
 // app/layout.tsx — 根布局
-// chromacheck v1.7.4
+// chromacheck v1.7.9
 import React from 'react';
 import type { Metadata, Viewport } from 'next';
 import { Archivo, IBM_Plex_Mono } from 'next/font/google';
@@ -10,6 +10,8 @@ import { Navbar } from '@/components/layout/Navbar';
 import { Footer } from '@/components/layout/Footer';
 import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics';
 import { JsonLd } from '@/components/seo/JsonLd';
+import { ServiceWorkerRegistrar } from '@/components/pwa/ServiceWorkerRegistrar';
+import { LangProvider } from '@/components/layout/LangProvider';
 
 // 自托管字体（next/font），消除 no-page-custom-font 告警并避免运行时外部字体请求
 const archivo = Archivo({
@@ -72,6 +74,11 @@ export const metadata: Metadata = {
   other: {
     'llms-txt': '/llms.txt',
   },
+  appleWebApp: {
+    capable: true,
+    title: '色辨 ChromaCheck',
+    statusBarStyle: 'default',
+  },
 };
 
 // WebApplication 结构化数据（GEO / SEO 实体声明）
@@ -132,11 +139,14 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           跳到主内容
         </a>
         <JsonLd data={webAppLd} />
+        <ServiceWorkerRegistrar />
         <GoogleAnalytics />
         <ThemeProvider>
-          <Navbar />
-          <main id="main-content">{children}</main>
-          <Footer />
+          <LangProvider>
+            <Navbar />
+            <main id="main-content">{children}</main>
+            <Footer />
+          </LangProvider>
         </ThemeProvider>
       </body>
     </html>

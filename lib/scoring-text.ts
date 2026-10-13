@@ -21,7 +21,7 @@ export const OVERALL_LABEL: Record<Overall, string> = {
   inconclusive: '结果不确定',
 };
 
-export const MODE_TEXT: Record<TestMode, string> = { quick: '快速版', standard: '标准版', advanced: '进阶版' };
+export const MODE_TEXT: Record<TestMode, string> = { quick: '快速版', standard: '标准版', advanced: '进阶版', child: '儿童版' };
 
 export const uiText = {
   type: (t: DeficiencyType) => (t ? TYPE_TEXT[t] : ''),

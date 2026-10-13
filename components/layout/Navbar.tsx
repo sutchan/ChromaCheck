@@ -1,5 +1,5 @@
 // components/layout/Navbar.tsx — 顶部导航
-// chromacheck v1.7.5
+// chromacheck v1.7.9
 'use client';
 
 import React from 'react';
@@ -7,15 +7,19 @@ import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Icon } from '@/components/common/Icon';
 import { ThemeToggle } from './ThemeToggle';
+import { LangToggle } from './LangToggle';
+import { useLang } from './LangProvider';
+import type { DictKey } from '@/lib/i18n';
 
-const LINKS = [
-  { href: '/', label: '首页', exact: true },
-  { href: '/test', label: '开始检测', exact: false },
-  { href: '/history', label: '历史', exact: false },
+const LINKS: Array<{ href: string; labelKey: DictKey; exact: boolean }> = [
+  { href: '/', labelKey: 'nav.home', exact: true },
+  { href: '/test', labelKey: 'nav.test', exact: false },
+  { href: '/history', labelKey: 'nav.history', exact: false },
 ];
 
 export function Navbar() {
   const pathname = usePathname();
+  const { t } = useLang();
   return (
     <header
       id="app-header"
@@ -51,10 +55,11 @@ export function Navbar() {
             const active = l.exact ? pathname === l.href : pathname.startsWith(l.href) && l.href !== '/';
             return (
               <Link key={l.href} href={l.href} className={`nav-link ${active ? 'nav-link-active' : ''}`}>
-                {l.label}
+                {t(l.labelKey)}
               </Link>
             );
           })}
+          <LangToggle />
           <ThemeToggle />
         </div>
       </nav>

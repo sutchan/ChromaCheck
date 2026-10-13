@@ -1,7 +1,20 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.7.8`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.7.9`）。
+
+## [1.7.9] - 2026-10-13
+
+### 新增
+- PWA 支持（TASKS C7）：`app/manifest.ts` 生成 Web App Manifest；`public/sw.js` Service Worker（预缓存首页 / 检测前指引 / 模式选择，导航请求回退 `/offline`，静态资源 stale-while-revalidate）；`components/pwa/ServiceWorkerRegistrar.tsx` 仅生产环境注册；零依赖脚本生成 `public/icons/icon-192.png`、`icon-512.png`、`icon-maskable-512.png`；根布局补 `appleWebApp` 配置。
+- 儿童模式（TASKS C4）：`lib/questions/child.ts` 图形题库（10 题，含 2 道演示题）+ `lib/child-scoring.ts` 保守判读；`components/test/ChildPlate.tsx`（图形掩码点阵图）、`ChildShapeIcon.tsx`、`ChildRunner.tsx`、`ChildFlow.tsx`；新增 `/test/child` 与模式选择入口；`TestResult.child` 扩展与结果页 `ChildSummary` 区块；`TestMode` 增加 `'child'`，`MODE_TEXT` 补「儿童版」。
+- 轻量 i18n（TASKS C6）：`lib/i18n.ts` 中英字典 + `components/layout/LangProvider.tsx` / `LangToggle.tsx`（偏好存 `cc.lang.v1`）；首页 `HomeContent`、模式选择 `TestSelectContent`、导航与儿童模式支持中英切换，零第三方依赖。
+- 服务端匿名事件上报（TASKS C3）：`app/api/analytics/event` 路由（事件名白名单 + 1KB 体积上限，仅保留事件名 / 测试类型 / 时长 / 结果摘要，不落库、不记录 IP 与 UA）；`lib/analytics.ts` 新增 `reportServerEvent()`。
+
+### 文档
+- `docs/TASKS.md`：记录时间戳 2026-10-13，T1–T6 标注已完成；C1–C8 重新评估优先级与状态（C7 / C4 升 P0，C6 / C3 维持 P1，C1 / C2 / C5 / C8 因需服务端账号与数据库、与本地优先隐私定位冲突而阻塞）。
+- 新增 `docs/tasks-done.md`：归档 T1–T6 与本次完成的 C3 / C4 / C6 / C7。
+- 版本单一来源同步至 `1.7.9`（`VERSION`、`package.json`、改动文件头注释）。
 
 ## [1.7.8] - 2026-09-21
 

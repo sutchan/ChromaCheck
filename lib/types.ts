@@ -32,7 +32,7 @@ export type Overall =
 
 export type AxisKey = 'protan' | 'deutan' | 'tritan';
 
-export type TestMode = 'quick' | 'standard' | 'advanced';
+export type TestMode = 'quick' | 'standard' | 'advanced' | 'child';
 
 export interface Question {
   id: string;
@@ -141,6 +141,17 @@ export interface HueArrangementResult {
   normal: boolean;
 }
 
+/** 儿童模式判读结果（v1.7.9：图形识别，结论保守，仅作初筛参考） */
+export interface ChildResult {
+  /** 计入判读的题量（演示题不计） */
+  total: number;
+  correct: number;
+  details: Array<{ questionId: string; value: string; correct: boolean }>;
+  overall: Overall;
+  analysis: string;
+  note: string;
+}
+
 export interface TestResult {
   id: string;
   schema: string;
@@ -159,6 +170,8 @@ export interface TestResult {
   pathTracking?: PathTrackingResult[];
   /** 色相排列（D15）判读结果（v1.2 扩展） */
   hueArrangement?: HueArrangementResult;
+  /** 儿童模式判读结果（v1.7.9 扩展） */
+  child?: ChildResult;
   analysis: string;
   confidenceNote: string;
   device: string;

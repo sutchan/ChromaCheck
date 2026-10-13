@@ -55,3 +55,4 @@ Thumbs.db
 # ===== 临时 / 缓存 =====
 *.tmp
 .cache/
+*tmp-*

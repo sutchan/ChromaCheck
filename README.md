@@ -2,7 +2,7 @@
 
 > 一眼辨色，科学筛查 — 在线色觉检测 Web 应用
 
-> **实现状态**：v1.0 已实现（Next.js 14 应用 + 石原氏检测 + 结果/历史/科普/隐私）；路径追踪已于 v1.1 实现，色相排列（D15）已于 v1.2 实现，进阶联合判读（advanced）已于 v1.3 实现，趣味性体验包（进度点阵/章末科普/分享卡/换一双眼睛/三轴科普/旅人称号）已于 v1.4 实现。权威规范见 [docs/SPEC.md](docs/SPEC.md)。当前项目版本 **v1.7.8**（见 `VERSION`）；38 板完整石原氏图谱已于 v1.5 实现，Google Analytics 匿名访问统计已于 v1.5.1 接入，SEO/GEO（sitemap/robots/结构化数据/llms.txt/社交图）已于 v1.6.0 完善；驾驶员场景色觉检测改进（驾照辨色力参考栏 / 信号灯辨识 / 屏幕校准提示 / 图版明度控制 / 严肃场景隐藏趣味）已于 v1.7.0 实现（详见 [docs/TASKS.md](docs/TASKS.md)）。
+> **实现状态**：v1.0 已实现（Next.js 14 应用 + 石原氏检测 + 结果/历史/科普/隐私）；路径追踪已于 v1.1 实现，色相排列（D15）已于 v1.2 实现，进阶联合判读（advanced）已于 v1.3 实现，趣味性体验包（进度点阵/章末科普/分享卡/换一双眼睛/三轴科普/旅人称号）已于 v1.4 实现。权威规范见 [docs/SPEC.md](docs/SPEC.md)。当前项目版本 **v1.7.9**（见 `VERSION`）；38 板完整石原氏图谱已于 v1.5 实现，Google Analytics 匿名访问统计已于 v1.5.1 接入，SEO/GEO（sitemap/robots/结构化数据/llms.txt/社交图）已于 v1.6.0 完善；驾驶员场景色觉检测改进已于 v1.7.0 实现；服务端匿名事件上报（C3）、儿童模式（C4）、轻量 i18n（C6，核心页面中英双语）、PWA 支持（C7：manifest + service worker + 离线兜底）已于 v1.7.9 实现（详见 [docs/TASKS.md](docs/TASKS.md) 与 [docs/tasks-done.md](docs/tasks-done.md)）。
 
 [![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
@@ -106,18 +106,21 @@ npm test
 ```
 chromacheck/
 ├── app/                          # Next.js App Router 页面
-│   ├── layout.tsx                # 根布局（含 ThemeProvider、GoogleAnalytics）
+│   ├── layout.tsx                # 根布局（含 ThemeProvider、GoogleAnalytics、LangProvider）
 │   ├── page.tsx                  # 首页（含色觉模拟 CvdSimulator）
 │   ├── not-found.tsx             # 404
 │   ├── globals.css               # 全局样式 + 设计令牌
+│   ├── manifest.ts               # PWA Web App Manifest（v1.7.9）
 │   ├── icon.svg                  # 站点图标
+│   ├── offline/page.tsx          # PWA 离线兜底页（v1.7.9）
 │   ├── guide/page.tsx            # 检测前指引
 │   ├── test/
-│   │   ├── page.tsx              # 模式选择（快速 / 标准 / 路径追踪 / 色相排列 / 进阶联合）
+│   │   ├── page.tsx              # 模式选择（快速 / 标准 / 路径追踪 / 色相排列 / 进阶联合 / 儿童，双语）
 │   │   ├── ishihara/[mode]/page.tsx   # 石原氏测试
 │   │   ├── path-tracking/[mode]/page.tsx   # 路径追踪测试（v1.1）
 │   │   ├── hue-arrangement/[mode]/page.tsx # 色相排列测试（v1.2）
-│   │   └── advanced/page.tsx     # 进阶联合检测（v1.3）
+│   │   ├── advanced/page.tsx     # 进阶联合检测（v1.3）
+│   │   └── child/page.tsx        # 儿童模式检测（图形识别，v1.7.9）
 │   ├── result/[id]/page.tsx      # 结果页
 │   ├── learn/
 │   │   ├── page.tsx              # 科普列表
@@ -127,10 +130,12 @@ chromacheck/
 ├── components/
 │   ├── common/                   # Callout、Icon
 │   ├── home/                     # CvdSimulator
-│   ├── layout/                   # Footer、Navbar、ThemeProvider、ThemeToggle
+│   ├── layout/                   # Footer、Navbar、ThemeProvider、ThemeToggle、LangProvider、LangToggle
 │   ├── analytics/                # GoogleAnalytics（GA4 脚本注入与路由上报，v1.5.1）
-│   ├── result/                   # AnswerReview、AxisChart、ReportActions、ResultSummary、PathTrackingSummary、HueArrangementSummary、EyesSwitcher、DimScenes、DriverCompliance
-│   └── test/                     # IshiharaPlate、Numpad、TestProgress、IshiharaFlow、FunBits、TestRunner、PathTrackingCanvas、PathTrackingRunner、HueArrangementGrid、HueArrangementRunner、AdvancedRunner、SignalRunner
+│   ├── pwa/                      # ServiceWorkerRegistrar（v1.7.9）
+│   ├── home/                     # CvdSimulator、HomeContent（双语，v1.7.9）
+│   ├── result/                   # AnswerReview、AxisChart、ReportActions、ResultSummary、PathTrackingSummary、HueArrangementSummary、EyesSwitcher、DimScenes、DriverCompliance、ChildSummary
+│   └── test/                     # IshiharaPlate、Numpad、TestProgress、IshiharaFlow、FunBits、TestRunner、PathTrackingCanvas、PathTrackingRunner、HueArrangementGrid、HueArrangementRunner、AdvancedRunner、SignalRunner、ChildPlate、ChildShapeIcon、ChildRunner、ChildFlow、TestSelectContent
 ├── lib/
 │   ├── types.ts                  # 全局类型（以 docs/SPEC.md §5 为权威）
 │   ├── questions.ts              # 石原氏题库数据
@@ -142,6 +147,9 @@ chromacheck/
 │   ├── fun.ts                    # 趣味性数据（章节/旅人称号/三轴科普，v1.4）
 │   ├── sharecard.ts              # 色觉人格分享卡 Canvas 绘制（v1.4）
 │   ├── analytics.ts              # GA4 衡量 ID 与上报辅助（v1.5.1）
+│   ├── child-scoring.ts          # 儿童模式判读（v1.7.9）
+│   ├── i18n.ts                   # 中英字典与 t()（v1.7.9）
+│   ├── questions/                # 子题库（path-tracking.ts、hue-arrangement.ts、child.ts）
 │   ├── ishihara.ts              # 点阵生成与色觉模拟
 │   ├── storage.ts                # 本地存储
 │   ├── learn-data.ts             # 科普文章数据
