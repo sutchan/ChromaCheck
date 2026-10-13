@@ -1,6 +1,6 @@
-<!-- docs/SPEC.md v1.0.6 — ChromaCheck 项目规范总纲（单一事实来源） -->
+<!-- docs/SPEC.md v1.7.8 — ChromaCheck 项目规范总纲（单一事实来源） -->
 <!-- 地位：本规范为权威总纲。当与各分册（PRD/ARCHITECTURE/API/DATA-SPEC/DEPLOYMENT/TESTING/CONTRIBUTING/PRIVACY/ROADMAP）冲突时，以本规范为准。 -->
-<!-- 实现状态：v1.0 已实现（Next.js 14 应用 + 石原氏检测 + 结果/历史/科普/隐私），原型作为设计验证参考。当前版本 v1.0.6。 -->
+<!-- 实现状态：Next.js 14 应用已落地——石原氏检测（38板）、路径追踪、色相排列 D15、进阶联合、信号灯专项、趣味性体验包、结果/历史/科普/隐私、GA4 匿名统计、SEO/GEO、Vitest 测试套件；原型仅作设计验证参考。当前版本 v1.7.8。 -->
 
 # 色辨 ChromaCheck 项目规范（SPEC）
 
@@ -22,7 +22,7 @@
 | `docs/PRIVACY.md` | 隐私政策分册 | 已对齐 SPEC，生效 |
 | `docs/ROADMAP.md` | 路线图分册 | 已对齐 SPEC，生效 |
 
-**实现状态声明（必须写入各文档顶部）**：ChromaCheck 已完成 v1.0 实现——Next.js 14 应用 + 石原氏检测 + 结果/历史/科普/隐私页均已落地，`npm install / npm run dev / npm run build / npm test` 均可正常执行（见 README「快速开始」）。路径追踪（F4）已于 v1.1 实现，色相排列（F5）已于 v1.2 实现，进阶联合判读（advanced）已于 v1.3 实现；原型仅作设计验证参考。
+**实现状态声明（必须写入各文档顶部）**：ChromaCheck 已完成 v1.0 实现并持续迭代至 v1.7.8——Next.js 14 应用 + 石原氏检测（38 板）+ 结果/历史/科普/隐私页均已落地，`npm install / npm run dev / npm run build / npm test`（Vitest）均可正常执行（见 README「快速开始」）。路径追踪（F4）已于 v1.1 实现，色相排列（F5）已于 v1.2 实现，进阶联合判读（advanced）已于 v1.3 实现，趣味性体验包已于 v1.4 实现，38 板完整图谱已于 v1.5 实现，GA4 匿名统计已于 v1.5.1 接入，SEO/GEO 已于 v1.6.0 完善，驾驶员场景专项已于 v1.7.0 落地，Vitest 测试套件已于 v1.7.6 引入；原型仅作设计验证参考。
 
 ## 1. 产品定位与功能范围
 
@@ -50,22 +50,35 @@
 - 导出：**Canvas（PNG）+ `window.print()`（PDF）**，不引入重型依赖。
 - 状态/存储：React 状态 + `localStorage`（隐私优先，无服务端状态）。
 
-### 2.2 目录结构（v1.0 已实现）
+### 2.2 目录结构（v1.7 已实现）
 ```
-app/              # Next.js App Router：layout/page/guide/test/result/learn/history/privacy + globals.css/icon.svg
-components/       # 按域：common/ home/ layout/ result/ test/
+app/              # Next.js App Router：/ /guide /test /test/ishihara/[mode] /test/advanced
+                  # /test/hue-arrangement/[mode] /test/path-tracking/[mode] /test/signal
+                  # /result/[id] /history /learn /learn/[slug] /privacy /not-found
+                  # + robots.ts sitemap.ts llms.txt/route.ts globals.css icon.svg
+components/       # 按域：common/ home/ layout/ result/ test/ analytics/ seo/
 lib/
-  questions.ts    # 题库数据
-  scoring.ts      # 判读引擎（移植 prototype/assets/js/scoring.js 真值）
-  ishihara.ts     # 石原氏点阵生成（移植 prototype/assets/js/ishihara.js 真值）
-  storage.ts      # localStorage 读写
-  learn-data.ts   # 科普文章数据
-  format.ts       # 格式化工具
   types.ts        # 全局类型（以本文档 §5 为权威）
-  questions/signal.ts # 信号灯辨识题库（驾驶场景专项）
-  signal-scoring.ts   # 信号灯辨识判读
+  questions.ts    # 石原氏题库（38 题，v1.5 扩充）
+  questions/      # 专项题库子目录：hue-arrangement.ts / path-tracking.ts / signal.ts
+  scoring.ts      # 石原氏判读引擎 + scoring-text.ts（判读文案）
+  hue-scoring.ts  # 色相排列 D15 判读（TES）
+  path-scoring.ts # 路径追踪判读（IoU）
+  signal-scoring.ts # 信号灯辨识判读
+  advanced-scoring.ts # 进阶联合交叉验证判读
+  ishihara.ts     # 石原氏点阵生成 + CVD 模拟 + path-field.ts（路径字段）
+  storage.ts      # localStorage 读写（safeSet 降级 + 运行时校验）
+  learn-data.ts   # 科普文章数据
+  fun.ts          # 趣味性数据（章节/称号/三轴科普）
+  sharecard.ts / sharecard-canvas.ts  # 色觉人格分享卡 Canvas
+  report-canvas.ts # 报告 PNG 绘制
+  analytics.ts    # GA4 衡量 ID 与 pageview 上报
+  license.ts      # 驾照辨色力合规映射（172 号令）
+  site.ts         # SITE_URL 单一来源
+  format.ts       # 格式化工具
+  *.test.ts       # Vitest 单测（scoring/hue/path/signal/advanced/storage）
 ```
-> 原型 `prototype/assets/js/*.js` 中的纯逻辑（scoring/data/ishihara）已作为 `lib/` 实现的**参考真值**完成移植，算法与字段保持一致。
+> 原型 `prototype/assets/js/*.js` 中的纯逻辑（scoring/data/ishihara）已作为 `lib/` 实现的**参考真值**完成移植；v1.7.5 起原型判读已反向对齐应用实现（见 `.codebuddy/memory/2026-09-08.md`）。
 
 ### 2.3 运行形态
 纯前端、客户端渲染为主；无强制登录、无 PII 上传、无传统后端（与 PRD「隐私优先」一致）。**不承诺服务端并发能力**——PRD §4.1「支持 1000 并发用户」与纯前端架构矛盾，予以作废，改为「静态托管可水平扩展」表述。
@@ -77,7 +90,7 @@ lib/
 
 ### 3.2 字体
 - 无衬线/展示：`Archivo`（Google Fonts）；代码/数字：`IBM Plex Mono`。
-- 通过 `fonts.googleapis.com` 引入；离线/沙箱构建需本地回退（系统字体栈已在 tokens.css 定义）。
+- **v1.7.4 起自托管**：`app/layout.tsx` 通过 `next/font/google` 注入（`variable:--font-sans/--font-mono`，`display:'swap'`），不再手动 `<link>`；构建时需访问 fonts.gstatic.com，离线/弱网可能 `ECONNRESET`（Next 自动重试通常可过）。`globals.css` 的 `--font-sans/--font-mono` 字面量保留作降级回退。
 
 ### 3.3 色彩语义与色觉友好
 - 品牌色：**棱镜靛 `#4b3df0`**（刻意避开红绿混淆轴，红绿色盲用户可完整辨识）。
@@ -173,10 +186,9 @@ interface AnswerRecord {
   questionId: string;
   userAnswer: string;     // 用户原始输入（空串表示未作答/隐藏题留空）
   durationMs: number;     // 作答用时（>0 有效）
-  correct: boolean;       // 由判读引擎计算（见 §6），解决 PRD 缺「是否正确」
-  expectedAnswer: string; // 冗余存正确答案，便于结果复核
 }
 ```
+**决议**：`correct` 与 `expectedAnswer` 不持久化在 `AnswerRecord` 中——判读时由 `isCorrect(q, ua)` 现场计算（见 §6.1），避免冗余字段与判读规则漂移。
 
 ### 5.3 测试结果 `TestResult`
 ```ts
@@ -204,14 +216,16 @@ interface TestResult {
   confidence: number;               // 0–100
   durationMs: number;               // 作答总时长
   answers: AnswerRecord[];          // 逐题作答（含 userAnswer/durationMs）
-  ishihara: IshiharaScoringResult;  // 判读引擎输出（见 §6）
+  ishihara?: IshiharaScoringResult; // 石原氏判读输出（纯路径追踪测试为 undefined）
+  pathTracking?: PathTrackingResult[];   // v1.1 路径追踪
+  hueArrangement?: HueArrangementResult;  // v1.2 色相排列 D15
   analysis: string;                 // 文字解读
   confidenceNote: string;           // 置信度说明
   device: string;                   // 设备/UA 摘要
-  // v1.1/v1.2 扩展（已实现）：pathTracking?（v1.1 已实现）/ hueArrangement?（v1.2 已实现）
+  scene?: 'general' | 'driver';     // v1.7 检测场景；driver 隐藏趣味元素
 }
 ```
-**决议**：采用 DATA-SPEC 结构（`testMode` + `ishiharaAssessment` 内聚 `correctCount`），废用 PRD 顶层 `correctCount` 与 `testType` 命名。
+**决议**：采用 DATA-SPEC 结构（`testMode` + `ishihara` 内聚 `correctCount`），废用 PRD 顶层 `correctCount` 与 `testType` 命名。`pathTracking`/`hueArrangement`/`scene` 均为可选扩展字段，结果页与历史按测试类型守卫渲染。
 
 ### 5.4 本地存储（以 `lib/storage.ts` 实现为准）
 > v1.0 实际落地：使用三个独立的 `localStorage` 键，不聚合为单一 `LocalStorageData` 对象；无用户账号、无 PII、无分析开关（均推迟至 v1.1）。
@@ -220,11 +234,12 @@ interface TestResult {
 interface AppSettings {            // 键 cc.settings.v1
   theme: 'light' | 'dark';        // 含深色；'system' 由 ThemeProvider 解析，不持久化
   cvdSafe: boolean;               // 色觉安全模式开关
+  funMode: boolean;               // v1.4 趣味体验开关（称号/章末过渡/里程碑仪式感），默认 true
 }
 // 键 cc.results.v1    → TestResult[]（保留最近 30 条，按 createdAt 倒序）
 // 键 cc.progress.v1   → { mode: TestMode; index: number; answers: AnswerRecord[]; startedAt: number }
 ```
-**决议**：DATA-SPEC 的 `UserSettings{theme: 'light'|'dark'|'system'; analyticsEnabled}`、`HistorySummary`、`LocalStorageData` 聚合结构与 v1.0 代码不符。v1.0 采用上述扁平结构；`system` 主题与 `analyticsEnabled` 留作 v1.1 规划（届时再抽象为聚合 `LocalStorageData`）。
+**决议**：DATA-SPEC 的 `UserSettings{theme: 'light'|'dark'|'system'; analyticsEnabled}`、`HistorySummary`、`LocalStorageData` 聚合结构与代码不符。采用上述扁平结构；`system` 主题与 `analyticsEnabled` 服务端上报留作 v1.1 规划。`funMode` 已于 v1.4 落地（键 `cc.settings.v1` 内字段，非独立 localStorage 键）。
 
 ### 5.5 枚举（统一别名，供全局复用）
 ```ts
@@ -351,7 +366,7 @@ clamp(confidence, 0, 100)
 ### 8.2 版本管理
 - 每次修改 bump 最小版本（patch 优先；新功能 minor；破坏性 major）。
 - 源码文件头统一 `// path vX.Y.Z`；**仅被改动文件更新头注释，禁止全仓库批量刷写**。
-- 项目的**版本单一来源已确立**：仓库根 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.7.2`）为权威；每次发版须同步二者并新增 `CHANGELOG.md` 条目。各文档头注释版本（如 SPEC `v1.0.6`）与 `VERSION` 保持一致；分册"文档版本 v1.0"为文档初版标记，与项目发布版本分属两套体系。原型文件头 `v0.1.0` 为原型内部迭代号，不随项目版本刷写（见 CHANGELOG 说明）。
+- 项目的**版本单一来源已确立**：仓库根 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.7.8`）为权威；每次发版须同步二者并新增 `CHANGELOG.md` 条目。各文档头注释版本（如 SPEC `v1.7.8`）与 `VERSION` 保持一致；分册"文档版本 v1.0"为文档初版标记，与项目发布版本分属两套体系。原型文件头 `v0.1.2` 为原型内部迭代号，不随项目版本刷写（见 CHANGELOG 说明）。
 - 文档版本当前统一标注 v1.0（产品目标）；原型文件头为 v0.1.0（原型阶段），二者分阶段对齐，不混用。
 
 ### 8.3 文档结构
@@ -360,13 +375,14 @@ clamp(confidence, 0, 100)
 - 变更须记录 CHANGELOG（实现阶段建立）。
 
 ### 8.4 测试与质量门禁
-- 判读引擎（`lib/scoring/*`）为纯函数，须以 Vitest/Jest 单测覆盖，**覆盖率 ≥80%**（直接移植 scoring.js 后补齐）。
-- 实现阶段质量门禁：ESLint + Prettier + Stylelint；TS strict；无 `console.log`/`debugger`；CI（`.github/workflows/ci.yml`，已建）跑 type-check + lint + build（e2e 安全跳过）。
+- **Vitest 测试套件（v1.7.6 落地）**：判读引擎全量单测（`scoring` / `hue-scoring` / `path-scoring` / `signal-scoring` / `advanced-scoring`，39 例）+ `storage` 健壮性 13 例；`npm test` = `vitest run`，`npm run test:coverage` 走 `@vitest/coverage-v8`。测试环境为 node（`vitest.setup.ts` 注入内存 Storage，无 jsdom/happy-dom）。
+- 实现阶段质量门禁：ESLint + TypeScript strict；无 `console.log`/`debugger`；CI（`.github/workflows/ci.yml`）跑 type-check + lint + build + test（e2e 安全跳过）。
+- **安全响应头（v1.7.6 起）**：`next.config.mjs` 配置 CSP / X-Frame-Options / X-Content-Type-Options / Referrer-Policy / Permissions-Policy。
 
 ## 9. 实现状态与待办（对齐 ROADMAP）
-- **已完成（v1.0）**：文档体系（9 分册 + SPEC 总纲）、高保真静态原型（4 页）、Next.js 14 应用骨架、石原氏检测全流程（`lib/` 题库/判读/点阵/存储移植 + `components/` 组件）、结果/历史/科普/隐私页、导出（PNG/打印/复制）/分享、CI。
-- **推迟**：`analyticsEnabled` 服务端匿名事件上报。（匿名访问统计 GA4 已于 v1.5.1 实现）（路径追踪 F4 已于 v1.1、色相排列 F5 已于 v1.2、进阶联合判读 advanced 已于 v1.3 实现）
+- **已完成（v1.0–v1.7）**：文档体系（9 分册 + SPEC 总纲）、高保真静态原型（4 页，判读已对齐应用）、Next.js 14 应用、石原氏检测全流程（38 板）、结果/历史/科普/隐私页、导出（PNG/打印/复制）/分享卡、路径追踪（v1.1）、色相排列 D15（v1.2）、进阶联合判读（v1.3）、趣味性体验包（v1.4）、38 板完整图谱（v1.5）、GA4 匿名统计（v1.5.1）、SEO/GEO（v1.6.0）、驾驶员场景专项（v1.7.0：驾照合规栏/信号灯辨识/屏幕校准/图版明度/严肃场景隐藏趣味）、Vitest 测试套件（v1.7.6）、安全响应头（v1.7.6）。
+> 任务清单见 [tasks.md](./tasks.md)。
 - **信号灯辨识（驾驶场景专项）**：独立路由 `/test/signal` 已实现（题库 9 题 + `scoreSignal` 判读），结果不计入历史，与 `TestMode` 枚举解耦。
 
 ---
-*本文档为 ChromaCheck 权威规范总纲 v1.0.6。分册应据本规范修订以消除前述字段/算法/范围冲突。*
+*本文档为 ChromaCheck 权威规范总纲 v1.7.8。分册应据本规范修订以消除前述字段/算法/范围冲突。*

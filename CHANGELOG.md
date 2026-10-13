@@ -1,7 +1,23 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.7.7`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.7.8`）。
+
+## [1.7.8] - 2026-09-21
+
+### 文档（SPEC 总纲对齐 v1.7.7 真实代码）
+- 修复 SPEC 权威总纲长期脱节：头注释与底部版本声明由 `v1.0.6` 同步为 `v1.7.8`；§0 实现状态声明补全 v1.4 趣味包 / v1.5 38 板 / v1.5.1 GA4 / v1.6 SEO·GEO / v1.7 驾驶员场景 / v1.7.6 Vitest。
+- §2.2 目录结构重写为真实模块清单（补 `hue-scoring`/`path-scoring`/`signal-scoring`/`advanced-scoring`/`fun`/`sharecard`/`report-canvas`/`analytics`/`license`/`site`/`path-field`/`scoring-text` + `lib/questions/` 子目录 + `*.test.ts`）。
+- §3.2 字体改为 `next/font/google` 自托管（v1.7.4 起），不再写 CDN `<link>`。
+- §5.2 `AnswerRecord` 对齐代码：移除未持久化的 `correct`/`expectedAnswer` 字段（判读时由 `isCorrect` 现场计算）。
+- §5.3 `TestResult`：`ishihara` 改可选，补 `pathTracking?`/`hueArrangement?`/`scene?`（`'general'|'driver'`）。
+- §5.4 `AppSettings` 补 `funMode: boolean`（v1.4，默认 true，存于 `cc.settings.v1` 内）。
+- §8.2 版本单一来源 `1.7.2`→`1.7.8`，原型头版本 `v0.1.0`→`v0.1.2`。
+- §8.4 测试门禁更新为 Vitest 已落地（39 判读例 + 13 storage 例，node 环境 + `vitest.setup.ts`），补安全响应头条目。
+- §9 待办重写：已完成项列至 v1.7，推迟项更新为服务端上报/英文版/PWA/账号云同步。
+
+### 版本同步
+- 修复 `package.json` 版本（1.7.6）与 `VERSION`（1.7.7）不一致问题，统一至 `1.7.8`；README 状态行与 `npm test` 命令补全同步。
 
 ## [1.7.7] - 2026-09-09
 

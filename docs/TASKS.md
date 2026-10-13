@@ -81,3 +81,55 @@
 - `docs/PRD.md` — 产品定位与「贴合国内职业体检标准」目标
 - `docs/SPEC.md` — 检测范式权威定义
 - `lib/scoring.ts` / `lib/ishihara.ts` / `lib/hue-scoring.ts` — 判读与图版实现
+
+## 5. 收敛待办（2026-09-30 自 SPEC §9 / ROADMAP / ARCHITECTURE §10 迁入）
+
+> 以下为各分册中残留的未完成行动项，统一收敛至此；原分册「待办 / 扩展规划」章节已改为指向本文档。原有 T1–T6 已于 v1.7.0 完成（见 §3）。
+
+### P0 — 用户体系（ROADMAP v1.5）
+
+**C1 用户账号系统**
+- 目标：邮箱 / 微信 / 手机号登录，建立用户体系。
+- 方案：引入 Auth.js (NextAuth) + 数据库（PostgreSQL / Supabase），数据加密与合规升级。
+- 涉及：新增服务端、认证模块；`lib/storage.ts` 本地存储与云端合并。
+- 来源：ROADMAP.md §4.2、ARCHITECTURE.md §10.2。
+
+**C2 历史记录云同步**
+- 目标：跨设备查看历史记录，与本地 localStorage 并存。
+- 方案：账号体系下的云端历史同步与冲突合并策略。
+- 来源：ROADMAP.md §4.2、ARCHITECTURE.md §10.2。
+
+### P1 — 服务端与场景增强
+
+**C3 `analyticsEnabled` 服务端匿名事件上报**
+- 目标：补齐规划中的服务端匿名事件上报（当前仅前端 GA4 pageview）。
+- 方案：新增 `/api/analytics/event` 路由，上报测试类型 / 时长 / 结果摘要等匿名事件，仍不上传 PII。
+- 涉及：服务端路由、`lib/analytics.ts`、API.md 规划接口落地。
+- 来源：SPEC.md §9、ARCHITECTURE.md、PRIVACY.md §2.2、API.md。
+
+**C4 儿童模式**
+- 目标：图形识别替代数字题，适合 5–10 岁儿童。
+- 方案：新增儿童向题库与 runner，结果文案适配低龄。
+- 来源：ROADMAP.md §4.2、ARCHITECTURE.md §10.2。
+
+**C5 批量检测管理后台**
+- 目标：面向学校 / 企业的批量检测与报告导出管理。
+- 方案：后台账号、批量建题、汇总报告导出。
+- 来源：ROADMAP.md §4.2、ARCHITECTURE.md §10.2。
+
+### P2 — 国际化与可安装
+
+**C6 英文版 / i18n 多语言**
+- 目标：国际化第一步，界面与科普文案双语化。
+- 方案：文案抽离 + next-intl，路由双语。
+- 来源：ROADMAP.md §3.2、ARCHITECTURE.md §10.1。
+
+**C7 PWA 支持**
+- 目标：离线可用、安装到桌面。
+- 方案：manifest + service worker + 离线缓存检测图。
+- 来源：ROADMAP.md §3.2、ARCHITECTURE.md §10.1。
+
+**C8 家庭共享**
+- 目标：家庭成员结果共享。
+- 方案：基于账号体系的家庭成员组与结果分享。
+- 来源：ROADMAP.md §4.2。

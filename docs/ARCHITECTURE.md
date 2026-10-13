@@ -1,7 +1,7 @@
 # 色辨 ChromaCheck 技术架构文档
 
 > **规范遵循**：本文档为 [docs/SPEC.md](docs/SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。
-> **实现状态**：v1.0 已实现（Next.js 14 应用）。路径追踪已于 v1.1 实现；色相排列已于 v1.2 实现；详见 §2 已实现结构。
+> **实现状态**：v1.0–v1.7.8 已实现（Next.js 14 应用；石原氏 38 板 / 路径追踪 v1.1 / 色相排列 D15 v1.2 / 进阶联合 v1.3 / 趣味包 v1.4 / GA4 v1.5.1 / SEO·GEO v1.6 / 驾驶员场景 v1.7 / Vitest 测试套件 v1.7.6）。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [TASKS.md](./TASKS.md)。
 > **原型定位**：`prototype/` 为独立的高保真原型与设计验证参考（含早期 JS 移植源），**非应用运行依赖**；应用源码以 `lib/` 与 `components/` 为准，删除 `prototype/` 不影响构建与运行。
 
 | 项目 | 内容 |
@@ -95,18 +95,21 @@
 > 下方为实际落地结构（与 `README.md` 项目结构树一致）。
 
 app/                          # Next.js App Router 页面
-├── layout.tsx                # 根布局（含 ThemeProvider）
+├── layout.tsx                # 根布局（含 ThemeProvider、GoogleAnalytics、skip link）
 ├── page.tsx                  # 首页（含色觉模拟 CvdSimulator）
 ├── not-found.tsx             # 404
-├── globals.css               # 全局样式 + 设计令牌
+├── globals.css               # 全局样式 + 设计令牌 + prefers-reduced-motion
 ├── icon.svg                  # 站点图标
-├── guide/page.tsx            # 检测前指引
+├── robots.ts / sitemap.ts / llms.txt/route.ts   # SEO/GEO（v1.6）
+├── guide/page.tsx            # 检测前指引（含屏幕校准提示 v1.7）
 ├── test/
-│   ├── page.tsx              # 模式选择（快速 / 标准 / 路径追踪 / 色相排列）
-│   ├── ishihara/[mode]/page.tsx   # 石原氏测试
-│   ├── path-tracking/[mode]/page.tsx   # 路径追踪测试（v1.1）
-│   └── hue-arrangement/[mode]/page.tsx # 色相排列测试（v1.2）
-├── result/[id]/page.tsx      # 结果页
+│   ├── page.tsx              # 模式选择（快速 / 标准 / 路径追踪 / 色相排列 / 进阶联合）
+│   ├── ishihara/[mode]/page.tsx      # 石原氏测试
+│   ├── path-tracking/[mode]/page.tsx # 路径追踪测试（v1.1）
+│   ├── hue-arrangement/[mode]/page.tsx # 色相排列测试（v1.2）
+│   ├── advanced/page.tsx     # 进阶联合检测（v1.3）
+│   └── signal/page.tsx       # 信号灯辨识专项（v1.7，不计入历史）
+├── result/[id]/page.tsx      # 结果页（按测试类型守卫渲染）
 ├── learn/
 │   ├── page.tsx              # 科普列表
 │   └── [slug]/page.tsx       # 科普详情
@@ -114,22 +117,32 @@ app/                          # Next.js App Router 页面
 └── privacy/page.tsx          # 隐私政策
 components/
 ├── common/                   # Callout、Icon
-├── home/                     # CvdSimulator
-├── layout/                   # Footer、Navbar、ThemeProvider、ThemeToggle
-├── result/                   # AnswerReview、AxisChart、ReportActions、ResultSummary、PathTrackingSummary、HueArrangementSummary
-└── test/                     # IshiharaPlate、Numpad、TestProgress、TestRunner、PathTrackingCanvas、PathTrackingRunner、HueArrangementGrid、HueArrangementRunner
+├── home/                     # CvdSimulator、HomeFaq
+├── layout/                   # Footer（版本直读 package.json）、Navbar、ThemeProvider、ThemeToggle
+├── analytics/                # GoogleAnalytics（GA4 注入与路由上报）
+├── result/                   # AnswerReview、AxisChart、DriverCompliance、EyesSwitcher、
+│                             #   HueArrangementSummary、PathTrackingSummary、ReportActions、ResultSummary、DimScenes
+└── test/                     # AdvancedRunner、FunBits、HueArrangementGrid/Runner、IshiharaFlow/Plate、
+                              #   Numpad、PathTrackingCanvas(rAF 节流)、PathTrackingRunner、SignalRunner、
+                              #   TestProgress、TestRunner、useIshiharaFlow
 lib/
 ├── types.ts                  # 全局类型（以 docs/SPEC.md §5 为权威）
-├── questions.ts              # 石原氏题库数据
-├── questions/                # 子题库（path-tracking.ts、hue-arrangement.ts）
-├── scoring.ts                # 判读引擎
-├── path-scoring.ts           # 路径追踪判读（v1.1）
+├── questions.ts              # 石原氏题库（38 题）
+├── questions/                # 子题库（path-tracking.ts、hue-arrangement.ts、signal.ts）
+├── scoring.ts / scoring-text.ts   # 石原氏判读引擎 + 文案
+├── path-scoring.ts           # 路径追踪判读（IoU，v1.1）
 ├── hue-scoring.ts            # 色相排列 TES 判读（v1.2）
-├── ishihara.ts               # 点阵生成与色觉模拟
-├── storage.ts                # 本地存储
-├── learn-data.ts             # 科普文章数据
-└── format.ts                 # 格式化工具
-docs/                         # 项目文档（SPEC.md 为权威总纲）
+├── signal-scoring.ts         # 信号灯辨识判读（v1.7）
+├── advanced-scoring.ts       # 进阶联合交叉验证判读（v1.3）
+├── ishihara.ts / path-field.ts  # 点阵生成、CVD 模拟、路径字段
+├── storage.ts                # 本地存储（safeSet 降级 + 运行时类型守卫）
+├── fun.ts / sharecard.ts / sharecard-canvas.ts / report-canvas.ts  # 趣味与报告 Canvas（v1.4）
+├── analytics.ts              # GA4 衡量 ID 与上报辅助（v1.5.1）
+├── license.ts                # 驾照辨色力合规映射（v1.7）
+├── site.ts                   # SITE_URL 单一来源
+├── learn-data.ts / format.ts  # 科普数据与格式化
+└── *.test.ts                 # Vitest 单测（6 文件 52 例，v1.7.6）
+docs/                         # 项目文档（SPEC.md 为权威总纲，TASKS.md 为任务 SSOT）
 ```
 
 ### 2.3 状态管理
@@ -150,15 +163,18 @@ docs/                         # 项目文档（SPEC.md 为权威总纲）
 | 路径 | 渲染方式 | 说明 |
 |------|----------|------|
 | `/` | SSG | 首页 |
-| `/guide` | CSR | 检测前指引 |
+| `/guide` | CSR | 检测前指引（含屏幕校准提示） |
 | `/test` | CSR | 测试模式选择 |
 | `/test/ishihara/[mode]` | CSR | 石原氏测试（`?mode=quick\|standard`） |
-| `/test/path-tracking/[mode]` | CSR | 路径追踪测试（v1.1 已实现） |
-| `/test/hue-arrangement/[mode]` | CSR | 色相排列测试（v1.2 已实现） |
-| `/result?id=xxx` | CSR | 结果展示页 |
+| `/test/path-tracking/[mode]` | CSR | 路径追踪测试（v1.1） |
+| `/test/hue-arrangement/[mode]` | CSR | 色相排列测试（v1.2） |
+| `/test/advanced` | CSR | 进阶联合检测（v1.3） |
+| `/test/signal` | CSR | 信号灯辨识专项（v1.7，结果不入历史） |
+| `/result/[id]` | CSR | 结果展示页（从 localStorage 按 ID 读取） |
 | `/learn` | SSG | 科普文章列表 |
 | `/learn/[slug]` | SSG | 科普文章详情 |
 | `/history` | CSR | 历史记录 |
+| `/robots.txt` `/sitemap.xml` `/llms.txt` | SSG Route Handler | SEO/GEO（v1.6） |
 
 ### 2.5 性能优化策略
 
@@ -201,7 +217,7 @@ docs/                         # 项目文档（SPEC.md 为权威总纲）
 **题库版本管理**：
 
 ```typescript
-// lib/questions/ishihara.ts
+// lib/questions.ts（实际位置；38 题完整版）
 export const ISHIHARA_VERSION = '1.0.0';
 
 export const ishiharaQuestions: IshiharaQuestion[] = [
@@ -259,7 +275,7 @@ export const getStandardSet = (): IshiharaQuestion[] => {
 **判读引擎接口**：
 
 ```typescript
-// lib/scoring/ishihara-scoring.ts
+// lib/scoring.ts（实际位置；另有 path-scoring.ts / hue-scoring.ts / signal-scoring.ts / advanced-scoring.ts 分域）
 export function scoreIshiharaTest(
   answers: AnswerRecord[],
   questions: IshiharaQuestion[]
@@ -318,8 +334,8 @@ export interface IshiharaScoringResult {
    - sRGB 值预先计算并校准。
 
 2. **交互处理**：
-   - 使用 @dnd-kit 实现拖拽排序。
-   - 移动端支持点击交换（点击两张色卡交换位置）。
+   - **点击选中 + 交换**（无拖拽库依赖）：点击一张色卡选中，再点击另一张交换位置。
+   - 移动端与桌面端统一交互，触控目标 ≥44px。
 
 3. **判读算法（TES - Total Error Score）**：
    - 计算每张色卡与正确位置的偏差。
@@ -329,14 +345,14 @@ export interface IshiharaScoringResult {
 
 ### 3.5 报告导出模块
 
-**技术方案**：
-- PNG 导出：`html2canvas` 将报告 DOM 转为 Canvas，再导出 PNG。
-- PDF 导出：`jsPDF` 将 Canvas 嵌入 PDF，或直接使用 `html2canvas` + `jsPDF.addImage`。
+**技术方案**（零外部依赖）：
+- PNG 导出：`lib/report-canvas.ts` / `lib/sharecard-canvas.ts` 用原生 Canvas API 自绘报告与分享卡，`canvas.toBlob()` 导出 PNG。
+- PDF 导出：`window.print()` + 打印样式（`@media print`），浏览器另存为 PDF。
 
 **优化**：
-- 动态导入（`next/dynamic`），仅在用户点击导出时加载库（约 300KB gzip）。
+- 无第三方导出库（html2canvas/jsPDF 均未引入），bundle 零额外体积。
 - 导出前隐藏不需要的元素（按钮、导航）。
-- 设置合适的缩放比（`scale: 2`）保证清晰度。
+- 设备像素比自适应，保证清晰度。
 
 ---
 
@@ -457,25 +473,18 @@ interface AnalyticsEvent {
 
 ## 7. 测试策略
 
-### 7.1 单元测试
+### 7.1 单元测试（v1.7.6 已落地）
 
-- **框架**：Vitest + React Testing Library
-- **覆盖范围**：
-  - 判读算法（`lib/scoring/*`）：各种答题模式的边界用例
-  - 工具函数（`lib/utils.ts`）
-  - 本地存储封装（`lib/storage/*`）
-  - 纯组件（无副作用的 UI 组件）
-- **覆盖率目标**：业务逻辑 > 80%，判读算法 > 95%
+- **框架**：Vitest（node 环境，`vitest.setup.ts` 注入内存 Storage，无 jsdom/happy-dom）
+- **实际覆盖**：6 个测试文件 52 例——
+  - 判读引擎全量（`scoring` / `hue-scoring` / `path-scoring` / `signal-scoring` / `advanced-scoring`，39 例）
+  - `storage` 健壮性（13 例，含 safeSet 降级与类型守卫）
+- **运行**：`npm test`（vitest run）、`npm run test:watch`、`npm run test:coverage`（@vitest/coverage-v8）
+- **后续目标**：业务逻辑覆盖率持续提升；组件测试与 E2E 尚未引入。
 
-### 7.2 集成测试
+### 7.2 集成 / E2E（未实现）
 
-- **框架**：Playwright
-- **测试场景**：
-  - 完整检测流程（首页 → 指引 → 测试 → 结果）
-  - 答题中断恢复（刷新页面后继续）
-  - 报告导出功能
-  - 历史记录增删
-  - 响应式布局（桌面/移动视口）
+- Playwright 完整检测链路、答题中断恢复、报告导出流程：**规划中，尚未落地**（见 [TASKS.md](./TASKS.md)）。
 
 ### 7.3 手动测试清单
 
@@ -546,46 +555,4 @@ jobs:
 
 ## 10. 扩展规划
 
-### 10.1 短期（v1.1）
-
-- 更多石原氏图版（38 板完整版）
-- 检测结果分享卡片（社交媒体优化）
-- 多语言支持（英文）
-- PWA 支持（离线可用）
-
-### 10.2 中期（v1.5）
-
-- 用户账号系统（云同步历史记录）
-- 儿童模式（图形识别替代数字，适合低龄儿童）
-- 色觉模拟功能（让正常色觉用户体验色盲视角）
-- 批量检测管理后台（学校/企业使用）
-
-### 10.3 长期（v2.0）
-
-- AI 辅助判读（结合用户答题模式和历史数据优化准确性）
-- 可穿戴设备集成（手机摄像头环境光校准）
-- 医疗合作（与眼科医院合作，提供在线预约转诊）
-- 开放 API（供第三方应用集成色觉检测）
-
----
-
-## 附录
-
-### A. 参考资源
-
-- [Next.js 官方文档](https://nextjs.org/docs)
-- [Tailwind CSS 官方文档](https://tailwindcss.com/docs)
-- [shadcn/ui 官方文档](https://ui.shadcn.com/)
-- [WCAG 2.1 无障碍标准](https://www.w3.org/TR/WCAG21/)
-- [Ishihara Test 维基百科](https://en.wikipedia.org/wiki/Ishihara_test)
-- [Farnsworth-Munsell D15 Test](https://www.xrite.com/categories/color-management/farnsworth-munsell-hue-test)
-
-### B. 变更记录
-
-| 版本 | 日期 | 变更内容 | 作者 |
-|------|------|----------|------|
-| v1.0 | 2026-09-03 | 初始版本 | — |
-
----
-
-*文档结束*
+> 任务清单见 [tasks.md](./tasks.md)。

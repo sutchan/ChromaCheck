@@ -1,13 +1,13 @@
 # 色辨 ChromaCheck API 接口文档
 
 > **规范遵循**：本文档为 [docs/SPEC.md](docs/SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。
-> **实现状态**：v1.0 已实现（Next.js 14 应用 + 石原氏检测 + 结果/历史/科普/隐私）。路径追踪已于 v1.1 实现；色相排列已于 v1.2 实现。
+> **实现状态**：v1.0–v1.7.8 已实现（Next.js 14 应用；石原氏 38 板 / 路径追踪 v1.1 / 色相排列 D15 v1.2 / 进阶联合 v1.3 / 趣味包 v1.4 / GA4 v1.5.1 / SEO·GEO v1.6 / 驾驶员场景 v1.7 / Vitest 测试 v1.7.6）。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [TASKS.md](./TASKS.md)。
 
 | 项目 | 内容 |
 |------|------|
 | 文档版本 | v1.0 |
 | 创建日期 | 2026-09-03 |
-| Base URL | `https://chromacheck.example.com/api` |
+| Base URL | `https://chromacheck.app/api`（规划中，当前无服务端） |
 
 ---
 

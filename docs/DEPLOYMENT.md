@@ -1,7 +1,7 @@
 # 色辨 ChromaCheck 部署文档
 
 > **规范遵循**：本文档为 [docs/SPEC.md](docs/SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。
-> **实现状态**：v1.0 应用已实现，部署流程见 §2（Vercel / Node 托管）；静态原型仍可单独托管预览。
+> **实现状态**：v1.0–v1.7.8 已部署上线。Vercel 自动部署；v1.7.6 起 `next.config.mjs` 配置安全响应头（CSP/X-Frame-Options 等）。静态原型仍可单独托管预览。
 
 | 项目 | 内容 |
 |------|------|
