@@ -1,7 +1,18 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.7.9`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.8.0`）。
+
+## [1.8.0] - 2026-10-14
+
+### 新增（本地优先替代，无需服务端账号）
+- 本地多档案 / 家庭共享（TASKS C1/C8）：`lib/profile.ts` 档案模型（昵称 / 头像 / 关系标签），`components/history/ProfileSwitcher.tsx` 切换与增删改；`TestResult.profileId` 由 `saveResult` 自动归属当前档案；历史页支持按档案筛选。
+- 历史导出 / 导入（TASKS C2）：`lib/export-import.ts` 导出 JSON 包（档案 + 结果），导入按 id 合并（档案冲突保留本地、结果冲突保留较新），实现断点备份与跨设备迁移。
+- 批量检测（TASKS C5）：新增 `/test/batch` 录入多名被测者、逐人标准检测、汇总 CSV 导出（按档案分组，含 BOM 兼容 Excel）；检测选择页新增入口。
+
+### 文档
+- `docs/TASKS.md`：C1 / C2 / C5 / C8 标注「本地优先替代已完成（v1.8.0）」；`docs/tasks-done.md` 归档实现摘要（§四）。
+- 版本单一来源同步至 `1.8.0`。
 
 ## [1.7.9] - 2026-10-13
 

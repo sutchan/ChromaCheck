@@ -1,6 +1,6 @@
 'use client';
 // components/test/TestSelectContent.tsx — 模式选择页双语内容
-// chromacheck v1.7.9
+// chromacheck v1.8.0
 import React from 'react';
 import Link from 'next/link';
 import { Icon } from '@/components/common/Icon';
@@ -82,6 +82,26 @@ export function TestSelectContent() {
               </div>
               <p className="muted" style={{ margin: 0, flex: 1 }}>{t('driver.signalDesc')}</p>
               <span className="muted" style={{ fontSize: '0.85rem' }}>约 3 分钟 · 9 题</span>
+            </div>
+          </Link>
+        </div>
+      </div>
+
+      <div className="stack" style={{ gap: 'var(--s-3)' }}>
+        <div className="row" style={{ gap: 'var(--s-2)', flexWrap: 'wrap', alignItems: 'center' }}>
+          <Icon name="users" size={20} style={{ color: 'var(--brand)' }} />
+          <h2 style={{ margin: 0, fontSize: '1.2rem' }}>{t('batch.title')}</h2>
+        </div>
+        <p className="muted" style={{ margin: 0 }}>{t('batch.desc')}</p>
+        <div id="batch-grid" className="grid-cards">
+          <Link href="/test/batch" style={{ color: 'inherit' }}>
+            <div className="card stack" style={{ gap: 'var(--s-3)', height: '100%' }}>
+              <div className="row between">
+                <h3 style={{ margin: 0 }}>{t('batch.title')}</h3>
+                <Icon name="arrowRight" size={20} />
+              </div>
+              <p className="muted" style={{ margin: 0, flex: 1 }}>{t('batch.desc')}</p>
+              <span className="muted" style={{ fontSize: '0.85rem' }}>{t('batch.meta')}</span>
             </div>
           </Link>
         </div>

@@ -1,6 +1,7 @@
 // lib/storage.ts — 本地存储（历史 / 设置 / 进度），SSR 安全
-// chromacheck v1.7.6
+// chromacheck v1.8.0
 import type { AppSettings, TestResult } from './types';
+import { getActiveProfileId } from './profile';
 
 const K = {
   results: 'cc.results.v1',
@@ -42,11 +43,19 @@ export function saveSettings(s: AppSettings): void {
 
 export function saveResult(r: TestResult): void {
   if (!isBrowser()) return;
+  const withProfile: TestResult = r.profileId ? r : { ...r, profileId: getActiveProfileId() };
   const all = listResults();
   const map = new Map(all.map((x) => [x.id, x]));
-  map.set(r.id, r);
+  map.set(withProfile.id, withProfile);
   const arr = Array.from(map.values()).sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
   safeSet(K.results, JSON.stringify(arr.slice(0, 30)));
+}
+
+/** 全量覆盖历史（导入合并后使用），统一排序与截断 */
+export function saveAllResults(arr: TestResult[]): void {
+  if (!isBrowser()) return;
+  const valid = arr.filter(isTestResult).sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
+  safeSet(K.results, JSON.stringify(valid.slice(0, 30)));
 }
 
 function isTestResult(x: unknown): x is TestResult {

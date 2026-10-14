@@ -1,5 +1,5 @@
 // lib/i18n.ts — 轻量双语字典（zh / en，零依赖，C6 国际化第一步）
-// chromacheck v1.7.9
+// chromacheck v1.8.0
 
 export type Lang = 'zh' | 'en';
 
@@ -75,7 +75,34 @@ export type DictKey =
   | 'child.noShape'
   | 'child.saving'
   | 'child.callout'
-  | 'common.analysisNote';
+  | 'common.analysisNote'
+  | 'profile.all'
+  | 'profile.switch'
+  | 'profile.manage'
+  | 'profile.add'
+  | 'profile.name'
+  | 'profile.relation'
+  | 'profile.avatar'
+  | 'profile.rename'
+  | 'profile.delete'
+  | 'profile.deleteConfirm'
+  | 'profile.current'
+  | 'history.export'
+  | 'history.import'
+  | 'history.exportSummary'
+  | 'history.importError'
+  | 'history.importDone'
+  | 'batch.title'
+  | 'batch.desc'
+  | 'batch.names'
+  | 'batch.start'
+  | 'batch.goTest'
+  | 'batch.done'
+  | 'batch.pending'
+  | 'batch.none'
+  | 'batch.summary'
+  | 'batch.hint'
+  | 'batch.meta';
 
 type Dict = Record<DictKey, string>;
 
@@ -145,6 +172,33 @@ const ZH: Dict = {
   'child.saving': '已记录，正在生成结果…',
   'child.callout': '儿童版是',
   'common.analysisNote': '筛查参考，不替代专业医学诊断',
+  'profile.all': '全部档案',
+  'profile.switch': '切换档案',
+  'profile.manage': '管理档案',
+  'profile.add': '新增档案',
+  'profile.name': '名称',
+  'profile.relation': '关系（如父亲 / 女儿）',
+  'profile.avatar': '头像',
+  'profile.rename': '重命名',
+  'profile.delete': '删除',
+  'profile.deleteConfirm': '删除该成员及其历史记录？此操作不可撤销。',
+  'profile.current': '当前',
+  'history.export': '导出历史',
+  'history.import': '导入历史',
+  'history.exportSummary': '导出汇总表',
+  'history.importError': '导入失败：',
+  'history.importDone': '导入完成：新增 {a} 条结果、{p} 个档案',
+  'batch.title': '批量检测',
+  'batch.desc': '录入多名被测者，逐人完成标准检测，最后导出汇总表。适合学校、企业等场景的初步筛查。',
+  'batch.names': '被测者名单（每行一个姓名）',
+  'batch.start': '生成档案并开始',
+  'batch.goTest': '去检测',
+  'batch.done': '已完成',
+  'batch.pending': '待检测',
+  'batch.none': '还没有被测者。在上方录入名单后点「生成档案并开始」。',
+  'batch.summary': '导出汇总表',
+  'batch.hint': '每位被测者会建立独立档案；检测结果自动归属其名下，可在历史页查看或导出汇总。',
+  'batch.meta': '录入多人 · 逐人检测 · 汇总导出',
 };
 
 const EN: Dict = {
@@ -213,6 +267,33 @@ const EN: Dict = {
   'child.saving': 'Recorded — preparing your result…',
   'child.callout': 'Kids mode is',
   'common.analysisNote': 'Screening reference only, not a medical diagnosis',
+  'profile.all': 'All profiles',
+  'profile.switch': 'Switch profile',
+  'profile.manage': 'Manage profiles',
+  'profile.add': 'Add profile',
+  'profile.name': 'Name',
+  'profile.relation': 'Relation (e.g. Father / Daughter)',
+  'profile.avatar': 'Avatar',
+  'profile.rename': 'Rename',
+  'profile.delete': 'Delete',
+  'profile.deleteConfirm': 'Delete this member and their history? This cannot be undone.',
+  'profile.current': 'Current',
+  'history.export': 'Export history',
+  'history.import': 'Import history',
+  'history.exportSummary': 'Export summary',
+  'history.importError': 'Import failed: ',
+  'history.importDone': 'Import done: {a} new results, {p} new profiles',
+  'batch.title': 'Batch screening',
+  'batch.desc': 'Enter multiple subjects, screen each with the standard test, then export a summary. Ideal for schools and workplaces.',
+  'batch.names': 'Subject list (one name per line)',
+  'batch.start': 'Create profiles & start',
+  'batch.goTest': 'Test',
+  'batch.done': 'Done',
+  'batch.pending': 'Pending',
+  'batch.none': 'No subjects yet. Enter a list above and click “Create profiles & start”.',
+  'batch.summary': 'Export summary',
+  'batch.hint': 'Each subject gets a separate profile; their results are attributed automatically and viewable or exportable from History.',
+  'batch.meta': 'Enter many · screen each · export summary',
 };
 
 const DICTS: Record<Lang, Dict> = { zh: ZH, en: EN };
