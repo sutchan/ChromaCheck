@@ -1,7 +1,17 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.8.0`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.8.1`）。
+
+## [1.8.1] - 2026-10-14
+
+### 修复（对抗式审查整改）
+- 隐私政策（`app/privacy/page.tsx`）与 `docs/PRIVACY.md` 对齐：如实披露第一方匿名事件上报（`/api/analytics/event`，不落库、不记录 IP/UA）与 Google Analytics，新增未成年人（儿童模式）条款。
+- 色相排列判读 `lib/hue-scoring.ts`：收窄 `deviationAxis` 返回类型，D-15 不再输出不可达的 `protan`（红绿向统一归为 deutan，细分见进阶联合判读），修正误导性注释。
+- 结果展示将"置信度"统一改为"判读稳定性（内部估计）"，消除虚假医学确定感（`ResultSummary.tsx` / `ReportActions.tsx` 文案与各 scoring 模块注释）。
+- 路径追踪 `lib/path-scoring.ts`：重合度计算由 `pathOverlap` 更名为 `pathF1`（实为 F1 而非 IoU），重采样改为按累计弧长等距，避免采样不均导致的覆盖率偏差；明确 `TOL=0.07` 为归一化坐标容差（画布 7%）。
+- 结果结构 `version` 由 `1.0.0` 对齐至 `1.8.1`（`hue-scoring` / `path-scoring` / `advanced-scoring` / `ChildFlow`），并标注向后兼容。
+- 改动文件头注释版本号统一对齐 `1.8.1`；`docs/DATA-SPEC.md` 同步 `deviationDirection` 类型。
 
 ## [1.8.0] - 2026-10-14
 

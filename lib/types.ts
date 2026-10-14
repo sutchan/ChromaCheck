@@ -1,5 +1,5 @@
 // lib/types.ts — ChromaCheck 领域类型
-// chromacheck v1.8.0
+// chromacheck v1.8.1
 
 /** 检测场景：general 通用自测 / driver 驾驶·职业体检准备（隐藏趣味元素） */
 export type Scene = 'general' | 'driver';
@@ -135,8 +135,8 @@ export interface HueArrangementResult {
   totalErrorScore: number;
   /** 相邻色卡位置误差 */
   cardErrors: number[];
-  /** 偏差方向（提示异常类型；D-15 排列不足以临床分型） */
-  deviationDirection: 'protan' | 'deutan' | 'tritan' | 'none';
+  /** 偏差方向（红绿向 / 蓝黄向两级；D-15 不足以细分 protan/deutan，故不输出 protan） */
+  deviationDirection: 'deutan' | 'tritan' | 'none';
   /** TES < 20 视为正常 */
   normal: boolean;
 }
@@ -188,7 +188,7 @@ export interface AppSettings {
   funMode: boolean;
 }
 
-/** 本地档案（v1.8.0：家庭多成员 / 批量检测，本地优先，不收集 PII） */
+/** 本地档案（v1.8.1：家庭多成员 / 批量检测，本地优先，不收集 PII） */
 export interface Profile {
   id: string;
   name: string;

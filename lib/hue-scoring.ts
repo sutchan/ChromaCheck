@@ -1,5 +1,5 @@
 // lib/hue-scoring.ts — 色相排列（D15）判读（v1.2）
-// chromacheck v1.7.1
+// chromacheck v1.8.1
 import type {
   DeficiencyType,
   HueArrangementQuestion,
@@ -10,7 +10,11 @@ import type {
   TestResult,
 } from './types';
 
-/** TES 判读阈值：< 20 正常；20–40 轻度偏差；> 40 明显偏差 */
+/**
+ * TES 判读阈值（借自 Kinnear 经验值，适配本项目的 sRGB 15 卡模拟）：
+ * < 20 正常；20–40 轻度偏差；> 40 明显偏差。
+ * 注意：该阈值尚未用本地样本标定，仅作筛查参考，不作临床分型依据。
+ */
 const TES_NORMAL = 20;
 export const TES_MILD = 40;
 
@@ -32,12 +36,13 @@ function capErrors(order: number[]): number[] {
 }
 
 /**
- * 偏差方向启发式：
- * 蓝黄向（tritan）混淆压缩蓝-青-绿弧（卡号 ≤ 5），红绿向（protan/deutan）压缩绿-红弧。
- * D-15 排列本身难以稳定区分 protan / deutan，红绿向偏差按最常见的 deutan 报告，
- * 不作为临床分型依据。
+ * 偏差方向启发式（仅红绿向 / 蓝黄向两级）：
+ * 蓝黄向（tritan）混淆压缩蓝-青-绿弧（卡号 ≤ 5），红绿向压缩绿-红弧。
+ * D-15 排列无法稳定区分 protan / deutan，红绿向偏差统一归为 deutan（最常见），
+ * 本函数不输出 protan；若需红绿向细分，应结合石原氏与路径追踪交叉判读
+ * （见 advanced-scoring.ts 的 typeFromAdvanced）。结果不作为临床分型依据。
  */
-function deviationAxis(order: number[], errs: number[]): 'protan' | 'deutan' | 'tritan' {
+function deviationAxis(order: number[], errs: number[]): 'deutan' | 'tritan' {
   const seq = [0, ...order, 14];
   let redGreen = 0;
   let blueYellow = 0;
@@ -82,6 +87,7 @@ export function computeHueResult(
     severity = tes >= TES_MILD ? 'moderate' : 'mild';
   }
 
+  // confidence 为内部质量估计（基于 TES 的线性映射），并非统计置信度；UI 已标注“判读稳定性（内部估计）”。
   const confidence = tes < TES_NORMAL ? 88 : clamp(Math.round(90 - tes * 0.6), 55, 85);
   const analysis =
     overall === 'normal'
@@ -92,7 +98,7 @@ export function computeHueResult(
   return {
     id: typeof crypto !== 'undefined' && 'randomUUID' in crypto ? crypto.randomUUID() : `cc-${Date.now()}`,
     schema: 'cc.result/v1',
-    version: '1.0.0',
+    version: '1.8.1', // 结果结构版本；解析方应对未知字段保持兼容（向后兼容）
     createdAt: new Date(opts.endedAt).toISOString(),
     testMode: opts.testMode,
     overall,

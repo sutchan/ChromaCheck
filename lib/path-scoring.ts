@@ -1,5 +1,5 @@
 // lib/path-scoring.ts — 路径追踪判读（v1.1）
-// chromacheck v1.7.1
+// chromacheck v1.8.1
 import type {
   DeficiencyType,
   Overall,
@@ -10,14 +10,36 @@ import type {
   TestResult,
 } from './types';
 
-/** 重合度通过阈值（%）与归一化容差 */
+/** 重合度通过阈值（%）；TOL 为归一化坐标容差（0.07 = 画布 7%） */
 const PASS = 70;
 const TOL = 0.07;
 
+/** 按累计弧长等距重采样，避免按索引取样在采样不均时偏差过大 */
 function resample(path: { x: number; y: number }[], n: number): { x: number; y: number }[] {
   if (path.length < 2) return path.slice();
+  const cum: number[] = [0];
+  for (let i = 1; i < path.length; i++) {
+    cum.push(cum[i - 1] + Math.hypot(path[i].x - path[i - 1].x, path[i].y - path[i - 1].y));
+  }
+  const total = cum[cum.length - 1];
+  if (total === 0) return Array.from({ length: n }, () => ({ ...path[0] }));
   const out: { x: number; y: number }[] = [];
-  for (let i = 0; i < n; i++) out.push(path[Math.round((i / (n - 1)) * (path.length - 1))]);
+  for (let i = 0; i < n; i++) {
+    const d = (i / (n - 1)) * total;
+    let lo = 0;
+    let hi = cum.length - 1;
+    while (lo < hi - 1) {
+      const mid = (lo + hi) >> 1;
+      if (cum[mid] <= d) lo = mid;
+      else hi = mid;
+    }
+    const segLen = cum[hi] - cum[lo] || 1;
+    const t = (d - cum[lo]) / segLen;
+    out.push({
+      x: path[lo].x + (path[hi].x - path[lo].x) * t,
+      y: path[lo].y + (path[hi].y - path[lo].y) * t,
+    });
+  }
   return out;
 }
 
@@ -30,8 +52,12 @@ function minDist(p: { x: number; y: number }, pts: { x: number; y: number }[]): 
   return m;
 }
 
-/** 计算用户轨迹与标准路径的重合度（IoU 思路）0-100 */
-function pathOverlap(std: { x: number; y: number }[], user: { x: number; y: number }[]): number {
+/**
+ * 计算用户轨迹与标准路径的重合度（F1 思路，非 IoU）：
+ * coverage = 标准点中被用户轨迹覆盖的比例，precision = 用户点中落在标准附近的比例，
+ * F1 = 2·cov·prec / (cov+prec)。坐标均为归一化 0–1，TOL=0.07 即画布 7%。
+ */
+function pathF1(std: { x: number; y: number }[], user: { x: number; y: number }[]): number {
   if (user.length < 2) return 0;
   const S = resample(std, 80);
   const U = resample(user, 80);
@@ -46,7 +72,7 @@ function pathOverlap(std: { x: number; y: number }[], user: { x: number; y: numb
 }
 
 export function scorePathTracking(q: PathTrackingQuestion, userPath: { x: number; y: number }[]): PathTrackingResult {
-  const overlapScore = pathOverlap(q.standardPath, userPath);
+  const overlapScore = pathF1(q.standardPath, userPath);
   return { questionId: q.id, overlapScore, userPath, passed: overlapScore >= PASS };
 }
 
@@ -86,6 +112,7 @@ export function computePathResult(
     severity = blind ? 'moderate' : 'mild';
   }
 
+  // confidence 为内部质量估计（基于平均重合度），非统计置信度；UI 标注为“判读稳定性（内部估计）”。
   const confidence = clamp(Math.round(avg + (results.length > 1 ? 8 : 0)), 0, 100);
   const passedCount = results.filter((r) => r.passed).length;
   const blindLabel = overall === 'suspected_blindness' ? '色盲' : '色弱';
@@ -99,7 +126,7 @@ export function computePathResult(
   return {
     id: typeof crypto !== 'undefined' && 'randomUUID' in crypto ? crypto.randomUUID() : `cc-${Date.now()}`,
     schema: 'cc.result/v1',
-    version: '1.0.0',
+    version: '1.8.1', // 结果结构版本；解析方应对未知字段保持兼容（向后兼容）
     createdAt: new Date(opts.endedAt).toISOString(),
     testMode: opts.testMode,
     overall,

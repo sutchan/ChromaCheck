@@ -1,5 +1,5 @@
 // lib/advanced-scoring.ts — 进阶版三模块联合判读（v1.3）
-// chromacheck v1.7.1
+// chromacheck v1.8.1
 import type {
   AnswerRecord,
   DeficiencyType,
@@ -70,6 +70,7 @@ export function computeAdvancedResult(inputs: {
   let overall: Overall = ishihara.overall;
   let type: DeficiencyType = ishihara.type;
   let severity: Severity = ishihara.severity;
+  // confidence 为内部质量估计（多模块交叉调权的经验值），并非统计置信度；UI 标注为“判读稳定性（内部估计）”。
   let confidence = ishihara.confidence;
   let crossNote = '';
 
@@ -109,12 +110,12 @@ export function computeAdvancedResult(inputs: {
       : overall === 'inconclusive'
         ? `进阶联合检测${crossNote}建议调整环境光线后重新检测。`
         : `三模块联合判读提示${t}${s}。${crossNote}这可能影响相关色彩的日常辨色表现，建议在职业选择与安全场景中多加留意，必要时前往正规医院眼科复查。`;
-  const confidenceNote = `联合判读：石原氏置信度 ${ishihara.confidence}%，路径追踪平均重合度 ${pathAvg}%，色相排列 TES ${hueResult.totalErrorScore}。`;
+  const confidenceNote = `联合判读：石原氏评分 ${ishihara.confidence}%，路径追踪平均重合度 ${pathAvg}%，色相排列 TES ${hueResult.totalErrorScore}。`;
 
   return {
     id: typeof crypto !== 'undefined' && 'randomUUID' in crypto ? crypto.randomUUID() : `cc-${Date.now()}`,
     schema: 'cc.result/v1',
-    version: '1.0.0',
+    version: '1.8.1', // 结果结构版本；解析方应对未知字段保持兼容（向后兼容）
     createdAt: new Date(opts.endedAt).toISOString(),
     testMode: 'advanced',
     overall,

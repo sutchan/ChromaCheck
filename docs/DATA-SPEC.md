@@ -206,7 +206,7 @@ interface HueArrangementResult {
   /** 每张色卡位置偏差 */
   cardErrors: number[];
   /** 偏差方向（指示异常类型） */
-  deviationDirection: 'protan' | 'deutan' | 'tritan' | 'none';
+  deviationDirection: 'deutan' | 'tritan' | 'none';
   /** 是否正常 */
   normal: boolean;
 }

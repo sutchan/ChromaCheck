@@ -1,5 +1,5 @@
 // components/result/ReportActions.tsx — 结果导出 / 分享
-// chromacheck v1.7.2
+// chromacheck v1.8.1
 'use client';
 
 import React, { useState } from 'react';
@@ -51,7 +51,7 @@ export function ReportActions({ result, plain = false }: { result: TestResult; p
           : '';
     const txt = `色辨 ChromaCheck 筛查结果：\n结论：${uiText.overall(result.overall)}\n${
       result.type ? `类型：${uiText.type(result.type)}（${uiText.severity(result.severity)}）\n` : ''
-    }置信度：${result.confidence}%\n${dimText}\n${result.analysis}`;
+    }判读稳定性：${result.confidence}%（内部估计，非医学置信度）\n${dimText}\n${result.analysis}`;
     try {
       await navigator.clipboard.writeText(txt);
       setCopied(true);

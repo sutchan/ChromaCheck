@@ -1,5 +1,5 @@
 // components/result/HueArrangementSummary.tsx — 色相排列结果摘要
-// chromacheck v1.2.0
+// chromacheck v1.8.1
 'use client';
 
 import React from 'react';

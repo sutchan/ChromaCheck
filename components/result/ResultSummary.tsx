@@ -1,5 +1,5 @@
 // components/result/ResultSummary.tsx — 判读总览
-// chromacheck v1.7.9
+// chromacheck v1.8.1
 'use client';
 
 import React from 'react';
@@ -30,8 +30,10 @@ export function ResultSummary({ result }: { result: TestResult }) {
           </span>
         </div>
         <div className="row" style={{ gap: 'var(--s-5)' }}>
-          <div className="stat">
-            <span className="stat-k">置信度</span>
+          <div className="stat" title="内部质量估计，非医学统计置信度">
+            <span className="stat-k">
+              判读稳定性<small style={{ fontWeight: 400 }}>（内部估计）</small>
+            </span>
             <span className="stat-v" style={{ color: 'var(--brand)' }}>{confidence}%</span>
           </div>
         </div>
