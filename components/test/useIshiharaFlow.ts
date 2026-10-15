@@ -5,6 +5,7 @@
 import { useEffect, useRef, useState } from 'react';
 import type { AnswerRecord, Question } from '@/lib/types';
 import { chapterOf } from '@/lib/fun';
+import { t, type Lang } from '@/lib/i18n';
 
 export interface IshiharaFlowApi {
   idx: number;
@@ -36,8 +37,10 @@ export function useIshiharaFlow(opts: {
   onProgress?: (index: number, answers: AnswerRecord[]) => void;
   /** 全部作答完成 */
   onDone: (answers: AnswerRecord[]) => void;
+  /** 展示语言 */
+  lang?: Lang;
 }): IshiharaFlowApi {
-  const { questions, initial, funMode = false, onProgress, onDone } = opts;
+  const { questions, initial, funMode = false, onProgress, onDone, lang = 'zh' } = opts;
   const total = questions.length;
   const [idx, setIdx] = useState(initial?.index ?? 0);
   const [input, setInput] = useState('');
@@ -76,7 +79,7 @@ export function useIshiharaFlow(opts: {
     setRecorded(true);
     const answered = next.length;
     if (funMode && answered % 8 === 0 && answered < total) {
-      setMilestone(`已完成 ${answered} / ${total} 版`);
+      setMilestone(t(lang, 'test.milestone', { a: answered, t: total }));
       setPulse(true);
       timersRef.current.push(window.setTimeout(() => setMilestone(null), 2200));
     }

@@ -1,13 +1,14 @@
 // lib/sharecard.ts — 色觉人格分享卡：Canvas 手绘 + PNG 导出（零依赖，移植自 prototype/sharecard.js）
-// chromacheck v1.7.2
+// chromacheck v1.9.0
 import type { AnswerRecord, IshiharaResult, Overall } from './types';
 import { getQuestion } from './questions';
 import { uiText } from './scoring';
-import { funTitle } from './fun';
+import { funTitle, loc } from './fun';
+import { t, type Lang } from './i18n';
 import { W, H, VERDICT, wrapText, drawRadar } from './sharecard-canvas';
 
 /** 六轴雷达值：三轴维度 + 转换/分类题错误率 + 消失题错误率 + 综合轴 */
-export function computeRadar(ish: IshiharaResult, answers: AnswerRecord[]): { values: number[]; labels: string[] } {
+export function computeRadar(ish: IshiharaResult, answers: AnswerRecord[], lang: Lang = 'zh'): { values: number[]; labels: string[] } {
   let tt = 0;
   let tw = 0;
   let vt = 0;
@@ -36,7 +37,14 @@ export function computeRadar(ish: IshiharaResult, answers: AnswerRecord[]): { va
       vt ? Math.round((vw / vt) * 100) : 0,
       d.deutan,
     ],
-    labels: ['红轴', '绿轴', '蓝轴', '转换题', '消失题', '综合'],
+    labels: [
+      t(lang, 'analysis.axisProtan'),
+      t(lang, 'analysis.axisDeutan'),
+      t(lang, 'analysis.axisTritan'),
+      t(lang, 'analysis.transformRate'),
+      t(lang, 'analysis.vanishRate'),
+      t(lang, 'analysis.composite'),
+    ],
   };
 }
 
@@ -50,10 +58,12 @@ export interface ShareCardInput {
   /** 结果类型 / 综合判定（取称号用） */
   type: IshiharaResult['type'];
   overall: Overall;
+  /** 展示语言 */
+  lang: Lang;
 }
 
 export function drawShareCard(canvas: HTMLCanvasElement, input: ShareCardInput): void {
-  const { ish, radarValues, radarLabels, dateText, funMode, type, overall } = input;
+  const { ish, radarValues, radarLabels, dateText, funMode, type, overall, lang } = input;
   canvas.width = W;
   canvas.height = H;
   const ctx = canvas.getContext('2d');
@@ -88,25 +98,25 @@ export function drawShareCard(canvas: HTMLCanvasElement, input: ShareCardInput):
   // 结论
   ctx.fillStyle = color;
   ctx.font = '800 44px Archivo, "PingFang SC", sans-serif';
-  ctx.fillText(v[1], 52, 196);
-  const sub = (ish.type ? uiText.type(ish.type) : '') + (ish.severity ? ` · ${uiText.severity(ish.severity)}` : '');
+  ctx.fillText(uiText.overall(ish.overall, lang), 52, 196);
+  const sub = (ish.type ? uiText.type(ish.type, lang) : '') + (ish.severity ? ` · ${uiText.severity(ish.severity, lang)}` : '');
   ctx.fillStyle = 'rgba(255,255,255,0.7)';
   ctx.font = '20px "PingFang SC", "Microsoft YaHei", sans-serif';
-  ctx.fillText(sub || '本次未得出类型结论', 52, 228);
+  ctx.fillText(sub || t(lang, 'canvas.noType'), 52, 228);
 
   // 称号（趣味体验）或中性说明
   let y = 268;
   if (title) {
     ctx.fillStyle = '#8e85ff';
     ctx.font = '700 26px Archivo, "PingFang SC", sans-serif';
-    ctx.fillText(`「${title.name}」`, 52, y);
+    ctx.fillText(`「${loc(title.name, lang)}」`, 52, y);
     ctx.fillStyle = 'rgba(255,255,255,0.62)';
     ctx.font = '15px "PingFang SC", "Microsoft YaHei", sans-serif';
-    y = wrapText(ctx, title.desc, 52, y + 30, W - 104, 24) + 6;
+    y = wrapText(ctx, loc(title.desc, lang), 52, y + 30, W - 104, 24) + 6;
   } else {
     ctx.fillStyle = 'rgba(255,255,255,0.5)';
     ctx.font = '15px "PingFang SC", "Microsoft YaHei", sans-serif';
-    y = wrapText(ctx, '本报告仅基于本机检测数据生成，仅供筛查参考，不构成医学诊断。', 52, y, W - 104, 24) + 6;
+    y = wrapText(ctx, t(lang, 'canvas.neutral'), 52, y, W - 104, 24) + 6;
   }
 
   // 雷达
@@ -117,9 +127,9 @@ export function drawShareCard(canvas: HTMLCanvasElement, input: ShareCardInput):
 
   // 三轴数值条
   const dims: [string, number][] = [
-    ['红色觉', ish.dimensions.protan],
-    ['绿色觉', ish.dimensions.deutan],
-    ['蓝色觉', ish.dimensions.tritan],
+    [t(lang, 'analysis.axisProtan'), ish.dimensions.protan],
+    [t(lang, 'analysis.axisDeutan'), ish.dimensions.deutan],
+    [t(lang, 'analysis.axisTritan'), ish.dimensions.tritan],
   ];
   const by = y + 470;
   dims.forEach((d, k) => {
@@ -145,10 +155,10 @@ export function drawShareCard(canvas: HTMLCanvasElement, input: ShareCardInput):
   ctx.stroke();
   ctx.fillStyle = 'rgba(255,255,255,0.6)';
   ctx.font = '14px "PingFang SC", sans-serif';
-  ctx.fillText(`置信度 ${ish.confidence} / 100 · ${dateText}`, 52, H - 62);
+  ctx.fillText(t(lang, 'canvas.stability', { p: ish.confidence }) + ' · ' + dateText, 52, H - 62);
   ctx.fillStyle = 'rgba(255,255,255,0.38)';
   ctx.font = '12px "PingFang SC", sans-serif';
-  ctx.fillText('筛查参考，不替代专业医学诊断 · 数据不出本机', 52, H - 38);
+  ctx.fillText(t(lang, 'canvas.disclaimer'), 52, H - 38);
 }
 
 /** 导出 PNG（canvas 无外源图像，不会被污染） */

@@ -1,9 +1,12 @@
 // components/test/FunBits.tsx — 进度点阵与章末过渡卡（趣味体验，答题期不泄露对错）
-// chromacheck v1.4.0
+// chromacheck v1.9.0
 'use client';
 
 import React, { useEffect } from 'react';
 import type { Chapter } from '@/lib/fun';
+import { loc } from '@/lib/fun';
+import { t, type DictKey } from '@/lib/i18n';
+import { useLang } from '@/components/layout/LangProvider';
 
 /** 圆点三态：已完成 / 当前 / 未到（硬约束：不表达对错） */
 export function ProgressDots({
@@ -18,6 +21,7 @@ export function ProgressDots({
   pulse?: boolean;
   id?: string;
 }) {
+  const { t } = useLang();
   return (
     <div
       className={`row ${pulse ? 'is-milestone' : ''}`}
@@ -26,7 +30,7 @@ export function ProgressDots({
       aria-valuemin={1}
       aria-valuemax={total}
       aria-valuenow={Math.min(index + 1, total)}
-      aria-label={`第 ${Math.min(index + 1, total)} / ${total} 题`}
+      aria-label={t('test.progress', { i: Math.min(index + 1, total), total })}
       style={{ gap: 5, flexWrap: 'wrap', alignItems: 'center' }}
     >
       {Array.from({ length: total }, (_, i) => (
@@ -63,6 +67,7 @@ export function ChapterCard({
   index: number;
   onContinue: () => void;
 }) {
+  const { t, lang } = useLang();
   useEffect(() => {
     function onKey(e: KeyboardEvent) {
       if (e.key === 'Enter') onContinue();
@@ -73,14 +78,14 @@ export function ChapterCard({
   }, []);
 
   return (
-    <div className="card stack" id="chapter-card" role="status" aria-label="章节过渡" style={{ gap: 'var(--s-3)', alignItems: 'center', textAlign: 'center', paddingBlock: 'var(--s-6)' }}>
+    <div className="card stack" id="chapter-card" role="status" aria-label={t('test.chapterAria')} style={{ gap: 'var(--s-3)', alignItems: 'center', textAlign: 'center', paddingBlock: 'var(--s-6)' }}>
       <span aria-hidden style={{ fontSize: '1.8rem', color: 'var(--brand)' }}>{chapter.icon}</span>
-      <span className="muted" style={{ fontSize: '0.8rem', fontFamily: 'var(--font-mono)' }}>第 {chapterNo + 1} / 3 章</span>
-      <h2 style={{ margin: 0, fontSize: '1.3rem' }}>{chapter.name}</h2>
-      <p className="muted" style={{ margin: 0, maxWidth: 420 }}>{chapter.copy}</p>
+      <span className="muted" style={{ fontSize: '0.8rem', fontFamily: 'var(--font-mono)' }}>{t('test.chapterNo', { n: chapterNo + 1 })}</span>
+      <h2 style={{ margin: 0, fontSize: '1.3rem' }}>{loc(chapter.name, lang)}</h2>
+      <p className="muted" style={{ margin: 0, maxWidth: 420 }}>{loc(chapter.copy, lang)}</p>
       <ProgressDots total={total} index={index} />
-      <button type="button" className="btn btn-primary" onClick={onContinue}>继续检测</button>
-      <span className="muted" style={{ fontSize: '0.75rem' }}>回车键也可继续</span>
+      <button type="button" className="btn btn-primary" onClick={onContinue}>{t('test.chapterContinue')}</button>
+      <span className="muted" style={{ fontSize: '0.75rem' }}>{t('test.chapterEnterHint')}</span>
     </div>
   );
 }

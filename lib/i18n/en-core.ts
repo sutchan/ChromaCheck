@@ -83,6 +83,7 @@ export const EN_CORE: Record<CoreKey, string> = {
   'history.import': 'Import history',
   'history.exportSummary': 'Export summary',
   'history.importError': 'Import failed: ',
+  'history.readFail': 'Failed to read file',
   'history.importDone': 'Import done: {a} new results, {p} new profiles',
   'batch.title': 'Batch screening',
   'batch.desc': 'Enter multiple subjects, screen each with the standard test, then export a summary. Ideal for schools and workplaces.',

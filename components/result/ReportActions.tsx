@@ -1,5 +1,5 @@
 // components/result/ReportActions.tsx — 结果导出 / 分享
-// chromacheck v1.8.1
+// chromacheck v1.9.0
 'use client';
 
 import React, { useState } from 'react';
@@ -10,15 +10,17 @@ import { computeRadar, drawShareCard, exportShareCard } from '@/lib/sharecard';
 import { drawReport } from '@/lib/report-canvas';
 import { useSettings } from '@/components/layout/ThemeProvider';
 import { Icon } from '@/components/common/Icon';
+import { useLang } from '@/components/layout/LangProvider';
 
 export function ReportActions({ result, plain = false }: { result: TestResult; plain?: boolean }) {
   const [copied, setCopied] = useState(false);
   const { settings } = useSettings();
+  const { t, lang } = useLang();
 
   /** 色觉人格分享卡（v1.4 趣味体验）：实时绘制并导出 PNG */
   function exportShareCardPng() {
     if (!result.ishihara) return;
-    const radar = computeRadar(result.ishihara, result.answers);
+    const radar = computeRadar(result.ishihara, result.answers, lang);
     const c = document.createElement('canvas');
     drawShareCard(c, {
       ish: result.ishihara,
@@ -28,6 +30,7 @@ export function ReportActions({ result, plain = false }: { result: TestResult; p
       funMode: !plain && settings.funMode,
       type: result.type,
       overall: result.overall,
+      lang,
     });
     exportShareCard(c);
   }
@@ -43,15 +46,26 @@ export function ReportActions({ result, plain = false }: { result: TestResult; p
 
   async function copyText() {
     const dimText = result.ishihara
-      ? `维度：红${result.ishihara.dimensions.protan} 绿${result.ishihara.dimensions.deutan} 蓝${result.ishihara.dimensions.tritan}`
+      ? t('report.copyDimIshihara', {
+          p: result.ishihara.dimensions.protan,
+          d: result.ishihara.dimensions.deutan,
+          t: result.ishihara.dimensions.tritan,
+        })
       : result.pathTracking
-        ? `路径重合度：${result.pathTracking.map((r) => `${r.overlapScore}%`).join(' / ')}`
+        ? t('report.copyDimPath', { v: result.pathTracking.map((r) => `${r.overlapScore}%`).join(' / ') })
         : result.hueArrangement
-          ? `色相排列 TES：${result.hueArrangement.totalErrorScore}（${result.hueArrangement.normal ? '排列正常' : result.hueArrangement.totalErrorScore <= 40 ? '轻度偏差' : '明显偏差'}）`
+          ? t('report.copyDimHue', {
+              v: result.hueArrangement.totalErrorScore,
+              label: result.hueArrangement.normal
+                ? t('result.verdictNormal')
+                : result.hueArrangement.totalErrorScore <= 40
+                  ? t('result.verdictMild')
+                  : t('result.verdictObvious'),
+            })
           : '';
-    const txt = `色辨 ChromaCheck 筛查结果：\n结论：${uiText.overall(result.overall)}\n${
-      result.type ? `类型：${uiText.type(result.type)}（${uiText.severity(result.severity)}）\n` : ''
-    }判读稳定性：${result.confidence}%（内部估计，非医学置信度）\n${dimText}\n${result.analysis}`;
+    const txt = `${t('report.copyTitle')}${t('report.copyVerdict', { v: uiText.overall(result.overall, lang) })}${
+      result.type ? t('report.copyType', { t: uiText.type(result.type, lang), s: uiText.severity(result.severity, lang) }) : ''
+    }${t('report.copyStability', { p: result.confidence })}${dimText}\n${result.analysis}`;
     try {
       await navigator.clipboard.writeText(txt);
       setCopied(true);
@@ -65,26 +79,26 @@ export function ReportActions({ result, plain = false }: { result: TestResult; p
     <div className="stack no-print" style={{ gap: 'var(--s-3)' }}>
       <div className="row" style={{ gap: 'var(--s-3)', flexWrap: 'wrap' }}>
         <button type="button" className="btn btn-primary" onClick={exportPng}>
-          <Icon name="download" size={18} /> 导出 PNG
+          <Icon name="download" size={18} /> {t('report.png')}
         </button>
         <button type="button" className="btn btn-ghost" onClick={() => window.print()}>
-          <Icon name="share" size={18} /> 打印 / 另存 PDF
+          <Icon name="share" size={18} /> {t('report.pdf')}
         </button>
         <button type="button" className="btn btn-ghost" onClick={copyText}>
-          <Icon name="info" size={18} /> {copied ? '已复制' : '复制结果'}
+          <Icon name="info" size={18} /> {copied ? t('report.copied') : t('report.copy')}
         </button>
         {result.ishihara && !plain ? (
           <button type="button" id="shareCardBtn" className="btn btn-ghost" onClick={exportShareCardPng}>
-            <Icon name="share" size={18} /> 分享卡 PNG
+            <Icon name="share" size={18} /> {t('report.shareCard')}
           </button>
         ) : null}
       </div>
       <div className="row" style={{ gap: 'var(--s-3)', flexWrap: 'wrap' }}>
         <Link href="/test" className="btn btn-ghost">
-          <Icon name="reset" size={18} /> 重新检测
+          <Icon name="reset" size={18} /> {t('report.retest')}
         </Link>
         <Link href="/history" className="btn btn-ghost">
-          <Icon name="history" size={18} /> 查看历史
+          <Icon name="history" size={18} /> {t('report.viewHistory')}
         </Link>
       </div>
     </div>

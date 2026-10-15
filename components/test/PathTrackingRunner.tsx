@@ -1,24 +1,26 @@
 // components/test/PathTrackingRunner.tsx — 路径追踪检测流程编排
-// chromacheck v1.1.0
+// chromacheck v1.9.0
 'use client';
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
+import type { TestMode } from '@/lib/types';
 import { getPathQuestions } from '@/lib/questions/path-tracking';
-import type { PathTrackingQuestion, PathTrackingResult, TestMode } from '@/lib/types';
 import { computePathResult, scorePathTracking } from '@/lib/path-scoring';
 import { saveResult, saveProgress, loadProgress, clearProgress } from '@/lib/storage';
 import { detectDevice } from '@/lib/format';
 import { TestProgress } from './TestProgress';
 import { PathTrackingCanvas } from './PathTrackingCanvas';
 import { Callout } from '@/components/common/Callout';
+import { useLang } from '@/components/layout/LangProvider';
 
 export function PathTrackingRunner({ mode }: { mode: TestMode }) {
   const router = useRouter();
+  const { t, lang } = useLang();
   const questions = useMemo(() => getPathQuestions(mode), [mode]);
   const total = questions.length;
   const [idx, setIdx] = useState(0);
-  const [results, setResults] = useState<PathTrackingResult[]>([]);
+  const [results, setResults] = useState<ReturnType<typeof scorePathTracking>[]>([]);
   const [finished, setFinished] = useState(false);
   const startedAtRef = useRef<number>(Date.now());
 
@@ -43,6 +45,7 @@ export function PathTrackingRunner({ mode }: { mode: TestMode }) {
         startedAt: startedAtRef.current,
         endedAt,
         device: detectDevice(),
+        lang,
       });
       saveResult(result);
       clearProgress();
@@ -61,27 +64,25 @@ export function PathTrackingRunner({ mode }: { mode: TestMode }) {
     startedAtRef.current = Date.now();
   }
 
-  const q: PathTrackingQuestion | undefined = questions[idx];
+  const q = questions[idx];
   if (!q || finished) return null;
 
   return (
     <section id="path-runner" className="wrap stack" style={{ maxWidth: 760, paddingBlock: 'var(--s-6)', gap: 'var(--s-4)' }}>
       <div className="row between">
-        <h1 style={{ margin: 0, fontSize: '1.5rem' }}>路径追踪检测</h1>
+        <h1 style={{ margin: 0, fontSize: '1.5rem' }}>{t('test.titlePath')}</h1>
         <button type="button" className="btn btn-ghost" style={{ height: 38, fontSize: '0.85rem' }} onClick={restart}>
-          重新开始
+          {t('test.restart')}
         </button>
       </div>
 
-      <TestProgress index={idx} total={total} label="路径追踪" />
+      <TestProgress index={idx} total={total} label={t('test.phasePath')} />
 
       <div className="card stack" style={{ alignItems: 'center', gap: 'var(--s-4)' }}>
         <PathTrackingCanvas key={q.id} question={q} onResult={onResult} />
       </div>
 
-      <Callout icon="info">
-        保持光线充足，眼睛与屏幕约 40–50cm。沿你认为相连的路径描线，松手即记录；不满意可“重画”。
-      </Callout>
+      <Callout icon="info">{t('test.calloutPath')}</Callout>
     </section>
   );
 }

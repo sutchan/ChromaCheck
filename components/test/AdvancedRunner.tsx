@@ -1,5 +1,5 @@
 // components/test/AdvancedRunner.tsx — 进阶版联合检测编排（石原氏 + 路径追踪 + 色相排列）
-// chromacheck v1.7.3
+// chromacheck v1.9.0
 'use client';
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
@@ -19,11 +19,13 @@ import { PathTrackingCanvas } from './PathTrackingCanvas';
 import { HueArrangementGrid } from './HueArrangementGrid';
 import { useSettings } from '@/components/layout/ThemeProvider';
 import { Callout } from '@/components/common/Callout';
+import { useLang } from '@/components/layout/LangProvider';
 
-const PHASES = ['石原氏检测（38 题）', '路径追踪（3 题）', '色相排列（D15）'] as const;
+const PHASE_LABEL_KEYS = ['test.phaseIshihara', 'test.phasePath', 'test.phaseHue'] as const;
 
 export function AdvancedRunner({ scene = 'general' }: { scene?: Scene }) {
   const router = useRouter();
+  const { t, lang } = useLang();
   const { settings } = useSettings();
   const ishiharaQuestions = useMemo(() => getQuestions('standard'), []);
   const pathQuestions = useMemo(() => getPathQuestions('standard'), []);
@@ -64,12 +66,12 @@ export function AdvancedRunner({ scene = 'general' }: { scene?: Scene }) {
   function onHueSubmit(order: number[]) {
     if (!ishiharaAnswers) return;
     const result = computeAdvancedResult({
-      ishihara: scoreIshihara(ishiharaAnswers, ishiharaQuestions),
+      ishihara: scoreIshihara(ishiharaAnswers, ishiharaQuestions, lang),
       answers: ishiharaAnswers,
       pathResults,
       pathQuestions,
       hueResult: scoreHueQuestion(hueQuestion, order),
-      opts: { startedAt: startedAtRef.current, endedAt: Date.now(), device: detectDevice(), scene },
+      opts: { startedAt: startedAtRef.current, endedAt: Date.now(), device: detectDevice(), scene, lang },
     });
     saveResult(result);
     clearProgress();
@@ -91,16 +93,18 @@ export function AdvancedRunner({ scene = 'general' }: { scene?: Scene }) {
   return (
     <section id="advanced-runner" className="wrap stack" style={{ maxWidth: 760, paddingBlock: 'var(--s-6)', gap: 'var(--s-4)' }}>
       <div className="row between">
-        <h1 style={{ margin: 0, fontSize: '1.5rem' }}>进阶联合检测</h1>
+        <h1 style={{ margin: 0, fontSize: '1.5rem' }}>{t('test.titleAdvanced')}</h1>
         <button type="button" className="btn btn-ghost" style={{ height: 38, fontSize: '0.85rem' }} onClick={restart}>
-          重新开始
+          {t('test.restart')}
         </button>
       </div>
 
       <div className="row" id="advanced-phases" style={{ gap: 'var(--s-2)', flexWrap: 'wrap' }}>
-        {PHASES.map((label, i) => (
-          <span key={label} className={`chip ${i === phase ? 'chip-ok' : ''}`} style={{ opacity: i <= phase ? 1 : 0.55 }}>
-            模块 {i + 1}/3 · {label}
+        {PHASE_LABEL_KEYS.map((key, i) => (
+          <span key={key} className={`chip ${i === phase ? 'chip-ok' : ''}`} style={{ opacity: i <= phase ? 1 : 0.55 }}>
+            {t('test.module', { i: i + 1, n: 3 })}
+            {' · '}
+            {t(key)}
             {i < phase ? ' ✓' : ''}
           </span>
         ))}
@@ -118,7 +122,7 @@ export function AdvancedRunner({ scene = 'general' }: { scene?: Scene }) {
           />
         ) : (
           <div className="card stack" style={{ alignItems: 'center', gap: 'var(--s-4)', minHeight: 320 }} aria-hidden>
-            <p className="muted" style={{ margin: 0 }}>正在恢复进度…</p>
+            <p className="muted" style={{ margin: 0 }}>{t('test.restoring')}</p>
           </div>
         )
       ) : null}
@@ -135,9 +139,7 @@ export function AdvancedRunner({ scene = 'general' }: { scene?: Scene }) {
         </div>
       ) : null}
 
-      <Callout icon="info">
-        进阶检测依次完成三个模块，全程约 15 分钟，请保持光线充足、屏幕未开启护眼滤镜；中途重新开始将清空全部作答。
-      </Callout>
+      <Callout icon="info">{t('test.calloutAdvanced')}</Callout>
     </section>
   );
 }

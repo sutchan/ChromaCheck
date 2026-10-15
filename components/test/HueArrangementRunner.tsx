@@ -1,5 +1,5 @@
 // components/test/HueArrangementRunner.tsx — 色相排列检测流程编排
-// chromacheck v1.2.0
+// chromacheck v1.9.0
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
@@ -11,9 +11,11 @@ import { saveResult, saveProgress, loadProgress, clearProgress } from '@/lib/sto
 import { detectDevice } from '@/lib/format';
 import { HueArrangementGrid } from './HueArrangementGrid';
 import { Callout } from '@/components/common/Callout';
+import { useLang } from '@/components/layout/LangProvider';
 
 export function HueArrangementRunner({ mode }: { mode: TestMode }) {
   const router = useRouter();
+  const { t, lang } = useLang();
   const question = getHueQuestions(mode)[0];
   const [submitted, setSubmitted] = useState(false);
   const startedAtRef = useRef<number>(Date.now());
@@ -35,6 +37,7 @@ export function HueArrangementRunner({ mode }: { mode: TestMode }) {
       startedAt: startedAtRef.current,
       endedAt: Date.now(),
       device: detectDevice(),
+      lang,
     });
     saveResult(result);
     clearProgress();
@@ -44,14 +47,14 @@ export function HueArrangementRunner({ mode }: { mode: TestMode }) {
   return (
     <section id="hue-runner" className="wrap stack" style={{ maxWidth: 860, paddingBlock: 'var(--s-6)', gap: 'var(--s-4)' }}>
       <div className="row between">
-        <h1 style={{ margin: 0, fontSize: '1.5rem' }}>色相排列检测（D15）</h1>
+        <h1 style={{ margin: 0, fontSize: '1.5rem' }}>{t('test.titleHue')}</h1>
         <button
           type="button"
           className="btn btn-ghost"
           style={{ height: 38, fontSize: '0.85rem' }}
           onClick={() => window.location.reload()}
         >
-          重新开始
+          {t('test.restart')}
         </button>
       </div>
 
@@ -59,9 +62,7 @@ export function HueArrangementRunner({ mode }: { mode: TestMode }) {
         <HueArrangementGrid question={question} onSubmit={onSubmit} />
       </div>
 
-      <Callout icon="info">
-        保持光线充足，眼睛与屏幕约 40–50cm，屏幕不要开启夜间模式或护眼滤镜。完成时间不限，仔细比对后再提交。
-      </Callout>
+      <Callout icon="info">{t('test.calloutHue')}</Callout>
     </section>
   );
 }

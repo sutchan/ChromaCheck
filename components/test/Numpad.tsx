@@ -1,9 +1,10 @@
 // components/test/Numpad.tsx — 数字键盘
-// chromacheck v1.0.0
+// chromacheck v1.9.0
 'use client';
 
 import React from 'react';
 import { Icon } from '@/components/common/Icon';
+import { useLang } from '@/components/layout/LangProvider';
 
 export interface NumpadProps {
   onDigit: (d: string) => void;
@@ -14,6 +15,7 @@ export interface NumpadProps {
 const KEYS = ['1', '2', '3', '4', '5', '6', '7', '8', '9', 'clear', '0', 'back'];
 
 export function Numpad({ onDigit, onBackspace, onClear }: NumpadProps) {
+  const { t } = useLang();
   return (
     <div
       style={{
@@ -27,14 +29,14 @@ export function Numpad({ onDigit, onBackspace, onClear }: NumpadProps) {
       {KEYS.map((k, i) => {
         if (k === 'clear') {
           return (
-            <button key={i} type="button" className="btn btn-ghost" style={{ height: 52 }} onClick={onClear} aria-label="清除">
+            <button key={i} type="button" className="btn btn-ghost" style={{ height: 52 }} onClick={onClear} aria-label={t('test.numpadClear')}>
               <Icon name="x" size={18} />
             </button>
           );
         }
         if (k === 'back') {
           return (
-            <button key={i} type="button" className="btn btn-ghost" style={{ height: 52 }} onClick={onBackspace} aria-label="删除一位">
+            <button key={i} type="button" className="btn btn-ghost" style={{ height: 52 }} onClick={onBackspace} aria-label={t('test.numpadBack')}>
               <Icon name="reset" size={18} />
             </button>
           );

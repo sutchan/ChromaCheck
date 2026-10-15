@@ -1,5 +1,5 @@
 // components/test/SignalRunner.tsx — 信号灯辨识检测编排
-// chromacheck v1.7.0
+// chromacheck v1.9.0
 'use client';
 
 import React, { useMemo, useState } from 'react';
@@ -8,8 +8,10 @@ import { getSignalTasks, type SignalTask } from '@/lib/questions/signal';
 import { scoreSignal } from '@/lib/signal-scoring';
 import { Callout } from '@/components/common/Callout';
 import { Icon } from '@/components/common/Icon';
+import { useLang } from '@/components/layout/LangProvider';
 
 export function SignalRunner() {
+  const { t, lang } = useLang();
   const tasks = useMemo(() => getSignalTasks(), []);
   const [idx, setIdx] = useState(0);
   const [answers, setAnswers] = useState<Record<string, string>>({});
@@ -27,7 +29,7 @@ export function SignalRunner() {
     window.setTimeout(() => {
       setRecorded(false);
       if (idx + 1 >= total) {
-        setDone(scoreSignal(tasks, next));
+        setDone(scoreSignal(tasks, next, lang));
       } else {
         setIdx(idx + 1);
       }
@@ -35,13 +37,12 @@ export function SignalRunner() {
   }
 
   if (done) {
-    const missed = done.tasks.filter((t) => !t.correct);
     return (
       <section id="signal-result" className="wrap stack" style={{ maxWidth: 720, paddingBlock: 'var(--s-6)', gap: 'var(--s-4)' }}>
         <div className="row between">
-          <h1 style={{ margin: 0, fontSize: '1.5rem' }}>信号灯辨识结果</h1>
+          <h1 style={{ margin: 0, fontSize: '1.5rem' }}>{t('test.signalResultTitle')}</h1>
           <span className={`chip ${done.overall === 'pass' ? 'chip-ok' : 'chip-risk'}`}>
-            {done.overall === 'pass' ? '三色信号可辨识' : '信号辨色存疑'}
+            {done.overall === 'pass' ? t('test.signalPass') : t('test.signalFail')}
           </span>
         </div>
 
@@ -49,27 +50,27 @@ export function SignalRunner() {
 
         <div className="card stack" style={{ gap: 'var(--s-2)' }}>
           <div className="row between">
-            <strong>判读概览</strong>
-            <span className="muted" style={{ fontSize: '0.85rem' }}>正确 {done.correct} / {done.total}</span>
+            <strong>{t('test.signalOverview')}</strong>
+            <span className="muted" style={{ fontSize: '0.85rem' }}>{t('test.signalScore', { c: done.correct, t: done.total })}</span>
           </div>
           <ul style={{ margin: 0, paddingLeft: 20, display: 'grid', gap: 4 }}>
-            {done.tasks.map((t, i) => (
-              <li key={t.id} className="muted" style={{ fontSize: '0.88rem' }}>
-                <Icon name={t.correct ? 'check' : 'alert'} size={14} style={{ color: t.correct ? 'var(--ok)' : 'var(--risk)' }} /> 第 {i + 1} 题：{t.correct ? '正确' : `你的选择有误`}
+            {done.tasks.map((task, i) => (
+              <li key={task.id} className="muted" style={{ fontSize: '0.88rem' }}>
+                <Icon name={task.correct ? 'check' : 'alert'} size={14} style={{ color: task.correct ? 'var(--ok)' : 'var(--risk)' }} /> {t('test.signalItem', { n: i + 1, r: t(task.correct ? 'test.signalItemOk' : 'test.signalItemBad') })}
               </li>
             ))}
           </ul>
         </div>
 
         <p className="muted" style={{ margin: 0, fontSize: '0.82rem' }}>
-          本项检测仅验证红 / 绿 / 黄交通信号的辨识能力，不能替代专业眼科诊断与驾照体检。
+          {t('test.signalNote')}
         </p>
 
         <div className="row" style={{ gap: 'var(--s-3)', flexWrap: 'wrap' }}>
           <button type="button" className="btn btn-primary" onClick={() => { setAnswers({}); setIdx(0); setDone(null); }}>
-            <Icon name="reset" size={18} /> 重新检测
+            <Icon name="reset" size={18} /> {t('test.signalRetry')}
           </button>
-          <Link href="/test" className="btn btn-ghost">返回检测选择</Link>
+          <Link href="/test" className="btn btn-ghost">{t('test.signalBack')}</Link>
         </div>
       </section>
     );
@@ -80,13 +81,11 @@ export function SignalRunner() {
   return (
     <section id="signal-runner" className="wrap stack" style={{ maxWidth: 720, paddingBlock: 'var(--s-6)', gap: 'var(--s-4)' }}>
       <div className="row between">
-        <h1 style={{ margin: 0, fontSize: '1.5rem' }}>信号灯辨识</h1>
-        <span className="chip">第 {idx + 1} / {total} 题</span>
+        <h1 style={{ margin: 0, fontSize: '1.5rem' }}>{t('test.titleSignal')}</h1>
+        <span className="chip">{t('test.progress', { i: idx + 1, total })}</span>
       </div>
 
-      <Callout icon="info">
-        模拟路口与夜间行车场景下的红、绿、黄信号辨识。请凭第一直觉作答；本项不计入历史记录，仅作驾驶场景参考。
-      </Callout>
+      <Callout icon="info">{t('test.calloutSignal')}</Callout>
 
       <div className="card stack" style={{ alignItems: 'center', gap: 'var(--s-4)' }}>
         {q.kind === 'light' && q.color ? (
@@ -101,7 +100,7 @@ export function SignalRunner() {
             }}
           />
         ) : null}
-        <p style={{ margin: 0, textAlign: 'center', fontSize: '1.05rem' }}>{q.prompt}</p>
+        <p style={{ margin: 0, textAlign: 'center', fontSize: '1.05rem' }}>{lang === 'en' ? q.promptEn : q.prompt}</p>
       </div>
 
       <div className="stack" style={{ gap: 'var(--s-3)' }}>
@@ -114,7 +113,7 @@ export function SignalRunner() {
             disabled={recorded}
             onClick={() => pick(o.value)}
           >
-            {o.label}
+            {lang === 'en' ? o.labelEn : o.label}
           </button>
         ))}
       </div>

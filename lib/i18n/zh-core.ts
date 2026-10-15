@@ -82,6 +82,7 @@ export const ZH_CORE = {
   'history.import': '导入历史',
   'history.exportSummary': '导出汇总表',
   'history.importError': '导入失败：',
+  'history.readFail': '读取文件失败',
   'history.importDone': '导入完成：新增 {a} 条结果、{p} 个档案',
   'batch.title': '批量检测',
   'batch.desc': '录入多名被测者，逐人完成标准检测，最后导出汇总表。适合学校、企业等场景的初步筛查。',

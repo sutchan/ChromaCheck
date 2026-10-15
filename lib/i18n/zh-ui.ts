@@ -3,6 +3,11 @@
 
 export const ZH_UI = {
   // 检测流程（各 Runner / Flow / 交互组件）
+  'child.calloutScreening': '初筛体验',
+  'child.calloutNote': '，结果受孩子的配合度、屏幕色彩与环境光线影响，不能作为诊断依据。建议先在',
+  'child.calloutGuide': '《检测前指引》',
+  'child.calloutTail': '完成屏幕与环境准备；如结果提示异常，请到正规医院眼科复查。',
+  'child.plateAria': '儿童模式检测图',
   'test.titleIshihara': '石原氏色觉检测',
   'test.titlePath': '路径追踪检测',
   'test.titleHue': '色相排列检测（D15）',
@@ -24,7 +29,8 @@ export const ZH_UI = {
   'test.ishiharaPrompt': '请说出图中您看到的数字（最多 3 位）。若看不清任何数字，点“看不清 / 无数字”。',
   'test.revealCorrect': '正确',
   'test.revealDemo': '演示题',
-  'test.revealExpected': '图上的数字是 {d}。演示题用于校准，不计入判读结果。',
+  'test.revealExpected': '图上的数字是 {d}。',
+  'test.revealDemoNote': '演示题用于校准，不计入判读结果。',
   'test.revealNone': '（无数字）',
   'test.continue': '继续',
   'test.finish': '完成作答',
@@ -162,7 +168,7 @@ export const ZH_UI = {
   'report.shareCard': '分享卡 PNG',
   'report.retest': '重新检测',
   'report.viewHistory': '查看历史',
-  'report.copyTitle': '色辨 ChromaCheck 筛查结果：',
+  'report.copyTitle': '色辨 ChromaCheck 筛查结果：\n',
   'report.copyVerdict': '结论：{v}',
   'report.copyType': '类型：{t}（{s}）',
   'report.copyStability': '判读稳定性：{p}%（内部估计，非医学置信度）',
@@ -260,4 +266,6 @@ export const ZH_UI = {
   'canvas.pathN': '路径{n}',
   'canvas.generatedAt': '报告生成时间：{d}',
   'canvas.disclaimer': '本结果仅供参考，不能替代专业眼科诊断。',
+  'canvas.noType': '本次未得出类型结论',
+  'canvas.neutral': '本报告仅基于本机检测数据生成，仅供筛查参考，不构成医学诊断。',
 } as const;

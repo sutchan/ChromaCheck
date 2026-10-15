@@ -5,6 +5,11 @@ type UiKey = keyof typeof import('./zh-ui').ZH_UI;
 
 export const EN_UI: Record<UiKey, string> = {
   // Test flow
+  'child.calloutScreening': 'first-pass experience',
+  'child.calloutNote': ', heavily affected by the child’s cooperation, screen color and ambient light; it cannot serve as a diagnosis basis. Please finish the',
+  'child.calloutGuide': 'Pre-test guide',
+  'child.calloutTail': 'first; if the result flags an abnormality, visit a reputable ophthalmology department.',
+  'child.plateAria': 'Kids mode test plate',
   'test.titleIshihara': 'Ishihara color vision test',
   'test.titlePath': 'Path tracking test',
   'test.titleHue': 'Hue arrangement test (D15)',
@@ -26,7 +31,8 @@ export const EN_UI: Record<UiKey, string> = {
   'test.ishiharaPrompt': 'Say the digits you see in the plate (up to 3). If you see no digits, tap “Not sure / no digits”.',
   'test.revealCorrect': 'Correct',
   'test.revealDemo': 'Demo item',
-  'test.revealExpected': 'The digit on the plate is {d}. Demo items calibrate the test and are not scored.',
+  'test.revealExpected': 'The digit on the plate is {d}.',
+  'test.revealDemoNote': 'Demo items calibrate the test and are not scored.',
   'test.revealNone': '(no digits)',
   'test.continue': 'Continue',
   'test.finish': 'Finish',
@@ -262,4 +268,6 @@ export const EN_UI: Record<UiKey, string> = {
   'canvas.pathN': 'Path {n}',
   'canvas.generatedAt': 'Generated at: {d}',
   'canvas.disclaimer': 'For reference only; cannot replace a professional eye examination.',
+  'canvas.noType': 'No type conclusion this time',
+  'canvas.neutral': 'Generated from this device’s test data only; for screening reference and not a medical diagnosis.',
 };
