@@ -24,6 +24,7 @@ export const EN_RESULT: Record<ResultKey, string> = {
   'result.mode.child': 'Kids',
 
   'analysis.note': 'Based on {c}/{t} answers, overall reading stability {p}%.',
+  'analysis.genericType': 'color vision deficiency',
   'analysis.normal': 'No obvious color vision deficiency was detected. Online screening cannot replace a professional eye examination; if you still struggle with color in daily life, consider a follow-up check.',
   'analysis.inconclusive': 'This run had too few answers, or the demo item was clearly misread, so the result is undetermined. Adjust the lighting and retake the test, making sure you see each plate before answering.',
   'analysis.abnormal': 'Your result suggests {t} ({s}). In transformation and classification items, some answers matched the typical pattern of {t}; in vanishing items some digits were also hard to read. This may affect red/green discrimination — pay extra attention in career choices and safety scenarios. {clarify}',
@@ -37,6 +38,9 @@ export const EN_RESULT: Record<ResultKey, string> = {
   'analysis.axisProtan': 'red',
   'analysis.axisDeutan': 'green',
   'analysis.axisTritan': 'blue',
+  'analysis.axisLabelProtan': 'red deficiency',
+  'analysis.axisLabelDeutan': 'green deficiency',
+  'analysis.axisLabelTritan': 'blue deficiency',
   'analysis.blindLabel': ' blindness',
   'analysis.weakLabel': ' deficiency',
   'analysis.pathNormal': 'You traced the path formed by the embedded colored dots accurately, with no obvious red/green deficiency. Online screening cannot replace a professional eye examination; if in doubt, seek a follow-up check.',

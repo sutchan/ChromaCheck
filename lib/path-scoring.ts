@@ -1,5 +1,5 @@
 // lib/path-scoring.ts — 路径追踪判读（v1.1）
-// chromacheck v1.8.2
+// chromacheck v1.9.0
 import type {
   DeficiencyType,
   Overall,
@@ -9,6 +9,7 @@ import type {
   TestMode,
   TestResult,
 } from './types';
+import { t, type Lang } from './i18n';
 
 /** 重合度通过阈值（%）；TOL 为归一化坐标容差（0.07 = 画布 7%） */
 const PASS = 70;
@@ -88,7 +89,7 @@ function mean(a: number[]): number {
 export function computePathResult(
   results: PathTrackingResult[],
   questions: PathTrackingQuestion[],
-  opts: { testMode: TestMode; startedAt: number; endedAt: number; device: string },
+  opts: { testMode: TestMode; startedAt: number; endedAt: number; device: string; lang?: Lang },
 ): TestResult {
   const avg = Math.round(mean(results.map((r) => r.overlapScore)));
   const overall: Overall = avg >= 70 ? 'normal' : avg >= 30 ? 'suspected_deficiency' : 'suspected_blindness';
@@ -115,18 +116,19 @@ export function computePathResult(
   // confidence 为内部质量估计（基于平均重合度），非统计置信度；UI 标注为“判读稳定性（内部估计）”。
   const confidence = clamp(Math.round(avg + (results.length > 1 ? 8 : 0)), 0, 100);
   const passedCount = results.filter((r) => r.passed).length;
-  const blindLabel = overall === 'suspected_blindness' ? '色盲' : '色弱';
-  const tLabel = type ? (type.includes('protan') ? '红色觉' : '绿色觉') : '';
+  const lang = opts.lang ?? 'zh';
+  const blindLabel = t(lang, overall === 'suspected_blindness' ? 'analysis.blindLabel' : 'analysis.weakLabel');
+  const tLabel = type ? t(lang, type.includes('protan') ? 'analysis.axisProtan' : 'analysis.axisDeutan') : '';
   const analysis =
     overall === 'normal'
-      ? '路径追踪中你准确描出了嵌入色点连成的路径，未见明显红/绿色觉异常。在线筛查不能替代专业眼科检查，如仍有疑虑请就医复查。'
-      : `路径追踪显示部分路径描线重合度偏低，结果提示${tLabel}${blindLabel}。红/绿色点路径与背景干扰色点的区分可能存在困难，建议在职业选择与日常安全场景中多加留意，必要时前往正规医院眼科复查。`;
-  const confidenceNote = `基于 ${passedCount}/${results.length} 条路径追踪，平均重合度 ${avg}%。`;
+      ? t(lang, 'analysis.pathNormal')
+      : t(lang, 'analysis.pathAbnormal', { t: tLabel, b: blindLabel });
+  const confidenceNote = t(lang, 'analysis.pathNote', { p: passedCount, t: results.length, a: avg });
 
   return {
     id: typeof crypto !== 'undefined' && 'randomUUID' in crypto ? crypto.randomUUID() : `cc-${Date.now()}`,
     schema: 'cc.result/v1',
-    version: '1.8.2', // 结果结构版本；解析方应对未知字段保持兼容（向后兼容）
+    version: '1.9.0', // 结果结构版本；解析方应对未知字段保持兼容（向后兼容）
     createdAt: new Date(opts.endedAt).toISOString(),
     testMode: opts.testMode,
     overall,

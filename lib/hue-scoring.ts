@@ -1,5 +1,5 @@
 // lib/hue-scoring.ts — 色相排列（D15）判读（v1.2）
-// chromacheck v1.8.2
+// chromacheck v1.9.0
 import type {
   DeficiencyType,
   HueArrangementQuestion,
@@ -9,6 +9,7 @@ import type {
   TestMode,
   TestResult,
 } from './types';
+import { t, type Lang } from './i18n';
 
 /**
  * TES 判读阈值（借自 Kinnear 经验值，适配本项目的 sRGB 15 卡模拟）：
@@ -74,7 +75,7 @@ export function scoreHueQuestion(q: HueArrangementQuestion, order: number[]): Hu
 /** 由色相排列结果汇总为完整 TestResult（ishihara / pathTracking 字段留空） */
 export function computeHueResult(
   hueResult: HueArrangementResult,
-  opts: { testMode: TestMode; startedAt: number; endedAt: number; device: string },
+  opts: { testMode: TestMode; startedAt: number; endedAt: number; device: string; lang?: Lang },
 ): TestResult {
   const tes = hueResult.totalErrorScore;
   const overall: Overall = tes < TES_NORMAL ? 'normal' : 'suspected_deficiency';
@@ -89,16 +90,18 @@ export function computeHueResult(
 
   // confidence 为内部质量估计（基于 TES 的线性映射），并非统计置信度；UI 已标注“判读稳定性（内部估计）”。
   const confidence = tes < TES_NORMAL ? 88 : clamp(Math.round(90 - tes * 0.6), 55, 85);
+  const lang = opts.lang ?? 'zh';
+  const dir = t(lang, hueResult.deviationDirection === 'tritan' ? 'analysis.dirTritan' : 'analysis.dirDeutan');
   const analysis =
     overall === 'normal'
-      ? '色相排列中你按正确的色彩渐变顺序排好了全部色卡，辨色精度未见明显异常。在线筛查不能替代专业眼科检查，如仍有疑虑请就医复查。'
-      : `色相排列 TES 为 ${tes}，部分色卡顺序偏离正确渐变，提示辨色精度可能下降（偏差方向偏向${hueResult.deviationDirection === 'tritan' ? '蓝黄向' : '红绿向'}）。建议留意职业体检要求，必要时前往正规医院眼科复查。`;
-  const confidenceNote = `基于单组 D15 排列：TES ${tes}（< ${TES_NORMAL} 正常，${TES_NORMAL}–${TES_MILD} 轻度，> ${TES_MILD} 明显）。`;
+      ? t(lang, 'analysis.hueNormal')
+      : t(lang, 'analysis.hueAbnormal', { tes, dir });
+  const confidenceNote = t(lang, 'analysis.hueNote', { tes, n: TES_NORMAL, m: TES_MILD });
 
   return {
     id: typeof crypto !== 'undefined' && 'randomUUID' in crypto ? crypto.randomUUID() : `cc-${Date.now()}`,
     schema: 'cc.result/v1',
-    version: '1.8.2', // 结果结构版本；解析方应对未知字段保持兼容（向后兼容）
+    version: '1.9.0', // 结果结构版本；解析方应对未知字段保持兼容（向后兼容）
     createdAt: new Date(opts.endedAt).toISOString(),
     testMode: opts.testMode,
     overall,

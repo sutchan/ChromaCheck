@@ -1,6 +1,7 @@
 // lib/signal-scoring.ts — 信号灯辨识判读
-// chromacheck v1.7.0
+// chromacheck v1.9.0
 import type { SignalTask } from './questions/signal';
+import { t, type Lang } from './i18n';
 
 export interface SignalTaskResult {
   id: string;
@@ -22,7 +23,11 @@ export interface SignalTestResult {
  * 信号灯辨识判读：light 类（辨色）任务须全部正确才算通过；
  * meaning 类（含义）错误反映认知而非辨色，单独提示但不直接判不合格。
  */
-export function scoreSignal(tasks: SignalTask[], answers: Record<string, string>): SignalTestResult {
+export function scoreSignal(
+  tasks: SignalTask[],
+  answers: Record<string, string>,
+  lang: Lang = 'zh',
+): SignalTestResult {
   const lightIds = tasks.filter((t) => t.kind === 'light').map((t) => t.id);
   const results: SignalTaskResult[] = tasks.map((t) => {
     const ua = answers[t.id] ?? '';
@@ -32,12 +37,7 @@ export function scoreSignal(tasks: SignalTask[], answers: Record<string, string>
   const colorResults = results.filter((r) => lightIds.includes(r.id));
   const colorOk = colorResults.length > 0 && colorResults.every((r) => r.correct);
 
-  let note: string;
-  if (colorOk) {
-    note = '你能稳定辨识红、绿、黄三色交通信号，符合安全驾驶对信号辨色的基本要求。';
-  } else {
-    note = '你在红 / 绿信号辨色上存在不确定，建议前往正规医院眼科进一步确认，并以体检机构结论为准。';
-  }
+  const note = colorOk ? t(lang, 'analysis.signalPass') : t(lang, 'analysis.signalFail');
 
   return {
     overall: colorOk ? 'pass' : 'fail',

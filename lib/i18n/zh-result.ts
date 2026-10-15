@@ -24,6 +24,7 @@ export const ZH_RESULT = {
 
   // 石原氏判读分析
   'analysis.note': '基于 {c}/{t} 题作答，综合判读稳定性 {p}%。',
+  'analysis.genericType': '色觉异常',
   'analysis.normal': '本次筛查未检出明显色觉异常。在线筛查不能替代专业眼科检查，如在日常生活中仍感辨色困难，建议就医复查。',
   'analysis.inconclusive': '本次作答样本不足，或演示题出现明显误读，结果暂不确定。建议调整环境光线后重新检测，确保每题都看清再作答。',
   'analysis.abnormal': '你的结果提示{t}（{s}）。在转换题与分类题中，部分答案与{t}的典型表现一致；消失题中也有数字难以辨认的情况。这可能影响对红/绿相关色彩的区分，建议在职业选择与日常安全场景中多加留意。{clarify}',
@@ -38,6 +39,9 @@ export const ZH_RESULT = {
   'analysis.axisProtan': '红色觉',
   'analysis.axisDeutan': '绿色觉',
   'analysis.axisTritan': '蓝色觉',
+  'analysis.axisLabelProtan': '红色觉异常',
+  'analysis.axisLabelDeutan': '绿色觉异常',
+  'analysis.axisLabelTritan': '蓝色觉异常',
   'analysis.blindLabel': '色盲',
   'analysis.weakLabel': '色弱',
   'analysis.pathNormal': '路径追踪中你准确描出了嵌入色点连成的路径，未见明显红/绿色觉异常。在线筛查不能替代专业眼科检查，如仍有疑虑请就医复查。',

@@ -1,5 +1,5 @@
 // lib/scoring.ts — 判读引擎（移植自 prototype/scoring.js，纯函数）
-// chromacheck v1.7.2
+// chromacheck v1.9.0
 import type {
   AnswerRecord,
   DeficiencyType,
@@ -10,7 +10,8 @@ import type {
   TestMode,
   TestResult,
 } from './types';
-import { TYPE_TEXT, SEVERITY_TEXT, OVERALL_LABEL, MODE_TEXT, uiText } from './scoring-text';
+import { uiText } from './scoring-text';
+import { t, type Lang } from './i18n';
 
 export { uiText };
 
@@ -36,7 +37,7 @@ function matches(q: Question, ua: string, axis: 'protan' | 'deutan'): boolean {
   return (ua || '').trim() === alt;
 }
 
-export function scoreIshihara(answers: AnswerRecord[], questions: Question[]): IshiharaResult {
+export function scoreIshihara(answers: AnswerRecord[], questions: Question[], lang: Lang = 'zh'): IshiharaResult {
   const map: Record<string, AnswerRecord> = {};
   answers.forEach((a) => (map[a.questionId] = a));
 
@@ -113,13 +114,13 @@ export function scoreIshihara(answers: AnswerRecord[], questions: Question[]): I
 
   const patterns: IshiharaResult['details']['errorPatterns'] = [];
   if (deutanHit)
-    patterns.push({ type: 'deutan', questionCount: deutanHit, description: `转换/分类题中 ${deutanHit} 题答案符合绿色觉异常典型表现` });
+    patterns.push({ type: 'deutan', questionCount: deutanHit, description: t(lang, 'analysis.patternDeutan', { n: deutanHit }) });
   if (protanHit)
-    patterns.push({ type: 'protan', questionCount: protanHit, description: `转换/分类题中 ${protanHit} 题答案符合红色觉异常典型表现` });
+    patterns.push({ type: 'protan', questionCount: protanHit, description: t(lang, 'analysis.patternProtan', { n: protanHit }) });
   if (vanishWrong)
-    patterns.push({ type: 'mixed', questionCount: vanishWrong, description: `消失题中有 ${vanishWrong} 题未能读出数字` });
+    patterns.push({ type: 'mixed', questionCount: vanishWrong, description: t(lang, 'analysis.patternVanish', { n: vanishWrong }) });
   if (!patterns.length)
-    patterns.push({ type: 'random', questionCount: 0, description: '未发现稳定的错误模式' });
+    patterns.push({ type: 'random', questionCount: 0, description: t(lang, 'analysis.patternNone') });
 
   return {
     overall,
@@ -131,37 +132,35 @@ export function scoreIshihara(answers: AnswerRecord[], questions: Question[]): I
   };
 }
 
-function buildAnalysis(result: IshiharaResult, mode: TestMode): { analysis: string; confidenceNote: string } {
+function buildAnalysis(result: IshiharaResult, mode: TestMode, lang: Lang): { analysis: string; confidenceNote: string } {
   const { overall, type, severity, confidence, details } = result;
-  const note = `基于 ${details.correctCount}/${details.totalCount} 题作答，综合置信度 ${confidence}%。`;
+  const note = t(lang, 'analysis.note', { c: details.correctCount, t: details.totalCount, p: confidence });
   let analysis = '';
   if (overall === 'normal') {
-    analysis = '本次筛查未检出明显色觉异常。在线筛查不能替代专业眼科检查，如在日常生活中仍感辨色困难，建议就医复查。';
+    analysis = t(lang, 'analysis.normal');
   } else if (overall === 'inconclusive') {
-    analysis = '本次作答样本不足，或演示题出现明显误读，结果暂不确定。建议调整环境光线后重新检测，确保每题都看清再作答。';
+    analysis = t(lang, 'analysis.inconclusive');
   } else {
-    const t = type ? TYPE_TEXT[type] : '色觉异常';
-    const s = severity ? SEVERITY_TEXT[severity] : '';
+    const tt = type ? uiText.type(type, lang) : t(lang, 'analysis.genericType');
+    const s = severity ? uiText.severity(severity, lang) : '';
     const isBlindness = type && type.endsWith('opia');
-    const clarify = isBlindness
-      ? '需注意：色盲与色弱性质不同，本次属「色盲」范畴。'
-      : '需注意：色弱（异常三色视觉）与色盲（二色视觉）不同，法规通常仅限制色盲，色弱一般不影响驾驶资格，但以体检机构结论为准。';
-    analysis = `你的结果提示${t}${s ? `（${s}）` : ''}。在转换题与分类题中，部分答案与${t}的典型表现一致；消失题中也有数字难以辨认的情况。这可能影响对红/绿相关色彩的区分，建议在职业选择与日常安全场景中多加留意。${clarify}`;
+    const clarify = isBlindness ? t(lang, 'analysis.clarifyBlind') : t(lang, 'analysis.clarifyWeak');
+    analysis = t(lang, 'analysis.abnormal', { t: tt, s, clarify });
   }
-  return { analysis: `${uiText.mode(mode)} · ${analysis}`, confidenceNote: note };
+  return { analysis: `${uiText.mode(mode, lang)} · ${analysis}`, confidenceNote: note };
 }
 
 export function computeResult(
   answers: AnswerRecord[],
   questions: Question[],
-  opts: { testMode: TestMode; startedAt: number; endedAt: number; device: string; scene?: import('./types').Scene },
+  opts: { testMode: TestMode; startedAt: number; endedAt: number; device: string; scene?: import('./types').Scene; lang?: Lang },
 ): TestResult {
-  const ishihara = scoreIshihara(answers, questions);
-  const { analysis, confidenceNote } = buildAnalysis(ishihara, opts.testMode);
+  const ishihara = scoreIshihara(answers, questions, opts.lang ?? 'zh');
+  const { analysis, confidenceNote } = buildAnalysis(ishihara, opts.testMode, opts.lang ?? 'zh');
   return {
     id: typeof crypto !== 'undefined' && 'randomUUID' in crypto ? crypto.randomUUID() : `cc-${Date.now()}`,
     schema: 'cc.result/v1',
-    version: '1.0.0',
+    version: '1.9.0', // 结果结构版本；解析方应对未知字段保持兼容（向后兼容）
     createdAt: new Date(opts.endedAt).toISOString(),
     testMode: opts.testMode,
     overall: ishihara.overall,
