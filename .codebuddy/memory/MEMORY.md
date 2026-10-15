@@ -13,7 +13,8 @@
 - **v1.5.1 起接入 Google Analytics 4**：衡量 ID `G-0F9QWS1PDX`，单一来源 `lib/analytics.ts`（`NEXT_PUBLIC_GA_ID` 可覆盖，置空即停用；**仅生产环境加载**）；`components/analytics/GoogleAnalytics.tsx` 为客户端组件（`next/script` afterInteractive 注入 gtag.js，`usePathname` 变化补报 page_view），挂载于 `app/layout.tsx` body 首位；`trackEvent` 已预留但未埋点——检测内容/判读结果一律不上报。
 - **v1.7.9 已收敛待办（纯前端可落地项）**：C7 PWA、C4 儿童模式、C6 轻量 i18n、C3 服务端匿名事件上报，均已完成并归档见 `docs/tasks-done.md`。
 - **v1.8.0 本地优先替代（2026-10-14，C1/C2/C5/C8 全部完成）**：经产品决策，原「服务端账号+数据库」阻塞项改以纯前端本地优先方式落地，符合隐私定位——① 本地多档案 `lib/profile.ts` + `components/history/ProfileSwitcher.tsx`，`TestResult.profileId` 由 `saveResult` 自动归属当前档案，历史页按档案筛选（C1/C8 替代）；② 历史导出/导入 `lib/export-import.ts`（JSON 包按 id 合并，档案冲突保留本地、结果冲突保留较新）（C2 替代）；③ 批量检测 `/test/batch` 录入名单→逐人标准检测→汇总 CSV 导出（C5 替代）。任务文档 `docs/TASKS.md` 全部标注完成，`docs/tasks-done.md` §三 归档实现摘要。类型检查与 52 项 Vitest 全绿。
-- **v1.8.1 对抗式审查整改（2026-10-14，用户会话间隙自行提交）**：D-15 判读不再输出不可达 protan；路径追踪 `pathOverlap`→`pathF1`（实为 F1 非 IoU）+ 弧长等距重采样；结果结构 version 对齐 1.8.1；隐私页如实披露第一方上报与 GA4 及未成年条款；「置信度」改为「判读稳定性（内部估计）」。v1.8.2（2026-10-15）为任务文档同步（修正 TASKS.md 过时头部与章节引用）。
+- **v1.8.1 对抗式审查整改（2026-10-14，用户会话间隙自行提交）**：D-15 判读不再输出不可达 protan；路径追踪 `pathOverlap`→`pathF1`（实为 F1 非 IoU）+ 弧长等距重采样；结果结构 version 对齐 1.8.1；隐私页如实披露第一方上报与 GA4 及未成年条款；「置信度」改为「判读稳定性（内部估计）」。
+- **v1.8.2 更新日期展示 + 任务文档同步（2026-10-15）**：用户会话间隙发布页脚「更新于 {日期}」功能——`lib/site.ts` 的 `SITE_UPDATED` 为更新日期唯一来源，`components/layout/Footer.tsx` 展示 `v{version} · 更新于 {SITE_UPDATED}`；README「当前项目版本」与 SPEC §0 实现状态修正；本会话（grilling 驱动）完成 `docs/TASKS.md` 过时头部修正与 `docs/tasks-done.md` §四→§三 引用修正，折叠进同一 1.8.2 发布。
 - 色相排列模块（v1.2 已实现）架构：`lib/questions/hue-arrangement.ts`（D15 sRGB 15 卡 + `shuffledOrder` mulberry32 确定性打乱，初始种子 20260905 防 SSR 闪烁）；评分 `lib/hue-scoring.ts`（TES：seq=[0,...order,14]，首末权重1/中间2，max(0,d-1)×权重；<20 正常/20-40 轻度/>40 明显；偏差方向 min(卡号)≤5→tritan 否则默认 deutan，注明不足以临床分型）；交互 `HueArrangementGrid`（点击选中+交换，v1.7.6 修复 listbox ARIA 误用改 group+aria-pressed）；**测试中不显示实时 TES**（防用户凑分，原型演示有显示但正式应用刻意去掉）。
 - 路径追踪模块（v1.1 已实现）架构：题库 `lib/questions/path-tracking.ts`（3 题，kind 0/1/2，复用 `standardPath`）；渲染用 `lib/ishihara.ts` 的 `buildPathField`（离屏 canvas 缓存于 `PathTrackingCanvas`）；评分 `lib/path-scoring.ts`（`pathOverlap` IoU 重采样 80 点 + TOL 0.07，`computePathResult`；v1.7.6 PathTrackingCanvas 指针移动加 rAF 节流）；`TestResult.ishihara` 改为可选、`pathTracking?: PathTrackingResult[]` 新增；结果页/摘要/导出/历史均按测试类型守卫渲染。
 - 数据/算法权威来源：应用侧 `lib/questions.ts`(38题) `lib/scoring.ts` `lib/ishihara.ts` `lib/hue-scoring.ts` `lib/path-scoring.ts` `lib/signal-scoring.ts` `lib/advanced-scoring.ts`；原型 `prototype/` v0.1.2 已反向对齐应用判读（wrongRate 阈值/IoU/色相轴启发式），仅作设计验证参考。
@@ -24,6 +25,9 @@
 - 文档治理教训：分册（ARCHITECTURE/DATA-SPEC/PRD/PRIVACY）的「规划蓝图」结构树/存储规范/上报功能须明确标注 v1.0 实际与后续版本边界，否则会与 SPEC/代码矛盾。分册头注释保持各自文档版，不随项目版本刷写；本次 v1.7.8 仅同步 SPEC 总纲与 README/VERSION/package.json/CHANGELOG，分册实现状态声明仍停留在 v1.2/v1.3，待后续按需对齐。
 - **趣味性设计（2026-09-05，SPEC §3.5 原型已验证）**：4 红线——答题中永不显示对错（判读数据污染）、无积分/排行榜（刷分毁效度）、无障碍零豁免（5 种色觉模拟 + reduced-motion）、称号去污名化（旅人隐喻，本机展示可关闭）；明确不做复测提醒等留存钩子（成人色觉稳定）。7 功能：进度点阵仪式感（每8题脉冲）、章末轻科普过渡（题型分3章）、中性提交反馈「✓已记录」恒开、Canvas 分享卡（`sharecard-canvas.ts` 零依赖 PNG 导出）、换一双眼睛（复用 `CC.renderPlate` 的 cvd 参数）、三轴互动科普、「趣味体验」总开关（`cc.funMode`，默认开）。
 - 原型 `ishihara.js` 坑：`CVD_MATRIX` 键名为 protanopia/deuteranopia/tritanopia/achromatopsia，**不是** protan/deutan/tritan/mono——键名写错会静默回退正常视觉不报错。
+- **页脚版本+更新日期（v1.8.2 起）**：应用页脚（`components/layout/Footer.tsx`）展示 `v{pkg.version} · 更新于 {SITE_UPDATED}`，更新日期唯一来源为 `lib/site.ts` 的 `SITE_UPDATED` 常量（发版时同步改）；原型侧 5 处（产品页脚 screens-main.js / prototype.html 外壳徽标 / 三规范页 docs-ver）为硬编码字符串，改版需手工同步。
+- **版本展示漂移教训（v1.8.2 修复）**：README「当前项目版本」与 SPEC §0「当前版本」曾停在 v1.7.9/v1.7.8 未随 1.8.0/1.8.1 同步；版本 bump 清单必须显式覆盖 README 实现状态行 + SPEC §0 注释 + 页脚/原型展示位，不能只改 VERSION/package.json/CHANGELOG。
+- **当前状态（2026-10-15）**：项目 v1.8.2；原型 prototype.html v0.1.3（已反向对齐应用判读，题库 38 题）。
 
 ## 跨项目通用（沿用）
 - 源文件单文件 >200 行须按职责拆分（仅代码文件，文档不拆）。
