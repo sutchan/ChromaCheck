@@ -408,7 +408,7 @@ cc.progress.v1     # 进行中的检测进度（模式 / 题号 / 答题记录 /
 | 方法 | 路径 | 说明 | 认证 |
 |------|------|------|------|
 | GET | `/api/health` | 健康检查 | 否 |
-| POST | `/api/analytics/event` | 匿名事件上报（需用户同意） | 否 |
+| POST | `/api/analytics/event` | 匿名事件上报（v1.9.0 已移除，不再提供服务） | 否 |
 | GET | `/api/questions/version` | 题库版本查询（用于客户端更新判断） | 否 |
 | GET | `/api/questions/:type` | 获取题库数据（远期，支持远程更新） | 否 |
 
@@ -416,6 +416,7 @@ cc.progress.v1     # 进行中的检测进度（模式 / 题号 / 答题记录 /
 
 ```typescript
 // POST /api/analytics/event —— 字段以 docs/API.md §3.2 与 docs/SPEC.md §5.6 为权威
+// v1.9.0 已移除：该端点不再存在，以下保留作历史设计记录
 interface AnalyticsEvent {
   eventId: string;          // 事件唯一 ID
   event: 'page_view' | 'cta_click' | 'answer_submit' | 'test_complete'

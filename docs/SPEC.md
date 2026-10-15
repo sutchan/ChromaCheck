@@ -253,6 +253,9 @@ type TestMode = 'quick' | 'standard' | 'advanced';  // advanced（进阶联合�
 **决议**：DATA-SPEC §4/§5 引用的 `ColorDeficiencyType`/`OverallResult`/`SeverityLevel` 在此统一定义，分册不得另起别名。（代码实现别名为 `DeficiencyType`/`Overall`/`Severity`，语义一致，分册以本文类型为准）。
 
 ### 5.6 分析事件 `AnalyticsEvent`（以 API §3.2 为准，含 `eventId`）
+
+> **v1.9.0 起已废止**：`/api/analytics/event` 路由与 `lib/analytics.ts` 的 `reportServerEvent()` 已删除——该端点自 v1.7.9 落地起从未被任何组件调用（死代码），且与"不上传服务器"的隐私承诺存在披露冲突。删除后应用除 Google Analytics 4 外无任何服务端数据上报。本节保留作历史设计记录。
+
 ```ts
 type AnalyticsEventName =
   | 'page_view' | 'cta_click' | 'answer_submit' | 'test_complete'

@@ -114,9 +114,11 @@ curl https://chromacheck.example.com/api/health
 
 ---
 
-### 3.2 匿名事件上报
+### 3.2 匿名事件上报（已于 v1.9.0 移除）
 
-#### POST `/analytics/event`
+> **v1.9.0 起废止**：`POST /api/analytics/event` 路由与客户端 `reportServerEvent()` 已删除，应用不再向服务端上报任何检测事件，仅保留 Google Analytics 4 匿名访问统计。以下内容保留作历史设计记录，不再对外提供服务。
+
+#### POST `/analytics/event`（已移除）
 
 上报匿名使用事件，用于产品数据统计。**仅在用户明确同意的情况下**，客户端才会调用此接口。
 

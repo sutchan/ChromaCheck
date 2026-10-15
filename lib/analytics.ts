@@ -1,5 +1,5 @@
 // lib/analytics.ts — Google Analytics 4 接入配置与上报辅助（单一来源）
-// chromacheck v1.7.9
+// chromacheck v1.9.0
 
 /**
  * GA4 衡量 ID 的唯一来源。
@@ -31,30 +31,3 @@ export function pageview(path: string): void {
     page_title: document.title,
   });
 }
-
-/** 事件名白名单（与 app/api/analytics/event 服务端保持一致） */
-export type AnalyticsEventName =
-  | 'test_start'
-  | 'test_complete'
-  | 'share'
-  | 'download'
-  | 'learn_view'
-  | 'export';
-
-/**
- * 匿名事件上报至服务端 `/api/analytics/event`（C3）。
- * 仅含事件名 / 测试类型 / 时长 / 结果摘要，不含答题内容与身份信息；失败静默，不影响主流程。
- */
-export function reportServerEvent(
-  event: AnalyticsEventName,
-  params?: { testType?: string; durationMs?: number; resultSummary?: string },
-): void {
-  if (typeof fetch !== 'function') return;
-  void fetch('/api/analytics/event', {
-    method: 'POST',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ event, ...params }),
-    keepalive: true,
-  }).catch(() => undefined);
-}
-

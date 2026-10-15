@@ -1,4 +1,4 @@
-// next.config.mjs v1.7.6
+// next.config.mjs v1.9.0
 /** @type {import('next').NextConfig} */
 
 // 安全响应头（docs/ARCHITECTURE.md §6.2）：
@@ -13,11 +13,14 @@ const csp = [
   "object-src 'none'",
   "base-uri 'self'",
   "form-action 'self'",
-  "frame-ancestors *",
+  // 仅允许本站嵌入，杜绝点击劫持（v1.9.0：由 * 收紧为 'self'）
+  "frame-ancestors 'self'",
 ].join('; ');
 
 const securityHeaders = [
   { key: 'Content-Security-Policy', value: csp },
+  // 旧浏览器兜底：与现代浏览器以 frame-ancestors 为准，两者不冲突
+  { key: 'X-Frame-Options', value: 'SAMEORIGIN' },
   { key: 'X-Content-Type-Options', value: 'nosniff' },
   { key: 'Referrer-Policy', value: 'strict-origin-when-cross-origin' },
   { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
