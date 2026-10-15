@@ -1,8 +1,9 @@
 // components/layout/Footer.tsx — 页脚
-// chromacheck v1.7.7
+// chromacheck v1.8.2
 import React from 'react';
 import Link from 'next/link';
 import pkg from '../../package.json';
+import { SITE_UPDATED } from '../../lib/site';
 
 export function Footer() {
   return (
@@ -26,8 +27,8 @@ export function Footer() {
           </div>
         </div>
         <div className="muted" style={{ fontSize: '0.82rem', borderTop: '1px solid var(--border)', paddingTop: 'var(--s-4)' }}>
-          {/* 版本号直读 package.json，避免展示版本与实际发布版本脱节 */}
-          © {new Date().getFullYear()} ChromaCheck · v{pkg.version} · 仅供教育与筛查用途
+          {/* 版本号直读 package.json，避免展示版本与实际发布版本脱节；更新日期唯一来源为 lib/site.ts 的 SITE_UPDATED */}
+          © {new Date().getFullYear()} ChromaCheck · v{pkg.version} · 更新于 {SITE_UPDATED} · 仅供教育与筛查用途
         </div>
       </div>
     </footer>

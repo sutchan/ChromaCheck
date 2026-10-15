@@ -1,6 +1,6 @@
 'use client';
 // components/test/ChildFlow.tsx — 儿童模式：页面文案 + 答题 → 判读 → 本地保存 → 跳转结果页
-// chromacheck v1.8.1
+// chromacheck v1.8.2
 import React, { useCallback, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -29,7 +29,7 @@ export function ChildFlow() {
             ? crypto.randomUUID()
             : `cc-${endedAt}`,
         schema: 'cc.result/v1',
-        version: '1.8.1', // 结果结构版本；解析方应对未知字段保持兼容（向后兼容）
+        version: '1.8.2', // 结果结构版本；解析方应对未知字段保持兼容（向后兼容）
         createdAt: new Date(endedAt).toISOString(),
         testMode: 'child',
         overall: child.overall,

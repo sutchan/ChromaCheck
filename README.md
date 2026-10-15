@@ -2,7 +2,7 @@
 
 > 一眼辨色，科学筛查 — 在线色觉检测 Web 应用
 
-> **实现状态**：v1.0 已实现（Next.js 14 应用 + 石原氏检测 + 结果/历史/科普/隐私）；路径追踪已于 v1.1 实现，色相排列（D15）已于 v1.2 实现，进阶联合判读（advanced）已于 v1.3 实现，趣味性体验包（进度点阵/章末科普/分享卡/换一双眼睛/三轴科普/旅人称号）已于 v1.4 实现。权威规范见 [docs/SPEC.md](docs/SPEC.md)。当前项目版本 **v1.7.9**（见 `VERSION`）；38 板完整石原氏图谱已于 v1.5 实现，Google Analytics 匿名访问统计已于 v1.5.1 接入，SEO/GEO（sitemap/robots/结构化数据/llms.txt/社交图）已于 v1.6.0 完善；驾驶员场景色觉检测改进已于 v1.7.0 实现；服务端匿名事件上报（C3）、儿童模式（C4）、轻量 i18n（C6，核心页面中英双语）、PWA 支持（C7：manifest + service worker + 离线兜底）已于 v1.7.9 实现（详见 [docs/TASKS.md](docs/TASKS.md) 与 [docs/tasks-done.md](docs/tasks-done.md)）。
+> **实现状态**：v1.0 已实现（Next.js 14 应用 + 石原氏检测 + 结果/历史/科普/隐私）；路径追踪已于 v1.1 实现，色相排列（D15）已于 v1.2 实现，进阶联合判读（advanced）已于 v1.3 实现，趣味性体验包（进度点阵/章末科普/分享卡/换一双眼睛/三轴科普/旅人称号）已于 v1.4 实现。权威规范见 [docs/SPEC.md](docs/SPEC.md)。当前项目版本 **v1.8.2**（见 `VERSION`）；38 板完整石原氏图谱已于 v1.5 实现，Google Analytics 匿名访问统计已于 v1.5.1 接入，SEO/GEO（sitemap/robots/结构化数据/llms.txt/社交图）已于 v1.6.0 完善；驾驶员场景色觉检测改进已于 v1.7.0 实现；服务端匿名事件上报（C3）、儿童模式（C4）、轻量 i18n（C6，核心页面中英双语）、PWA 支持（C7：manifest + service worker + 离线兜底）已于 v1.7.9 实现（详见 [docs/TASKS.md](docs/TASKS.md) 与 [docs/tasks-done.md](docs/tasks-done.md)）。
 
 [![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)

@@ -1,6 +1,6 @@
-<!-- docs/SPEC.md v1.7.8 — ChromaCheck 项目规范总纲（单一事实来源） -->
+<!-- docs/SPEC.md v1.7.9 — ChromaCheck 项目规范总纲（单一事实来源） -->
 <!-- 地位：本规范为权威总纲。当与各分册（PRD/ARCHITECTURE/API/DATA-SPEC/DEPLOYMENT/TESTING/CONTRIBUTING/PRIVACY/ROADMAP）冲突时，以本规范为准。 -->
-<!-- 实现状态：Next.js 14 应用已落地——石原氏检测（38板）、路径追踪、色相排列 D15、进阶联合、信号灯专项、趣味性体验包、结果/历史/科普/隐私、GA4 匿名统计、SEO/GEO、Vitest 测试套件；原型仅作设计验证参考。当前版本 v1.7.8。 -->
+<!-- 实现状态：Next.js 14 应用已落地——石原氏检测（38板）、路径追踪、色相排列 D15、进阶联合、信号灯专项、趣味性体验包、结果/历史/科普/隐私、GA4 匿名统计、SEO/GEO、Vitest 测试套件；原型仅作设计验证参考。当前版本 v1.8.2。 -->
 
 # 色辨 ChromaCheck 项目规范（SPEC）
 

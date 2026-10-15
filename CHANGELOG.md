@@ -1,7 +1,15 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.8.1`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.8.2`）。
+
+## [1.8.2] - 2026-10-15
+
+### 变更
+- 页脚在版本号后新增「更新于 {日期}」展示：`components/layout/Footer.tsx` 读取 `lib/site.ts` 的 `SITE_UPDATED` 常量（更新日期唯一来源），格式为 `v{version} · 更新于 {SITE_UPDATED}`。
+- 静态原型同步：产品页脚、原型外壳版本徽标及三份规范页（组件库/设计系统/交互标准）版本号后均追加「更新于 2026-10-15」。
+- 修正文档版本展示漂移：README「当前项目版本」v1.7.9 → v1.8.2；SPEC §0 实现状态 v1.7.8 → v1.8.2。
+- 结果结构 `version` 字段与改动文件头注释对齐 `1.8.2`。
 
 ## [1.8.1] - 2026-10-14
 

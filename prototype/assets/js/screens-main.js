@@ -1,4 +1,4 @@
-/* prototype/assets/js/screens-main.js v0.1.3 — 视图骨架 / 首页 / 检测前指引 / 模式选择 */
+/* prototype/assets/js/screens-main.js v0.1.4 — 视图骨架 / 首页 / 检测前指引 / 模式选择 */
 window.CC = window.CC || {};
 CC.screens = CC.screens || {};
 
@@ -38,7 +38,7 @@ CC.screens = CC.screens || {};
         '<div><h5>了解</h5><ul><li data-go="learn">色觉科普</li><li data-go="history">历史记录</li><li data-act="toast" data-msg="隐私政策：数据默认仅存本地">隐私政策</li></ul></div>' +
         '<div><h5>更多</h5><ul><li data-act="toast" data-msg="意见反馈入口在实现版本中提供">意见反馈</li><li data-act="toast" data-msg="关于我们：依据 GB/T 27896-2011 设计">关于我们</li></ul></div>' +
         '</div><div class="legal"><span>© 2026 色辨 ChromaCheck · MIT License</span>' +
-        '<span>原型 v0.1.0 · 依据 GB/T 27896-2011《色盲检查图》设计</span></div></footer>';
+        '<span>原型 v0.1.0 · 更新于 2026-10-15 · 依据 GB/T 27896-2011《色盲检查图》设计</span></div></footer>';
     },
 
     page: function (active, inner) {

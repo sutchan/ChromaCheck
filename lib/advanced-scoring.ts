@@ -1,5 +1,5 @@
 // lib/advanced-scoring.ts — 进阶版三模块联合判读（v1.3）
-// chromacheck v1.8.1
+// chromacheck v1.8.2
 import type {
   AnswerRecord,
   DeficiencyType,
@@ -115,7 +115,7 @@ export function computeAdvancedResult(inputs: {
   return {
     id: typeof crypto !== 'undefined' && 'randomUUID' in crypto ? crypto.randomUUID() : `cc-${Date.now()}`,
     schema: 'cc.result/v1',
-    version: '1.8.1', // 结果结构版本；解析方应对未知字段保持兼容（向后兼容）
+    version: '1.8.2', // 结果结构版本；解析方应对未知字段保持兼容（向后兼容）
     createdAt: new Date(opts.endedAt).toISOString(),
     testMode: 'advanced',
     overall,
