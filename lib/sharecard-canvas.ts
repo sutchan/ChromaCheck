@@ -1,16 +1,29 @@
 // lib/sharecard-canvas.ts — 分享卡 Canvas 绘制原语（零依赖，移植自 prototype/sharecard.js）
-// chromacheck v1.7.2
+// chromacheck v1.9.0
 import type { Overall } from './types';
+import { t, type DictKey, type Lang } from './i18n';
 
 export const W = 720;
 export const H = 960;
 
-export const VERDICT: Record<Overall, [string, string]> = {
-  normal: ['#0e8a99', '色觉正常'],
-  suspected_deficiency: ['#e8a03c', '疑似色弱'],
-  suspected_blindness: ['#f08b84', '疑似色盲'],
-  inconclusive: ['#7c8798', '结果不确定'],
+const VERDICT_COLOR: Record<Overall, string> = {
+  normal: '#0e8a99',
+  suspected_deficiency: '#e8a03c',
+  suspected_blindness: '#f08b84',
+  inconclusive: '#7c8798',
 };
+
+const VERDICT_KEY: Record<Overall, DictKey> = {
+  normal: 'canvas.overallNormal',
+  suspected_deficiency: 'canvas.overallWeak',
+  suspected_blindness: 'canvas.overallBlind',
+  inconclusive: 'canvas.overallInconclusive',
+};
+
+/** 判定标签：[颜色, 文案]；文案随语言变化 */
+export function verdict(overall: Overall, lang: Lang = 'zh'): [string, string] {
+  return [VERDICT_COLOR[overall], t(lang, VERDICT_KEY[overall])];
+}
 
 export function wrapText(ctx: CanvasRenderingContext2D, text: string, x: number, y: number, maxW: number, lh: number): number {
   let line = '';

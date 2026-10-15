@@ -10,6 +10,7 @@ import { buildExport, downloadExport, parseImport, mergeImport, downloadSummaryC
 import { uiText } from '@/lib/scoring';
 import { formatDate } from '@/lib/format';
 import type { Overall, TestResult } from '@/lib/types';
+import type { Lang } from '@/lib/i18n';
 import { Icon } from '@/components/common/Icon';
 import { Callout } from '@/components/common/Callout';
 import { ProfileSwitcher } from '@/components/history/ProfileSwitcher';
@@ -22,12 +23,12 @@ const TONE: Record<Overall, string> = {
   inconclusive: 'chip-warn',
 };
 
-function profileOf(r: TestResult): string {
-  return getProfileName(r.profileId ?? getDefaultProfile().id);
+function profileOf(r: TestResult, lang: Lang): string {
+  return getProfileName(r.profileId ?? getDefaultProfile(lang).id, lang);
 }
 
 export default function HistoryPage() {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const [items, setItems] = useState<TestResult[]>([]);
   const [activeId, setActiveId] = useState<string>('__all__');
   const [loaded, setLoaded] = useState(false);
@@ -60,7 +61,7 @@ export default function HistoryPage() {
   }
 
   function handleSummary() {
-    downloadSummaryCsv();
+    downloadSummaryCsv(undefined, lang);
   }
 
   async function handleImportFile(e: React.ChangeEvent<HTMLInputElement>) {
@@ -69,7 +70,7 @@ export default function HistoryPage() {
     if (!file) return;
     try {
       const text = await file.text();
-      const parsed = parseImport(text);
+      const parsed = parseImport(text, lang);
       if (!parsed.ok || !parsed.bundle) {
         setNotice(t('history.importError') + (parsed.error ?? ''));
         return;
@@ -78,7 +79,7 @@ export default function HistoryPage() {
       reload();
       setNotice(t('history.importDone', { a: sum.addedResults, p: sum.addedProfiles }));
     } catch {
-      setNotice(t('history.importError') + '读取文件失败');
+      setNotice(t('history.importError') + t('history.readFail'));
     }
   }
 
@@ -89,7 +90,7 @@ export default function HistoryPage() {
           <div className="stack" style={{ gap: 4 }}>
             <h1 style={{ margin: 0 }}>{t('nav.history')}</h1>
             <span className="muted" style={{ fontSize: '0.9rem' }}>
-              仅保存于本设备浏览器，最多保留最近 30 次。
+              {t('history.localOnly')}
             </span>
           </div>
           <div className="row" style={{ gap: 'var(--s-2)', flexWrap: 'wrap' }}>
@@ -114,7 +115,7 @@ export default function HistoryPage() {
                 style={{ fontSize: '0.85rem' }}
                 onClick={() => setConfirming(true)}
               >
-                <Icon name="trash" size={16} /> 清空
+                <Icon name="trash" size={16} /> {t('history.clear')}
               </button>
             )}
           </div>
@@ -130,8 +131,8 @@ export default function HistoryPage() {
       ) : items.length === 0 ? (
         <div className="card stack" style={{ alignItems: 'center', textAlign: 'center', gap: 'var(--s-3)' }}>
           <Icon name="history" size={36} />
-          <p className="muted" style={{ margin: 0 }}>还没有检测记录。完成一次检测后，结果会显示在这里。</p>
-          <Link href="/test" className="btn btn-primary">开始第一次检测</Link>
+          <p className="muted" style={{ margin: 0 }}>{t('history.empty')}</p>
+          <Link href="/test" className="btn btn-primary">{t('history.firstTest')}</Link>
         </div>
       ) : (
         <div className="stack" style={{ gap: 'var(--s-3)' }}>
@@ -143,22 +144,22 @@ export default function HistoryPage() {
             >
               <Link href={`/result/${r.id}`} className="stack" style={{ gap: 4, flex: 1, minWidth: 220, color: 'var(--fg)' }}>
                 <div className="row" style={{ gap: 'var(--s-2)', flexWrap: 'wrap' }}>
-                  <span className={`chip ${TONE[r.overall]}`}>{uiText.overall(r.overall)}</span>
+                  <span className={`chip ${TONE[r.overall]}`}>{uiText.overall(r.overall, lang)}</span>
                   <span className="chip">
                     {r.ishihara && r.pathTracking && r.hueArrangement
-                      ? '进阶联合'
+                      ? t('history.tagAdvanced')
                       : r.hueArrangement
-                        ? '色相排列'
+                        ? t('history.tagHue')
                         : r.pathTracking
-                          ? '路径追踪'
-                          : '石原氏'}
+                          ? t('history.tagPath')
+                          : t('history.tagIshihara')}
                   </span>
-                  {r.type && <span className="chip">{uiText.type(r.type)}</span>}
-                  <span className="chip">置信度 {r.confidence}%</span>
-                  {activeId === '__all__' && <span className="chip">{profileOf(r)}</span>}
+                  {r.type && <span className="chip">{uiText.type(r.type, lang)}</span>}
+                  <span className="chip">{t('history.stabilityChip', { p: r.confidence })}</span>
+                  {activeId === '__all__' && <span className="chip">{profileOf(r, lang)}</span>}
                 </div>
                 <span className="muted" style={{ fontSize: '0.85rem' }}>
-                  {formatDate(r.createdAt)} · {uiText.mode(r.testMode)}
+                  {formatDate(r.createdAt)} · {uiText.mode(r.testMode, lang)}
                 </span>
               </Link>
               <button
@@ -166,7 +167,7 @@ export default function HistoryPage() {
                 className="btn btn-ghost"
                 style={{ height: 38, fontSize: '0.85rem' }}
                 onClick={() => remove(r.id)}
-                aria-label="删除该记录"
+                aria-label={t('history.deleteAria')}
               >
                 <Icon name="trash" size={16} />
               </button>
@@ -177,7 +178,7 @@ export default function HistoryPage() {
 
       {confirming && (
         <div className="row" style={{ gap: 'var(--s-2)', flexWrap: 'wrap', alignItems: 'center' }}>
-          <span className="muted" style={{ fontSize: '0.85rem' }}>确定清空全部历史记录？</span>
+          <span className="muted" style={{ fontSize: '0.85rem' }}>{t('history.clearConfirm')}</span>
           <button
             type="button"
             className="btn btn-primary"
@@ -188,10 +189,10 @@ export default function HistoryPage() {
               setConfirming(false);
             }}
           >
-            确认清空
+            {t('history.clearOk')}
           </button>
           <button type="button" className="btn btn-ghost" style={{ fontSize: '0.85rem' }} onClick={() => setConfirming(false)}>
-            取消
+            {t('history.cancel')}
           </button>
         </div>
       )}
@@ -204,7 +205,7 @@ export default function HistoryPage() {
         onChange={handleImportFile}
       />
 
-      <Callout icon="shield">历史记录不会上传服务器，完全保存在你的浏览器本地。清除浏览器数据或更换设备后记录将不可恢复；可随时导出备份或导入到其他设备。</Callout>
+      <Callout icon="shield">{t('history.privacyCallout')}</Callout>
     </div>
   );
 }

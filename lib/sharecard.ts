@@ -5,7 +5,7 @@ import { getQuestion } from './questions';
 import { uiText } from './scoring';
 import { funTitle, loc } from './fun';
 import { t, type Lang } from './i18n';
-import { W, H, VERDICT, wrapText, drawRadar } from './sharecard-canvas';
+import { W, H, verdict, wrapText, drawRadar } from './sharecard-canvas';
 
 /** 六轴雷达值：三轴维度 + 转换/分类题错误率 + 消失题错误率 + 综合轴 */
 export function computeRadar(ish: IshiharaResult, answers: AnswerRecord[], lang: Lang = 'zh'): { values: number[]; labels: string[] } {
@@ -68,7 +68,7 @@ export function drawShareCard(canvas: HTMLCanvasElement, input: ShareCardInput):
   canvas.height = H;
   const ctx = canvas.getContext('2d');
   if (!ctx) return;
-  const v = VERDICT[ish.overall] ?? VERDICT.inconclusive;
+  const v = verdict(ish.overall, lang);
   const color = v[0];
   const title = funTitle(type, overall, funMode);
 
@@ -122,7 +122,7 @@ export function drawShareCard(canvas: HTMLCanvasElement, input: ShareCardInput):
   // 雷达
   ctx.fillStyle = 'rgba(255,255,255,0.55)';
   ctx.font = '600 14px "IBM Plex Mono", monospace';
-  ctx.fillText('COLOR VISION PROFILE / 色觉画像', 52, y + 34);
+  ctx.fillText(t(lang, 'share.profileTitle'), 52, y + 34);
   drawRadar(ctx, radarValues, radarLabels, W / 2, y + 250, 150, color);
 
   // 三轴数值条

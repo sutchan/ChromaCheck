@@ -1,16 +1,21 @@
-// app/not-found.tsx — 404
-// chromacheck v1.7.0
+// app/not-found.tsx — 404（客户端，双语）
+// chromacheck v1.9.0
+'use client';
+
 import React from 'react';
 import Link from 'next/link';
 import { Icon } from '@/components/common/Icon';
+import { useLang } from '@/components/layout/LangProvider';
 
 export default function NotFound() {
+  const { t } = useLang();
+
   return (
-    <div className="wrap stack" style={{ paddingBlock: 'var(--s-8)', alignItems: 'center', textAlign: 'center', gap: 'var(--s-3)' }}>
+    <div id="not-found-page" className="wrap stack" style={{ paddingBlock: 'var(--s-8)', alignItems: 'center', textAlign: 'center', gap: 'var(--s-3)' }}>
       <Icon name="alert" size={40} />
-      <h1 style={{ margin: 0 }}>页面走丢了</h1>
-      <p className="muted">你访问的页面不存在或已被移动。</p>
-      <Link href="/" className="btn btn-primary">返回首页</Link>
+      <h1 style={{ margin: 0 }}>{t('notFound.title')}</h1>
+      <p className="muted">{t('notFound.desc')}</p>
+      <Link href="/" className="btn btn-primary">{t('notFound.home')}</Link>
     </div>
   );
 }

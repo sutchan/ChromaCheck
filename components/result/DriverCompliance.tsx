@@ -21,8 +21,8 @@ const VERDICT_ICON: Record<LicenseVerdict, string> = {
 };
 
 export function DriverCompliance({ result }: { result: TestResult }) {
-  const { t } = useLang();
-  const ref = mapToLicense(result);
+  const { t, lang } = useLang();
+  const ref = mapToLicense(result, lang);
 
   return (
     <section id="driver-compliance" className="card stack" style={{ gap: 'var(--s-3)', borderColor: 'var(--brand)' }}>

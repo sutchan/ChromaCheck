@@ -58,7 +58,7 @@ export function ResultSummary({ result }: { result: TestResult }) {
         </div>
         <div className="card" style={{ padding: 'var(--s-4)', boxShadow: 'none', background: 'var(--bg-sunken)' }}>
           <div className="stat-k">{t('result.duration')}</div>
-          <div className="stat-v" style={{ fontSize: '1.2rem' }}>{formatDuration(durationMs)}</div>
+          <div className="stat-v" style={{ fontSize: '1.2rem' }}>{formatDuration(durationMs, lang)}</div>
         </div>
         <div className="card" style={{ padding: 'var(--s-4)', boxShadow: 'none', background: 'var(--bg-sunken)' }}>
           <div className="stat-k">{t('result.device')}</div>

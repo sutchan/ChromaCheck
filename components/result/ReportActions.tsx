@@ -36,7 +36,7 @@ export function ReportActions({ result, plain = false }: { result: TestResult; p
   }
 
   function exportPng() {
-    const c = drawReport(result);
+    const c = drawReport(result, lang);
     const url = c.toDataURL('image/png');
     const a = document.createElement('a');
     a.href = url;

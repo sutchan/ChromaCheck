@@ -40,7 +40,7 @@ export function ProfileSwitcher({
   current: string;
   onChange: (id: string) => void;
 }) {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const [mounted, setMounted] = useState(false);
   const [profiles, setProfiles] = useState<Profile[]>([]);
   const [managing, setManaging] = useState(false);
@@ -62,7 +62,7 @@ export function ProfileSwitcher({
   }
 
   function add() {
-    const p = addProfile({ name, relation });
+    const p = addProfile({ name, relation }, lang);
     setName('');
     setRelation('');
     refresh();

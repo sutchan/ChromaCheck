@@ -50,7 +50,7 @@ export function HueArrangementGrid({
 
       {/* 原生 button 天然键盘可用；用 group + aria-pressed 表达选中态，避免未实现键盘模式的 listbox 误用 */}
       <div className="row" id="hue-grid" role="group" aria-label={t('test.hueGroupAria')} style={{ gap: 'var(--s-2)', flexWrap: 'wrap', alignItems: 'stretch' }}>
-        <FixedCard color={fixedLeft} position={t('test.hueFixedLeft')} />
+        <FixedCard color={fixedLeft} label={t('test.hueFixedRef', { pos: t('test.hueFixedLeft') })} />
         {order.map((capId, slot) => (
           <button
             type="button"
@@ -78,7 +78,7 @@ export function HueArrangementGrid({
             </span>
           </button>
         ))}
-        <FixedCard color={fixedRight} position={t('test.hueFixedRight')} />
+        <FixedCard color={fixedRight} label={t('test.hueFixedRef', { pos: t('test.hueFixedRight') })} />
       </div>
 
       <div className="row" style={{ gap: 'var(--s-3)', flexWrap: 'wrap' }}>
@@ -96,11 +96,11 @@ export function HueArrangementGrid({
   );
 }
 
-function FixedCard({ color, position }: { color: string; position: string }) {
+function FixedCard({ color, label }: { color: string; label: string }) {
   return (
     <div className="stack" aria-hidden style={{ gap: 4, padding: 6, alignItems: 'center', opacity: 0.85 }}>
       <span style={{ width: 46, height: 46, borderRadius: '50%', background: color, boxShadow: 'var(--sh-1)' }} />
-      <span className="muted" style={{ fontSize: '0.72rem' }}>{position}参考</span>
+      <span className="muted" style={{ fontSize: '0.72rem' }}>{label}</span>
     </div>
   );
 }

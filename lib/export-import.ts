@@ -1,9 +1,10 @@
 // lib/export-import.ts — 历史导出 / 导入（本地优先，JSON 包），含冲突合并与汇总 CSV
-// chromacheck v1.8.0
+// chromacheck v1.9.0
 import type { Profile, TestResult } from './types';
 import { listProfiles, saveAllProfiles, getDefaultProfile } from './profile';
 import { listResults, saveAllResults } from './storage';
 import { uiText } from './scoring';
+import { t, type Lang } from './i18n';
 
 export interface ExportBundle {
   app: 'ChromaCheck';
@@ -49,15 +50,15 @@ export interface ImportResult {
   bundle?: ExportBundle;
 }
 
-export function parseImport(text: string): ImportResult {
+export function parseImport(text: string, lang: Lang = 'zh'): ImportResult {
   try {
     const data = JSON.parse(text) as Partial<ExportBundle>;
     if (data?.app !== 'ChromaCheck' || !Array.isArray(data.results)) {
-      return { ok: false, error: '文件格式不正确（非 ChromaCheck 导出文件）' };
+      return { ok: false, error: t(lang, 'history.errBadFormat') };
     }
     return { ok: true, bundle: data as ExportBundle };
   } catch {
-    return { ok: false, error: '无法解析文件（JSON 损坏）' };
+    return { ok: false, error: t(lang, 'history.errBadJson') };
   }
 }
 
@@ -107,11 +108,20 @@ function csvCell(value: string): string {
   return value;
 }
 
-/** 批量汇总 CSV：按档案分组，每人取最新一条结果 */
-export function buildSummaryCsv(): string {
+/** 批量汇总 CSV：按档案分组，每人取最新一条结果；lang 缺省为中文 */
+export function buildSummaryCsv(lang: Lang = 'zh'): string {
   const profiles = listProfiles();
   const results = listResults();
-  const header = ['姓名', '关系', '结论', '类型', '置信度', '检测模式', '检测时间', '记录ID'];
+  const header = [
+    t(lang, 'csv.name'),
+    t(lang, 'csv.relation'),
+    t(lang, 'csv.verdict'),
+    t(lang, 'csv.type'),
+    t(lang, 'csv.stability'),
+    t(lang, 'csv.mode'),
+    t(lang, 'csv.date'),
+    t(lang, 'csv.id'),
+  ];
   const rows: string[][] = [];
   for (const p of profiles) {
     const rs = results
@@ -122,10 +132,10 @@ export function buildSummaryCsv(): string {
     rows.push([
       p.name,
       p.relation ?? '',
-      uiText.overall(latest.overall),
-      latest.type ? uiText.type(latest.type) : '—',
+      uiText.overall(latest.overall, lang),
+      latest.type ? uiText.type(latest.type, lang) : '—',
       `${latest.confidence}%`,
-      uiText.mode(latest.testMode),
+      uiText.mode(latest.testMode, lang),
       latest.createdAt.slice(0, 10),
       latest.id,
     ]);
@@ -134,7 +144,7 @@ export function buildSummaryCsv(): string {
   return '﻿' + lines.join('\n'); // BOM 确保 Excel 正确识别 UTF-8
 }
 
-export function downloadSummaryCsv(filename?: string): void {
+export function downloadSummaryCsv(filename?: string, lang: Lang = 'zh'): void {
   const name = filename ?? `chromacheck-summary-${new Date().toISOString().slice(0, 10)}.csv`;
-  triggerDownload(buildSummaryCsv(), name, 'text/csv;charset=utf-8');
+  triggerDownload(buildSummaryCsv(lang), name, 'text/csv;charset=utf-8');
 }

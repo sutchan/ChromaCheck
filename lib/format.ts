@@ -1,5 +1,6 @@
 // lib/format.ts — 格式化辅助
-// chromacheck v1.0.1
+// chromacheck v1.9.0
+import { t, type Lang } from './i18n';
 
 export function formatDate(iso: string): string {
   const d = new Date(iso);
@@ -8,18 +9,28 @@ export function formatDate(iso: string): string {
   return `${d.getFullYear()}-${pad(d.getMonth() + 1)}-${pad(d.getDate())} ${pad(d.getHours())}:${pad(d.getMinutes())}`;
 }
 
-export function formatDuration(ms: number): string {
+/** 用时文案；lang 缺省为中文 */
+export function formatDuration(ms: number, lang: Lang = 'zh'): string {
   const total = Math.round(ms / 1000);
   const m = Math.floor(total / 60);
   const s = total % 60;
-  return `${m} 分 ${s.toString().padStart(2, '0')} 秒`;
+  return t(lang, 'fmt.minSec', { m, s: s.toString().padStart(2, '0') });
 }
 
-export function detectDevice(): string {
-  if (typeof navigator === 'undefined') return '未知设备';
+/** 设备串在检测完成时写入结果，故按当时语言落盘；lang 缺省为中文 */
+export function detectDevice(lang: Lang = 'zh'): string {
+  if (typeof navigator === 'undefined') return t(lang, 'fmt.unknownDevice');
   const ua = navigator.userAgent;
-  const os = /Windows/.test(ua) ? 'Windows' : /Mac OS X|Macintosh/.test(ua) ? 'macOS' : /Android/.test(ua) ? 'Android' : /iPhone|iPad|iPod/.test(ua) ? 'iOS' : '系统';
-  let browser = '浏览器';
+  const os = /Windows/.test(ua)
+    ? 'Windows'
+    : /Mac OS X|Macintosh/.test(ua)
+      ? 'macOS'
+      : /Android/.test(ua)
+        ? 'Android'
+        : /iPhone|iPad|iPod/.test(ua)
+          ? 'iOS'
+          : t(lang, 'fmt.osGeneric');
+  let browser = t(lang, 'fmt.browser');
   let ver = '';
   const m = ua.match(/(Edg|Chrome|Firefox|Safari)\/(\d+)/);
   if (m) {

@@ -53,8 +53,8 @@ export function TestSelectContent() {
 
       <Callout icon="info">
         {t('select.guideCallout')}
-        <Link href="/guide">《检测前指引》</Link>
-        ，确保光线、距离与状态都合适，结果才更可信。
+        <Link href="/guide">{t('select.guideLink')}</Link>
+        {t('select.guideTail')}
       </Callout>
 
       <div className="stack" style={{ gap: 'var(--s-3)' }}>
@@ -81,7 +81,7 @@ export function TestSelectContent() {
                 <Icon name="arrowRight" size={20} />
               </div>
               <p className="muted" style={{ margin: 0, flex: 1 }}>{t('driver.signalDesc')}</p>
-              <span className="muted" style={{ fontSize: '0.85rem' }}>约 3 分钟 · 9 题</span>
+              <span className="muted" style={{ fontSize: '0.85rem' }}>{t('driver.signalMeta')}</span>
             </div>
           </Link>
         </div>

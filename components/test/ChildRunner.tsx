@@ -1,6 +1,6 @@
 'use client';
 // components/test/ChildRunner.tsx — 儿童模式答题流程（图形选项，不显示对错）
-// chromacheck v1.7.9
+// chromacheck v1.9.0
 import React, { useMemo, useState } from 'react';
 import {
   getChildQuestions,

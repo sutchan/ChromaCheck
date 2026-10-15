@@ -33,12 +33,9 @@ export function generateMetadata({ params }: { params: { mode: string } }): Meta
 
 export default function IshiharaTestPage({
   params,
-  searchParams,
 }: {
   params: { mode: string };
-  searchParams: { scene?: string };
 }) {
   if (params.mode !== 'quick' && params.mode !== 'standard') notFound();
-  const scene = searchParams.scene === 'driver' ? 'driver' : 'general';
-  return <TestRunner mode={params.mode as TestMode} scene={scene} />;
+  return <TestRunner mode={params.mode as TestMode} />;
 }

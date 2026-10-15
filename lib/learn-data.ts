@@ -18,6 +18,8 @@ export interface Article {
   /** 分类英文（v1.9.0 国际化） */
   catEn: string;
   read: string;
+  /** 阅读时长英文（v1.9.0 国际化） */
+  readEn: string;
   hue: string;
   excerpt: string;
   /** 摘要英文（v1.9.0 国际化） */
@@ -33,6 +35,7 @@ export const ARTICLES: Article[] = [
     cat: '基础知识',
     catEn: 'Basics',
     read: '6 分钟',
+    readEn: '6 min',
     hue: '#6a7fc4',
     excerpt: '色盲是某类视锥细胞缺失，色弱是功能减弱。两者的成因、表现与生活影响差别很大。',
     excerptEn: 'Color blindness means a missing class of cone cells, while color weakness means reduced function. The two differ greatly in their causes, presentation and impact on daily life.',
@@ -50,6 +53,7 @@ export const ARTICLES: Article[] = [
     cat: '检测原理',
     catEn: 'How it works',
     read: '8 分钟',
+    readEn: '8 min',
     hue: '#c9903c',
     excerpt: '同样大小、同样明暗的色点，只靠色相差异构成数字——这是等亮度设计的巧思。',
     excerptEn: 'Dots of identical size and brightness form a number through hue differences alone — the cleverness of isoluminant design.',
@@ -66,6 +70,7 @@ export const ARTICLES: Article[] = [
     cat: '遗传规律',
     catEn: 'Inheritance',
     read: '5 分钟',
+    readEn: '5 min',
     hue: '#49b295',
     excerpt: '红绿色觉异常属于 X 连锁隐性遗传，男性患病率约为女性的 16 倍。',
     excerptEn: 'Red-green color vision deficiency follows X-linked recessive inheritance, and men are affected about 16 times as often as women.',
@@ -82,6 +87,7 @@ export const ARTICLES: Article[] = [
     cat: '职业相关',
     catEn: 'Careers',
     read: '7 分钟',
+    readEn: '7 min',
     hue: '#bb5566',
     excerpt: '梳理高考体检、驾驶证申领与部分行业的色觉要求，附官方文件依据。',
     excerptEn: 'A summary of color vision requirements in the college entrance medical examination, driver’s licence applications and selected industries, with references to official documents.',
@@ -98,6 +104,7 @@ export const ARTICLES: Article[] = [
     cat: '生活贴士',
     catEn: 'Daily tips',
     read: '5 分钟',
+    readEn: '5 min',
     hue: '#3fa8b8',
     excerpt: '从挑衣服到读图表，用标签、明度和位置替代色相，可以解决大部分困扰。',
     excerptEn: 'From choosing clothes to reading charts, replacing hue with labels, brightness and position solves most of the difficulty.',
@@ -114,6 +121,7 @@ export const ARTICLES: Article[] = [
     cat: '就医指南',
     catEn: 'When to see a doctor',
     read: '4 分钟',
+    readEn: '4 min',
     hue: '#87ad4c',
     excerpt: '在线筛查只是第一步，出现这些信号建议尽快到眼科做进一步检查。',
     excerptEn: 'Online screening is only a first step; if these signs appear, it is best to see an ophthalmologist for further testing as soon as possible.',

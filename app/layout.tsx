@@ -1,5 +1,5 @@
 // app/layout.tsx — 根布局
-// chromacheck v1.7.9
+// chromacheck v1.9.0
 import React from 'react';
 import type { Metadata, Viewport } from 'next';
 import { Archivo, IBM_Plex_Mono } from 'next/font/google';
@@ -12,6 +12,7 @@ import { GoogleAnalytics } from '@/components/analytics/GoogleAnalytics';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { ServiceWorkerRegistrar } from '@/components/pwa/ServiceWorkerRegistrar';
 import { LangProvider } from '@/components/layout/LangProvider';
+import { SkipLink } from '@/components/layout/SkipLink';
 
 // 自托管字体（next/font），消除 no-page-custom-font 告警并避免运行时外部字体请求
 const archivo = Archivo({
@@ -135,14 +136,12 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               "(function(){try{var s=localStorage.getItem('cc.settings.v1');if(s&&JSON.parse(s).cvdSafe)document.body.classList.add('cvd-safe');}catch(e){}})();",
           }}
         />
-        <a href="#main-content" className="skip-link">
-          跳到主内容
-        </a>
         <JsonLd data={webAppLd} />
         <ServiceWorkerRegistrar />
         <GoogleAnalytics />
         <ThemeProvider>
           <LangProvider>
+            <SkipLink />
             <Navbar />
             <main id="main-content">{children}</main>
             <Footer />

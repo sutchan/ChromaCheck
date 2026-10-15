@@ -50,7 +50,7 @@ const inputStyle: React.CSSProperties = {
 };
 
 export default function BatchPage() {
-  const { t } = useLang();
+  const { t, lang } = useLang();
   const router = useRouter();
   const [mounted, setMounted] = useState(false);
   const [names, setNames] = useState('');
@@ -76,7 +76,7 @@ export default function BatchPage() {
       .filter(Boolean);
     if (list.length === 0) return;
     const created: BatchSubject[] = list.map((n) => {
-      const p = addProfile({ name: n, relation: '批量' });
+      const p = addProfile({ name: n, relation: t('batch.relation') });
       return { profileId: p.id, name: n };
     });
     const merged = [...subjects, ...created];
@@ -113,7 +113,7 @@ export default function BatchPage() {
             rows={4}
             value={names}
             onChange={(e) => setNames(e.target.value)}
-            placeholder={'张三\n李四\n王五'}
+            placeholder={t('batch.placeholder')}
             style={inputStyle}
           />
         </label>
@@ -123,7 +123,7 @@ export default function BatchPage() {
           </button>
           {subjects.length > 0 && (
             <button type="button" className="btn btn-ghost" onClick={reset}>
-              重置名单
+              {t('batch.reset')}
             </button>
           )}
         </div>
@@ -135,9 +135,9 @@ export default function BatchPage() {
         <>
           <div className="row between">
             <span className="muted">
-              已完成 {doneCount} / {subjects.length}
+              {t('batch.progress', { d: doneCount, t: subjects.length })}
             </span>
-            <button type="button" className="btn btn-ghost" onClick={() => downloadSummaryCsv()}>
+            <button type="button" className="btn btn-ghost" onClick={() => downloadSummaryCsv(undefined, lang)}>
               <Icon name="chart" size={16} /> {t('batch.summary')}
             </button>
           </div>
@@ -158,7 +158,7 @@ export default function BatchPage() {
                     </span>
                   </div>
                   <button type="button" className="btn btn-primary" style={{ fontSize: '0.85rem' }} onClick={() => goTest(s.profileId)}>
-                    <Icon name="play" size={15} /> {done ? '重测' : t('batch.goTest')}
+                    <Icon name="play" size={15} /> {done ? t('batch.retest') : t('batch.goTest')}
                   </button>
                 </div>
               );

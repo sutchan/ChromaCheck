@@ -71,7 +71,7 @@ export function AdvancedRunner({ scene = 'general' }: { scene?: Scene }) {
       pathResults,
       pathQuestions,
       hueResult: scoreHueQuestion(hueQuestion, order),
-      opts: { startedAt: startedAtRef.current, endedAt: Date.now(), device: detectDevice(), scene, lang },
+      opts: { startedAt: startedAtRef.current, endedAt: Date.now(), device: detectDevice(lang), scene, lang },
     });
     saveResult(result);
     clearProgress();

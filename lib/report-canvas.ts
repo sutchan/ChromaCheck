@@ -1,8 +1,9 @@
 // lib/report-canvas.ts — 筛查报告 PNG 绘制（纯函数，零依赖）
-// chromacheck v1.7.2
+// chromacheck v1.9.0
 import type { TestResult } from './types';
 import { uiText } from './scoring';
 import { D15_CAPS, D15_FIXED } from './questions/hue-arrangement';
+import { t, type Lang } from './i18n';
 
 function wrap(ctx: CanvasRenderingContext2D, text: string, maxW: number): string[] {
   const lines: string[] = [];
@@ -22,8 +23,8 @@ function wrap(ctx: CanvasRenderingContext2D, text: string, maxW: number): string
   return lines;
 }
 
-/** 生成筛查报告位图（白底，A4 比例），供 PNG 导出 / 打印使用 */
-export function drawReport(result: TestResult): HTMLCanvasElement {
+/** 生成筛查报告位图（白底，A4 比例），供 PNG 导出 / 打印使用；lang 缺省为中文 */
+export function drawReport(result: TestResult, lang: Lang = 'zh'): HTMLCanvasElement {
   const W = 900;
   const H = 1320;
   const c = document.createElement('canvas');
@@ -39,19 +40,25 @@ export function drawReport(result: TestResult): HTMLCanvasElement {
   ctx.fillStyle = '#ffffff';
   ctx.font = '700 34px Archivo, sans-serif';
   ctx.textBaseline = 'middle';
-  ctx.fillText('色辨 ChromaCheck · 筛查报告', 40, 48);
+  ctx.fillText(t(lang, 'canvas.reportTitle'), 40, 48);
 
   let y = 150;
   ctx.fillStyle = '#14202b';
   ctx.font = '700 30px Archivo, sans-serif';
-  ctx.fillText(uiText.overall(result.overall), 40, y);
+  ctx.fillText(uiText.overall(result.overall, lang), 40, y);
   y += 44;
   ctx.fillStyle = '#41525f';
   ctx.font = '500 22px Archivo, sans-serif';
-  const sub = result.type ? `${uiText.type(result.type)}${result.severity ? ` · ${uiText.severity(result.severity)}` : ''}` : '未见明显异常';
+  const sub = result.type
+    ? `${uiText.type(result.type, lang)}${result.severity ? ` · ${uiText.severity(result.severity, lang)}` : ''}`
+    : t(lang, 'canvas.noAbnormal');
   ctx.fillText(sub, 40, y);
   y += 40;
-  ctx.fillText(`置信度 ${result.confidence}%  ·  ${uiText.mode(result.testMode)}`, 40, y);
+  ctx.fillText(
+    t(lang, 'canvas.stability', { p: result.confidence, m: uiText.mode(result.testMode, lang) }),
+    40,
+    y,
+  );
 
   // 维度条 / 路径重合度 / 色相排列色卡条
   y += 60;
@@ -59,7 +66,7 @@ export function drawReport(result: TestResult): HTMLCanvasElement {
     const hue = result.hueArrangement;
     ctx.fillStyle = '#6e7c87';
     ctx.font = '500 18px Archivo, sans-serif';
-    ctx.fillText('色卡排列（左参考 → 右参考）', 40, y);
+    ctx.fillText(t(lang, 'canvas.hueStrip'), 40, y);
     y += 20;
     const strip = [D15_FIXED[0], ...hue.order.map((i) => D15_CAPS[i]), D15_FIXED[1]];
     const cw = 44;
@@ -68,23 +75,29 @@ export function drawReport(result: TestResult): HTMLCanvasElement {
       ctx.fillRect(40 + i * (cw + 6), y, cw, cw);
     });
     y += cw + 24;
+    const label =
+      hue.totalErrorScore < 20
+        ? t(lang, 'result.verdictNormal')
+        : hue.totalErrorScore <= 40
+          ? t(lang, 'result.verdictMild')
+          : t(lang, 'result.verdictObvious');
     ctx.fillStyle = '#14202b';
     ctx.font = '700 24px Archivo, sans-serif';
-    ctx.fillText(
-      `TES ${hue.totalErrorScore}（${hue.totalErrorScore < 20 ? '排列正常' : hue.totalErrorScore <= 40 ? '轻度偏差' : '明显偏差'}）`,
-      40,
-      y,
-    );
+    ctx.fillText(t(lang, 'canvas.tes', { v: hue.totalErrorScore, label }), 40, y);
     y += 50;
   } else {
     const axes: [string, number, string][] = result.ishihara
       ? [
-          ['红色觉轴', result.ishihara.dimensions.protan, '#d64550'],
-          ['绿色觉轴', result.ishihara.dimensions.deutan, '#2f8f6b'],
-          ['蓝色觉轴', result.ishihara.dimensions.tritan, '#2f6fb0'],
+          [t(lang, 'canvas.axisProtan'), result.ishihara.dimensions.protan, '#d64550'],
+          [t(lang, 'canvas.axisDeutan'), result.ishihara.dimensions.deutan, '#2f8f6b'],
+          [t(lang, 'canvas.axisTritan'), result.ishihara.dimensions.tritan, '#2f6fb0'],
         ]
       : result.pathTracking
-        ? result.pathTracking.map((r, i) => [`路径${i + 1}`, r.overlapScore, r.passed ? '#2f8f6b' : '#d64550'])
+        ? result.pathTracking.map((r, i) => [
+            t(lang, 'canvas.pathN', { n: i + 1 }),
+            r.overlapScore,
+            r.passed ? '#2f8f6b' : '#d64550',
+          ])
         : [];
     const bw = 200;
     const gap = 40;
@@ -119,7 +132,12 @@ export function drawReport(result: TestResult): HTMLCanvasElement {
   // 页脚
   ctx.fillStyle = '#6e7c87';
   ctx.font = '400 16px Archivo, sans-serif';
-  ctx.fillText(`报告生成时间：${new Date(result.createdAt).toLocaleString('zh-CN')}`, 40, H - 60);
-  ctx.fillText('本结果仅供参考，不能替代专业眼科诊断。', 40, H - 36);
+  const locale = lang === 'en' ? 'en-US' : 'zh-CN';
+  ctx.fillText(
+    t(lang, 'canvas.generatedAt', { d: new Date(result.createdAt).toLocaleString(locale) }),
+    40,
+    H - 60,
+  );
+  ctx.fillText(t(lang, 'canvas.disclaimer'), 40, H - 36);
   return c;
 }

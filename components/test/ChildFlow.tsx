@@ -1,6 +1,6 @@
 'use client';
 // components/test/ChildFlow.tsx — 儿童模式：页面文案 + 答题 → 判读 → 本地保存 → 跳转结果页
-// chromacheck v1.8.2
+// chromacheck v1.9.0
 import React, { useCallback, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -15,13 +15,13 @@ export function ChildFlow() {
   const router = useRouter();
   const startedAt = useRef<number>(Date.now());
   const [saving, setSaving] = useState(false);
-  const { t } = useLang();
+  const { t, lang } = useLang();
 
   const handleDone = useCallback(
     (answers: ChildAnswer[]) => {
       if (saving) return;
       setSaving(true);
-      const child = scoreChild(answers);
+      const child = scoreChild(answers, lang);
       const endedAt = Date.now();
       const result: TestResult = {
         id:
@@ -29,7 +29,7 @@ export function ChildFlow() {
             ? crypto.randomUUID()
             : `cc-${endedAt}`,
         schema: 'cc.result/v1',
-        version: '1.8.2', // 结果结构版本；解析方应对未知字段保持兼容（向后兼容）
+        version: '1.9.0', // 结果结构版本；解析方应对未知字段保持兼容（向后兼容）
         createdAt: new Date(endedAt).toISOString(),
         testMode: 'child',
         overall: child.overall,
@@ -40,7 +40,7 @@ export function ChildFlow() {
         answers: [],
         child,
         analysis: child.analysis,
-        confidenceNote: `儿童版图形题 ${child.correct}/${child.total} 作答正确。${child.note}`,
+        confidenceNote: t('analysis.childCorrect', { c: child.correct, n: child.total }) + child.note,
         device: typeof navigator !== 'undefined' ? navigator.userAgent.slice(0, 120) : 'unknown',
         scene: 'general',
       };
@@ -68,10 +68,10 @@ export function ChildFlow() {
 
       <Callout icon="info">
         {t('child.callout')}
-        <strong>初筛体验</strong>
-        ，结果受孩子的配合度、屏幕色彩与环境光线影响，不能作为诊断依据。建议先在
-        <Link href="/guide">《检测前指引》</Link>
-        完成屏幕与环境准备；如结果提示异常，请到正规医院眼科复查。
+        <strong>{t('child.calloutScreening')}</strong>
+        {t('child.calloutNote')}
+        <Link href="/guide">{t('child.calloutGuide')}</Link>
+        {t('child.calloutTail')}
       </Callout>
     </div>
   );

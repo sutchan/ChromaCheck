@@ -19,8 +19,10 @@ import { DriverCompliance } from '@/components/result/DriverCompliance';
 import { ReportActions } from '@/components/result/ReportActions';
 import { Callout } from '@/components/common/Callout';
 import { Icon } from '@/components/common/Icon';
+import { useLang } from '@/components/layout/LangProvider';
 
 export default function ResultPage() {
+  const { t } = useLang();
   const params = useParams<{ id: string }>();
   const id = params?.id;
   const [result, setResult] = useState<TestResult | null>(null);
@@ -53,9 +55,9 @@ export default function ResultPage() {
     return (
       <div className="wrap stack" style={{ paddingBlock: 'var(--s-8)', alignItems: 'center', textAlign: 'center' }}>
         <Icon name="alert" size={40} />
-        <h1 style={{ fontSize: '1.5rem' }}>未找到该检测结果</h1>
-        <p className="muted">结果仅保存在本设备浏览器中。可重新进行一次检测。</p>
-        <Link href="/test" className="btn btn-primary">开始检测</Link>
+        <h1 style={{ fontSize: '1.5rem' }}>{t('result.notFound')}</h1>
+        <p className="muted">{t('result.notFoundDesc')}</p>
+        <Link href="/test" className="btn btn-primary">{t('result.notFoundCta')}</Link>
       </div>
     );
   }
@@ -73,7 +75,7 @@ export default function ResultPage() {
           <div className="grid-cards" style={{ gridTemplateColumns: 'minmax(280px, 1fr) minmax(280px, 1fr)', alignItems: 'start' }}>
             <AxisChart dimensions={result.ishihara.dimensions} />
             <div className="card stack" style={{ gap: 'var(--s-3)' }}>
-              <h3 style={{ margin: 0, fontSize: '1rem' }}>错误模式分析</h3>
+              <h3 style={{ margin: 0, fontSize: '1rem' }}>{t('result.errorPatterns')}</h3>
               {result.ishihara.details.errorPatterns.map((p, i) => (
                 <div key={i} className="row" style={{ gap: 'var(--s-2)', alignItems: 'flex-start' }}>
                   <Icon name={p.type === 'random' ? 'check' : 'alert'} size={18} style={{ color: p.type === 'random' ? 'var(--ok)' : 'var(--warn)', marginTop: 2 }} />
@@ -97,13 +99,13 @@ export default function ResultPage() {
       {result.child ? <ChildSummary result={result.child} /> : null}
 
       {isDriver ? (
-        <Callout icon="info">驾驶 / 职业体检准备场景：本报告仅含科学判读，已隐藏趣味元素。</Callout>
+        <Callout icon="info">{t('result.sceneNote')}</Callout>
       ) : null}
 
       <ReportActions result={result} plain={isDriver} />
 
       <Callout tone="warn" icon="shield">
-        本筛查为教育与自我了解用途，不能替代专业眼科诊断。若日常生活中频繁出现辨色困难，或职业/体检有要求，请前往正规医院眼科进行进一步检查。
+        {t('result.disclaimer')}
       </Callout>
     </div>
   );

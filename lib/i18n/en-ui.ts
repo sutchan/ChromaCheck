@@ -251,6 +251,11 @@ export const EN_UI: Record<UiKey, string> = {
   'notFound.title': 'Page lost',
   'notFound.desc': 'The page you visited does not exist or has been moved.',
   'notFound.home': 'Back to home',
+  'result.errTitle': 'Failed to load result',
+  'result.errDesc': 'Something went wrong while reading this result. You can retry or take the test again.',
+  'test.errTitle': 'The test ran into an error',
+  'test.errDesc': 'The test flow failed. You can retry or start again from test selection.',
+  'test.errCta': 'Choose a test mode',
 
   // Canvas exports
   'canvas.overallNormal': 'Normal color vision',

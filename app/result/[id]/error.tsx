@@ -1,20 +1,23 @@
-// app/result/[id]/error.tsx — 结果页段级错误边界
-// chromacheck v1.7.0
+// app/result/[id]/error.tsx — 结果页段级错误边界（客户端，双语）
+// chromacheck v1.9.0
 'use client';
 
 import React from 'react';
 import Link from 'next/link';
 import { Icon } from '@/components/common/Icon';
+import { useLang } from '@/components/layout/LangProvider';
 
-export default function ResultError({ error, reset }: { error: Error & { digest?: string }; reset: () => void }) {
+export default function ResultError({ reset }: { error: Error & { digest?: string }; reset: () => void }) {
+  const { t } = useLang();
+
   return (
-    <div className="wrap stack" style={{ paddingBlock: 'var(--s-8)', alignItems: 'center', textAlign: 'center', gap: 'var(--s-3)' }}>
+    <div id="result-error" className="wrap stack" style={{ paddingBlock: 'var(--s-8)', alignItems: 'center', textAlign: 'center', gap: 'var(--s-3)' }}>
       <Icon name="alert" size={40} />
-      <h1 style={{ margin: 0 }}>结果加载失败</h1>
-      <p className="muted">读取该检测结果时出现异常。你可以重试，或重新进行一次检测。</p>
+      <h1 style={{ margin: 0 }}>{t('result.errTitle')}</h1>
+      <p className="muted">{t('result.errDesc')}</p>
       <div className="row" style={{ gap: 'var(--s-3)', flexWrap: 'wrap', justifyContent: 'center' }}>
-        <button type="button" className="btn btn-primary" onClick={reset}>重试</button>
-        <Link href="/test" className="btn btn-ghost">开始检测</Link>
+        <button type="button" className="btn btn-primary" onClick={reset}>{t('error.retry')}</button>
+        <Link href="/test" className="btn btn-ghost">{t('result.notFoundCta')}</Link>
       </div>
     </div>
   );

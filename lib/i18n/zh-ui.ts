@@ -249,6 +249,11 @@ export const ZH_UI = {
   'notFound.title': '页面走丢了',
   'notFound.desc': '你访问的页面不存在或已被移动。',
   'notFound.home': '返回首页',
+  'result.errTitle': '结果加载失败',
+  'result.errDesc': '读取该检测结果时出现异常。你可以重试，或重新进行一次检测。',
+  'test.errTitle': '检测过程出现错误',
+  'test.errDesc': '检测流程运行异常。你可以重试，或从检测模式重新开始。',
+  'test.errCta': '选择检测模式',
 
   // 画布导出（报告 PNG / 分享卡）
   'canvas.overallNormal': '色觉正常',

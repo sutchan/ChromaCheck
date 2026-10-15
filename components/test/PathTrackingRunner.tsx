@@ -44,7 +44,7 @@ export function PathTrackingRunner({ mode }: { mode: TestMode }) {
         testMode: mode,
         startedAt: startedAtRef.current,
         endedAt,
-        device: detectDevice(),
+        device: detectDevice(lang),
         lang,
       });
       saveResult(result);

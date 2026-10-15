@@ -9,6 +9,7 @@ import { loc } from '@/lib/fun';
 import { IshiharaPlate } from './IshiharaPlate';
 import { TestProgress } from './TestProgress';
 import { Numpad } from './Numpad';
+import { useIshiharaFlow } from './useIshiharaFlow';
 import { ProgressDots, ChapterCard } from './FunBits';
 import { Icon } from '@/components/common/Icon';
 import { useLang } from '@/components/layout/LangProvider';

@@ -1,6 +1,7 @@
 // lib/profile.ts — 本地档案（家庭多成员），本地优先，不收集 PII
-// chromacheck v1.8.0
+// chromacheck v1.9.0
 import type { Profile } from './types';
+import { t, type Lang } from './i18n';
 
 const K_PROFILES = 'cc.profiles.v1';
 const K_ACTIVE = 'cc.activeProfile.v1';
@@ -30,8 +31,8 @@ function uid(): string {
   return 'p_' + Math.random().toString(36).slice(2, 10) + Date.now().toString(36).slice(-4);
 }
 
-export function getDefaultProfile(): Profile {
-  return { id: DEFAULT_ID, name: '本人', avatar: '🧑', createdAt: '1970-01-01T00:00:00.000Z' };
+export function getDefaultProfile(lang: Lang = 'zh'): Profile {
+  return { id: DEFAULT_ID, name: t(lang, 'profile.defaultName'), avatar: '🧑', createdAt: '1970-01-01T00:00:00.000Z' };
 }
 
 export function listProfiles(): Profile[] {
@@ -67,10 +68,10 @@ export function setActiveProfile(id: string): void {
   if (listProfiles().some((p) => p.id === id)) safeSet(K_ACTIVE, id);
 }
 
-export function addProfile(input: { name: string; avatar?: string; relation?: string }): Profile {
+export function addProfile(input: { name: string; avatar?: string; relation?: string }, lang: Lang = 'zh'): Profile {
   const p: Profile = {
     id: uid(),
-    name: input.name.trim() || '未命名',
+    name: input.name.trim() || t(lang, 'profile.untitled'),
     avatar: input.avatar || '🧑',
     relation: input.relation?.trim() || undefined,
     createdAt: new Date().toISOString(),
@@ -101,7 +102,7 @@ export function saveAllProfiles(arr: Profile[]): void {
   safeSet(K_PROFILES, JSON.stringify(arr));
 }
 
-export function getProfileName(id?: string): string {
-  if (!id) return getDefaultProfile().name;
-  return listProfiles().find((p) => p.id === id)?.name ?? getDefaultProfile().name;
+export function getProfileName(id?: string, lang: Lang = 'zh'): string {
+  if (!id) return getDefaultProfile(lang).name;
+  return listProfiles().find((p) => p.id === id)?.name ?? getDefaultProfile(lang).name;
 }

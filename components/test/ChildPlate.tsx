@@ -1,10 +1,11 @@
 'use client';
 // components/test/ChildPlate.tsx — 儿童模式点阵图渲染（图形替代数字）
-// chromacheck v1.7.9
+// chromacheck v1.9.0
 import React, { useEffect, useRef } from 'react';
 import { buildDots, mulberry32, PALETTE, simulate } from '@/lib/ishihara';
 import type { PlateType } from '@/lib/types';
 import type { ChildShape } from '@/lib/questions/child';
+import { useLang } from '@/components/layout/LangProvider';
 
 export interface ChildPlateProps {
   type: PlateType;
@@ -79,6 +80,7 @@ function buildShapeMask(shape: ChildShape, size: number): (x: number, y: number)
 }
 
 export function ChildPlate({ type, shape, seed, dots = 1500, maxWidth = 420 }: ChildPlateProps) {
+  const { t } = useLang();
   const ref = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -123,7 +125,7 @@ export function ChildPlate({ type, shape, seed, dots = 1500, maxWidth = 420 }: C
     <div className="hero-plate" style={{ maxWidth, marginInline: 'auto', background: '#efe9db' }}>
       <canvas
         ref={ref}
-        aria-label="儿童模式检测图"
+        aria-label={t('child.plateAria')}
         style={{ width: '100%', height: 'auto', display: 'block', borderRadius: 'inherit' }}
       />
     </div>

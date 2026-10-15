@@ -4,7 +4,7 @@
 
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import type { AnswerRecord } from '@/lib/types';
+import type { AnswerRecord, TestMode } from '@/lib/types';
 import { getQuestions } from '@/lib/questions';
 import { computeResult } from '@/lib/scoring';
 import { saveResult, loadProgress, saveProgress, clearProgress } from '@/lib/storage';
@@ -24,7 +24,7 @@ function figureText(q: { type: string; answer: string }): string {
   return q.type === 'hidden' ? '' : q.answer;
 }
 
-export function TestRunner({ mode }: { mode: 'standard' | 'quick' }) {
+export function TestRunner({ mode }: { mode: TestMode }) {
   const router = useRouter();
   const { t, lang } = useLang();
   const { settings } = useSettings();
@@ -45,10 +45,12 @@ export function TestRunner({ mode }: { mode: 'standard' | 'quick' }) {
 
   function onDone(answers: AnswerRecord[]) {
     clearProgress();
-    const result = computeResult({
-      answers,
-      questions: ishiharaQuestions,
-      opts: { startedAt: startedAtRef.current, endedAt: Date.now(), device: detectDevice(), lang },
+    const result = computeResult(answers, ishiharaQuestions, {
+      testMode: mode,
+      startedAt: startedAtRef.current,
+      endedAt: Date.now(),
+      device: detectDevice(lang),
+      lang,
     });
     saveResult(result);
     router.push(`/result/${result.id}`);

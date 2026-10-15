@@ -36,7 +36,7 @@ export function HueArrangementRunner({ mode }: { mode: TestMode }) {
       testMode: mode,
       startedAt: startedAtRef.current,
       endedAt: Date.now(),
-      device: detectDevice(),
+      device: detectDevice(lang),
       lang,
     });
     saveResult(result);

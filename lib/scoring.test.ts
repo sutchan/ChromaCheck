@@ -130,7 +130,7 @@ describe('computeResult', () => {
     expect(r.overall).toBe('normal');
     expect(r.durationMs).toBe(60000);
     expect(r.scene).toBe('general');
-    expect(r.confidenceNote).toContain('综合置信度');
+    expect(r.confidenceNote).toContain('综合判读稳定性');
     expect(r.answers).toBe(answers);
   });
 
