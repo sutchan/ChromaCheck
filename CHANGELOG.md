@@ -1,7 +1,18 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.8.2`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.9.0`）。
+
+## [1.9.0] - 2026-10-15
+
+### 新增
+- 国际化覆盖补齐（TASKS C9）：i18n 由单文件 `lib/i18n.ts` 重构为 `lib/i18n/` 模块（`dict.ts` / `zh-core|zh-ui|zh-result` / `en-core|en-ui|en-result` / `t.ts` / `lang.ts`）；`uiText` 与各 scoring 模块接入 `lang` 参数；40 个客户端组件接入 `useLang()`，覆盖历史 / 结果 / 科普（列表 + 正文）/ FAQ / 隐私 / 指引 / 离线页；中英词条对称（ui 77 / result 18 / learn 10 组）。
+
+### 测试
+- 新增 `lib/profile.test.ts`（11 例）与 `lib/export-import.test.ts`（10 例）：档案 CRUD / 默认档案回退 / 损坏数据不抛错；导出包结构 / 导入解析 / 冲突合并策略（档案保留本地、结果保留较新）/ 汇总 CSV（BOM、按档案分组、缺省 profileId 归默认）。测试总数 52 → 73，全部通过。
+
+### 变更
+- 收口版本漂移：代码文件头已标注 v1.9.0 而 `VERSION` / `package.json` 仍为 1.8.2，本次统一同步至 `1.9.0`。
 
 ## [1.8.2] - 2026-10-15
 

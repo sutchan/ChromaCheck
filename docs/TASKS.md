@@ -2,7 +2,7 @@
 
 > 来源：2026-09-06 对 ChromaCheck v1.6.0 检测覆盖度评估。
 > 关联：`docs/ROADMAP.md`（v1.1 规划中已有 P1「屏幕校准指引」，本任务集为其专项延展）。
-> **最后更新：2026-10-15**（当前版本 v1.8.2）：T1–T6、C3–C8 全部完成并归档至 `docs/tasks-done.md`；C1/C2/C5/C8 于 v1.8.0 以「本地优先替代」落地；v1.8.1 为对抗式审查整改（见 CHANGELOG），本清单无遗留未完成项。
+> **最后更新：2026-10-15**（当前版本 **v1.9.0**）：T1–T6、C3–C8 全部完成并归档；C1/C2/C5/C8 于 v1.8.0 以「本地优先替代」落地；v1.8.1 为对抗式审查整改；**C9（i18n 覆盖补齐）于 v1.9.0 完成**并归档至 `docs/tasks-done.md` §四。**遗留问题见 §6**（2026-10-15 全面审查待决策项 R1–R8）。
 
 ## 1. 背景与评估结论
 
@@ -90,3 +90,31 @@
 - 目标：家庭成员结果共享与查看。
 - 方案：基于本地多档案（C1 替代）+ 历史导出 / 导入（C2 替代）；单成员结果可导出 / 导入。
 - 来源：ROADMAP.md §4.2。
+
+### 待办（2026-10-15 补录，源自 `docs/tasks-done.md` §二 C6 边界）
+
+> C1–C8 均已完成；本项为 tasks-done 记录「科普文章 / 历史页 / 结果页 / FAQ 仍为中文」但**未登记到本清单**的遗留范围，现补录跟踪。
+
+**C9 ✅ 已完成（v1.9.0）i18n 覆盖补齐**
+- 目标：双语覆盖扩展到历史页、结果页、科普列表 / 正文、FAQ、隐私、指引、离线页，消除核心页面中文硬编码。
+- 实现：i18n 由单文件 `lib/i18n.ts` 重构为 `lib/i18n/` 模块（`dict.ts` / `zh-core|zh-ui|zh-result` / `en-core|en-ui|en-result` / `t.ts` / `lang.ts`）；`uiText` 与各 scoring 模块接入 `lang` 参数；40 个客户端组件接入 `useLang()`；中英词条对称（ui 77 / result 18 / learn 10 组）。
+- 边界：判读逻辑不随语言变化，仅文案本地化；语言偏好存 `cc.lang.v1`。
+- 备注：`VERSION` / `package.json` 已同步至 1.9.0（此前代码文件头先于版本文件的漂移已收口）；本轮另补 `lib/profile.test.ts` / `lib/export-import.test.ts` 共 21 例，测试总数 52 → 73。
+- 来源：`docs/tasks-done.md` §二 C6 边界说明、`docs/ROADMAP.md` §3.2。
+
+## 6. 审查发现待办（2026-10-15 全面审查遗留项）
+
+> 来源：2026-10-15 代码库全面审查（10 项问题）。已处理项见 `CHANGELOG.md`；以下为**仍需决策或排期**的部分。⏳ 表示改动前需先确认方案（涉及隐私承诺、安全策略、破坏性变更或跨模块重构）。
+
+| 编号 | 问题 | 优先级 | 状态 |
+|------|------|--------|------|
+| R1 | 服务端分析是死代码：`reportServerEvent` 全仓库 0 调用、`/api/analytics/event` 空转，但隐私页已披露该行为 → 实现与文案矛盾 | P0 | ⏳ 待决策（补埋点，或移除端点并同步改隐私文案） |
+| R2 | 安全：CSP `frame-ancestors *` 允许任意站点 iframe 嵌入（点击劫持）；生产 `script-src 'unsafe-inline'` | P0 | ⏳ 待决策 |
+| R3 | 单文件 >200 行违规：`app/history/page.tsx` 211、`lib/types.ts` 201（`lib/i18n.ts` 307 已由 v1.9.0 模块化拆分解决） | P1 | ⏳ 待拆分（受「≤200 行」规则约束） |
+| R4 | 无障碍：`PathTrackingCanvas` 仅支持指针（键盘不可达，WCAG 2.1.1）；Numpad / SignalRunner / DimScenes / AnswerReview / ChildPlate / IshiharaPlate 缺 aria 语义 | P1 | ⏳ 待处理 |
+| R5 | 测试覆盖率缺口：child-scoring / sharecard / report-canvas / scoring-text / ishihara / path-field / format 无单测；无组件测试与 e2e（≥80% 门禁未达成） | P2 | 🟡 部分完成（v1.9.0 补 profile + export-import 共 21 例，总数 73） |
+| R6 | 无 lockfile（`package-lock.json` 缺失）→ 构建不可复现；依赖钉扎策略不统一（vitest/coverage 用 `^`） | P2 | ⏳ 待决策 |
+| R7 | SEO metadata 缺 9 个路由段（首页、`test/advanced`、`test/batch`、`test/*/[mode]`、`learn/[slug]`、not-found） | P2 | ⏳ 待处理 |
+| R8 | 轻微反模式：mounted 进度恢复逻辑重复（AdvancedRunner / TestRunner）、history 页内联 style 与 Tailwind 混用、result props 透传 6+ 层 | P2 | ⏳ 后续迭代 |
+
+> **已在本轮闭环**：i18n 覆盖仅约 20%（审查第 4 项）→ 由 C9 / v1.9.0 重构解决；`metadata.json` 失实声明（声称服务端 Gemini 能力）→ 审查后已修正。
