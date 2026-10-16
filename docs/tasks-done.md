@@ -1,7 +1,7 @@
 # 已完成任务归档
 
 > 来源：`docs/TASKS.md`。已完成的条目从任务清单移入本文档，保留目标与实现摘要以便回溯。
-> **最后更新：2026-10-15**（v1.9.0 i18n 重构已提交；`VERSION` 待随发布同步至 1.9.0）。
+> **最后更新：2026-10-16**（当前版本 **v1.9.1**）：v1.9.0 安全提交 5030859 收口 R1 / R2（死代码 + CSP）；C9 i18n 已于 v1.9.0 完成；v1.9.1 为 R3 超 200 行拆分 + 文档同步。
 
 ---
 
@@ -98,6 +98,24 @@
 - 目标：双语覆盖扩展到历史页、结果页、科普列表 / 正文、FAQ、隐私、指引、离线页。
 - 实现：`lib/i18n.ts` → `lib/i18n/` 模块（`dict.ts` / `zh-core|zh-ui|zh-result` / `en-core|en-ui|en-result` / `t.ts` / `lang.ts`）；`uiText` 与各 scoring 模块接入 `lang` 参数；40 个客户端组件接入 `useLang()`；中英词条对称（ui 77 / result 18 / learn 10 组）。
 - 验收：切换中英文后历史 / 结果 / 科普 / FAQ / 隐私 / 指引页文案同步切换；判读逻辑不随语言变化，语言偏好存 `cc.lang.v1`。
+
+---
+
+## 五、安全与审查遗留收口（R1 / R2，v1.9.0）
+
+> 2026-10-15（实际随 v1.9.0 安全提交 `5030859` 落地）：代码库全面审查遗留项 R1 / R2 由并行会话在该安全提交中收口，现登记归档。
+
+### R1 移除死代码事件上报（P0）
+- 问题：`reportServerEvent()` 全仓库 0 调用、`app/api/analytics/event` 路由空转，但隐私页已披露该上报行为 → 实现与文案矛盾。
+- 处理：移除 `reportServerEvent`、`/api/analytics/event` 路由与 `lib/analytics.ts` 相关逻辑；隐私文档同步去除「第一方匿名事件上报」口径，仅保留 GA4（生产环境）。
+- 验收：仓库无服务端事件上报代码；隐私页口径与实现一致。
+
+### R2 加固安全响应头（P0）
+- 问题：CSP `frame-ancestors *` 允许任意站点 iframe 嵌入（点击劫持风险）。
+- 处理：`next.config.mjs` 将 `frame-ancestors` 收紧为 `'self'`；`script-src` 仍含 `'unsafe-inline'`（Next.js 内联脚本运行所需，属已知约束）。
+- 验收：`frame-ancestors 'self'`，消除跨站嵌入风险。
+
+> R3（超 200 行拆分）、R4（其余组件 aria）、R5（测试覆盖）、R6（lockfile）、R7（SEO metadata）、R8（反模式）仍属 `docs/TASKS.md` §6 待办，未在本轮归档。
 
 ---
 

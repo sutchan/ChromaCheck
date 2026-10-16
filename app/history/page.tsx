@@ -1,31 +1,19 @@
 // app/history/page.tsx — 历史记录（含档案筛选 / 导出导入 / 汇总）
-// chromacheck v1.8.0
+// chromacheck v1.9.1
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { listResults, deleteResult, clearResults } from '@/lib/storage';
-import { getActiveProfileId, getProfileName, getDefaultProfile } from '@/lib/profile';
+import { getActiveProfileId, getDefaultProfile } from '@/lib/profile';
 import { buildExport, downloadExport, parseImport, mergeImport, downloadSummaryCsv } from '@/lib/export-import';
-import { uiText } from '@/lib/scoring';
-import { formatDate } from '@/lib/format';
-import type { Overall, TestResult } from '@/lib/types';
+import type { TestResult } from '@/lib/types';
 import type { Lang } from '@/lib/i18n';
 import { Icon } from '@/components/common/Icon';
 import { Callout } from '@/components/common/Callout';
 import { ProfileSwitcher } from '@/components/history/ProfileSwitcher';
+import { HistoryCard } from '@/components/history/HistoryCard';
 import { useLang } from '@/components/layout/LangProvider';
-
-const TONE: Record<Overall, string> = {
-  normal: 'chip-ok',
-  suspected_deficiency: 'chip-warn',
-  suspected_blindness: 'chip-risk',
-  inconclusive: 'chip-warn',
-};
-
-function profileOf(r: TestResult, lang: Lang): string {
-  return getProfileName(r.profileId ?? getDefaultProfile(lang).id, lang);
-}
 
 export default function HistoryPage() {
   const { t, lang } = useLang();
@@ -137,41 +125,7 @@ export default function HistoryPage() {
       ) : (
         <div className="stack" style={{ gap: 'var(--s-3)' }}>
           {items.map((r) => (
-            <div
-              key={r.id}
-              className="card row between"
-              style={{ gap: 'var(--s-3)', flexWrap: 'wrap', padding: 'var(--s-4)' }}
-            >
-              <Link href={`/result/${r.id}`} className="stack" style={{ gap: 4, flex: 1, minWidth: 220, color: 'var(--fg)' }}>
-                <div className="row" style={{ gap: 'var(--s-2)', flexWrap: 'wrap' }}>
-                  <span className={`chip ${TONE[r.overall]}`}>{uiText.overall(r.overall, lang)}</span>
-                  <span className="chip">
-                    {r.ishihara && r.pathTracking && r.hueArrangement
-                      ? t('history.tagAdvanced')
-                      : r.hueArrangement
-                        ? t('history.tagHue')
-                        : r.pathTracking
-                          ? t('history.tagPath')
-                          : t('history.tagIshihara')}
-                  </span>
-                  {r.type && <span className="chip">{uiText.type(r.type, lang)}</span>}
-                  <span className="chip">{t('history.stabilityChip', { p: r.confidence })}</span>
-                  {activeId === '__all__' && <span className="chip">{profileOf(r, lang)}</span>}
-                </div>
-                <span className="muted" style={{ fontSize: '0.85rem' }}>
-                  {formatDate(r.createdAt)} · {uiText.mode(r.testMode, lang)}
-                </span>
-              </Link>
-              <button
-                type="button"
-                className="btn btn-ghost"
-                style={{ height: 38, fontSize: '0.85rem' }}
-                onClick={() => remove(r.id)}
-                aria-label={t('history.deleteAria')}
-              >
-                <Icon name="trash" size={16} />
-              </button>
-            </div>
+            <HistoryCard key={r.id} r={r} lang={lang} showProfile={activeId === '__all__'} onRemove={remove} />
           ))}
         </div>
       )}

@@ -1,5 +1,5 @@
 // lib/types.ts — ChromaCheck 领域类型
-// chromacheck v1.8.1
+// chromacheck v1.9.1
 
 /** 检测场景：general 通用自测 / driver 驾驶·职业体检准备（隐藏趣味元素） */
 export type Scene = 'general' | 'driver';
@@ -188,13 +188,4 @@ export interface AppSettings {
   funMode: boolean;
 }
 
-/** 本地档案（v1.8.1：家庭多成员 / 批量检测，本地优先，不收集 PII） */
-export interface Profile {
-  id: string;
-  name: string;
-  /** 头像 emoji */
-  avatar: string;
-  /** 家庭关系标签，如「父亲 / 女儿」（可选） */
-  relation?: string;
-  createdAt: string;
-}
+

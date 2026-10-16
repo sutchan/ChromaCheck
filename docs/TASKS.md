@@ -2,7 +2,7 @@
 
 > 来源：2026-09-06 对 ChromaCheck v1.6.0 检测覆盖度评估。
 > 关联：`docs/ROADMAP.md`（v1.1 规划中已有 P1「屏幕校准指引」，本任务集为其专项延展）。
-> **最后更新：2026-10-15**（当前版本 **v1.9.0**）：T1–T6、C3–C8 全部完成并归档；C1/C2/C5/C8 于 v1.8.0 以「本地优先替代」落地；v1.8.1 为对抗式审查整改；**C9（i18n 覆盖补齐）于 v1.9.0 完成**并归档至 `docs/tasks-done.md` §四。**遗留问题见 §6**（2026-10-15 全面审查待决策项 R1–R8）。
+> **最后更新：2026-10-16**（当前版本 **v1.9.1**）：T1–T6、C3–C8 全部完成并归档；C1/C2/C5/C8 于 v1.8.0 以「本地优先替代」落地；v1.8.1 为对抗式审查整改；C9（i18n）于 v1.9.0 完成；**R1/R2 已于 v1.9.0 安全提交收口**、R3/R4 部分完成（见 §6）。**遗留问题见 §6**（R1–R8）。
 
 ## 1. 背景与评估结论
 
@@ -108,13 +108,13 @@
 
 | 编号 | 问题 | 优先级 | 状态 |
 |------|------|--------|------|
-| R1 | 服务端分析是死代码：`reportServerEvent` 全仓库 0 调用、`/api/analytics/event` 空转，但隐私页已披露该行为 → 实现与文案矛盾 | P0 | ⏳ 待决策（补埋点，或移除端点并同步改隐私文案） |
-| R2 | 安全：CSP `frame-ancestors *` 允许任意站点 iframe 嵌入（点击劫持）；生产 `script-src 'unsafe-inline'` | P0 | ⏳ 待决策 |
-| R3 | 单文件 >200 行违规：`app/history/page.tsx` 211、`lib/types.ts` 201（`lib/i18n.ts` 307 已由 v1.9.0 模块化拆分解决） | P1 | ⏳ 待拆分（受「≤200 行」规则约束） |
-| R4 | 无障碍：`PathTrackingCanvas` 仅支持指针（键盘不可达，WCAG 2.1.1）；Numpad / SignalRunner / DimScenes / AnswerReview / ChildPlate / IshiharaPlate 缺 aria 语义 | P1 | ⏳ 待处理 |
+| R1 | 服务端分析是死代码：`reportServerEvent` 全仓库 0 调用、`/api/analytics/event` 空转，但隐私页已披露该行为 → 实现与文案矛盾 | P0 | ✅ 已完成（v1.9.0 安全提交 5030859：移除 `reportServerEvent` 与 `/api/analytics/event` 路由，隐私文案同步） |
+| R2 | 安全：CSP `frame-ancestors *` 允许任意站点 iframe 嵌入（点击劫持）；生产 `script-src 'unsafe-inline'` | P0 | ✅ 已完成（v1.9.0 安全提交 5030859：CSP `frame-ancestors` 收紧为 `'self'`；`script-src` 仍含 `'unsafe-inline'` 因 Next 内联脚本需求） |
+| R3 | 单文件 >200 行违规（受「≤200 行」规则约束）：`components/test/PathTrackingCanvas.tsx` 247、`lib/i18n/en-ui.ts` 279 / `zh-ui.ts` 277 待拆分；`lib/types.ts`(201) 与 `app/history/page.tsx`(212) 已于 v1.9.1 拆至 ≤200 | P1 | 🟡 部分完成（v1.9.1 拆分 `Profile`→`profile.ts` + 抽取 `HistoryCard`，types.ts / history 降至 ≤200；PathTrackingCanvas + i18n 字典列为后续） |
+| R4 | 无障碍：`PathTrackingCanvas` 仅支持指针（键盘不可达）；Numpad / SignalRunner / DimScenes / AnswerReview / ChildPlate / IshiharaPlate 缺 aria 语义 | P1 | 🟡 部分（v1.9.1 核验 `PathTrackingCanvas` 已具键盘通道 tabIndex / role / aria-keyshortcuts，无需处理；其余组件 aria 语义仍待补） |
 | R5 | 测试覆盖率缺口：child-scoring / sharecard / report-canvas / scoring-text / ishihara / path-field / format 无单测；无组件测试与 e2e（≥80% 门禁未达成） | P2 | 🟡 部分完成（v1.9.0 补 profile + export-import 共 21 例，总数 73） |
 | R6 | 无 lockfile（`package-lock.json` 缺失）→ 构建不可复现；依赖钉扎策略不统一（vitest/coverage 用 `^`） | P2 | ⏳ 待决策 |
 | R7 | SEO metadata 缺 9 个路由段（首页、`test/advanced`、`test/batch`、`test/*/[mode]`、`learn/[slug]`、not-found） | P2 | ⏳ 待处理 |
 | R8 | 轻微反模式：mounted 进度恢复逻辑重复（AdvancedRunner / TestRunner）、history 页内联 style 与 Tailwind 混用、result props 透传 6+ 层 | P2 | ⏳ 后续迭代 |
 
-> **已在本轮闭环**：i18n 覆盖仅约 20%（审查第 4 项）→ 由 C9 / v1.9.0 重构解决；`metadata.json` 失实声明（声称服务端 Gemini 能力）→ 审查后已修正。
+> **已闭环 / 进展（2026-10-16）**：i18n 覆盖（审查第 4 项）→ 由 C9 / v1.9.0 重构解决；`metadata.json` 失实声明 → 审查后已修正；**R1 死代码、R2 CSP 由 v1.9.0 安全提交 5030859 收口**；**R3 超 200 行由 v1.9.1 部分拆分**（types.ts / history 达标，PathTrackingCanvas / i18n 字典待续）；**R4 PathTrackingCanvas 键盘通道经核验已具备**。R5 / R6 / R7 / R8 仍待办（见上表）。

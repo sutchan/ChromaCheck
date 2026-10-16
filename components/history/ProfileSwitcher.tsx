@@ -1,11 +1,11 @@
 // components/history/ProfileSwitcher.tsx — 本地档案切换与管理（家庭多成员）
-// chromacheck v1.8.0
+// chromacheck v1.9.1
 'use client';
 
 import React, { useEffect, useState } from 'react';
 import { useLang } from '@/components/layout/LangProvider';
 import { Icon } from '@/components/common/Icon';
-import type { Profile } from '@/lib/types';
+import type { Profile } from '@/lib/profile';
 import {
   listProfiles,
   addProfile,

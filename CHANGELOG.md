@@ -1,7 +1,19 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.9.0`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.9.1`）。
+
+## [1.9.1] - 2026-10-16
+
+### 重构（R3 超 200 行拆分）
+- `Profile` 接口由 `lib/types.ts` 迁移至 `lib/profile.ts`（领域归属更清晰），`components/history/ProfileSwitcher.tsx` 与 `lib/export-import.ts` 的 `Profile` 导入源同步调整。
+- 历史页结果卡片抽取为 `components/history/HistoryCard.tsx`，`app/history/page.tsx` 由 212 → ~174 行。
+- `lib/types.ts`（201 → ~191）、`app/history/page.tsx` 降至 200 行以内，满足单文件行数约束；`components/test/PathTrackingCanvas.tsx`（247）与 i18n 字典 `en-ui.ts` / `zh-ui.ts`（279 / 277，纯键值对数据）列为后续拆分待办。
+
+### 文档
+- `docs/TASKS.md` §6：R1 / R2 已由 v1.9.0 安全提交 5030859 收口，标记完成；R3 / R4 更新进展。
+- `docs/tasks-done.md`：新增 §五 归档 R1 / R2 收口实现。
+- 版本单一来源同步至 `1.9.1`。
 
 ## [1.9.0] - 2026-10-15
 

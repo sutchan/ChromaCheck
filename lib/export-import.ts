@@ -1,6 +1,7 @@
 // lib/export-import.ts — 历史导出 / 导入（本地优先，JSON 包），含冲突合并与汇总 CSV
-// chromacheck v1.9.0
-import type { Profile, TestResult } from './types';
+// chromacheck v1.9.1
+import type { TestResult } from './types';
+import type { Profile } from './profile';
 import { listProfiles, saveAllProfiles, getDefaultProfile } from './profile';
 import { listResults, saveAllResults } from './storage';
 import { uiText } from './scoring';

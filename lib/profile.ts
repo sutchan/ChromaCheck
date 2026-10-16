@@ -1,7 +1,17 @@
 // lib/profile.ts — 本地档案（家庭多成员），本地优先，不收集 PII
-// chromacheck v1.9.0
-import type { Profile } from './types';
+// chromacheck v1.9.1
 import { t, type Lang } from './i18n';
+
+/** 本地档案（v1.8.1：家庭多成员 / 批量检测，本地优先，不收集 PII） */
+export interface Profile {
+  id: string;
+  name: string;
+  /** 头像 emoji */
+  avatar: string;
+  /** 家庭关系标签，如「父亲 / 女儿」（可选） */
+  relation?: string;
+  createdAt: string;
+}
 
 const K_PROFILES = 'cc.profiles.v1';
 const K_ACTIVE = 'cc.activeProfile.v1';
