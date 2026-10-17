@@ -1,42 +1,29 @@
 # 记忆索引
 
 ## 项目：ChromaCheck（e:/Github/ChromaCheck）
-- 已从「纯文档 + 静态原型」进入**应用开发阶段**，v1.0.0 已实现（2026-09-04），当前版本 **v1.10.1**（2026-10-17；注意会话间隙用户会自行 bump/提交，改版本前必须重读 VERSION 并 `git status --short --untracked-files=all` 确认新建文件是否已被中间会话提交）。
-- 应用技术栈：Next.js 14 (App Router) + React 18 + TypeScript(strict) + Tailwind 3，纯本地、无后端、无重型依赖；图表用内联 SVG，报告导出用 Canvas(PNG)+`window.print()`(PDF)。
-- **字体（v1.7.4 起自托管）**：`app/layout.tsx` 用 `next/font/google` 注入 Archivo + IBM Plex Mono（`variable:--font-sans/--font-mono`），移除手动 Google Fonts `<link>`；站点域名统一由 `lib/site.ts` 的 `SITE_URL` 提供。构建时 next/font 需访问 fonts.gstatic.com，离线/弱网可能 `ECONNRESET`（Next 自动重试通常可过）。
-- 版本单一来源：`VERSION`(=1.10.1) 与 `package.json` version 一致；原型文件头 v0.1.2（判读已反向对齐应用，见 2026-09-08 日记），与正式应用版本解耦。
-- **导航结构（v1.7.5）**：页眉 `components/layout/Navbar.tsx` 仅保留「首页 / 开始检测 / 历史」；「科普」「隐私」入口已移至页脚 `components/layout/Footer.tsx`（页脚含 开始检测/科普文章/隐私政策/GitHub；v1.7.7 起 Footer 版本号直读 `package.json`，不再硬编码，杜绝脱节）。
-- **已实现页面/功能**：v1.0 首页(含色觉模拟 CvdSimulator)、检测前指引、模式选择(快速10题/标准38题)、石原氏测试(`/test/ishihara/[mode]`)、结果页(`/result/[id]`)、历史、科普列表+详情、隐私政策；v1.1 路径追踪(`/test/path-tracking/[mode]`)；v1.2 色相排列 D15(`/test/hue-arrangement/[mode]`)；v1.3 进阶联合判读(`/test/advanced`)；**v1.4 趣味性体验包**（`lib/fun.ts` 趣味数据+`lib/sharecard.ts` Canvas 分享卡、`components/test/FunBits.tsx` 进度点阵/章末过渡、`components/result/EyesSwitcher.tsx` 换一双眼睛、`components/result/DimScenes.tsx` 三轴科普；`AppSettings.funMode` 开关经设置面板（v1.10.0 起 `SettingsDialog`）控制，中性反馈恒开）；v1.5 38 板完整图谱；v1.5.1 GA4 匿名统计；v1.6 SEO/GEO（sitemap/robots/JSON-LD/llms.txt/社交图）；v1.7 驾驶员场景专项（驾照合规栏 `lib/license.ts`/信号灯辨识 `/test/signal` 9 题/屏幕校准/图版明度/`scene:'driver'` 隐藏趣味）。GitHub 仓库：https://github.com/sutchan/ChromaCheck 。
-- **Vitest 测试套件（v1.7.6 落地）**：`npm test`=`vitest run`，覆盖判读引擎全量（scoring/hue-scoring/path-scoring/signal-scoring/advanced-scoring 共 39 例）+ storage 13 例；测试文件在 `lib/*.test.ts`；`vitest.setup.ts` 注入内存版 Storage（window 指向 globalThis），统一跑 node 环境（无 jsdom/happy-dom）；`npm run test:coverage` 走 @vitest/coverage-v8。**安全响应头（v1.7.6）**：`next.config.mjs` 配置 CSP/X-Frame-Options/X-Content-Type-Options/Referrer-Policy/Permissions-Policy。
-- **v1.7.6 判读/存储健壮性修复**：石原氏判读无隐含题时满分不再误判（`hiddenTotal>0` 前置条件）；`lib/storage.ts` 写路径统一 `safeSet` 降级（配额满/隐私模式静默失败），读取加 `isTestResult`/`isProgress` 运行时类型守卫，损坏数据不抛错；v1.7.7 修 Node 26 实验性 localStorage 与 DOM 环境冲突、加 `prefers-reduced-motion`。
-- **v1.7.8 SPEC 对齐（2026-09-21）**：权威总纲 `docs/SPEC.md` 由 v1.0.6 对齐到 v1.7.8——§2.2 目录结构、§3.2 字体自托管、§5.2 AnswerRecord 去掉未持久化的 correct/expectedAnswer、§5.3 TestResult 补 pathTracking/hueArrangement/scene、§5.4 AppSettings 补 funMode、§8.4 测试门禁改 Vitest 已落地；修复 package.json 1.7.6 与 VERSION 1.7.7 不一致。
-- **v1.5.1 起接入 Google Analytics 4**：衡量 ID `G-0F9QWS1PDX`，单一来源 `lib/analytics.ts`（`NEXT_PUBLIC_GA_ID` 可覆盖，置空即停用；**仅生产环境加载**）；`components/analytics/GoogleAnalytics.tsx` 为客户端组件（`next/script` afterInteractive 注入 gtag.js，`usePathname` 变化补报 page_view），挂载于 `app/layout.tsx` body 首位；`trackEvent` 已预留但未埋点——检测内容/判读结果一律不上报。
-- **v1.7.9 已收敛待办（纯前端可落地项）**：C7 PWA、C4 儿童模式、C6 轻量 i18n、C3 服务端匿名事件上报，均已完成并归档见 `docs/tasks-done.md`。
-- **v1.8.0 本地优先替代（2026-10-14，C1/C2/C5/C8 全部完成）**：经产品决策，原「服务端账号+数据库」阻塞项改以纯前端本地优先方式落地，符合隐私定位——① 本地多档案 `lib/profile.ts` + `components/history/ProfileSwitcher.tsx`，`TestResult.profileId` 由 `saveResult` 自动归属当前档案，历史页按档案筛选（C1/C8 替代）；② 历史导出/导入 `lib/export-import.ts`（JSON 包按 id 合并，档案冲突保留本地、结果冲突保留较新）（C2 替代）；③ 批量检测 `/test/batch` 录入名单→逐人标准检测→汇总 CSV 导出（C5 替代）。任务文档 `docs/TASKS.md` 全部标注完成，`docs/tasks-done.md` §三 归档实现摘要。类型检查与 52 项 Vitest 全绿。
-- **v1.8.1 对抗式审查整改（2026-10-14，用户会话间隙自行提交）**：D-15 判读不再输出不可达 protan；路径追踪 `pathOverlap`→`pathF1`（实为 F1 非 IoU）+ 弧长等距重采样；结果结构 version 对齐 1.8.1；隐私页如实披露第一方上报与 GA4 及未成年条款；「置信度」改为「判读稳定性（内部估计）」。
-- **v1.8.2 更新日期展示 + 任务文档同步（2026-10-15）**：用户会话间隙发布页脚「更新于 {日期}」功能——`lib/site.ts` 的 `SITE_UPDATED` 为更新日期唯一来源，`components/layout/Footer.tsx` 展示 `v{version} · 更新于 {SITE_UPDATED}`；README「当前项目版本」与 SPEC §0 实现状态修正；本会话（grilling 驱动）完成 `docs/TASKS.md` 过时头部修正与 `docs/tasks-done.md` §四→§三 引用修正，折叠进同一 1.8.2 发布。
-- **v1.9.0 i18n 重构（2026-10-15，并行会话主导）**：i18n 由单文件 `lib/i18n.ts` 重构为 **`lib/i18n/` 模块**（`dict.ts` / `zh-core|zh-ui|zh-result` / `en-core|en-ui|en-result` / `t.ts` / `lang.ts`）；`uiText` 与 scoring 模块均增加 `lang` 参数（调用须传 `lang`）；**40 个客户端组件接入 `useLang()`**，覆盖历史 / 结果 / 科普（列表+正文）/ FAQ / 隐私 / 指引 / 离线页；中英词条对称（ui 77 / result 18 / learn 10 组）。重构后 tsc 通过、Vitest **73 项全绿**（本会话补 `lib/profile.test.ts` 11 例 + `lib/export-import.test.ts` 10 例，原 52 项）。原 C6 遗留范围作为 **C9** 补录并归档至 `docs/tasks-done.md` §四；`VERSION` / `package.json` 同步 1.9.0。
-- **v1.9.0 安全收口（2026-10-15，并行会话 `5030859`）**：R1 移除死代码 `reportServerEvent` 与 `app/api/analytics/event` 路由（隐私页口径同步）；R2 CSP `frame-ancestors` 由 `*` 收紧为 `'self'`。已归档至 `docs/tasks-done.md` §五。
-- **v1.9.1 超 200 行拆分 + 文档同步（2026-10-16）**：R3 治理——`Profile` 接口从 `lib/types.ts` 迁至 `lib/profile.ts`（领域归属，更新 ProfileSwitcher/export-import 导入源），历史页结果卡片抽为 `components/history/HistoryCard.tsx`；`lib/types.ts`(201→~191)、`app/history/page.tsx`(212→~174) 降至 ≤200 行；tsc + 73 Vitest 全绿。R3 残余：`components/test/PathTrackingCanvas.tsx`(247)、i18n 字典 `en-ui.ts`/`zh-ui.ts`(279/277，纯键值对) 待拆。R4 核验 `PathTrackingCanvas` 已具键盘通道（tabIndex/role/aria-keyshortcuts）。R5/R6/R7/R8 仍为 `docs/TASKS.md` §6 待办。
-- **v1.10.0 设置面板（2026-10-17，用户直接指令）**：把中英切换 / 色觉安全 / 趣味开关等迁入设置——新增右上角设置按钮 `components/layout/SettingsButton.tsx`（id `settings-button`，aria-haspopup / aria-expanded）+ 设置弹窗 `components/layout/SettingsDialog.tsx`（role=dialog + aria-modal，Esc / 遮罩关闭，打开聚焦面板），聚合语言 / 主题 / 色觉安全 / 趣味四组；持久化机制不变（ThemeProvider `cc.settings.v1` + LangProvider `cc.lang.v1`，`app/layout.tsx` 未改）；删除 `LangToggle.tsx` / `ThemeToggle.tsx`（仅 Navbar 引用，防死代码）；i18n `theme.*` 键组替换为 `settings.*`（zh-core / en-core 同步，含描述文案）。tsc + 73 Vitest 全绿。
-- 色相排列模块（v1.2 已实现）架构：`lib/questions/hue-arrangement.ts`（D15 sRGB 15 卡 + `shuffledOrder` mulberry32 确定性打乱，初始种子 20260905 防 SSR 闪烁）；评分 `lib/hue-scoring.ts`（TES：seq=[0,...order,14]，首末权重1/中间2，max(0,d-1)×权重；<20 正常/20-40 轻度/>40 明显；偏差方向 min(卡号)≤5→tritan 否则默认 deutan，注明不足以临床分型）；交互 `HueArrangementGrid`（点击选中+交换，v1.7.6 修复 listbox ARIA 误用改 group+aria-pressed）；**测试中不显示实时 TES**（防用户凑分，原型演示有显示但正式应用刻意去掉）。
-- 路径追踪模块（v1.1 已实现）架构：题库 `lib/questions/path-tracking.ts`（3 题，kind 0/1/2，复用 `standardPath`）；渲染用 `lib/ishihara.ts` 的 `buildPathField`（离屏 canvas 缓存于 `PathTrackingCanvas`）；评分 `lib/path-scoring.ts`（`pathOverlap` IoU 重采样 80 点 + TOL 0.07，`computePathResult`；v1.7.6 PathTrackingCanvas 指针移动加 rAF 节流）；`TestResult.ishihara` 改为可选、`pathTracking?: PathTrackingResult[]` 新增；结果页/摘要/导出/历史均按测试类型守卫渲染。
-- 数据/算法权威来源：应用侧 `lib/questions.ts`(38题) `lib/scoring.ts` `lib/ishihara.ts` `lib/hue-scoring.ts` `lib/path-scoring.ts` `lib/signal-scoring.ts` `lib/advanced-scoring.ts`；原型 `prototype/` v0.1.2 已反向对齐应用判读（wrongRate 阈值/IoU/色相轴启发式），仅作设计验证参考。
-- **构建关键坑（Windows/PowerShell + 腾讯 coding-copilot 扩展）**：该扩展注入的 `node-safe-delete-shim` 会拦截 Node 目录删除并因调用 genie-trash 超时，导致 `next build` 在 cleanup 阶段失败（ETIMEDOUT）。**解决办法**：构建前设 `$env:CODEBUDDY_SAFE_DELETE_ENABLED='0'`（shim 读此变量跳过安全删除），不影响代码本身。
-- 内置题库 38 道（`lib/questions.ts`，v1.5.0 由 24 扩至 38，新增 plate 25–38），题型含 demonstration/transformation/vanishing/hidden/classification/normal；隐藏题对正常视觉应渲染为空白图版（figureText 返回 ''），避免误判；快速版固定 10 题核心集，标准版/进阶版 38 题。
-- 设计令牌移植到 `app/globals.css`（`:root`/`[data-theme=dark]`/`body.cvd-safe`）；`tailwind.config.ts` 将颜色映射到这些 CSS 变量；v1.7.7 加 `prefers-reduced-motion: reduce`。
-- 原型集（`prototype/`）四页互相链接、纯 HTML+CSS+原生 JS、无构建依赖：`prototype.html`(高保真可交互+色觉模拟) / `wireframes.html`(组件库) / `design-system.html`(设计系统) / `interaction.html`(交互标准)。图标库 `prototype/assets/js/icons.js` 暴露 `CC.icon(name)`（24×24 线性 SVG，`currentColor` 继承）。
-- 文档治理教训：分册（ARCHITECTURE/DATA-SPEC/PRD/PRIVACY）的「规划蓝图」结构树/存储规范/上报功能须明确标注 v1.0 实际与后续版本边界，否则会与 SPEC/代码矛盾。分册头注释保持各自文档版，不随项目版本刷写；本次 v1.7.8 仅同步 SPEC 总纲与 README/VERSION/package.json/CHANGELOG，分册实现状态声明仍停留在 v1.2/v1.3，待后续按需对齐。
-- **趣味性设计（2026-09-05，SPEC §3.5 原型已验证）**：4 红线——答题中永不显示对错（判读数据污染）、无积分/排行榜（刷分毁效度）、无障碍零豁免（5 种色觉模拟 + reduced-motion）、称号去污名化（旅人隐喻，本机展示可关闭）；明确不做复测提醒等留存钩子（成人色觉稳定）。7 功能：进度点阵仪式感（每8题脉冲）、章末轻科普过渡（题型分3章）、中性提交反馈「✓已记录」恒开、Canvas 分享卡（`sharecard-canvas.ts` 零依赖 PNG 导出）、换一双眼睛（复用 `CC.renderPlate` 的 cvd 参数）、三轴互动科普、「趣味体验」总开关（`cc.funMode`，默认开）。
-- 原型 `ishihara.js` 坑：`CVD_MATRIX` 键名为 protanopia/deuteranopia/tritanopia/achromatopsia，**不是** protan/deutan/tritan/mono——键名写错会静默回退正常视觉不报错。
-- **页脚版本+更新日期（v1.8.2 起）**：应用页脚（`components/layout/Footer.tsx`）展示 `v{pkg.version} · 更新于 {SITE_UPDATED}`，更新日期唯一来源为 `lib/site.ts` 的 `SITE_UPDATED` 常量（发版时同步改）；原型侧 5 处（产品页脚 screens-main.js / prototype.html 外壳徽标 / 三规范页 docs-ver）为硬编码字符串，改版需手工同步。
-- **版本展示漂移教训（v1.8.2 修复）**：README「当前项目版本」与 SPEC §0「当前版本」曾停在 v1.7.9/v1.7.8 未随 1.8.0/1.8.1 同步；版本 bump 清单必须显式覆盖 README 实现状态行 + SPEC §0 注释 + 页脚/原型展示位，不能只改 VERSION/package.json/CHANGELOG。
-- **当前状态（2026-10-17）**：项目 v1.10.1；原型 prototype.html v0.1.3（已反向对齐应用判读，题库 38 题）。
-- **CI 无 lock 文件约束（v1.10.1，重要）**：仓库**不提交** `package-lock.json` / `yarn.lock`（文件不存在且未被 .gitignore 排除）。因此 `.github/workflows/ci.yml` 的 `actions/setup-node` **不能配 `cache: npm`**，安装步骤**必须用 `npm install` 而非 `npm ci`**——两者都要求 lock 文件存在，否则 `setup-node` 直接报 `Dependencies lock file is not found` 令整个工作流失败。若要改用 `cache`/`npm ci`，须先提交 lock 文件。
-- **CHANGELOG 追加规则（并行会话实证）**：用户会在会话间隙自行 bump 并发版（1.9.0→1.10.0→1.10.1 集中在 10-15~10-17）。写文档/版本前必须重读 `VERSION` + `package.json` + `CHANGELOG` 头部；若目标版本节**已存在**，应把新条目**追加进既有版本节的对应列表**，切勿新建重复版本节（本次曾险些为 CI 修复单开一个 `[1.10.1]`）。
-- **i18n 静态页改造模式（v1.10.1 固化）**：含 `metadata` 的静态页 = 服务端 `page.tsx` 导出静态中文 metadata + client 内容组件用 `useLang()`（参照 `app/test/page.tsx` → `components/test/TestSelectContent.tsx`）；client 组件仍参与 SSR，故其中的 `<JsonLd>` 结构化数据不丢 SEO。**长文本**（隐私政策等）走独立双语数据模块 `lib/privacy-data.ts`（与 `lib/learn-data.ts` 同构），段落内 `**强调**` 标记由 `parseEmphasis` 拆片段渲染 `<strong>`，避免撑大 i18n 字典。错误边界（`error.tsx`/`not-found.tsx`/段级 error）统一 `'use client'` + `useLang()`。`SkipLink` 必须放在 `LangProvider` **内部**，否则 `useLang()` 取到默认 context 会直接返回 key 本身。
+- 纯前端 Next.js 14(App Router)+React 18+TS(strict)+Tailwind 3，本地优先、无后端、无重型依赖；图表内联 SVG，报告 Canvas(PNG)+`window.print()`(PDF)。当前版本 **v1.10.1**（2026-10-17；会话间隙用户会自行 bump/提交，改版本前必须重读 `VERSION` 并 `git status --short --untracked-files=all`）。
+- 版本单一来源：`VERSION`(=1.10.1) 与 `package.json` 一致；代码改后同步 `README`/`CHANGELOG` 顶部版本。原型文件头 v0.1.3（已反向对齐应用，与正式版本解耦）。
+- 字体（v1.7.4 自托管）：`app/layout.tsx` 用 `next/font/google` 注入 Archivo+IBM Plex Mono；`lib/site.ts` 提供 `SITE_URL`/`SITE_UPDATED`（更新日期唯一来源，页脚 `v{ver}·更新于{SITE_UPDATED}` 直读 package.json）。构建需访问 fonts.gstatic.com，离线可能 ECONNRESET（重试通常可过）。
+- 导航（v1.7.5）：页眉 Navbar 仅「首页/开始检测/历史」；科普/隐私入口在页脚 Footer。
+
+### 功能/路由（详见 CHANGELOG）
+石原氏(quick10/standard38)+智能判读、路径追踪、色相排列D15、进阶联合判读、信号灯(`/test/signal`)、批量(`/test/batch`)、儿童、趣味包(可关)、历史多档案+导出导入、响应式+深色+色觉安全+五视角、中英 i18n、PWA、设置面板、GA4。`/test/`：ishihara/path-tracking/hue-arrangement/advanced/signal/batch/child；**FAQ 是首页区块 `components/home/HomeFaq.tsx`，非独立路由**。
+
+### 关键模块（长期有效）
+- i18n：`lib/i18n/`(dict/zh-*/en-*/t/lang)，40+ 组件 `useLang()`；含 metadata 静态页=服务端 page 导中文 metadata + client 内容组件 `useLang()`（范例 `app/test/page.tsx`→`TestSelectContent.tsx`）；长文本走 `lib/privacy-data.ts`/`lib/learn-data.ts`。
+- 本地数据：`lib/profile.ts`(Profile)、`lib/export-import.ts`、历史 `components/history/{HistoryCard,ProfileSwitcher}.tsx`；`TestResult.profileId` 由 `saveResult` 自动归属。
+- 设置面板（v1.10.0）：`components/layout/{SettingsButton,SettingsDialog}.tsx` 收编语言/主题/色觉安全/趣味；删 `LangToggle`/`ThemeToggle`；持久化 `cc.settings.v1`+`cc.lang.v1`。
+- 判读：`lib/{scoring,hue-scoring,path-scoring,signal-scoring,advanced-scoring}.ts`+`lib/ishihara.ts`；题库 `lib/questions.ts`(38)+`lib/questions/*`；`pathOverlap` 实为 F1；「置信度」已改「判读稳定性」。
+- 隐私：v1.9.0 已移除 `reportServerEvent`/`app/api/analytics/event`，**仅 GA4 上报**（口径见 `lib/privacy-data.ts`）。
+- 原型 `prototype/`：4 页纯 HTML 设计验证，**判读算法须以 app/lib 为准**（已对齐 v0.1.x，与 VERSION 解耦）；`CVD_MATRIX` 键名 protanopia/deuteranopia/tritanopia/achromatopsia（非 protan/deutan/tritan/mono）。
+- **仓库结构（长期有效）**：`.github/` 已规范化——含 CODE_OF_CONDUCT/CONTRIBUTING/SECURITY/SUPPORT/PULL_REQUEST_TEMPLATE/ISSUE_TEMPLATE/workflows；**未建 FUNDING.yml**；遵守全局规则**禁止新建 `.github/readme.md`**。根目录其余文件（README/LICENSE/CHANGELOG/package.json/VERSION/各构建配置/metadata.json/ChromaCheck.code-workspace）均属项目核心，按惯例留根，不应移入 .github/（用户 2026-10-17 核查确认）。
+
+### 坑/约束
+- 构建：`next build` cleanup 被腾讯 coding-copilot 的 node-safe-delete-shim 拦截致 ETIMEDOUT；构建前 `$env:CODEBUDDY_SAFE_DELETE_ENABLED='0'`。
+- CI：仓库**不提交** lock 文件，`.github/workflows/ci.yml` 的 setup-node **勿配 `cache: npm`**，安装用 `npm install`（非 `npm ci`）。
+- 版本漂移：改版本前必重读 VERSION+package.json+CHANGELOG 头；目标版本节已存在则追加，勿新建重复节。
 
 ## 跨项目通用（沿用）
-- 源文件单文件 >200 行须按职责拆分（仅代码文件，文档不拆）。
-- 每次修改 bump 最小版本号；仅被改文件头注释更新，禁止全仓库刷写头注释。
-- 中文对话、回复精简直给。
+- 源码单文件 >200 行须拆分（文档不拆）。
+- 每次修改 bump 最小版本号；仅被改文件头注释更新，禁全仓库刷写。
+- 中文对话、精简直给。
