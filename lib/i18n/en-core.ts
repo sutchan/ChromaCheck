@@ -1,5 +1,5 @@
 // lib/i18n/en-core.ts — English core dictionary (mirrors zh-core keys)
-// chromacheck v1.9.0
+// chromacheck v1.10.0
 import type { DictKey } from './dict';
 
 export const EN_CORE: Record<CoreKey, string> = {
@@ -163,15 +163,18 @@ export const EN_CORE: Record<CoreKey, string> = {
   'footer.updated': 'Updated',
   'footer.purpose': 'For education and screening only',
 
-  // Theme / fun / CVD-safe toggles
-  'theme.cvdSafe': 'CVD-safe',
-  'theme.cvdSafeTitle': 'Color-vision-safe mode: reduces reliance on color and boosts contrast',
-  'theme.funOn': 'Fun on',
-  'theme.funOff': 'Fun off',
-  'theme.funTitle': 'Playful experience: titles, chapter transitions and milestone rituals (does not affect scoring)',
-  'theme.toDark': 'Switch to dark',
-  'theme.toLight': 'Switch to light',
-  'theme.toggleTitle': 'Toggle light/dark',
+  // Settings dialog (v1.10.0: language / theme / CVD-safe / fun)
+  'settings.title': 'Settings',
+  'settings.open': 'Open settings',
+  'settings.close': 'Close',
+  'settings.language': 'Language',
+  'settings.appearance': 'Appearance',
+  'settings.light': 'Light',
+  'settings.dark': 'Dark',
+  'settings.cvdSafe': 'Color-vision-safe mode',
+  'settings.cvdSafeDesc': 'Reduces reliance on color and boosts contrast for comfortable browsing',
+  'settings.funMode': 'Playful experience',
+  'settings.funModeDesc': 'Titles, chapter transitions and milestone rituals during tests — does not affect scoring',
 };
 
 type CoreKey = keyof typeof import('./zh-core').ZH_CORE;

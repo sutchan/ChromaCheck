@@ -1,5 +1,5 @@
 // lib/i18n/zh-core.ts — 中文核心字典（导航 / 首页 / 模式选择 / 档案 / 历史 / 批量）
-// chromacheck v1.9.0
+// chromacheck v1.10.0
 
 export const ZH_CORE = {
   'nav.home': '首页',
@@ -162,13 +162,16 @@ export const ZH_CORE = {
   'footer.updated': '更新于',
   'footer.purpose': '仅供教育与筛查用途',
 
-  // 主题 / 趣味 / 色觉安全切换
-  'theme.cvdSafe': '色觉安全',
-  'theme.cvdSafeTitle': '色觉安全模式：弱化色彩依赖，加强对比',
-  'theme.funOn': '趣味开',
-  'theme.funOff': '趣味关',
-  'theme.funTitle': '趣味体验：称号、章末过渡与里程碑仪式感（不影响判读）',
-  'theme.toDark': '切换到深色',
-  'theme.toLight': '切换到浅色',
-  'theme.toggleTitle': '切换深浅色',
+  // 设置面板（v1.10.0：语言 / 主题 / 色觉安全 / 趣味）
+  'settings.title': '设置',
+  'settings.open': '打开设置',
+  'settings.close': '关闭',
+  'settings.language': '语言',
+  'settings.appearance': '主题外观',
+  'settings.light': '浅色',
+  'settings.dark': '深色',
+  'settings.cvdSafe': '色觉安全模式',
+  'settings.cvdSafeDesc': '弱化色彩依赖、加强对比，让色觉异常也能舒适浏览',
+  'settings.funMode': '趣味体验',
+  'settings.funModeDesc': '检测中的称号、章末过渡与里程碑仪式感，不影响判读结果',
 } as const;

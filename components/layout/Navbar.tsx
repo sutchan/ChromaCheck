@@ -1,13 +1,12 @@
 // components/layout/Navbar.tsx — 顶部导航
-// chromacheck v1.7.9
+// chromacheck v1.10.0
 'use client';
 
 import React from 'react';
 import Link from 'next/link';
 import { usePathname } from 'next/navigation';
 import { Icon } from '@/components/common/Icon';
-import { ThemeToggle } from './ThemeToggle';
-import { LangToggle } from './LangToggle';
+import { SettingsButton } from './SettingsButton';
 import { useLang } from './LangProvider';
 import type { DictKey } from '@/lib/i18n';
 
@@ -59,8 +58,7 @@ export function Navbar() {
               </Link>
             );
           })}
-          <LangToggle />
-          <ThemeToggle />
+          <SettingsButton />
         </div>
       </nav>
     </header>

@@ -1,7 +1,20 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.9.1`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.10.0`）。
+
+## [1.10.0] - 2026-10-17
+
+### 新增
+- 设置面板：右上角新增设置按钮（`components/layout/SettingsButton.tsx`，id `settings-button`，aria-haspopup/aria-expanded），点击弹出设置窗口（`components/layout/SettingsDialog.tsx`，`role="dialog"` + `aria-modal`，Esc / 点击遮罩关闭，打开即聚焦面板）。
+- 原导航栏的中英切换、主题深浅、色觉安全、趣味体验四个开关统一迁移至设置弹窗，按「语言 / 主题外观 / 色觉安全 / 趣味体验」分组呈现；持久化机制不变（`cc.settings.v1` + `cc.lang.v1`）。
+
+### 重构
+- 删除 `components/layout/LangToggle.tsx` 与 `components/layout/ThemeToggle.tsx`（功能已并入设置弹窗，避免死代码）。
+- i18n 字典 `theme.*` 键组替换为 `settings.*` 键组（中英对称，含设置项描述文案）。
+
+### 文档
+- 版本单一来源同步至 `1.10.0`。
 
 ## [1.9.1] - 2026-10-16
 
