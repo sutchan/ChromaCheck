@@ -32,6 +32,9 @@
 - **页脚版本+更新日期（v1.8.2 起）**：应用页脚（`components/layout/Footer.tsx`）展示 `v{pkg.version} · 更新于 {SITE_UPDATED}`，更新日期唯一来源为 `lib/site.ts` 的 `SITE_UPDATED` 常量（发版时同步改）；原型侧 5 处（产品页脚 screens-main.js / prototype.html 外壳徽标 / 三规范页 docs-ver）为硬编码字符串，改版需手工同步。
 - **版本展示漂移教训（v1.8.2 修复）**：README「当前项目版本」与 SPEC §0「当前版本」曾停在 v1.7.9/v1.7.8 未随 1.8.0/1.8.1 同步；版本 bump 清单必须显式覆盖 README 实现状态行 + SPEC §0 注释 + 页脚/原型展示位，不能只改 VERSION/package.json/CHANGELOG。
 - **当前状态（2026-10-17）**：项目 v1.10.1；原型 prototype.html v0.1.3（已反向对齐应用判读，题库 38 题）。
+- **CI 无 lock 文件约束（v1.10.1，重要）**：仓库**不提交** `package-lock.json` / `yarn.lock`（文件不存在且未被 .gitignore 排除）。因此 `.github/workflows/ci.yml` 的 `actions/setup-node` **不能配 `cache: npm`**，安装步骤**必须用 `npm install` 而非 `npm ci`**——两者都要求 lock 文件存在，否则 `setup-node` 直接报 `Dependencies lock file is not found` 令整个工作流失败。若要改用 `cache`/`npm ci`，须先提交 lock 文件。
+- **CHANGELOG 追加规则（并行会话实证）**：用户会在会话间隙自行 bump 并发版（1.9.0→1.10.0→1.10.1 集中在 10-15~10-17）。写文档/版本前必须重读 `VERSION` + `package.json` + `CHANGELOG` 头部；若目标版本节**已存在**，应把新条目**追加进既有版本节的对应列表**，切勿新建重复版本节（本次曾险些为 CI 修复单开一个 `[1.10.1]`）。
+- **i18n 静态页改造模式（v1.10.1 固化）**：含 `metadata` 的静态页 = 服务端 `page.tsx` 导出静态中文 metadata + client 内容组件用 `useLang()`（参照 `app/test/page.tsx` → `components/test/TestSelectContent.tsx`）；client 组件仍参与 SSR，故其中的 `<JsonLd>` 结构化数据不丢 SEO。**长文本**（隐私政策等）走独立双语数据模块 `lib/privacy-data.ts`（与 `lib/learn-data.ts` 同构），段落内 `**强调**` 标记由 `parseEmphasis` 拆片段渲染 `<strong>`，避免撑大 i18n 字典。错误边界（`error.tsx`/`not-found.tsx`/段级 error）统一 `'use client'` + `useLang()`。`SkipLink` 必须放在 `LangProvider` **内部**，否则 `useLang()` 取到默认 context 会直接返回 key 本身。
 
 ## 跨项目通用（沿用）
 - 源文件单文件 >200 行须按职责拆分（仅代码文件，文档不拆）。
