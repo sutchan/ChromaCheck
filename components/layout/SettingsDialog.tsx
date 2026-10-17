@@ -1,8 +1,9 @@
-// components/layout/SettingsDialog.tsx — 设置弹窗（语言 / 主题 / 色觉安全 / 趣味体验，v1.10.0）
-// chromacheck v1.10.0
+// components/layout/SettingsDialog.tsx — 设置弹窗（语言 / 主题 / 色觉安全 / 趣味体验，v1.10.1）
+// chromacheck v1.10.1
 'use client';
 
 import React, { useEffect, useRef } from 'react';
+import { createPortal } from 'react-dom';
 import { Icon } from '@/components/common/Icon';
 import { useLang } from './LangProvider';
 import { useSettings } from './ThemeProvider';
@@ -103,7 +104,18 @@ export function SettingsDialog({ onClose }: Props) {
     panelRef.current?.focus();
   }, []);
 
-  return (
+  // 打开期间锁定背景滚动，关闭时恢复
+  useEffect(() => {
+    const prev = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    return () => {
+      document.body.style.overflow = prev;
+    };
+  }, []);
+
+  // 经 Portal 挂到 document.body：Navbar 的 header 带 backdrop-filter，会成为 fixed 后代的
+  // 包含块，若在导航内直接渲染，全屏遮罩会被限制在 60px 高的头部里导致弹窗显示不完整。
+  return createPortal(
     <div
       id="settings-overlay"
       style={{
@@ -114,7 +126,7 @@ export function SettingsDialog({ onClose }: Props) {
         display: 'flex',
         alignItems: 'flex-start',
         justifyContent: 'center',
-        padding: '10vh var(--s-4) var(--s-4)',
+        padding: 'clamp(16px, 10vh, 72px) var(--s-4) var(--s-4)',
         overflowY: 'auto',
       }}
       onClick={(e) => {
@@ -217,6 +229,7 @@ export function SettingsDialog({ onClose }: Props) {
           t={t}
         />
       </div>
-    </div>
+    </div>,
+    document.body,
   );
 }

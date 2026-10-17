@@ -1,7 +1,19 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.10.0`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.10.1`）。
+
+## [1.10.1] - 2026-10-17
+
+### 修复
+- CI 工作流（`.github/workflows/ci.yml`）：移除 `actions/setup-node` 的 `cache: npm`，安装步骤由 `npm ci` 改为 `npm install`。仓库不提交 lock 文件（`package-lock.json` / `yarn.lock`），而 `cache: npm` 与 `npm ci` 均要求 lock 文件存在，导致 `setup-node` 直接报 `Dependencies lock file is not found` 而使整个工作流失败。
+- 设置弹窗显示不完整：弹窗遮罩改经 `createPortal` 挂载至 `document.body`。根因是 Navbar `header` 上的 `backdrop-filter: blur(10px)` 会成为 fixed 定位后代的包含块，使全屏遮罩被限制在 60px 高的头部内；Portal 到 body 后彻底绕过包含块与层叠上下文限制。
+- 打开设置时锁定背景滚动（关闭后恢复）；遮罩顶部留白由 `10vh` 改为 `clamp(16px, 10vh, 72px)`，适配矮视口。
+- 验证（Playwright 实测 1280×720 与 900×520）：遮罩父元素为 `BODY`，弹窗 420×441 完整居中，四组设置全部可见，Esc / 遮罩点击关闭正常。
+
+### 文档
+- `README.md` 追平实际版本：状态块收敛为单行，项目结构由逐文件罗列改为按目录职责概述（移除已删除的 ThemeToggle / LangToggle，补 lib/i18n/、设置面板等），移除占位联系方式。
+- 版本单一来源同步至 `1.10.1`。
 
 ## [1.10.0] - 2026-10-17
 

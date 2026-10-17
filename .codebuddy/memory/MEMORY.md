@@ -1,10 +1,10 @@
 # 记忆索引
 
 ## 项目：ChromaCheck（e:/Github/ChromaCheck）
-- 已从「纯文档 + 静态原型」进入**应用开发阶段**，v1.0.0 已实现（2026-09-04），当前版本 **v1.10.0**（2026-10-17；注意会话间隙用户会自行 bump/提交，改版本前必须重读 VERSION 并 `git status --short --untracked-files=all` 确认新建文件是否已被中间会话提交）。
+- 已从「纯文档 + 静态原型」进入**应用开发阶段**，v1.0.0 已实现（2026-09-04），当前版本 **v1.10.1**（2026-10-17；注意会话间隙用户会自行 bump/提交，改版本前必须重读 VERSION 并 `git status --short --untracked-files=all` 确认新建文件是否已被中间会话提交）。
 - 应用技术栈：Next.js 14 (App Router) + React 18 + TypeScript(strict) + Tailwind 3，纯本地、无后端、无重型依赖；图表用内联 SVG，报告导出用 Canvas(PNG)+`window.print()`(PDF)。
 - **字体（v1.7.4 起自托管）**：`app/layout.tsx` 用 `next/font/google` 注入 Archivo + IBM Plex Mono（`variable:--font-sans/--font-mono`），移除手动 Google Fonts `<link>`；站点域名统一由 `lib/site.ts` 的 `SITE_URL` 提供。构建时 next/font 需访问 fonts.gstatic.com，离线/弱网可能 `ECONNRESET`（Next 自动重试通常可过）。
-- 版本单一来源：`VERSION`(=1.10.0) 与 `package.json` version 一致；原型文件头 v0.1.2（判读已反向对齐应用，见 2026-09-08 日记），与正式应用版本解耦。
+- 版本单一来源：`VERSION`(=1.10.1) 与 `package.json` version 一致；原型文件头 v0.1.2（判读已反向对齐应用，见 2026-09-08 日记），与正式应用版本解耦。
 - **导航结构（v1.7.5）**：页眉 `components/layout/Navbar.tsx` 仅保留「首页 / 开始检测 / 历史」；「科普」「隐私」入口已移至页脚 `components/layout/Footer.tsx`（页脚含 开始检测/科普文章/隐私政策/GitHub；v1.7.7 起 Footer 版本号直读 `package.json`，不再硬编码，杜绝脱节）。
 - **已实现页面/功能**：v1.0 首页(含色觉模拟 CvdSimulator)、检测前指引、模式选择(快速10题/标准38题)、石原氏测试(`/test/ishihara/[mode]`)、结果页(`/result/[id]`)、历史、科普列表+详情、隐私政策；v1.1 路径追踪(`/test/path-tracking/[mode]`)；v1.2 色相排列 D15(`/test/hue-arrangement/[mode]`)；v1.3 进阶联合判读(`/test/advanced`)；**v1.4 趣味性体验包**（`lib/fun.ts` 趣味数据+`lib/sharecard.ts` Canvas 分享卡、`components/test/FunBits.tsx` 进度点阵/章末过渡、`components/result/EyesSwitcher.tsx` 换一双眼睛、`components/result/DimScenes.tsx` 三轴科普；`AppSettings.funMode` 开关经设置面板（v1.10.0 起 `SettingsDialog`）控制，中性反馈恒开）；v1.5 38 板完整图谱；v1.5.1 GA4 匿名统计；v1.6 SEO/GEO（sitemap/robots/JSON-LD/llms.txt/社交图）；v1.7 驾驶员场景专项（驾照合规栏 `lib/license.ts`/信号灯辨识 `/test/signal` 9 题/屏幕校准/图版明度/`scene:'driver'` 隐藏趣味）。GitHub 仓库：https://github.com/sutchan/ChromaCheck 。
 - **Vitest 测试套件（v1.7.6 落地）**：`npm test`=`vitest run`，覆盖判读引擎全量（scoring/hue-scoring/path-scoring/signal-scoring/advanced-scoring 共 39 例）+ storage 13 例；测试文件在 `lib/*.test.ts`；`vitest.setup.ts` 注入内存版 Storage（window 指向 globalThis），统一跑 node 环境（无 jsdom/happy-dom）；`npm run test:coverage` 走 @vitest/coverage-v8。**安全响应头（v1.7.6）**：`next.config.mjs` 配置 CSP/X-Frame-Options/X-Content-Type-Options/Referrer-Policy/Permissions-Policy。
@@ -31,7 +31,7 @@
 - 原型 `ishihara.js` 坑：`CVD_MATRIX` 键名为 protanopia/deuteranopia/tritanopia/achromatopsia，**不是** protan/deutan/tritan/mono——键名写错会静默回退正常视觉不报错。
 - **页脚版本+更新日期（v1.8.2 起）**：应用页脚（`components/layout/Footer.tsx`）展示 `v{pkg.version} · 更新于 {SITE_UPDATED}`，更新日期唯一来源为 `lib/site.ts` 的 `SITE_UPDATED` 常量（发版时同步改）；原型侧 5 处（产品页脚 screens-main.js / prototype.html 外壳徽标 / 三规范页 docs-ver）为硬编码字符串，改版需手工同步。
 - **版本展示漂移教训（v1.8.2 修复）**：README「当前项目版本」与 SPEC §0「当前版本」曾停在 v1.7.9/v1.7.8 未随 1.8.0/1.8.1 同步；版本 bump 清单必须显式覆盖 README 实现状态行 + SPEC §0 注释 + 页脚/原型展示位，不能只改 VERSION/package.json/CHANGELOG。
-- **当前状态（2026-10-15）**：项目 v1.8.2；原型 prototype.html v0.1.3（已反向对齐应用判读，题库 38 题）。
+- **当前状态（2026-10-17）**：项目 v1.10.1；原型 prototype.html v0.1.3（已反向对齐应用判读，题库 38 题）。
 
 ## 跨项目通用（沿用）
 - 源文件单文件 >200 行须按职责拆分（仅代码文件，文档不拆）。

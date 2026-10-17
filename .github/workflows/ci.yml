@@ -1,7 +1,9 @@
 # CI 工作流 — ChromaCheck
 # 规范依据：docs/SPEC.md §8.4 / docs/ARCHITECTURE.md §8.1 / docs/TESTING.md §7.1
 # 注：当前项目已为 Next.js 14 应用（package.json + lint/type-check/test/build 脚本齐备）。
-#     应用暂无独立单测套件，test 脚本以 tsc 类型检查作为正确性闸门；e2e 暂未配置。
+#     测试门禁：Vitest（npm test）；e2e 暂未配置。
+# 仓库不提交 lock 文件（package-lock.json / yarn.lock），故不使用 setup-node 的
+# npm 缓存，安装步骤用 `npm install`（`npm ci` 与 `cache: npm` 均要求 lock 文件存在）。
 name: CI
 
 on:
@@ -21,10 +23,9 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: 20
-          cache: npm
 
       - name: Install dependencies
-        run: npm ci
+        run: npm install
 
       - name: Lint
         run: npm run lint

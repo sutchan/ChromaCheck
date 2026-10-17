@@ -56,3 +56,4 @@ Thumbs.db
 *.tmp
 .cache/
 *tmp-*
+*.txt
