@@ -1,7 +1,14 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.10.1`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.10.2`）。
+
+## [1.10.2] - 2026-10-17
+
+### 重构 / 清理
+- 删除死代码：移除 `lib/questions.ts` 的 `TYPE_LABEL` 常量（已被 `components/test/TestProgress.tsx` 与 `components/result/AnswerReview.tsx` 的 `TYPE_LABEL_KEY` 取代）。
+- 清理 i18n 字典中 11 个从未被引用的键（`nav.lang`、`child.noShape`、`common.analysisNote`、`guide.desc`、`guide.pageTitle`、`learn.title`、`learn.desc`、`learn.crumbHome`、`learn.crumbLearn`、`profile.avatar`、`profile.delete`），字典条目由 509 降至 498。说明：`child.noShape` 与 `SHAPE_LABEL.none` 重复；`guide.*` / `learn.*` 部分键对应服务端静态 `metadata`（已硬编码中文，无需字典条目）。
+- 经脚本扫描确认：无孤儿文件、无未使用依赖、无 `console.*` / `debugger`；`app/globals.css` 的全部自定义类均被组件引用。
 
 ## [1.10.1] - 2026-10-17
 
