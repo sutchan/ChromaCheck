@@ -196,7 +196,6 @@ export const EN_UI: Record<UiKey, string> = {
 
   // Pre-test guide
   'guide.title': 'Pre-test guide',
-  'guide.desc': 'Before starting, prepare the right environment, device and state: even lighting, a color-accurate screen, no tinted glasses, 40–50 cm viewing distance, and first-impression answers.',
   'guide.envTitle': 'Environment & device',
   'guide.envText': 'Test in a well-lit, evenly lit room and avoid direct glare on the screen. Use a display with normal color reproduction, ideally with a calibrated color temperature.',
   'guide.eyesTitle': 'Eyes & distance',
@@ -213,7 +212,6 @@ export const EN_UI: Record<UiKey, string> = {
   'guide.lightText': 'Test under even white light; avoid warm desk lamps or direct sunlight tinting the screen. The screen surface should have no strong reflections.',
   'guide.demoTitle': 'Self-check with the demo item',
   'guide.demoText': 'After starting, item 1 is a demo that confirms you can see and input normally; if even the demo is hard to read, adjust the environment first.',
-  'guide.pageTitle': 'Pre-test guide',
   'guide.startHint': 'Before you start, prepare',
   'guide.startDesc': 'Online screening is sensitive to the environment. Results are more trustworthy when all conditions below are met. The whole process takes about 3–8 minutes.',
   'guide.disclaimer': 'This test is for screening only and cannot replace a professional eye examination. If you already struggle with color in daily life, please visit a reputable ophthalmology department directly.',
@@ -225,13 +223,9 @@ export const EN_UI: Record<UiKey, string> = {
   'guide.ctaHome': 'Back to home',
 
   // Learn
-  'learn.title': 'Color vision basics',
-  'learn.desc': 'Learn the difference between color blindness and deficiency, how Ishihara plates work, inheritance patterns, plus practical tips and when to see a doctor.',
   'learn.chip': 'Learn',
   'learn.heading': 'What you should know about color vision',
   'learn.sub': 'From principles to inheritance, careers and daily life — build a basic understanding of color vision deficiency in a few minutes.',
-  'learn.crumbHome': 'Home',
-  'learn.crumbLearn': 'Learn',
   'learn.back': 'Back to article list',
   'learn.next': 'Next article',
   'learn.cta': 'Take a test now',

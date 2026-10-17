@@ -5,7 +5,6 @@ export const ZH_CORE = {
   'nav.home': '首页',
   'nav.test': '开始检测',
   'nav.history': '历史',
-  'nav.lang': '语言',
   'home.chip': '在线色觉筛查 · 石原氏原理',
   'home.title': '看清世界的色彩，从一次自测开始',
   'home.desc': '色辨 ChromaCheck 帮你在家快速了解自己的色觉状况：是正常、色弱还是色盲倾向，以及偏向红绿还是蓝黄。',
@@ -66,10 +65,8 @@ export const ZH_CORE = {
   'child.demo': '演示题 · 大家一起看',
   'child.pickShape': '看清后选择图形',
   'child.optionsLabel': '选择你看到的图形',
-  'child.noShape': '看不清 / 没有图形',
   'child.saving': '已记录，正在生成结果…',
   'child.callout': '儿童版是',
-  'common.analysisNote': '筛查参考，不替代专业医学诊断',
   'common.skipToContent': '跳到主内容',
 
   // 格式化（时长 / 设备）
@@ -86,9 +83,7 @@ export const ZH_CORE = {
   'profile.add': '新增档案',
   'profile.name': '名称',
   'profile.relation': '关系（如父亲 / 女儿）',
-  'profile.avatar': '头像',
   'profile.rename': '重命名',
-  'profile.delete': '删除',
   'profile.deleteConfirm': '删除该成员及其历史记录？此操作不可撤销。',
   'profile.current': '当前',
   'profile.defaultName': '本人',

@@ -194,7 +194,6 @@ export const ZH_UI = {
 
   // 检测前指引
   'guide.title': '检测前指引',
-  'guide.desc': '开始色觉检测前，请准备合适的环境、设备与状态：光线均匀、色彩正常的屏幕、摘除有色眼镜、眼睛距屏 40–50cm，并凭第一直觉作答。',
   'guide.envTitle': '环境与设备',
   'guide.envText': '在光线充足、均匀的室内进行，避免强光直射屏幕。使用色彩表现正常的显示器，建议校准过色温。',
   'guide.eyesTitle': '眼睛与距离',
@@ -211,7 +210,6 @@ export const ZH_UI = {
   'guide.lightText': '在均匀白光下进行，避免暖黄台灯或阳光直射屏幕造成偏色。屏幕表面无强反光。',
   'guide.demoTitle': '先用演示题自检',
   'guide.demoText': '进入检测后，第 1 题为演示题，用于确认你能看清并正常输入；若演示题都难以辨认，请先调整环境再继续。',
-  'guide.pageTitle': '检测前指引',
   'guide.startHint': '开始前，请先准备',
   'guide.startDesc': '在线筛查对环境较敏感。以下条件都满足时，结果才更可信。整个过程约 3–8 分钟。',
   'guide.disclaimer': '本检测为筛查用途，不能替代专业眼科诊断。若你已出现日常辨色困难，建议直接前往正规医院眼科检查。',
@@ -223,13 +221,9 @@ export const ZH_UI = {
   'guide.ctaHome': '返回首页',
 
   // 科普
-  'learn.title': '色觉科普',
-  'learn.desc': '了解色盲与色弱的区别、石原氏检测原理、色觉异常的遗传规律，以及生活中实用的辨色技巧与就医建议。',
   'learn.chip': '科普',
   'learn.heading': '关于色觉，你需要知道的事',
   'learn.sub': '从原理到遗传、职业与日常生活，用几分钟建立对色觉异常的基本认识。',
-  'learn.crumbHome': '首页',
-  'learn.crumbLearn': '科普',
   'learn.back': '返回科普列表',
   'learn.next': '下一篇',
   'learn.cta': '现在做一次检测',

@@ -6,7 +6,6 @@ export const EN_CORE: Record<CoreKey, string> = {
   'nav.home': 'Home',
   'nav.test': 'Start test',
   'nav.history': 'History',
-  'nav.lang': 'Language',
   'home.chip': 'Online color vision screening · Ishihara',
   'home.title': 'See the world in color — start with one self-test',
   'home.desc': 'ChromaCheck helps you understand your color vision at home: normal, anomalous, or color blind tendency, and whether it leans red-green or blue-yellow.',
@@ -67,10 +66,8 @@ export const EN_CORE: Record<CoreKey, string> = {
   'child.demo': 'Demo item · everyone can see it',
   'child.pickShape': 'Pick the shape once you see it',
   'child.optionsLabel': 'Choose the shape you see',
-  'child.noShape': 'Not sure / no shape',
   'child.saving': 'Recorded — preparing your result…',
   'child.callout': 'Kids mode is',
-  'common.analysisNote': 'Screening reference only, not a medical diagnosis',
   'common.skipToContent': 'Skip to main content',
 
   // Formatting (duration / device)
@@ -87,9 +84,7 @@ export const EN_CORE: Record<CoreKey, string> = {
   'profile.add': 'Add profile',
   'profile.name': 'Name',
   'profile.relation': 'Relation (e.g. Father / Daughter)',
-  'profile.avatar': 'Avatar',
   'profile.rename': 'Rename',
-  'profile.delete': 'Delete',
   'profile.deleteConfirm': 'Delete this member and their history? This cannot be undone.',
   'profile.current': 'Current',
   'profile.defaultName': 'Me',

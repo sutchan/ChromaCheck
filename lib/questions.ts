@@ -46,15 +46,6 @@ export const QUESTIONS: Question[] = [
 // 首页 Hero 展示用图版（题库首题，确定性，无需依赖完整题库导入）
 export const HERO_PLATE = QUESTIONS[0];
 
-export const TYPE_LABEL: Record<Question['type'], string> = {
-  demonstration: '演示题',
-  normal: '常规题',
-  transformation: '转换题',
-  vanishing: '消失题',
-  hidden: '隐藏题',
-  classification: '分类题',
-};
-
 const BY_ID = new Map(QUESTIONS.map((q) => [q.id, q]));
 
 export function getQuestion(id: string): Question | undefined {
