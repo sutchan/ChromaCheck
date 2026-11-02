@@ -67,12 +67,12 @@
 
 ## 6. 未完成待办（R4–R8）
 
-> 来源：2026-10-15 代码库全面审查遗留项。**R1 / R2 已于 v1.9.0 完成并归档至 `docs/tasks-done.md` §五**（死代码上报移除 + CSP 收紧），**R3 已于 v1.11.1 完成**（拆分 `PathTrackingCanvas` / `SettingsDialog` / `zh-ui` / `en-ui` 共 4 个超 200 行文件为 `pathCanvas.*` / `SettingsSwitchRow`+`settingsControls` / `*.test`+`*.result`+`*.guide` 子模块），均不在本清单。⏳ 表示改动前需先确认方案（涉及隐私承诺、安全策略、破坏性变更或跨模块重构）。下表"状态"为 2026-11-02（v1.11.1）复核。
+> 来源：2026-10-15 代码库全面审查遗留项。**R1 / R2 已于 v1.9.0 完成并归档至 `docs/tasks-done.md` §五**（死代码上报移除 + CSP 收紧），**R3 已于 v1.11.1–v1.11.2 完成**（拆分 `PathTrackingCanvas` / `SettingsDialog` / `zh-ui` / `en-ui` 为 `pathCanvas.*`（types/render/coords/keymap）/ `SettingsSwitchRow`+`settingsControls` / `*.flow`+`*.result`+`*.guide` 子模块），**R6（lockfile）、R7（SEO metadata）已于 v1.11.2 完成**，均不在本清单。⏳ 表示改动前需先确认方案（涉及隐私承诺、安全策略、破坏性变更或跨模块重构）。下表"状态"为 2026-11-02（v1.11.2）复核。
 
 | 编号 | 问题 | 优先级 | 状态 |
 |------|------|--------|------|
-| R4 | 无障碍：`Numpad` / `SignalRunner` / `DimScenes` / `AnswerReview` / `ChildPlate` / `IshiharaPlate` 缺 aria 语义（`PathTrackingCanvas` 经 v1.9.1 核验已具键盘通道 tabIndex / role / aria-keyshortcuts） | P1 | 🟡 部分（待复核） |
-| R5 | 测试覆盖率缺口：child-scoring / sharecard / report-canvas / scoring-text / ishihara / path-field / format 无单测；无组件测试与 e2e（≥80% 门禁未达成） | P2 | 🟡 部分完成（v1.9.0 补 profile + export-import 共 21 例） |
-| R6 | 无 lockfile（`package-lock.json` 缺失）→ 构建不可复现；依赖钉扎策略不统一（vitest/coverage 用 `^`） | P2 | ⏳ 待决策（2026-11-02 确认仓库仍无 lockfile） |
-| R7 | SEO metadata 缺 9 个路由段（首页、`test/advanced`、`test/batch`、`test/*/[mode]`、`learn/[slug]`、not-found） | P2 | ⏳ 待处理 |
+| R4 | 无障碍：`Numpad` / `SignalRunner` / `DimScenes` / `AnswerReview` / `ChildPlate` / `IshiharaPlate` aria 走查（`PathTrackingCanvas` 经 v1.9.1 核验已具键盘通道 tabIndex / role / aria-keyshortcuts） | P1 | 🟡 大部分已具备（按钮自标注、分组/角色标签齐全），AnswerReview / IshiharaPlate 待最终走查 |
+| R5 | 测试覆盖率缺口：child-scoring / sharecard / report-canvas / scoring-text / ishihara / path-field / format 无单测；无组件测试与 e2e（≥80% 门禁未达成） | P2 | 🟡 8 文件 73 例（判读 + 存储 + 导入导出）；上述模块仍缺 |
+| R6 | lockfile：`package-lock.json` 已生成（8072 行），vitest/coverage 钉死 2.1.9 | P2 | ✅ v1.11.2 完成（CI 是否切 `npm ci` 待决策） |
+| R7 | SEO metadata：`test/batch`（layout）与 404（拆出 NotFoundClient）补齐；其余路由段此前已具备 | P2 | ✅ v1.11.2 完成 |
 | R8 | 轻微反模式：mounted 进度恢复逻辑重复（AdvancedRunner / TestRunner）、history 页内联 style 与 Tailwind 混用、result props 透传 6+ 层 | P2 | ⏳ 后续迭代 |

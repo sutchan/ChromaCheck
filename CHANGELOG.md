@@ -1,7 +1,18 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.11.1`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.11.2`）。
+
+## [1.11.2] - 2026-11-02
+
+### 修复（R3 / R6 / R7 收口）
+- **R3 拆分收尾**：`components/test/PathTrackingCanvas.tsx` 在已抽离 `pathCanvas.types/render/coords` 基础上，再把键盘通道（光标移动 / Enter 落点 / Backspace 撤销 / Esc 清空）抽为 `pathCanvas.keymap.ts`，组件由 247 行降至 146 行，符合单文件 ≤200 行规则。
+- **修复 vitest 误报**：i18n 数据分片 `zh-ui.test.ts` / `en-ui.test.ts` 被 vitest 的 `lib/**/*.test.ts` 匹配规则当成测试文件，报 `No test suite found`；更名为 `zh-ui.flow.ts` / `en-ui.flow.ts`（导出契约不变），测试套件由 10 收为 8、73 例全过。
+- **R6 构建可复现**：生成 `package-lock.json`（8072 行），`vitest` 与 `@vitest/coverage-v8` 由 `^2.1.9` 钉死为 `2.1.9`。注：v1.10.1 曾因 CI 无 lockfile 而用 `npm install`；现 lockfile 入库后，CI 可择机切回 `npm ci`（本轮未改 CI）。
+- **R7 SEO metadata 补齐**：`app/test/batch/page.tsx` 为客户端组件无法导出 metadata，新增 `app/test/batch/layout.tsx` 提供标题 / 描述 / canonical / OG（`robots: noindex`，工具页不索引）；`app/not-found.tsx` 由客户端组件改为服务端壳，UI 移至 `components/NotFoundClient.tsx`，404 页补上 `noindex` 元数据。
+
+### 验证
+- `tsc --noEmit` 干净；`vitest run` 8 文件 73 例全过；`next build` 29 路由全部成功生成（含 `/test/batch`、`/_not-found`、`/learn/[slug]`）。
 
 ## [1.11.1] - 2026-11-02
 

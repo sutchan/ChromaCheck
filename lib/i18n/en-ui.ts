@@ -1,6 +1,6 @@
 // lib/i18n/en-ui.ts — English UI dictionary (mirrors zh-ui keys)
 // chromacheck v1.11.1
-import { EN_UI_TEST } from './en-ui.test';
+import { EN_UI_TEST } from './en-ui.flow';
 import { EN_UI_RESULT } from './en-ui.result';
 import { EN_UI_GUIDE } from './en-ui.guide';
 
