@@ -1,22 +1,18 @@
 // components/test/PathTrackingCanvas.tsx — 路径追踪画布 + 描线交互（指针 + 键盘双通道）
-// chromacheck v1.9.0
+// chromacheck v1.11.1
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
 import { buildPathField, type PathField } from '@/lib/path-field';
 import { simulate } from '@/lib/ishihara';
-import type { PathTrackingQuestion } from '@/lib/types';
 import { Icon } from '@/components/common/Icon';
 import { useLang } from '@/components/layout/LangProvider';
+import { type PathCanvasProps } from './pathCanvas.types';
+import { drawPathField } from './pathCanvas.render';
+import { toNormPoint } from './pathCanvas.coords';
+import { createPathKeymap } from './pathCanvas.keymap';
 
-const STEP = 0.04; // 键盘移动步长（归一化坐标）
-
-interface Props {
-  question: PathTrackingQuestion;
-  onResult: (userPath: { x: number; y: number }[]) => void;
-}
-
-export function PathTrackingCanvas({ question, onResult }: Props) {
+export function PathTrackingCanvas({ question, onResult }: PathCanvasProps) {
   const { t } = useLang();
   const canvasRef = useRef<HTMLCanvasElement>(null);
   const offRef = useRef<HTMLCanvasElement | null>(null);
@@ -27,42 +23,13 @@ export function PathTrackingCanvas({ question, onResult }: Props) {
   const cursorRef = useRef<{ x: number; y: number }>({ x: 0.5, y: 0.5 });
   const [userPath, setUserPath] = useState<{ x: number; y: number }[]>([]);
   const [, forceTick] = useState(0);
+  const { handleKeyDown, clear } = createPathKeymap({ cursorRef, ptsRef, setUserPath, forceTick });
 
-  function render() {
-    const canvas = canvasRef.current;
-    const off = offRef.current;
-    if (!canvas || !off) return;
-    const ctx = canvas.getContext('2d');
-    if (!ctx) return;
-    ctx.drawImage(off, 0, 0);
-    const up = ptsRef.current;
-    if (up.length > 1) {
-      ctx.beginPath();
-      ctx.lineWidth = 4;
-      ctx.lineJoin = 'round';
-      ctx.lineCap = 'round';
-      ctx.strokeStyle = 'rgba(20,30,45,0.85)';
-      const W = fieldRef.current!.W;
-      const H = fieldRef.current!.H;
-      ctx.moveTo(up[0].x * W, up[0].y * H);
-      for (let i = 1; i < up.length; i++) ctx.lineTo(up[i].x * W, up[i].y * H);
-      ctx.stroke();
-    }
-    // 键盘光标
-    const c = cursorRef.current;
-    ctx.beginPath();
-    ctx.arc(c.x * fieldRef.current!.W, c.y * fieldRef.current!.H, 9, 0, Math.PI * 2);
-    ctx.strokeStyle = '#5b7cfa';
-    ctx.lineWidth = 2;
-    ctx.stroke();
-  }
-
-  /** rAF 节流：合并同一帧内的多次 pointermove，只做一次重绘 */
   function scheduleRender() {
     if (rafRef.current !== null) return;
     rafRef.current = requestAnimationFrame(() => {
       rafRef.current = null;
-      render();
+      drawPathField(canvasRef.current, offRef.current, fieldRef.current, ptsRef.current, cursorRef.current);
     });
   }
 
@@ -96,7 +63,7 @@ export function PathTrackingCanvas({ question, onResult }: Props) {
     ptsRef.current = [];
     cursorRef.current = { x: 0.5, y: 0.5 };
     setUserPath([]);
-    render();
+    drawPathField(canvasRef.current, off, field, [], cursorRef.current);
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [question.id]);
 
@@ -108,18 +75,10 @@ export function PathTrackingCanvas({ question, onResult }: Props) {
     [],
   );
 
-  function toNorm(e: React.PointerEvent<HTMLCanvasElement>) {
-    const canvas = canvasRef.current!;
-    const rect = canvas.getBoundingClientRect();
-    const x = (e.clientX - rect.left) / rect.width;
-    const y = (e.clientY - rect.top) / rect.height;
-    return { x: Math.max(0, Math.min(1, x)), y: Math.max(0, Math.min(1, y)) };
-  }
-
   function onDown(e: React.PointerEvent<HTMLCanvasElement>) {
     e.preventDefault();
     drawing.current = true;
-    cursorRef.current = toNorm(e);
+    cursorRef.current = toNormPoint(canvasRef.current!, e);
     ptsRef.current = [cursorRef.current];
     setUserPath(ptsRef.current);
     forceTick((v) => v + 1);
@@ -128,7 +87,7 @@ export function PathTrackingCanvas({ question, onResult }: Props) {
 
   function onMove(e: React.PointerEvent<HTMLCanvasElement>) {
     if (!drawing.current) return;
-    const p = toNorm(e);
+    const p = toNormPoint(canvasRef.current!, e);
     cursorRef.current = p;
     ptsRef.current.push(p);
     scheduleRender();
@@ -141,65 +100,6 @@ export function PathTrackingCanvas({ question, onResult }: Props) {
     setUserPath(up);
     forceTick((v) => v + 1);
     if (up.length > 1) onResult(up);
-  }
-
-  function moveCursor(dx: number, dy: number) {
-    const c = cursorRef.current;
-    cursorRef.current = { x: Math.max(0, Math.min(1, c.x + dx)), y: Math.max(0, Math.min(1, c.y + dy)) };
-    forceTick((v) => v + 1);
-  }
-
-  function dropCursor() {
-    ptsRef.current = [...ptsRef.current, { ...cursorRef.current }];
-    setUserPath(ptsRef.current);
-    forceTick((v) => v + 1);
-  }
-
-  function undo() {
-    ptsRef.current = ptsRef.current.slice(0, -1);
-    setUserPath(ptsRef.current);
-    forceTick((v) => v + 1);
-  }
-
-  function clear() {
-    ptsRef.current = [];
-    setUserPath([]);
-    forceTick((v) => v + 1);
-  }
-
-  function handleKeyDown(e: React.KeyboardEvent<HTMLCanvasElement>) {
-    switch (e.key) {
-      case 'ArrowLeft':
-        e.preventDefault();
-        moveCursor(-STEP, 0);
-        break;
-      case 'ArrowRight':
-        e.preventDefault();
-        moveCursor(STEP, 0);
-        break;
-      case 'ArrowUp':
-        e.preventDefault();
-        moveCursor(0, -STEP);
-        break;
-      case 'ArrowDown':
-        e.preventDefault();
-        moveCursor(0, STEP);
-        break;
-      case 'Enter':
-        e.preventDefault();
-        dropCursor();
-        break;
-      case 'Backspace':
-        e.preventDefault();
-        undo();
-        break;
-      case 'Escape':
-        e.preventDefault();
-        clear();
-        break;
-      default:
-        break;
-    }
   }
 
   return (

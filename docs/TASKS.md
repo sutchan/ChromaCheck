@@ -65,13 +65,12 @@
 
 > **完成结论**：C1 / C2 / C5 / C8 采用「本地优先替代」方案，纯前端落地，不引入服务端、不收集 PII，符合项目隐私定位。v1.8.1 对抗式审查整改、v1.9.0 移除 C3 服务端上报（见 R1），均不改变本清单已完成状态。
 
-## 6. 未完成待办（R3–R8）
+## 6. 未完成待办（R4–R8）
 
-> 来源：2026-10-15 代码库全面审查遗留项。**R1 / R2 已于 v1.9.0 完成并归档至 `docs/tasks-done.md` §五**（死代码上报移除 + CSP 收紧），不在本清单。⏳ 表示改动前需先确认方案（涉及隐私承诺、安全策略、破坏性变更或跨模块重构）。下表"状态"为 2026-11-02（v1.10.2）复核。
+> 来源：2026-10-15 代码库全面审查遗留项。**R1 / R2 已于 v1.9.0 完成并归档至 `docs/tasks-done.md` §五**（死代码上报移除 + CSP 收紧），**R3 已于 v1.11.1 完成**（拆分 `PathTrackingCanvas` / `SettingsDialog` / `zh-ui` / `en-ui` 共 4 个超 200 行文件为 `pathCanvas.*` / `SettingsSwitchRow`+`settingsControls` / `*.test`+`*.result`+`*.guide` 子模块），均不在本清单。⏳ 表示改动前需先确认方案（涉及隐私承诺、安全策略、破坏性变更或跨模块重构）。下表"状态"为 2026-11-02（v1.11.1）复核。
 
 | 编号 | 问题 | 优先级 | 状态 |
 |------|------|--------|------|
-| R3 | 单文件 >200 行违规（受「≤200 行」规则约束）：`components/test/PathTrackingCanvas.tsx`(247)、`lib/i18n/en-ui.ts`(273)/`zh-ui.ts`(271)、`components/layout/SettingsDialog.tsx`(236) 待拆分；`lib/types.ts` 与 `app/history/page.tsx` 已于 v1.9.1 拆至 ≤200 | P1 | 🟡 部分完成 |
 | R4 | 无障碍：`Numpad` / `SignalRunner` / `DimScenes` / `AnswerReview` / `ChildPlate` / `IshiharaPlate` 缺 aria 语义（`PathTrackingCanvas` 经 v1.9.1 核验已具键盘通道 tabIndex / role / aria-keyshortcuts） | P1 | 🟡 部分（待复核） |
 | R5 | 测试覆盖率缺口：child-scoring / sharecard / report-canvas / scoring-text / ishihara / path-field / format 无单测；无组件测试与 e2e（≥80% 门禁未达成） | P2 | 🟡 部分完成（v1.9.0 补 profile + export-import 共 21 例） |
 | R6 | 无 lockfile（`package-lock.json` 缺失）→ 构建不可复现；依赖钉扎策略不统一（vitest/coverage 用 `^`） | P2 | ⏳ 待决策（2026-11-02 确认仓库仍无 lockfile） |

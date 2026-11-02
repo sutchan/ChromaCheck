@@ -1,7 +1,15 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.11.0`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.11.1`）。
+
+## [1.11.1] - 2026-11-02
+
+### 重构（R3 超 200 行拆分）
+- 按单文件 ≤200 行规则拆分超行源码：`components/test/PathTrackingCanvas.tsx`（247）抽离 `pathCanvas.types.ts`（STEP 常量 + Props）、`pathCanvas.render.ts`（绘制纯函数）、`pathCanvas.coords.ts`（指针坐标归一化）；`components/layout/SettingsDialog.tsx`（236）抽离 `SettingsSwitchRow.tsx` 与 `settingsControls.ts`；i18n 字典 `lib/i18n/zh-ui.ts`（271）/ `en-ui.ts`（273）按语义块拆为 `*.test.ts` / `*.result.ts` / `*.guide.ts` 子模块，主文件合并导出。导出契约（`ZH_UI` / `EN_UI` / 组件 props）保持不变，仅内部模块拆分。
+
+### 文档
+- 版本单一来源同步至 `1.11.1`；修正 README 漂移的版本号（原误标 v1.10.2）。
 
 ## [1.11.0] - 2026-11-02
 
