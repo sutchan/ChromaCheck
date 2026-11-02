@@ -2,12 +2,19 @@
 
 > 一眼辨色，科学筛查 — 在线色觉检测 Web 应用
 
+[![Website](https://img.shields.io/badge/在线试用-chroma.ewuse.com-4c1)][website]
+[![CI](https://github.com/sutchan/ChromaCheck/actions/workflows/ci.yml/badge.svg)][ci]
 [![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3-38bdf8)](https://tailwindcss.com/)
 [![License](https://img.shields.io/badge/License-MIT-green)](#license)
 
+[website]: https://chroma.ewuse.com/
+[ci]: https://github.com/sutchan/ChromaCheck/actions/workflows/ci.yml
+
 色辨（ChromaCheck）是基于 Web 的在线色觉检测工具，通过标准化石原氏色盲检测图与多种测试范式，帮助用户快速、便捷地筛查色觉异常。纯本地运行、无需注册，检测数据默认仅存储于浏览器。
+
+**在线试用**：<https://chroma.ewuse.com/> — 打开即用，无需注册，检测数据仅存于本地浏览器。
 
 > **当前版本 v1.10.2**（版本单一来源见 `VERSION`）。已实现：石原氏数字图（快速 10 / 标准 38 题）与智能判读、路径追踪、色相排列（D15）、进阶联合判读、儿童模式、趣味体验包、中英双语、PWA 离线兜底、设置面板等。权威规范见 [docs/SPEC.md](docs/SPEC.md)。
 
@@ -20,6 +27,14 @@
 - 响应式 + 深色模式 + 色觉安全模式 + 五种色觉视角切换
 - 趣味体验包（进度点阵 / 章末轻科普 / 色觉人格分享卡 / 旅人称号），可一键关闭
 - 中英双语（i18n）、PWA 离线兜底、Google Analytics 匿名访问统计
+
+## 界面预览
+
+![首页：色觉模拟与核心特性](docs/images/home.jpg)
+
+![检测模式选择：快速 / 标准 / 路径追踪 / 色相排列 / 进阶 / 儿童](docs/images/modes.jpg)
+
+![石原氏答题界面：图版 + 数字键盘](docs/images/quiz.jpg)
 
 ## 技术栈
 
