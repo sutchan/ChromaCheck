@@ -1,9 +1,10 @@
 // components/home/HomeFaq.tsx — 首页常见问题（含 FAQPage 结构化数据）
-// chromacheck v1.9.0
+// chromacheck v1.11.0
 'use client';
 
 import React from 'react';
 import { JsonLd } from '@/components/seo/JsonLd';
+import { Icon } from '@/components/common/Icon';
 import { useLang } from '@/components/layout/LangProvider';
 import type { DictKey } from '@/lib/i18n';
 
@@ -39,11 +40,14 @@ export function HomeFaq() {
         </p>
       </div>
 
-      <div className="stack" style={{ gap: 'var(--s-3)', maxWidth: 760 }}>
-        {faqs.map((f) => (
-          <details key={f.q} className="card stack" style={{ gap: 'var(--s-2)', padding: 'var(--s-4)' }}>
-            <summary style={{ fontWeight: 600, cursor: 'pointer' }}>{f.q}</summary>
-            <p className="muted" style={{ margin: 0, fontSize: '0.95rem' }}>{f.a}</p>
+      <div className="faq-list">
+        {faqs.map((f, i) => (
+          <details key={f.q} className="faq-item" open={i === 0}>
+            <summary className="faq-q">
+              <span>{f.q}</span>
+              <Icon name="chevron" size={18} className="faq-marker" />
+            </summary>
+            <p className="faq-a" style={{ margin: 0 }}>{f.a}</p>
           </details>
         ))}
       </div>

@@ -1,7 +1,15 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.10.2`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.11.0`）。
+
+## [1.11.0] - 2026-11-02
+
+### 改进
+- 首页常见问题（FAQ）界面升级：原生 `<details>` 卡片改为带旋转箭头指示器的手风琴。`app/globals.css` 新增 `.faq-list` / `.faq-item` / `.faq-q` / `.faq-a` / `.faq-marker` 样式——展开时高亮品牌色边框 + 阴影、hover 背景、`:focus-visible` 可见描边、内容淡入动画；首项默认展开以引导阅读。`components/common/Icon.tsx` 新增 `chevron` 图标。功能、文案与 `FAQPage` 结构化数据均不变。
+
+### 文档
+- 版本单一来源同步至 `1.11.0`。
 
 ## [1.10.2] - 2026-10-17
 

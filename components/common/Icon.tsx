@@ -1,5 +1,5 @@
 // components/common/Icon.tsx — 内联 SVG 图标（currentColor）
-// chromacheck v1.8.0
+// chromacheck v1.11.0
 import React from 'react';
 
 const PATHS: Record<string, React.ReactNode> = {
@@ -69,6 +69,7 @@ const PATHS: Record<string, React.ReactNode> = {
     </>
   ),
   arrowRight: <path d="M5 12h14m0 0-6-6m6 6-6 6" />,
+  chevron: <path d="m6 9 6 6 6-6" />,
   trash: <path d="M4 7h16M9 7V5a1 1 0 0 1 1-1h4a1 1 0 0 1 1 1v2m-9 0 1 13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1l1-13" />,
   shield: <path d="M12 3 5 6v5c0 4.5 3 8 7 10 4-2 7-5.5 7-10V6l-7-3Z" />,
   clock: (

@@ -1,8 +1,8 @@
 # 记忆索引
 
 ## 项目：ChromaCheck（e:/Github/ChromaCheck）
-- 纯前端 Next.js 14(App Router)+React 18+TS(strict)+Tailwind 3，本地优先、无后端、无重型依赖；图表内联 SVG，报告 Canvas(PNG)+`window.print()`(PDF)。当前版本 **v1.10.1**（2026-10-17；会话间隙用户会自行 bump/提交，改版本前必须重读 `VERSION` 并 `git status --short --untracked-files=all`）。
-- 版本单一来源：`VERSION`(=1.10.1) 与 `package.json` 一致；代码改后同步 `README`/`CHANGELOG` 顶部版本。原型文件头 v0.1.3（已反向对齐应用，与正式版本解耦）。
+- 纯前端 Next.js 14(App Router)+React 18+TS(strict)+Tailwind 3，本地优先、无后端、无重型依赖；图表内联 SVG，报告 Canvas(PNG)+`window.print()`(PDF)。当前版本 **v1.11.0**（2026-11-02；会话间隙用户会自行 bump/提交，改版本前必须重读 `VERSION` 并 `git status --short --untracked-files=all`）。
+- 版本单一来源：`VERSION`(=1.11.0) 与 `package.json` 一致；代码改后同步 `README`/`CHANGELOG` 顶部版本。原型文件头 v0.1.3（已反向对齐应用，与正式版本解耦）。
 - 字体（v1.7.4 自托管）：`app/layout.tsx` 用 `next/font/google` 注入 Archivo+IBM Plex Mono；`lib/site.ts` 提供 `SITE_URL`/`SITE_UPDATED`（更新日期唯一来源，页脚 `v{ver}·更新于{SITE_UPDATED}` 直读 package.json）。构建需访问 fonts.gstatic.com，离线可能 ECONNRESET（重试通常可过）。
 - 导航（v1.7.5）：页眉 Navbar 仅「首页/开始检测/历史」；科普/隐私入口在页脚 Footer。
 
