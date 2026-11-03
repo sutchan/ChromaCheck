@@ -3,29 +3,34 @@
 import type { HueArrangementQuestion, TestMode } from '../types';
 
 /**
- * Farnsworth-Munsell D15 色卡 sRGB 近似值（与原型 data.js CC.hueCards 一致），
- * 按正确渐变顺序排列：蓝紫 → 蓝 → 青 → 绿 → 黄绿 → 黄 → 橙 → 红 → 品红 → 紫。
+ * Farnsworth-Munsell D15 风格色卡。相较原版改进：
+ * - 15 张可移动卡在 CIELAB Lch 空间生成（恒定 L*≈60、C* 近似恒定，仅色相变化），
+ *   等亮度、等彩度，避免亮度/彩度线索干扰纯色相判别。
+ * - 按蓝→红单调光谱渐变排列（hue 241°→10°），相邻步长均匀。
+ * - 首尾固定参考卡取色相远端（蓝紫 #009ce0 与粉红 #d66ea3，跨约 269°），
+ *   正确闭合色环；旧版两端同为蓝紫会破坏闭环几何。
+ * 注意：TES 阈值（hue-scoring.ts 的 20/40）为经验值，尚未用本地样本标定。
  */
 export const D15_CAPS: string[] = [
-  '#7b6ea8',
-  '#6a7fc4',
-  '#4f97c9',
-  '#3fa8b8',
-  '#49b295',
-  '#5fb369',
-  '#87ad4c',
-  '#b3a33f',
-  '#c9903c',
-  '#cf7442',
-  '#c95f52',
-  '#bb5566',
-  '#a95f87',
-  '#9568a4',
-  '#8474ae',
+  '#00a2d0',
+  '#00a5bf',
+  '#00a6aa',
+  '#00a693',
+  '#00a57c',
+  '#42a266',
+  '#639f53',
+  '#7e9a44',
+  '#95953a',
+  '#aa8e38',
+  '#bd863e',
+  '#cc7d4a',
+  '#d8755b',
+  '#de6f6e',
+  '#df6c84',
 ];
 
-/** 首尾固定参考卡颜色（与原型 screens-advanced.js 一致） */
-export const D15_FIXED: [string, string] = ['#6b5fa8', '#8a7bb2'];
+/** 首尾固定参考卡颜色（色相远端，用于正确闭合色环） */
+export const D15_FIXED: [string, string] = ['#009ce0', '#d66ea3'];
 
 /** 确定性打乱：同一种子生成相同序列，保证 SSR / CSR 初始渲染一致 */
 export function shuffledOrder(seed: number): number[] {

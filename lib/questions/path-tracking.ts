@@ -3,8 +3,10 @@
 import type { PathTrackingQuestion, TestMode } from '../types';
 import { standardPath } from '../path-field';
 
-const GREEN = '#8fa05a';
-const PATH_COLOR = '#c4553b';
+// 路径追踪配色：等亮度异色相混淆对（橙 vs 绿），经二色觉模型验证——
+// 正常视觉可凭色相辨识路径；红绿色觉异常者因混淆而难以分辨路径与背景（ΔL≈0.005，异常空间 2D 距离≈0.04）。
+const GREEN = '#4f9438';
+const PATH_COLOR = '#b8732e';
 
 type Seed = Omit<PathTrackingQuestion, 'standardPath'>;
 

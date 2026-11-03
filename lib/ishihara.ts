@@ -1,11 +1,13 @@
 // lib/ishihara.ts — 点阵图数学与色觉模拟（移植自 prototype/ishihara.js，纯函数无 DOM）
 // chromacheck v1.7.2
 
-const CVD_MATRIX: Record<string, number[]> = {
+// 正确的二色觉投影矩阵（Brettel/Vienot 1999，作用于线性 RGB；秩为 2，使等混淆对在异常视觉下真正趋同）。
+// 旧版 daltonize 矩阵可逆（秩 3），仅做色相偏移、仍保留可分辨性，会错误显示石原氏数字"可见"。
+const DICHROMAT: Record<string, number[]> = {
   none: [1, 0, 0, 0, 1, 0, 0, 0, 1],
-  protanopia: [0.567, 0.433, 0, 0.558, 0.442, 0, 0, 0.242, 0.758],
-  deuteranopia: [0.625, 0.375, 0, 0.7, 0.3, 0, 0, 0.3, 0.7],
-  tritanopia: [0.95, 0.05, 0, 0, 0.433, 0.567, 0, 0.475, 0.525],
+  protanopia: [0.152286, 1.052583, -0.204868, 0.114503, 0.786281, 0.099216, -0.003882, -0.048116, 1.051998],
+  deuteranopia: [0.367322, 0.860646, -0.227968, 0.280085, 0.672501, 0.047413, -0.011820, 0.042940, 0.968881],
+  tritanopia: [1.255528, -0.076749, -0.178779, -0.078411, 0.930809, 0.147602, 0.004733, 0.691367, 0.303900],
   achromatopsia: [0.299, 0.587, 0.114, 0.299, 0.587, 0.114, 0.299, 0.587, 0.114],
 };
 
@@ -20,7 +22,7 @@ export const PALETTE: Record<PaletteKey, { fig: string[]; bg: string[] }> = {
   // 红系图点 L≈0.13–0.14，绿系背景 L≈0.15–0.16，亮度差远小于色相差
   transformation: { fig: ['#c0392b', '#b83227'], bg: ['#2e7d32', '#2f8f4e', '#357a38'] },
   vanishing: { fig: ['#c0392b', '#cf4434'], bg: ['#2e7d32', '#2f8f4e'] },
-  // hidden：图点（红系）与背景（绿系）等亮度 → 正常视觉看不到数字、答「无数字」；异常视觉借色相看到数字
+  // hidden：本应用未实现真正的"隐藏数字"双色版；相关题库已并入 vanishing（见 lib/questions.ts）。保留调色板仅供兼容。
   hidden: { fig: ['#c0392b', '#b83227'], bg: ['#2e7d32', '#2f8f4e'] },
   classification: { fig: ['#c0392b', '#b83227'], bg: ['#2e7d32', '#2f8f4e', '#357a38'] },
 };
@@ -34,17 +36,28 @@ function rgbToCss(r: number, g: number, b: number): string {
   return `rgb(${Math.round(r)},${Math.round(g)},${Math.round(b)})`;
 }
 
-/** 在近似线性空间应用矩阵，避免暗部偏色 */
+function toLin(v: number): number {
+  v /= 255;
+  return v <= 0.04045 ? v / 12.92 : Math.pow((v + 0.055) / 1.055, 2.4);
+}
+function toSrgb(v: number): number {
+  v = Math.max(0, Math.min(1, v));
+  return 255 * (v <= 0.0031308 ? v * 12.92 : 1.055 * Math.pow(v, 1 / 2.4) - 0.055);
+}
+
+/**
+ * 色觉异常模拟：对线性 RGB 应用正确的二色觉投影矩阵（秩 2）。
+ * 这样等混淆的图/底色在模拟的异常视觉下会真正趋同（石原氏消失题的数字会"消失"），
+ * 而非旧版可逆矩阵那样仅做色相偏移、仍保留可分辨性。
+ */
 export function simulate(hex: string, kind: string): string {
-  const m = CVD_MATRIX[kind] || CVD_MATRIX.none;
-  if (kind === 'none' || !m || kind === undefined) return hex;
-  const c = hexToRgb(hex).map((v) => Math.pow(v / 255, 2.2) * 255);
-  const o = [
-    m[0] * c[0] + m[1] * c[1] + m[2] * c[2],
-    m[3] * c[0] + m[4] * c[1] + m[5] * c[2],
-    m[6] * c[0] + m[7] * c[1] + m[8] * c[2],
-  ].map((v) => Math.pow(Math.max(v, 0) / 255, 1 / 2.2) * 255);
-  return rgbToCss(o[0], o[1], o[2]);
+  const m = DICHROMAT[kind] || DICHROMAT.none;
+  if (kind === 'none' || !m) return hex;
+  const [r, g, b] = hexToRgb(hex).map(toLin);
+  const R = m[0] * r + m[1] * g + m[2] * b;
+  const G = m[3] * r + m[4] * g + m[5] * b;
+  const B = m[6] * r + m[7] * g + m[8] * b;
+  return rgbToCss(toSrgb(R), toSrgb(G), toSrgb(B));
 }
 
 export function mulberry32(a: number): () => number {
