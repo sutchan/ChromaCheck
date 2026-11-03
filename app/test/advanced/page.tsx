@@ -1,5 +1,5 @@
 // app/test/advanced/page.tsx — 进阶联合检测页
-// chromacheck v1.7.3
+// chromacheck v1.13.1
 import React from 'react';
 import type { Metadata } from 'next';
 import { AdvancedRunner } from '@/components/test/AdvancedRunner';
@@ -24,5 +24,5 @@ export function generateMetadata(): Metadata {
 
 export default function AdvancedTestPage({ searchParams }: { searchParams: { scene?: string } }) {
   const scene = searchParams.scene === 'driver' ? 'driver' : 'general';
-  return <AdvancedRunner scene={scene} />;
+  return <div id="advanced-test-page"><AdvancedRunner scene={scene} /></div>;
 }

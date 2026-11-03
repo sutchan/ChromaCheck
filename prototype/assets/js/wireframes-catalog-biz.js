@@ -206,6 +206,3 @@ var BIZ = [
 ];
 
 BIZ.forEach(function (c) { CC_CATALOG.push(c); });
-var BIZ = (window.__CAT_BIZ_A || []).concat(window.__CAT_BIZ_B || []);
-
-BIZ.forEach(function (c) { CC_CATALOG.push(c); });

@@ -1,7 +1,15 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.13.0`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.13.1`）。
+
+## [1.13.1] - 2026-11-03
+
+### 代码健壮性 / 规范对齐
+- 修复原型 `prototype/assets/js/data.js` 在历史提交中引入的重复/损坏内容（约 1006 行冗余），恢复为干净的数据定义；移除误提交的拆分产物（`data-articles.js`、`wireframes-catalog-base-1/2.js`、`wireframes-catalog-biz-1/2.js`），恢复 `wireframes-catalog-base.js`/`wireframes-catalog-biz.js` 为完整数组定义。
+- 为 5 个测试运行页（`advanced`/`signal`/`hue-arrangement`/`ishihara`/`path-tracking`）补充路由级语义 id（`advanced-test-page` 等），便于调试定位与端到端测试锚定，对齐全局语义 id 规范。
+- 文档体系同步至 v1.13.1（`docs/` 各分册「实现状态」行对齐当前版本；SPEC 记录 v1.13.0 科学性修正）。
+- 原型 `prototype/` 按 `docs/SPEC.md §2.2` 界定为「设计验证参考，非发布源码」，其脚本为无打包器的经典全局脚本、依赖固定加载顺序；本次未对其超 200 行文件做机械拆分，以避免破坏参考原型且无法在本环境浏览器验证。提交版应用源码 `app/`/`components/`/`lib/` 均符合单文件 ≤200 行规范。
 
 ## [1.13.0] - 2026-11-03
 

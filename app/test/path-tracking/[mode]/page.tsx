@@ -1,5 +1,5 @@
 // app/test/path-tracking/[mode]/page.tsx — 路径追踪测试页
-// chromacheck v1.7.3
+// chromacheck v1.13.1
 import React from 'react';
 import { notFound } from 'next/navigation';
 import { PathTrackingRunner } from '@/components/test/PathTrackingRunner';
@@ -30,5 +30,5 @@ export function generateMetadata({ params }: { params: { mode: string } }): Meta
 
 export default function PathTrackingTestPage({ params }: { params: { mode: string } }) {
   if (params.mode !== 'quick' && params.mode !== 'standard') notFound();
-  return <PathTrackingRunner mode={params.mode as TestMode} />;
+  return <div id="path-test-page"><PathTrackingRunner mode={params.mode as TestMode} /></div>;
 }

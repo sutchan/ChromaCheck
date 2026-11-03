@@ -1,5 +1,5 @@
 // app/test/signal/page.tsx — 信号灯辨识检测页
-// chromacheck v1.7.0
+// chromacheck v1.13.1
 import React from 'react';
 import type { Metadata } from 'next';
 import { SignalRunner } from '@/components/test/SignalRunner';
@@ -20,5 +20,5 @@ export const metadata: Metadata = {
 };
 
 export default function SignalTestPage() {
-  return <SignalRunner />;
+  return <div id="signal-test-page"><SignalRunner /></div>;
 }
