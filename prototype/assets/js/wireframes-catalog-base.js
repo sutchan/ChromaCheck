@@ -207,3 +207,6 @@ var BASE = [
 ];
 
 BASE.forEach(function (c) { CC_CATALOG.push(c); });
+var BASE = (window.__CAT_BASE_A || []).concat(window.__CAT_BASE_B || []);
+
+BASE.forEach(function (c) { CC_CATALOG.push(c); });
