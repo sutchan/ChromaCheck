@@ -2,15 +2,16 @@
 // chromacheck v1.9.0
 'use client';
 
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { AnswerRecord, TestMode } from '@/lib/types';
 import { getQuestions } from '@/lib/questions';
 import { computeResult } from '@/lib/scoring';
-import { saveResult, loadProgress, saveProgress, clearProgress } from '@/lib/storage';
+import { saveResult, saveProgress, clearProgress } from '@/lib/storage';
 import { detectDevice } from '@/lib/format';
 import { CHAPTERS } from '@/lib/fun';
 import { useIshiharaFlow } from './useIshiharaFlow';
+import { useResumeProgress } from './useResumeProgress';
 import { IshiharaPlate } from './IshiharaPlate';
 import { TestProgress } from './TestProgress';
 import { Numpad } from './Numpad';
@@ -29,19 +30,7 @@ export function TestRunner({ mode }: { mode: TestMode }) {
   const { t, lang } = useLang();
   const { settings } = useSettings();
   const ishiharaQuestions = useMemo(() => getQuestions(mode), [mode]);
-  const [initial, setInitial] = useState<{ index: number; answers: AnswerRecord[] } | undefined>(undefined);
-  const [mounted, setMounted] = useState(false);
-  const startedAtRef = useRef<number>(Date.now());
-
-  useEffect(() => {
-    const p = loadProgress();
-    if (p && p.mode === mode && p.index < ishiharaQuestions.length) {
-      startedAtRef.current = p.startedAt ?? Date.now();
-      setInitial({ index: p.index, answers: p.answers });
-    }
-    setMounted(true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [mode]);
+  const { mounted, initial, setInitial, startedAtRef } = useResumeProgress(mode, ishiharaQuestions.length);
 
   function onDone(answers: AnswerRecord[]) {
     clearProgress();

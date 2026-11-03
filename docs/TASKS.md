@@ -2,7 +2,7 @@
 
 > 来源：2026-09-06 对 ChromaCheck v1.6.0 检测覆盖度评估。
 > 关联：`docs/ROADMAP.md`（v1.1 规划中已有 P1「屏幕校准指引」，本任务集为其专项延展）。
-> **最后更新：2026-11-02**（当前版本 **v1.10.2**）。T1–T6、C1–C9、R1/R2 全部完成并归档至 `docs/tasks-done.md`（§一~§五）；本文档仅保留**未完成待办 R3–R8**（见 §6）与已完成项索引。期间版本由 v1.9.1 推进至 v1.10.2（设置面板、记忆重构、冗余清理等，详见 `CHANGELOG.md`）。
+> **最后更新：2026-11-03**（当前版本 **v1.12.0**）。T1–T6、C1–C9、R1/R2 全部完成并归档至 `docs/tasks-done.md`（§一~§五）；**R3/R4/R5/R6/R7 已于 v1.11.1–v1.12.0 完成并归档至 §六**，本文档 §6 仅保留 **R8（反模式，部分完成）** 一项待办。期间版本由 v1.9.1 推进至 v1.12.0（设置面板、记忆重构、冗余清理、审查项收口等，详见 `CHANGELOG.md`）。
 
 ## 1. 背景与评估结论
 
@@ -65,14 +65,10 @@
 
 > **完成结论**：C1 / C2 / C5 / C8 采用「本地优先替代」方案，纯前端落地，不引入服务端、不收集 PII，符合项目隐私定位。v1.8.1 对抗式审查整改、v1.9.0 移除 C3 服务端上报（见 R1），均不改变本清单已完成状态。
 
-## 6. 未完成待办（R4–R8）
+## 6. 未完成待办（R8）
 
-> 来源：2026-10-15 代码库全面审查遗留项。**R1 / R2 已于 v1.9.0 完成并归档至 `docs/tasks-done.md` §五**（死代码上报移除 + CSP 收紧），**R3 已于 v1.11.1–v1.11.2 完成**（拆分 `PathTrackingCanvas` / `SettingsDialog` / `zh-ui` / `en-ui` 为 `pathCanvas.*`（types/render/coords/keymap）/ `SettingsSwitchRow`+`settingsControls` / `*.flow`+`*.result`+`*.guide` 子模块），**R6（lockfile）、R7（SEO metadata）已于 v1.11.2 完成**，均不在本清单。⏳ 表示改动前需先确认方案（涉及隐私承诺、安全策略、破坏性变更或跨模块重构）。下表"状态"为 2026-11-02（v1.11.2）复核。
+> 来源：2026-10-15 代码库全面审查遗留项。**R1 / R2 已于 v1.9.0 完成并归档至 `docs/tasks-done.md` §五**；**R3（超 200 行拆分）已于 v1.11.1–v1.11.2 完成**；**R4（aria 走查）于 v1.12.0 完成**（`IshiharaPlate` 加 `role="img"`+aria、`AnswerReview` 表头 `scope`/表 `aria-label`、`Numpad` 加 `role="group"`，其余组件经核验已具备）；**R5（测试覆盖率）于 v1.12.0 大幅收窄**（新增 6 模块单测，套件 73→97 例；因 vitest 为 node 环境、canvas 绘制不可单测，`sharecard`/`report-canvas` 绘制函数与 80% 门禁仍待后续）；**R6（lockfile）、R7（SEO metadata）已于 v1.11.2 完成**；以上均归档至 `docs/tasks-done.md` §六。下表仅余 **R8**，状态 2026-11-03（v1.12.0）复核。
 
 | 编号 | 问题 | 优先级 | 状态 |
 |------|------|--------|------|
-| R4 | 无障碍：`Numpad` / `SignalRunner` / `DimScenes` / `AnswerReview` / `ChildPlate` / `IshiharaPlate` aria 走查（`PathTrackingCanvas` 经 v1.9.1 核验已具键盘通道 tabIndex / role / aria-keyshortcuts） | P1 | 🟡 大部分已具备（按钮自标注、分组/角色标签齐全），AnswerReview / IshiharaPlate 待最终走查 |
-| R5 | 测试覆盖率缺口：child-scoring / sharecard / report-canvas / scoring-text / ishihara / path-field / format 无单测；无组件测试与 e2e（≥80% 门禁未达成） | P2 | 🟡 8 文件 73 例（判读 + 存储 + 导入导出）；上述模块仍缺 |
-| R6 | lockfile：`package-lock.json` 已生成（8072 行），vitest/coverage 钉死 2.1.9 | P2 | ✅ v1.11.2 完成（CI 是否切 `npm ci` 待决策） |
-| R7 | SEO metadata：`test/batch`（layout）与 404（拆出 NotFoundClient）补齐；其余路由段此前已具备 | P2 | ✅ v1.11.2 完成 |
-| R8 | 轻微反模式：mounted 进度恢复逻辑重复（AdvancedRunner / TestRunner）、history 页内联 style 与 Tailwind 混用、result props 透传 6+ 层 | P2 | ⏳ 后续迭代 |
+| R8 | 轻微反模式：mounted 进度恢复逻辑重复（已于 v1.12.0 提取为 `useResumeProgress` 共享 hook）、history 页内联 style 与 Tailwind 混用、result props 透传 6+ 层 | P2 | 🟡 部分完成（mounted 提取已做；history 内联 style / result props 透传列为后续，二者为既定设计风格、改动风险高） |

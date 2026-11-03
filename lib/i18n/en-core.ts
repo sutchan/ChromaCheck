@@ -141,6 +141,10 @@ export const EN_CORE: Record<CoreKey, string> = {
   'faq.q5': 'Which majors or professions require color vision?',
   'faq.a5': 'In China, fine arts, medicine, chemistry, transportation, military and public security work, and some engineering majors all have color vision checks in the college entrance medical examination and occupational entry requirements. For driving, people with red-green deficiencies are generally not eligible for a large-vehicle licence. The exact standards follow the documents issued by the relevant authorities each year.',
 
+  // Ishihara plate accessibility description (does not reveal the answer, only the plate type)
+  'ishihara.plateAria': 'Ishihara color vision plate ({type})',
+  'test.numpadLabel': 'Number pad',
+
   // Home color vision simulator
   'cvd.title': 'See the world through different color vision',
   'cvd.desc': 'The same test plate — switch the color vision type and watch whether the number “disappears” or “transforms”.',

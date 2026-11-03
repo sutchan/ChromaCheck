@@ -2,7 +2,7 @@
 // chromacheck v1.9.0
 'use client';
 
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import type { AnswerRecord, PathTrackingResult, Scene } from '@/lib/types';
 import { getQuestions } from '@/lib/questions';
@@ -12,7 +12,7 @@ import { scoreIshihara } from '@/lib/scoring';
 import { scorePathTracking } from '@/lib/path-scoring';
 import { scoreHueQuestion } from '@/lib/hue-scoring';
 import { computeAdvancedResult } from '@/lib/advanced-scoring';
-import { saveResult, loadProgress, saveProgress, clearProgress } from '@/lib/storage';
+import { saveResult, saveProgress, clearProgress } from '@/lib/storage';
 import { detectDevice } from '@/lib/format';
 import { IshiharaFlow } from './IshiharaFlow';
 import { PathTrackingCanvas } from './PathTrackingCanvas';
@@ -20,6 +20,7 @@ import { HueArrangementGrid } from './HueArrangementGrid';
 import { useSettings } from '@/components/layout/ThemeProvider';
 import { Callout } from '@/components/common/Callout';
 import { useLang } from '@/components/layout/LangProvider';
+import { useResumeProgress } from './useResumeProgress';
 
 const PHASE_LABEL_KEYS = ['test.phaseIshihara', 'test.phasePath', 'test.phaseHue'] as const;
 
@@ -33,20 +34,8 @@ export function AdvancedRunner({ scene = 'general' }: { scene?: Scene }) {
   const [phase, setPhase] = useState(0);
   const [runKey, setRunKey] = useState(0);
   const [ishiharaAnswers, setIshiharaAnswers] = useState<AnswerRecord[] | null>(null);
-  const [ishiharaInitial, setIshiharaInitial] = useState<{ index: number; answers: AnswerRecord[] } | undefined>(undefined);
-  const [mounted, setMounted] = useState(false);
   const [pathResults, setPathResults] = useState<PathTrackingResult[]>([]);
-  const startedAtRef = useRef<number>(Date.now());
-
-  useEffect(() => {
-    const p = loadProgress();
-    if (p && p.mode === 'advanced' && p.index < ishiharaQuestions.length) {
-      startedAtRef.current = p.startedAt ?? Date.now();
-      setIshiharaInitial({ index: p.index, answers: p.answers });
-    }
-    setMounted(true);
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
+  const { mounted, initial: ishiharaInitial, setInitial: setIshiharaInitial, startedAtRef } = useResumeProgress('advanced', ishiharaQuestions.length);
 
   function onIshiharaDone(answers: AnswerRecord[]) {
     clearProgress();

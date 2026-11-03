@@ -53,14 +53,14 @@ export function AnswerReview({ answers }: { answers: AnswerRecord[] }) {
     <div className="card" id="answer-review">
       <h3 style={{ marginBottom: 'var(--s-3)', fontSize: '1rem' }}>{t('result.reviewTitle', { n: answers.length })}</h3>
       <div style={{ overflowX: 'auto' }}>
-        <table style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
+        <table aria-label={t('result.reviewTitle', { n: answers.length })} style={{ width: '100%', borderCollapse: 'collapse', fontSize: '0.9rem' }}>
           <thead>
             <tr style={{ textAlign: 'left', color: 'var(--fg-mute)' }}>
-              <th style={th}>{t('result.reviewPlate')}</th>
-              <th style={th}>{t('result.reviewType')}</th>
-              <th style={th}>{t('result.reviewYour')}</th>
-              <th style={th}>{t('result.reviewStandard')}</th>
-              <th style={th}>{t('result.reviewVerdict')}</th>
+              <th scope="col" style={th}>{t('result.reviewPlate')}</th>
+              <th scope="col" style={th}>{t('result.reviewType')}</th>
+              <th scope="col" style={th}>{t('result.reviewYour')}</th>
+              <th scope="col" style={th}>{t('result.reviewStandard')}</th>
+              <th scope="col" style={th}>{t('result.reviewVerdict')}</th>
             </tr>
           </thead>
           <tbody>

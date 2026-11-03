@@ -18,6 +18,8 @@ export function Numpad({ onDigit, onBackspace, onClear }: NumpadProps) {
   const { t } = useLang();
   return (
     <div
+      role="group"
+      aria-label={t('test.numpadLabel')}
       style={{
         display: 'grid',
         gridTemplateColumns: 'repeat(3, 1fr)',

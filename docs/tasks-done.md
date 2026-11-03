@@ -1,7 +1,7 @@
 # 已完成任务归档
 
 > 来源：`docs/TASKS.md`。已完成的条目从任务清单移入本文档，保留目标与实现摘要以便回溯。
-> **最后更新：2026-11-02**（当前版本 **v1.10.2**）：归档范围覆盖 T1–T6、C1–C9、R1/R2；期间版本由 v1.9.1 推进至 v1.10.2（设置面板、记忆重构、冗余清理等，详见 `CHANGELOG.md`）。未完成任务见 `docs/TASKS.md` §6（R3–R8）。
+> **最后更新：2026-11-03**（当前版本 **v1.12.0**）：归档范围覆盖 T1–T6、C1–C9、R1/R2，以及审查遗留项 R3–R7（v1.11.1–v1.12.0）；R8 部分完成（见 §六）。未完成任务见 `docs/TASKS.md` §6（仅余 R8）。
 
 ---
 
@@ -115,7 +115,33 @@
 - 处理：`next.config.mjs` 将 `frame-ancestors` 收紧为 `'self'`；`script-src` 仍含 `'unsafe-inline'`（Next.js 内联脚本运行所需，属已知约束）。
 - 验收：`frame-ancestors 'self'`，消除跨站嵌入风险。
 
-> R3（超 200 行拆分）、R4（其余组件 aria）、R5（测试覆盖）、R6（lockfile）、R7（SEO metadata）、R8（反模式）仍属 `docs/TASKS.md` §6 待办，未在本轮归档。
+---
+
+## 六、代码审查遗留项收口（R3–R7，v1.11.1–v1.12.0）
+
+> 2026-10-15 全面审查遗留项 R3–R7 的收口实现，现登记归档（R8 部分完成，见末段）。
+
+### R3 超 200 行拆分（v1.11.1–v1.11.2）
+- `components/test/PathTrackingCanvas.tsx`（247）抽离 `pathCanvas.types.ts` / `pathCanvas.render.ts` / `pathCanvas.coords.ts` / `pathCanvas.keymap.ts`（键盘通道），降至 146 行。
+- `components/layout/SettingsDialog.tsx`（236）抽离 `SettingsSwitchRow.tsx` 与 `settingsControls.ts`。
+- i18n 字典 `zh-ui.ts`(271)/`en-ui.ts`(273) 按语义块拆为 `*.flow`/`*.result`/`*.guide` 子模块；并修复 vitest 误将 `zh-ui.test.ts` 当测试文件的问题（更名为 `*.flow.ts`）。
+
+### R6 构建可复现（v1.11.2）
+- 生成 `package-lock.json`（8072 行），`vitest` 与 `@vitest/coverage-v8` 钉死 `2.1.9`；CI 是否切回 `npm ci` 待决策（未改 CI）。
+
+### R7 SEO metadata 补齐（v1.11.2）
+- `app/test/batch/page.tsx` 新增 `layout.tsx` 提供标题/描述/canonical/OG（`robots: noindex`）；`app/not-found.tsx` 改为服务端壳，UI 移至 `components/NotFoundClient.tsx` 并补 `noindex`。
+
+### R4 无障碍走查（v1.12.0）
+- `IshiharaPlate` 的 `<canvas>` 加 `role="img"` + 类型化 `aria-label`（不剧透答案）；`AnswerReview` 表格 `<th>` 加 `scope="col"`、表加 `aria-label`；`Numpad` 加 `role="group"` + `aria-label`；`ChildPlate`/`SignalRunner` 经核验已具备。
+
+### R5 测试覆盖率收窄（v1.12.0）
+- 新增 6 模块单测：`child-scoring` / `format` / `scoring-text` / `path-field` / `ishihara` / `sharecard`(computeRadar)，套件由 73 → 97 例。
+- 限制：vitest 为 node 环境，`sharecard`(`drawShareCard`)/`report-canvas`(`drawReport`) 的 Canvas 绘制依赖 DOM 不可单测；80% 覆盖率门禁未硬性达成，列为后续。
+
+### R8 反模式（部分完成，v1.12.0）
+- ✅ 已将 `TestRunner` 与 `AdvancedRunner` 重复的 mounted 水合守卫 + 进度恢复逻辑提取为共享 hook `components/test/useResumeProgress.ts`。
+- ⏳ 仍待办：`history` 页内联 style 与 Tailwind 混用、result props 透传 6+ 层（二者属既定设计风格，改动风险高，列为后续迭代）。
 
 ---
 

@@ -1,8 +1,8 @@
 # 记忆索引
 
 ## 项目：ChromaCheck（e:/Github/ChromaCheck）
-- 纯前端 Next.js 14(App Router)+React 18+TS(strict)+Tailwind 3，本地优先、无后端、无重型依赖；图表内联 SVG，报告 Canvas(PNG)+`window.print()`(PDF)。当前版本 **v1.11.0**（2026-11-02；会话间隙用户会自行 bump/提交，改版本前必须重读 `VERSION` 并 `git status --short --untracked-files=all`）。
-- 版本单一来源：`VERSION`(=1.11.0) 与 `package.json` 一致；代码改后同步 `README`/`CHANGELOG` 顶部版本。原型文件头 v0.1.3（已反向对齐应用，与正式版本解耦）。
+- 纯前端 Next.js 14(App Router)+React 18+TS(strict)+Tailwind 3，本地优先、无后端、无重型依赖；图表内联 SVG，报告 Canvas(PNG)+`window.print()`(PDF)。当前版本 **v1.12.0**（2026-11-03；会话间隙用户会自行 bump/提交，改版本前必须重读 `VERSION` 并 `git status --short --untracked-files=all`）。
+- 版本单一来源：`VERSION`(=1.12.0) 与 `package.json` 一致；代码改后同步 `README`/`CHANGELOG` 顶部版本。原型文件头 v0.1.3（已反向对齐应用，与正式版本解耦）。
 - 字体（v1.7.4 自托管）：`app/layout.tsx` 用 `next/font/google` 注入 Archivo+IBM Plex Mono；`lib/site.ts` 提供 `SITE_URL`/`SITE_UPDATED`（更新日期唯一来源，页脚 `v{ver}·更新于{SITE_UPDATED}` 直读 package.json）。构建需访问 fonts.gstatic.com，离线可能 ECONNRESET（重试通常可过）。
 - 导航（v1.7.5）：页眉 Navbar 仅「首页/开始检测/历史」；科普/隐私入口在页脚 Footer。
 
@@ -13,6 +13,7 @@
 - i18n：`lib/i18n/`(dict/zh-*/en-*/t/lang)，40+ 组件 `useLang()`；含 metadata 静态页=服务端 page 导中文 metadata + client 内容组件 `useLang()`（范例 `app/test/page.tsx`→`TestSelectContent.tsx`）；长文本走 `lib/privacy-data.ts`/`lib/learn-data.ts`。
 - 本地数据：`lib/profile.ts`(Profile)、`lib/export-import.ts`、历史 `components/history/{HistoryCard,ProfileSwitcher}.tsx`；`TestResult.profileId` 由 `saveResult` 自动归属。
 - 设置面板（v1.10.0）：`components/layout/{SettingsButton,SettingsDialog}.tsx` 收编语言/主题/色觉安全/趣味；删 `LangToggle`/`ThemeToggle`；持久化 `cc.settings.v1`+`cc.lang.v1`。
+- **v1.12.0 审查项收口（2026-11-03）**：R4 aria 走查——`IshiharaPlate` 的 `<canvas>` 加 `role="img"`+类型化 `aria-label`（不剧透答案）、`AnswerReview` 表头 `scope="col"`/表 `aria-label`、`Numpad` 加 `role="group"`（新增 i18n 键 `ishihara.plateAria`/`test.numpadLabel`）；R5 新增 6 模块单测（child-scoring/format/scoring-text/path-field/ishihara/sharecard 的 computeRadar），套件 73→97 例（canvas 绘制因 vitest 为 node 环境不可单测）；R8 提取 `TestRunner`/`AdvancedRunner` 重复的 mounted 水合守卫+进度恢复为共享 hook `components/test/useResumeProgress.ts`。R3/R6/R7 已于 v1.11.1–v1.11.2 由并行会话完成；R8 的 history 内联 style / result props 透传仍列为后续（既定设计风格、改动风险高）。详见 `CHANGELOG.md`[1.12.0] 与 `docs/tasks-done.md` §六。
 - 判读：`lib/{scoring,hue-scoring,path-scoring,signal-scoring,advanced-scoring}.ts`+`lib/ishihara.ts`；题库 `lib/questions.ts`(38)+`lib/questions/*`；`pathOverlap` 实为 F1；「置信度」已改「判读稳定性」。
 - 隐私：v1.9.0 已移除 `reportServerEvent`/`app/api/analytics/event`，**仅 GA4 上报**（口径见 `lib/privacy-data.ts`）。
 - 原型 `prototype/`：4 页纯 HTML 设计验证，**判读算法须以 app/lib 为准**（已对齐 v0.1.x，与 VERSION 解耦）；`CVD_MATRIX` 键名 protanopia/deuteranopia/tritanopia/achromatopsia（非 protan/deutan/tritan/mono）。

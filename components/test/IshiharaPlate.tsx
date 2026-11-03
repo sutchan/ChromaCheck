@@ -5,6 +5,17 @@
 import React, { useEffect, useRef } from 'react';
 import { buildDots, mulberry32, PALETTE, simulate } from '@/lib/ishihara';
 import type { PlateType } from '@/lib/types';
+import { useLang } from '@/components/layout/LangProvider';
+import type { DictKey } from '@/lib/i18n';
+
+const TYPE_LABEL_KEY: Record<PlateType, DictKey> = {
+  demonstration: 'test.typeLabel.demonstration',
+  normal: 'test.typeLabel.normal',
+  transformation: 'test.typeLabel.transformation',
+  vanishing: 'test.typeLabel.vanishing',
+  hidden: 'test.typeLabel.hidden',
+  classification: 'test.typeLabel.classification',
+};
 
 export interface IshiharaPlateProps {
   type: PlateType;
@@ -43,6 +54,7 @@ export function IshiharaPlate({
   className,
   maxWidth = 460,
 }: IshiharaPlateProps) {
+  const { t } = useLang();
   const ref = useRef<HTMLCanvasElement>(null);
 
   useEffect(() => {
@@ -111,7 +123,12 @@ export function IshiharaPlate({
 
   return (
     <div className={`hero-plate ${className ?? ''}`} style={{ maxWidth, marginInline: 'auto', background: '#efe9db' }}>
-      <canvas ref={ref} style={{ width: '100%', height: 'auto', display: 'block', borderRadius: 'inherit' }} />
+      <canvas
+        ref={ref}
+        role="img"
+        aria-label={t('ishihara.plateAria', { type: t(TYPE_LABEL_KEY[type]) })}
+        style={{ width: '100%', height: 'auto', display: 'block', borderRadius: 'inherit' }}
+      />
     </div>
   );
 }

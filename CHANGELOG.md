@@ -1,7 +1,18 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.11.2`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.12.0`）。
+
+## [1.12.0] - 2026-11-03
+
+### 改进（R4 无障碍 / R5 测试 / R8 反模式）
+- **R4 无障碍走查**：`IshiharaPlate` 的 `<canvas>` 加 `role="img"` 与类型化 `aria-label`（不剧透答案）；`AnswerReview` 表格 `<th>` 加 `scope="col"`、表加 `aria-label`；`Numpad` 加 `role="group"` + `aria-label`；新增 i18n 键 `ishihara.plateAria` / `test.numpadLabel`。`ChildPlate` / `SignalRunner` 经核验已具备 aria。
+- **R5 测试覆盖**：新增 6 模块单测（child-scoring / format / scoring-text / path-field / ishihara / sharecard 的 `computeRadar`），`vitest` 套件 73 → 97 例。受 node 环境限制，`sharecard`（`drawShareCard`）/ `report-canvas`（`drawReport`）的 Canvas 绘制不可单测。
+- **R8 反模式**：提取 `TestRunner` 与 `AdvancedRunner` 重复的 mounted 水合守卫 + 进度恢复逻辑为共享 hook `components/test/useResumeProgress.ts`，消除重复。
+
+### 文档
+- `docs/TASKS.md` §6 收敛至仅余 R8（R3–R7 已归档）；`docs/tasks-done.md` 新增 §六 归档 R3–R8。
+- 版本单一来源同步至 `1.12.0`。
 
 ## [1.11.2] - 2026-11-02
 
