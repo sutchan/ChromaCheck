@@ -1,7 +1,15 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.12.1`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.12.2`）。
+
+## [1.12.2] - 2026-11-03
+
+### 改进（页脚构建号）
+- 页脚取消「更新于 {日期}」展示，改为构建号：`© · v{version} · build {yyyymmddhhmm} · {用途}`。
+- 构建号由 `next.config.mjs` 在构建时按本地时间生成 `yyyymmddhhmm`，注入 `NEXT_PUBLIC_BUILD_ID`（自动暴露客户端）；`dev` / `build` 均生效，无需手工维护、杜绝脱节。
+- `components/privacy/PrivacyContent.tsx` 的「最后更新」日期保留不变（合规需要，仍读 `lib/site.ts` 的 `SITE_UPDATED`）。
+- 版本单一来源同步至 `1.12.2`。
 
 ## [1.12.1] - 2026-11-03
 

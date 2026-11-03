@@ -1,5 +1,10 @@
-// next.config.mjs v1.9.0
+// next.config.mjs v1.12.2
 /** @type {import('next').NextConfig} */
+
+// 构建号：本地构建时间到分钟，结构 yyyymmddhhmm；注入 NEXT_PUBLIC_BUILD_ID 供客户端（页脚）读取
+const buildNow = new Date();
+const p2 = (n) => String(n).padStart(2, '0');
+const BUILD_ID = `${buildNow.getFullYear()}${p2(buildNow.getMonth() + 1)}${p2(buildNow.getDate())}${p2(buildNow.getHours())}${p2(buildNow.getMinutes())}`;
 
 // 安全响应头（docs/ARCHITECTURE.md §6.2）：
 // CSP 放行 GA（googletagmanager / google-analytics）；开发模式放行 'unsafe-eval'（React 刷新所需）
@@ -29,6 +34,9 @@ const securityHeaders = [
 const nextConfig = {
   reactStrictMode: true,
   output: 'standalone',
+  env: {
+    NEXT_PUBLIC_BUILD_ID: BUILD_ID,
+  },
   async headers() {
     return [{ source: '/:path*', headers: securityHeaders }];
   },
