@@ -1,7 +1,13 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.12.0`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.12.1`）。
+
+## [1.12.1] - 2026-11-03
+
+### 文档
+- `docs/TASKS.md` 精简：移除已归档任务的残留索引（T1–T6 / C1–C9 详情），仅保留未完成待办清单（R8）；已完成任务统一见 `docs/tasks-done.md`（§一~§六）。
+- 版本单一来源同步至 `1.12.1`。
 
 ## [1.12.0] - 2026-11-03
 
