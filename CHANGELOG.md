@@ -1,7 +1,14 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.12.2`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.12.3`）。
+
+## [1.12.3] - 2026-11-03
+
+### 清理（页脚构建号规范收尾）
+- 修正 `lib/site.ts` 过时注释：`SITE_UPDATED` 不再用于页脚（页脚已改 build 编号展示），现仅支撑隐私页「最后更新」。
+- 删除 i18n 死键 `footer.updated`（页脚「更新于」展示已移除，全仓库无引用处）。
+- 同步 `site.ts` / `zh-core` / `en-core` 头注释至 `1.12.3`，全局版本单一来源同步至 `1.12.3`。
 
 ## [1.12.2] - 2026-11-03
 

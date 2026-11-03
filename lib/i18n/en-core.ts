@@ -1,5 +1,5 @@
 // lib/i18n/en-core.ts — English core dictionary (mirrors zh-core keys)
-// chromacheck v1.10.0
+// chromacheck v1.12.3
 import type { DictKey } from './dict';
 
 export const EN_CORE: Record<CoreKey, string> = {
@@ -159,7 +159,6 @@ export const EN_CORE: Record<CoreKey, string> = {
   'footer.learn': 'Learn',
   'footer.privacy': 'Privacy',
   'footer.githubAria': 'ChromaCheck GitHub repository',
-  'footer.updated': 'Updated',
   'footer.purpose': 'For education and screening only',
 
   // Settings dialog (v1.10.0: language / theme / CVD-safe / fun)

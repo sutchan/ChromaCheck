@@ -1,6 +1,6 @@
 // lib/site.ts — 站点全局常量
-// chromacheck v1.8.2
+// chromacheck v1.12.3
 export const SITE_URL = 'https://chromacheck.app';
 
-/** 站点内容更新日期（ISO 日期，随每次发版同步；页脚「更新于」展示位唯一来源） */
+/** 隐私政策「最后更新」日期（ISO 日期，随每次发版同步；现仅用于隐私页，页脚已改用 build 编号展示） */
 export const SITE_UPDATED = '2026-10-15';
