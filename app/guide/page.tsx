@@ -1,5 +1,5 @@
 // app/guide/page.tsx — 检测前指引（服务端壳，metadata 静态；内容见 GuideContent）
-// chromacheck v1.9.0
+// chromacheck v1.13.2
 import React from 'react';
 import type { Metadata } from 'next';
 import { GuideContent } from '@/components/guide/GuideContent';
@@ -20,5 +20,9 @@ export const metadata: Metadata = {
 };
 
 export default function GuidePage() {
-  return <GuideContent />;
+  return (
+    <div id="guide-page" className="wrap stack" style={{ paddingBlock: 'var(--s-6)', gap: 'var(--s-5)' }}>
+      <GuideContent />
+    </div>
+  );
 }

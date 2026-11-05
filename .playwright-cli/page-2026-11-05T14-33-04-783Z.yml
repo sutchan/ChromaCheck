@@ -1,0 +1,154 @@
+- generic [active] [ref=f1e1]:
+  - link "跳到主内容" [ref=f1e2] [cursor=pointer]:
+    - /url: "#main-content"
+  - banner [ref=f1e3]:
+    - navigation [ref=f1e4]:
+      - link [ref=f1e5] [cursor=pointer]:
+        - /url: /
+      - generic [ref=f1e10]:
+        - link "首页" [ref=f1e11] [cursor=pointer]:
+          - /url: /
+        - link "开始检测" [ref=f1e12] [cursor=pointer]:
+          - /url: /test
+        - link "历史" [ref=f1e13] [cursor=pointer]:
+          - /url: /history
+        - button "打开设置" [ref=f1e14] [cursor=pointer]
+  - main [ref=f1e18]:
+    - generic [ref=f1e19]:
+      - generic [ref=f1e20]:
+        - generic [ref=f1e21]:
+          - generic [ref=f1e22]: 在线色觉筛查 · 石原氏原理
+          - heading "看清世界的色彩，从一次自测开始" [level=1] [ref=f1e23]
+          - paragraph [ref=f1e24]: 色辨 ChromaCheck 帮你在家快速了解自己的色觉状况：是正常、色弱还是色盲倾向，以及偏向红绿还是蓝黄。
+          - generic [ref=f1e25]:
+            - link "开始检测" [ref=f1e26] [cursor=pointer]:
+              - /url: /test
+            - link "了解色觉知识" [ref=f1e29] [cursor=pointer]:
+              - /url: /learn
+          - note [ref=f1e30]:
+            - generic [ref=f1e35]: 本工具为筛查用途，不能替代专业眼科诊断。
+        - img "石原氏色觉检测图（演示题）" [ref=f1e37]
+      - generic [ref=f1e38]:
+        - heading "为什么用色辨" [level=2] [ref=f1e39]
+        - generic [ref=f1e40]:
+          - generic [ref=f1e41]:
+            - heading "科学原理" [level=3] [ref=f1e46]
+            - paragraph [ref=f1e47]: 基于石原氏等亮度检测图，仅靠色相差异构成数字，能分辨红绿与蓝黄异常。
+          - generic [ref=f1e48]:
+            - heading "快速筛查" [level=3] [ref=f1e53]
+            - paragraph [ref=f1e54]: 快速版 10 题约 3 分钟，标准版 38 题约 12 分钟，随时在浏览器完成。
+          - generic [ref=f1e55]:
+            - heading "维度分析" [level=3] [ref=f1e59]
+            - paragraph [ref=f1e60]: 输出红 / 绿 / 蓝三轴异常倾向与判读稳定性，比“通过 / 不通过”更有信息量。
+          - generic [ref=f1e61]:
+            - heading "隐私优先" [level=3] [ref=f1e65]
+            - paragraph [ref=f1e66]: 检测数据与历史仅存于本机浏览器，不上传服务器，可随时查看与删除。
+      - generic [ref=f1e67]:
+        - heading "三步完成" [level=2] [ref=f1e68]
+        - generic [ref=f1e69]:
+          - generic [ref=f1e70]:
+            - generic [ref=f1e71]: "1"
+            - generic [ref=f1e72]:
+              - heading "选择模式" [level=3] [ref=f1e73]
+              - paragraph [ref=f1e74]: 快速版或标准版，按需自测。
+          - generic [ref=f1e75]:
+            - generic [ref=f1e76]: "2"
+            - generic [ref=f1e77]:
+              - heading "看图作答" [level=3] [ref=f1e78]
+              - paragraph [ref=f1e79]: 说出图中数字，凭直觉、不猜测。
+          - generic [ref=f1e80]:
+            - generic [ref=f1e81]: "3"
+            - generic [ref=f1e82]:
+              - heading "查看判读" [level=3] [ref=f1e83]
+              - paragraph [ref=f1e84]: 即时生成结论、维度图与明细。
+      - generic [ref=f1e86]:
+        - generic [ref=f1e87]:
+          - heading "看看不同色觉看到的世界" [level=3] [ref=f1e88]
+          - generic [ref=f1e89]: 同一张检测图，切换不同色觉类型，观察数字是否“消失”或“变形”。
+        - img "石原氏色觉检测图（消失题）" [ref=f1e91]
+        - generic [ref=f1e92]:
+          - button "正常色觉" [ref=f1e93] [cursor=pointer]
+          - button "红色觉异常" [ref=f1e94] [cursor=pointer]
+          - button "绿色觉异常" [ref=f1e95] [cursor=pointer]
+          - button "蓝色觉异常" [ref=f1e96] [cursor=pointer]
+        - generic [ref=f1e97]: 基于 Viénot–Brettel 模型的近似模拟，仅供直观理解。
+      - generic [ref=f1e99]:
+        - complementary [ref=f1e100]:
+          - generic [ref=f1e101]: 常见问题
+          - heading "关于色觉筛查，你可能想知道" [level=2] [ref=f1e102]
+          - paragraph [ref=f1e103]: 以下回答基于公开医学常识与本站检测原理整理，仅供科普参考。
+          - generic [ref=f1e104]: 共 12 个问题
+          - generic [ref=f1e105]:
+            - generic [ref=f1e106]: 延伸阅读
+            - link "科普文章" [ref=f1e107] [cursor=pointer]:
+              - /url: /learn
+            - link "隐私政策" [ref=f1e110] [cursor=pointer]:
+              - /url: /privacy
+        - list "关于色觉筛查，你可能想知道" [ref=f1e113]:
+          - listitem [ref=f1e114]:
+            - heading [level=3] [ref=f1e115]:
+              - button "色盲和色弱有什么区别？" [expanded] [ref=f1e116] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f1e117]: "01"
+            - region "色盲和色弱有什么区别？" [ref=f1e121]:
+              - paragraph [ref=f1e122]: 色盲指某一类视锥细胞完全缺失，色弱则是该类细胞仍在但功能减弱、敏感度下降。两者的可辨颜色数量与日常影响差别明显，但仅凭在线筛查无法精确区分“盲”与“弱”，确诊需专业仪器。
+          - listitem [ref=f1e123]:
+            - heading [level=3] [ref=f1e124]:
+              - button "ChromaCheck 在线色觉检测准确吗？" [ref=f1e125] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f1e126]: "02"
+          - listitem [ref=f1e130]:
+            - heading [level=3] [ref=f1e131]:
+              - button "做一次检测需要多久？" [ref=f1e132] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f1e133]: "03"
+          - listitem [ref=f1e137]:
+            - heading [level=3] [ref=f1e138]:
+              - button "我的检测数据安全吗？" [ref=f1e139] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f1e140]: "04"
+          - listitem [ref=f1e144]:
+            - heading [level=3] [ref=f1e145]:
+              - button "哪些专业或职业对色觉有要求？" [ref=f1e146] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f1e147]: "05"
+          - listitem [ref=f1e151]:
+            - heading [level=3] [ref=f1e152]:
+              - button "检测前需要做哪些准备？" [ref=f1e153] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f1e154]: "06"
+          - listitem [ref=f1e158]:
+            - heading [level=3] [ref=f1e159]:
+              - button "在线检测能代替体检或医院检查吗？" [ref=f1e160] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f1e161]: "07"
+          - listitem [ref=f1e165]:
+            - heading [level=3] [ref=f1e166]:
+              - button "色觉异常会遗传吗？可以治愈吗？" [ref=f1e167] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f1e168]: "08"
+          - listitem [ref=f1e172]:
+            - heading [level=3] [ref=f1e173]:
+              - button "孩子可以做这个检测吗？" [ref=f1e174] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f1e175]: "09"
+          - listitem [ref=f1e179]:
+            - heading [level=3] [ref=f1e180]:
+              - button "为什么两次检测结果不完全一样？" [ref=f1e181] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f1e182]: "10"
+          - listitem [ref=f1e186]:
+            - heading [level=3] [ref=f1e187]:
+              - button "测完之后可以做什么？" [ref=f1e188] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f1e189]: "11"
+          - listitem [ref=f1e193]:
+            - heading [level=3] [ref=f1e194]:
+              - button "色觉异常有什么辅助办法？" [ref=f1e195] [cursor=pointer]:
+                - generic [aria-hidden] [ref=f1e196]: "12"
+  - contentinfo [ref=f1e200]:
+    - generic [ref=f1e201]:
+      - generic [ref=f1e202]:
+        - generic [ref=f1e203]:
+          - strong [ref=f1e204]: 色辨 ChromaCheck
+          - generic [ref=f1e205]: 在线色觉筛查工具，基于石原氏检测原理。结果仅供参考，不能替代专业眼科诊断。
+        - generic [ref=f1e206]:
+          - link "开始检测" [ref=f1e207] [cursor=pointer]:
+            - /url: /test
+          - link "科普文章" [ref=f1e208] [cursor=pointer]:
+            - /url: /learn
+          - link "隐私政策" [ref=f1e209] [cursor=pointer]:
+            - /url: /privacy
+          - link "ChromaCheck GitHub 仓库" [ref=f1e210] [cursor=pointer]:
+            - /url: https://github.com/sutchan/ChromaCheck
+            - text: GitHub
+      - generic [ref=f1e211]: © 2026 ChromaCheck · v1.13.2 · build 202611052230 · 仅供教育与筛查用途

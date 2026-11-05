@@ -1,5 +1,5 @@
 // app/privacy/page.tsx — 隐私政策（服务端壳，metadata 静态；内容见 PrivacyContent）
-// chromacheck v1.9.0
+// chromacheck v1.13.2
 import React from 'react';
 import type { Metadata } from 'next';
 import { PrivacyContent } from '@/components/privacy/PrivacyContent';
@@ -20,5 +20,9 @@ export const metadata: Metadata = {
 };
 
 export default function PrivacyPage() {
-  return <PrivacyContent />;
+  return (
+    <div id="privacy-page" className="wrap stack" style={{ paddingBlock: 'var(--s-6)', gap: 'var(--s-5)' }}>
+      <PrivacyContent />
+    </div>
+  );
 }

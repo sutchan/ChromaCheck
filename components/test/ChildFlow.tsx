@@ -1,6 +1,6 @@
 'use client';
 // components/test/ChildFlow.tsx — 儿童模式：页面文案 + 答题 → 判读 → 本地保存 → 跳转结果页
-// chromacheck v1.9.0
+// chromacheck v1.13.2
 import React, { useCallback, useRef, useState } from 'react';
 import Link from 'next/link';
 import { useRouter } from 'next/navigation';
@@ -47,7 +47,7 @@ export function ChildFlow() {
       saveResult(result);
       router.push(`/result/${result.id}`);
     },
-    [router, saving],
+    [router, saving, lang, t],
   );
 
   return (

@@ -1,7 +1,16 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.13.1`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.13.2`）。
+
+## [1.13.2] - 2026-11-05
+
+### 改进（首页常见问题）
+- 首页 FAQ 区改为桌面双栏：左侧简介侧栏（标题 / 说明 / 问题总数 / 延伸阅读入口）随滚动吸附，右侧为整卡分隔式手风琴；修复原单列 `max-width: 760px` 造成的左侧大片留白与内容错位，`≤900px` 自动收为单栏。
+- 手风琴由原生 `<details>` 改为受控按钮结构（`aria-expanded` / `aria-controls` / `role="region"`），补齐题号、`hidden` 面板与焦点环，支持同时展开多题；移除字面量与内联布局样式，样式集中至 `globals.css` 的 `.faq-*`。
+- FAQ 文案由 5 条扩充至 12 条：新增检测前准备、能否替代体检、遗传与治疗、儿童适用性、结果波动原因、测后去向、辅助手段；`FAQPage` 结构化数据随问答列表自动同步。
+- 文案抽离为 `lib/i18n/zh-faq.ts` / `en-faq.ts`（中英键集合对称，`DictKey` 编译期校验），`zh-core.ts` / `en-core.ts` 不再逼近 200 行上限；`dict.ts` 合并顺序改为 core → faq → ui → result。
+- 版本单一来源同步至 `1.13.2`（`VERSION` / `package.json` / `README` / `docs/` 各分册「实现状态」行）。
 
 ## [1.13.1] - 2026-11-03
 
