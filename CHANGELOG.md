@@ -1,7 +1,21 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.13.2`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.13.3`）。
+
+## [1.13.3] - 2026-11-05
+
+### 修复（CI 运行时）
+- `.github/workflows/ci.yml`：`setup-node` 的 `node-version` 由已弃用的 `20` 升至 LTS `22`；`actions/checkout` 与 `actions/setup-node` 由 `v4` 升至 `v5`（动作自身运行时已迁移 Node 24），消除 GitHub Actions「Node.js 20 is deprecated / forced to run on Node.js 24」告警。
+- 同步修正工作流注释：明确 `npm install` 安装策略与不启用 `cache` 的原因（避开 setup-node v5 依据 packageManager 字段的自动缓存检测），项目运行时固定 Node 22 LTS。
+- 版本单一来源同步至 `1.13.3`：`VERSION` / `package.json` / `package-lock.json` / `README` / `docs/` 各分册「实现状态」行与 SPEC 头注释；页脚版本直读 `package.json`，无需改动。
+
+### 修复（离线构建字体失败）
+- 修复 EdgeOne / CI 构建失败：`next/font/google` 在**构建期**需访问 `fonts.gstatic.com`，离线环境返回 null 并报 `TypeError: Cannot read properties of null (reading '1')`（`app/layout.tsx`）。改为 `next/font/local` 真自托管。
+- 8 个 latin 子集 woff2（Archivo 400–800 / IBM Plex Mono 400–600，取自 `@fontsource/*`）随仓库提交于 `app/fonts/`；字体定义抽至 `app/font-defs.ts`，构建期不再联网，生产环境亦自托管。
+- 修复 CSS 字体变量覆盖缺陷：next/font 的 `variable` 与 `globals.css` `:root` 同名 `--font-sans` / `--font-mono` 作用于同一元素相互覆盖，会丢失中文回退链；改用中间变量 `--font-archivo` / `--font-plex-mono` 组合回退链。
+- 验证：离线环境 `next build` 通过（29/29 静态页生成，8 个 woff2 产物已打包）；`tsc --noEmit`、`next lint`、Vitest 97 例全绿。
+- 同步 `docs/SPEC.md` §3.2 字体规范；被改文件头注释升至 `1.13.3`。
 
 ## [1.13.2] - 2026-11-05
 

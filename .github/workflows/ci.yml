@@ -3,7 +3,7 @@
 # 注：当前项目已为 Next.js 14 应用（package.json + lint/type-check/test/build 脚本齐备）。
 #     测试门禁：Vitest（npm test）；e2e 暂未配置。
 # 安装步骤统一用 `npm install`；不配置 setup-node 的 `cache` 选项，
-# 避免 v5 依据 packageManager / lock 文件自动启用缓存而改变构建可复现性。
+# 避免 v5 依据 package.json 的 packageManager 字段自动启用缓存而改变构建可复现性。
 # checkout / setup-node 使用 v5（动作运行时 Node 24），项目运行时用 Node 22 LTS。
 name: CI
 

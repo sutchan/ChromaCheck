@@ -1,5 +1,5 @@
 /* app/globals.css — ChromaCheck 设计令牌与基础样式（移植自 prototype 设计系统） */
-/* chromacheck v1.13.2 */
+/* chromacheck v1.13.3 */
 
 @tailwind base;
 @tailwind components;
@@ -32,10 +32,11 @@
     --focus: #1f7a8c;
     --shadow-color: 18, 32, 43;
 
-    /* 字体 */
-    --font-sans: 'Archivo', 'PingFang SC', 'Microsoft YaHei', system-ui, -apple-system,
-      'Segoe UI', sans-serif;
-    --font-mono: 'IBM Plex Mono', ui-monospace, 'SFMono-Regular', Menlo, Consolas, monospace;
+    /* 字体：组合 next/font/local 注入的中间变量与中文/系统回退链（避免同名变量覆盖） */
+    --font-sans: var(--font-archivo, 'Archivo'), 'PingFang SC', 'Microsoft YaHei', system-ui,
+      -apple-system, 'Segoe UI', sans-serif;
+    --font-mono: var(--font-plex-mono, 'IBM Plex Mono'), ui-monospace, 'SFMono-Regular', Menlo,
+      Consolas, monospace;
 
     /* 间距 / 圆角 */
     --s-1: 4px;

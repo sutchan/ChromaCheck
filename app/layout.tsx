@@ -1,9 +1,9 @@
 // app/layout.tsx — 根布局
-// chromacheck v1.9.0
+// chromacheck v1.13.3
 import React from 'react';
 import type { Metadata, Viewport } from 'next';
-import { Archivo, IBM_Plex_Mono } from 'next/font/google';
 import './globals.css';
+import { archivo, plexMono } from './font-defs';
 import { SITE_URL } from '@/lib/site';
 import { ThemeProvider } from '@/components/layout/ThemeProvider';
 import { Navbar } from '@/components/layout/Navbar';
@@ -14,19 +14,7 @@ import { ServiceWorkerRegistrar } from '@/components/pwa/ServiceWorkerRegistrar'
 import { LangProvider } from '@/components/layout/LangProvider';
 import { SkipLink } from '@/components/layout/SkipLink';
 
-// 自托管字体（next/font），消除 no-page-custom-font 告警并避免运行时外部字体请求
-const archivo = Archivo({
-  subsets: ['latin'],
-  weight: ['400', '500', '600', '700', '800'],
-  variable: '--font-sans',
-  display: 'swap',
-});
-const plexMono = IBM_Plex_Mono({
-  subsets: ['latin'],
-  weight: ['400', '500', '600'],
-  variable: '--font-mono',
-  display: 'swap',
-});
+// 字体定义见 app/font-defs.ts：next/font/local 自托管，构建期不联网
 
 export const metadata: Metadata = {
   metadataBase: new URL(SITE_URL),
