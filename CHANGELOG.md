@@ -12,6 +12,13 @@
 - 文案抽离为 `lib/i18n/zh-faq.ts` / `en-faq.ts`（中英键集合对称，`DictKey` 编译期校验），`zh-core.ts` / `en-core.ts` 不再逼近 200 行上限；`dict.ts` 合并顺序改为 core → faq → ui → result。
 - 版本单一来源同步至 `1.13.2`（`VERSION` / `package.json` / `README` / `docs/` 各分册「实现状态」行）。
 
+### 审查修复（安全 / 规范 / 可达性 / 文档）
+- 安全：JSON-LD 注入增加 `<` `>` `&` 与行/段分隔符转义（`components/seo/JsonLd.tsx` 的 `safeJson`），阻断 `</script>` 断点注入与脚本逃逸（纵深防御，即使数据为可信常量）。
+- 规范：`components/test/ChildFlow.tsx` 的 `useCallback` 补齐缺失的 `lang` / `t` 依赖，消除 ESLint `react-hooks/exhaustive-deps` 警告。
+- 可达性：为 `guide` / `learn` / `privacy` / `offline` 四个服务端页面补充语义化根容器 id（`guide-page` / `learn-page` / `privacy-page` / `offline-page`），对齐全局语义 id 规范，便于调试定位与端到端测试锚定。
+- 文档：`docs/SPEC.md` §6.3 总体结论阈值对齐实际实现（`wrongRate` 比例阈值，与 `lib/scoring.ts` 及单元测试一致），并修正 SPEC 版本漂移（头注释 / 实现状态行 / §8.2 / 页脚统一至 `1.13.2`）。
+- 全仓版本单一来源同步至 `1.13.2`（`VERSION` / `package.json` / `README` / `SPEC`，先前 `VERSION` 滞后于 `package.json` 与 `CHANGELOG`，本次校正）。
+
 ## [1.13.1] - 2026-11-03
 
 ### 代码健壮性 / 规范对齐
