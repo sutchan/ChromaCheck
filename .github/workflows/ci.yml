@@ -2,8 +2,9 @@
 # 规范依据：docs/SPEC.md §8.4 / docs/ARCHITECTURE.md §8.1 / docs/TESTING.md §7.1
 # 注：当前项目已为 Next.js 14 应用（package.json + lint/type-check/test/build 脚本齐备）。
 #     测试门禁：Vitest（npm test）；e2e 暂未配置。
-# 仓库不提交 lock 文件（package-lock.json / yarn.lock），故不使用 setup-node 的
-# npm 缓存，安装步骤用 `npm install`（`npm ci` 与 `cache: npm` 均要求 lock 文件存在）。
+# 安装步骤统一用 `npm install`；不配置 setup-node 的 `cache` 选项，
+# 避免 v5 依据 packageManager / lock 文件自动启用缓存而改变构建可复现性。
+# checkout / setup-node 使用 v5（动作运行时 Node 24），项目运行时用 Node 22 LTS。
 name: CI
 
 on:
