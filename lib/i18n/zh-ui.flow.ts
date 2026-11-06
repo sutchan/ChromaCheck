@@ -1,5 +1,5 @@
 // lib/i18n/zh-ui.test.ts — 中文界面字典：儿童模式 + 检测流程
-// chromacheck v1.11.1
+// chromacheck v1.14.0
 
 export const ZH_UI_TEST = {
   // 检测流程（各 Runner / Flow / 交互组件）
@@ -27,6 +27,7 @@ export const ZH_UI_TEST = {
   'test.phaseHue': '色相排列（D15）',
   'test.module': '模块 {i}/{n}',
   'test.ishiharaPrompt': '请说出图中您看到的数字（最多 3 位）。若看不清任何数字，点“看不清 / 无数字”。',
+  'test.keyboardHint': '也可直接用键盘数字键输入，回车提交、退格删除。',
   'test.revealCorrect': '正确',
   'test.revealDemo': '演示题',
   'test.revealExpected': '图上的数字是 {d}。',

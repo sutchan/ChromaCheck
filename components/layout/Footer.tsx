@@ -1,5 +1,5 @@
 // components/layout/Footer.tsx — 页脚
-// chromacheck v1.12.2
+// chromacheck v1.13.5
 'use client';
 
 import React from 'react';
@@ -9,7 +9,7 @@ import { useLang } from './LangProvider';
 
 export function Footer() {
   const { t } = useLang();
-  // 构建号由 next.config.mjs 在构建时注入（yyyymmddhhmm），缺失时回退版本号
+  // 构建号由 next.config.mjs 在构建时注入（yymmddhhmm，10 位），缺失时回退版本号
   const buildId = process.env.NEXT_PUBLIC_BUILD_ID ?? pkg.version;
 
   return (
@@ -33,8 +33,8 @@ export function Footer() {
           </div>
         </div>
         <div className="muted" style={{ fontSize: '0.82rem', borderTop: '1px solid var(--border)', paddingTop: 'var(--s-4)' }}>
-          {/* 版本号直读 package.json；构建号 build 由 next.config.mjs 注入 NEXT_PUBLIC_BUILD_ID（yyyymmddhhmm），缺失时回退版本号 */}
-          © {new Date().getFullYear()} ChromaCheck · v{pkg.version} · build {buildId} · {t('footer.purpose')}
+          {/* 版本号直读 package.json；展示格式 V{版本}· build {yymmddhhmm}（10 位构建号由 next.config.mjs 注入 NEXT_PUBLIC_BUILD_ID），缺失时回退版本号 */}
+          © {new Date().getFullYear()} ChromaCheck · V{pkg.version}· build {buildId} · {t('footer.purpose')}
         </div>
       </div>
     </footer>

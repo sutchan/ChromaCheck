@@ -1,7 +1,14 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.13.3`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.14.0`）。
+
+## [1.14.0] - 2026-11-06
+
+### 新增（检测键盘输入）
+- 石原氏检测支持实体键盘输入数字：`IshiharaFlow` 挂载全局 `keydown` 监听，输入框未聚焦时，数字键 `0–9` 直接追加答案、`Backspace` 删除、`Enter` 提交；输入框已聚焦时交由原生处理，避免重复输入与事件冲突。反馈（reveal）态下 `Enter` 跳到下一题。
+- 输入框下方新增键盘操作提示文案（`test.keyboardHint`，中英双语）。
+- 版本单一来源同步至 `1.14.0`（`VERSION` / `package.json` / `package-lock.json` / `README` / `docs/` 各分册「实现状态」行与 SPEC 头注释）；页脚版本直读 `package.json`，无需改动。
 
 ## [1.13.4] - 2026-11-06
 

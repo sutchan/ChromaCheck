@@ -1,5 +1,5 @@
 // lib/i18n/en-ui.test.ts — English UI dictionary: kids mode + test flow
-// chromacheck v1.11.1
+// chromacheck v1.14.0
 
 export const EN_UI_TEST = {
   // Test flow
@@ -27,6 +27,7 @@ export const EN_UI_TEST = {
   'test.phaseHue': 'Hue arrangement (D15)',
   'test.module': 'Module {i}/{n}',
   'test.ishiharaPrompt': 'Say the digits you see in the plate (up to 3). If you see no digits, tap “Not sure / no digits”.',
+  'test.keyboardHint': 'You can also type with your number keys — Enter to submit, Backspace to delete.',
   'test.revealCorrect': 'Correct',
   'test.revealDemo': 'Demo item',
   'test.revealExpected': 'The digit on the plate is {d}.',
