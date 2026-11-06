@@ -1,7 +1,7 @@
 # 色辨 ChromaCheck 部署文档
 
-> **规范遵循**：本文档为 [docs/SPEC.md](docs/SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。
-> **实现状态**：v1.0–v1.14.0 已部署上线。Vercel 自动部署；v1.9.0 起 CSP `frame-ancestors` 收紧为 `'self'`，v1.11.2 引入 `package-lock.json`；v1.7.6 起 `next.config.mjs` 配置安全响应头（CSP/X-Frame-Options 等）。静态原型仍可单独托管预览。
+> **规范遵循**：本文档为 [SPEC.md](./SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。
+> **实现状态**：v1.0–v1.14.1 已部署上线。Vercel 自动部署；v1.9.0 起 CSP `frame-ancestors` 收紧为 `'self'`，v1.11.2 引入 `package-lock.json`；v1.7.6 起 `next.config.mjs` 配置安全响应头（CSP/X-Frame-Options 等）。静态原型仍可单独托管预览。
 
 | 项目 | 内容 |
 |------|------|
@@ -94,13 +94,13 @@
 
 ```dockerfile
 # 依赖安装阶段
-FROM node:20-alpine AS deps
+FROM node:22-alpine AS deps
 WORKDIR /app
 COPY package.json package-lock.json ./
-RUN npm ci
+RUN npm install
 
 # 构建阶段
-FROM node:20-alpine AS builder
+FROM node:22-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
 COPY . .
@@ -108,7 +108,7 @@ ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
 
 # 运行阶段
-FROM node:20-alpine AS runner
+FROM node:22-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
@@ -128,13 +128,17 @@ ENV HOSTNAME="0.0.0.0"
 CMD ["node", "server.js"]
 ```
 
-> 注意：使用 standalone 输出模式需要先在 `next.config.js` 中配置：
+> 注意：standalone 输出模式**已在** `next.config.mjs` 中配置，无需另行新建配置：
 
 ```javascript
-module.exports = {
+// next.config.mjs（节选）
+const nextConfig = {
   output: 'standalone',
-  // ...其他配置
+  reactStrictMode: true,
+  env: { NEXT_PUBLIC_BUILD_ID: BUILD_ID },  // 构建期注入 10 位 yymmddhhmm
+  async headers() { /* CSP 等安全响应头 */ },
 };
+export default nextConfig;
 ```
 
 ### 3.2 构建与运行
@@ -170,7 +174,7 @@ services:
       - NEXT_PUBLIC_APP_URL=https://chromacheck.example.com
     restart: unless-stopped
     healthcheck:
-      test: ['CMD', 'wget', '-qO-', 'http://localhost:3000/api/health']
+      test: ['CMD', 'wget', '-qO-', 'http://localhost:3000/']
       interval: 30s
       timeout: 5s
       retries: 3
@@ -243,14 +247,12 @@ ufw deny 3000/tcp  # 3000 端口仅内网访问
 
 ## 5. 环境变量清单
 
+> 代码中实际读取的环境变量仅下列两项；`NEXT_PUBLIC_ANALYTICS_ENABLED` / `NEXT_PUBLIC_SENTRY_DSN` / `NEXT_PUBLIC_VERCEL_ANALYTICS_ID` 均为早期规划，**未实现**。
+
 | 变量名 | 必需 | 说明 |
 |--------|------|------|
-| `NEXT_PUBLIC_APP_NAME` | 是 | 应用名称 |
-| `NEXT_PUBLIC_APP_URL` | 是 | 应用公开 URL |
-| `NEXT_PUBLIC_GA_ID` | 否 | Google Analytics 4 衡量 ID（默认 G-0F9QWS1PDX，置空即停用；仅生产环境加载） |
-| `NEXT_PUBLIC_ANALYTICS_ENABLED` | 否 | 匿名分析开关（默认 false） |
-| `NEXT_PUBLIC_SENTRY_DSN` | 否 | Sentry 错误监控 DSN |
-| `NEXT_PUBLIC_VERCEL_ANALYTICS_ID` | 否 | Vercel Analytics ID |
+| `NEXT_PUBLIC_GA_ID` | 否 | Google Analytics 4 衡量 ID（`lib/analytics.ts`，置空即停用；仅生产环境加载） |
+| `NEXT_PUBLIC_BUILD_ID` | 否（自动） | 10 位 `yymmddhhmm` 构建号，由 `next.config.mjs` 在**构建时**按构建机本地时间生成并注入，供页脚展示；缺失时回退版本号，无需手工配置 |
 
 ---
 
@@ -261,14 +263,14 @@ ufw deny 3000/tcp  # 3000 端口仅内网访问
 - [ ] `npm run build` 本地构建成功
 - [ ] `npm run lint` 无错误
 - [ ] `npm run type-check` 通过
-- [ ] 检测图资源已上传至 `public/plates/`
+- [ ] 自托管字体 `app/fonts/` 下 8 个 woff2 已随仓库提交（检测图为 Canvas 自绘，无 `public/plates/` 图片资源）
 - [ ] 环境变量已配置
 - [ ] 自定义域名 DNS 已生效（如使用）
 
 ### 6.2 上线后检查
 
 - [ ] 首页可正常访问（HTTP 200）
-- [ ] `/api/health` 返回 healthy
+- [ ] 首页与 `/offline` 离线兜底页可正常访问（纯前端，无 `/api/health` 端点）
 - [ ] 完成一次完整检测流程
 - [ ] 移动端访问正常
 - [ ] HTTPS 证书有效
@@ -298,7 +300,7 @@ docker run -d --name chromacheck-rollback -p 3000:3000 chromacheck:<old-tag>
 
 ## 8. 运维建议
 
-- **监控**：启用 Vercel Analytics 和 Web Vitals，关注 LCP/FID/CLS。
+- **监控**：当前仅 GA4 匿名页面浏览统计（`NEXT_PUBLIC_GA_ID`，生产环境）；Vercel Analytics / Web Vitals 均为规划项，尚未接入。
 - **告警**：配置错误率告警（Sentry 或自建），日错误率 > 1% 触发通知。
 - **备份**：本项目为无状态应用，无需数据库备份；本地存储数据由用户自持。
 - **升级**：关注 Next.js 和依赖的安全更新，定期 `npm audit`。

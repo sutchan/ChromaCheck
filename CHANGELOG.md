@@ -1,7 +1,19 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.14.0`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件、`package.json` 与 `package-lock.json` 的 `version` 字段（当前 `1.14.1`）。
+
+## [1.14.1] - 2026-11-06
+
+### 改进（文档全量校订）
+- 对 `docs/`（SPEC + 8 个分册 + TASKS/tasks-done）、根目录 README / CHANGELOG、`.github/` 贡献/安全/支持文档逐行核对现行代码，修正约 90 处过时或失实描述；**仅文档变更，无功能代码改动**。
+- 工程事实：CI 由 `checkout@v4` / `setup-node@v4` + Node 20 + `npm ci` + `cache: npm` 改为 `@v5` + Node 22 + `npm install` + 不启用缓存；仓库已提交 `package-lock.json`；Docker 示例改 `node:22-alpine` + `npm install`；`next.config.js` → `next.config.mjs`（`output: 'standalone'` 已配置）；E2E job / `npm run test:e2e` 标注为未落地。
+- 架构与字体：检测图为 Canvas 点阵自绘（非 `next/image`）；字体改 `next/font/local` 自托管 8 个 woff2 与中文回退链中间变量；CSP 按 `next.config.mjs` 实际 GA4 白名单重写；部署环境变量表收敛为代码实际读取的 `NEXT_PUBLIC_GA_ID` 与构建期注入的 `NEXT_PUBLIC_BUILD_ID`；`/api/health` 相关健康检查改为首页。
+- 判读与测试：权威实现由 `prototype/assets/js/scoring.js` 改为 `lib/scoring.ts`；路径重合度统一为 `pathF1`（F1，非 IoU）；阈值改为比例口径；Vitest 由「6 文件 52 例」统一为「14 文件 97 例，node 环境」，RTL / Playwright 标注为规划项。
+- 数据结构：`AnswerRecord` 收敛为 3 字段、`TestMode` 四值、`TestResult` / `AppSettings` / `TestProgress` 对齐 `lib/types.ts` 与 `lib/storage.ts`；早期规划草案以引用块或 `<details>` 明确标注「未实现」；技术选型表剔除 shadcn / Recharts / @dnd-kit / html2canvas / jsPDF / Vercel Analytics 等未引入依赖。
+- 隐私与范围：路由清单补齐 `/offline`、`/test/batch`、`/test/child`；统一为「除 GA4 外无服务端上报、历史为 30 条完整结果明文存储」；标准版题量统一 38 题；API 路由表标注规划中/未实现。
+- 交叉引用：修正 8 个分册的 `docs/SPEC.md` 相对路径、`tasks.md` → `TASKS.md` 大小写、失效记忆文件引用与任务归档链接；ROADMAP 的 v1.0 标为历史规划阶段。
+- 版本单一来源同步至 `1.14.1`（`VERSION` / `package.json` / `package-lock.json` / `README` / `docs/` 各分册「实现状态」行与 SPEC 头注释）；页脚版本直读 `package.json`，无需改动。
 
 ## [1.14.0] - 2026-11-06
 

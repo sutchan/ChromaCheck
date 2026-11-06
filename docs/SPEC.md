@@ -1,6 +1,6 @@
-<!-- docs/SPEC.md v1.14.0 — ChromaCheck 项目规范总纲（单一事实来源） -->
+<!-- docs/SPEC.md v1.14.1 — ChromaCheck 项目规范总纲（单一事实来源） -->
 <!-- 地位：本规范为权威总纲。当与各分册（PRD/ARCHITECTURE/API/DATA-SPEC/DEPLOYMENT/TESTING/CONTRIBUTING/PRIVACY/ROADMAP）冲突时，以本规范为准。 -->
-<!-- 实现状态：Next.js 14 应用已落地——石原氏检测（38板）、路径追踪、色相排列 D15、进阶联合、信号灯专项、趣味性体验包、结果/历史/科普/隐私、首页 FAQ 双栏问答（12 条）、GA4 匿名统计、SEO/GEO、Vitest 测试套件（14 文件 97 例）；原型仅作设计验证参考。当前版本 v1.14.0。 -->
+<!-- 实现状态：Next.js 14 应用已落地——石原氏检测（38板）、路径追踪、色相排列 D15、进阶联合、信号灯专项、趣味性体验包、结果/历史/科普/隐私、首页 FAQ 双栏问答（12 条）、GA4 匿名统计、SEO/GEO、Vitest 测试套件（14 文件 97 例）；原型仅作设计验证参考。当前版本 v1.14.1。 -->
 
 # 色辨 ChromaCheck 项目规范（SPEC）
 
@@ -22,7 +22,7 @@
 | `docs/PRIVACY.md` | 隐私政策分册 | 已对齐 SPEC，生效 |
 | `docs/ROADMAP.md` | 路线图分册 | 已对齐 SPEC，生效 |
 
-**实现状态声明（必须写入各文档顶部）**：ChromaCheck 已完成 v1.0 实现并持续迭代至 v1.14.0——Next.js 14 应用 + 石原氏检测（38 板）+ 结果/历史/科普/隐私页均已落地，`npm install / npm run dev / npm run build / npm test`（Vitest）均可正常执行（见 README「快速开始」）。路径追踪（F4）已于 v1.1 实现，色相排列（F5）已于 v1.2 实现，进阶联合判读（advanced）已于 v1.3 实现，趣味性体验包已于 v1.4 实现，38 板完整图谱已于 v1.5 实现，GA4 匿名统计已于 v1.5.1 接入，SEO/GEO 已于 v1.6.0 完善，驾驶员场景专项已于 v1.7.0 落地，Vitest 测试套件已于 v1.7.6 引入；v1.10.0 设置面板、v1.11.0 FAQ 手风琴、v1.11.1 i18n 字典子模块化、v1.11.2 引入 package-lock.json 与 SEO metadata 补齐、v1.12.0 无障碍走查与测试覆盖优化（Vitest 14 文件 97 例）及反模式清理均已落地；v1.13.0 修正色觉检测科学性问题（二色觉模拟矩阵改为秩-2 投影、路径追踪等亮度混淆配色、D15 色卡与色相远端固定卡、题库题型降级为消失型、科普文案对齐）已落地；v1.13.2 首页 FAQ 改为双栏布局（简介吸附侧栏 + 受控手风琴）并将问答扩充至 12 条已落地；v1.13.3 CI 升级 Node 22 LTS 与 checkout / setup-node v5（消除 Node 20 弃用告警）已落地；v1.13.4 历史页内联样式收敛（R8a）与 TestRunner 复用 IshiharaFlow 消除答题流程重复 JSX（R8b）已落地；v1.14.0 石原氏检测支持实体键盘输入数字（全局 keydown 监听，输入框聚焦时交由原生处理，未聚焦时数字键 / 退格 / 回车路由到作答）与页脚版本号/构建号展示规范化（格式 `V{ver}· build {yymmddhhmm}`，10 位构建号由 next.config.mjs 注入 NEXT_PUBLIC_BUILD_ID）已落地；原型仅作设计验证参考。
+**实现状态声明（必须写入各文档顶部）**：ChromaCheck 已完成 v1.0 实现并持续迭代至 v1.14.1——Next.js 14 应用 + 石原氏检测（38 板）+ 结果/历史/科普/隐私页均已落地，`npm install / npm run dev / npm run build / npm test`（Vitest）均可正常执行（见 README「快速开始」）。路径追踪（F4）已于 v1.1 实现，色相排列（F5）已于 v1.2 实现，进阶联合判读（advanced）已于 v1.3 实现，趣味性体验包已于 v1.4 实现，38 板完整图谱已于 v1.5 实现，GA4 匿名统计已于 v1.5.1 接入，SEO/GEO 已于 v1.6.0 完善，驾驶员场景专项已于 v1.7.0 落地，Vitest 测试套件已于 v1.7.6 引入；v1.10.0 设置面板、v1.11.0 FAQ 手风琴、v1.11.1 i18n 字典子模块化、v1.11.2 引入 package-lock.json 与 SEO metadata 补齐、v1.12.0 无障碍走查与测试覆盖优化（Vitest 14 文件 97 例）及反模式清理均已落地；v1.13.0 修正色觉检测科学性问题（二色觉模拟矩阵改为秩-2 投影、路径追踪等亮度混淆配色、D15 色卡与色相远端固定卡、题库题型降级为消失型、科普文案对齐）已落地；v1.13.2 首页 FAQ 改为双栏布局（简介吸附侧栏 + 受控手风琴）并将问答扩充至 12 条已落地；v1.13.3 CI 升级 Node 22 LTS 与 checkout / setup-node v5（消除 Node 20 弃用告警）已落地；v1.13.4 历史页内联样式收敛（R8a）与 TestRunner 复用 IshiharaFlow 消除答题流程重复 JSX（R8b）已落地；v1.14.0 石原氏检测支持实体键盘输入数字（全局 keydown 监听，输入框聚焦时交由原生处理，未聚焦时数字键 / 退格 / 回车路由到作答）与页脚版本号/构建号展示规范化（格式 `V{ver}· build {yymmddhhmm}`，10 位构建号由 next.config.mjs 注入 NEXT_PUBLIC_BUILD_ID）已落地；v1.14.1 对 SPEC + 8 个分册 + TASKS/tasks-done + README/CHANGELOG + `.github/` 文档做全量校订（工程事实、字体/CSP、判读权威、测试口径、数据结构、路由与交叉引用对齐现行代码）已落地；原型仅作设计验证参考。
 
 ## 1. 产品定位与功能范围
 
@@ -52,9 +52,10 @@
 
 ### 2.2 目录结构（v1.7 已实现）
 ```
-app/              # Next.js App Router：/ /guide /test /test/ishihara/[mode] /test/advanced
-                  # /test/hue-arrangement/[mode] /test/path-tracking/[mode] /test/signal
-                  # /result/[id] /history /learn /learn/[slug] /privacy /not-found
+app/              # Next.js App Router：/ /guide /test /offline /privacy
+                  # /test/ishihara/[mode] /test/path-tracking/[mode] /test/hue-arrangement/[mode]
+                  # /test/advanced /test/signal /test/batch /test/child
+                  # /result/[id] /history /learn /learn/[slug] /not-found
                   # + robots.ts sitemap.ts llms.txt/route.ts globals.css icon.svg
 components/       # 按域：common/ home/ layout/ result/ test/ analytics/ seo/
 lib/
@@ -63,7 +64,7 @@ lib/
   questions/      # 专项题库子目录：hue-arrangement.ts / path-tracking.ts / signal.ts
   scoring.ts      # 石原氏判读引擎 + scoring-text.ts（判读文案）
   hue-scoring.ts  # 色相排列 D15 判读（TES）
-  path-scoring.ts # 路径追踪判读（IoU）
+  path-scoring.ts # 路径追踪判读（pathF1，F1 重合度，非 IoU）
   signal-scoring.ts # 信号灯辨识判读
   advanced-scoring.ts # 进阶联合交叉验证判读
   ishihara.ts     # 石原氏点阵生成 + CVD 模拟 + path-field.ts（路径字段）
@@ -78,7 +79,7 @@ lib/
   format.ts       # 格式化工具
   *.test.ts       # Vitest 单测（scoring/hue/path/signal/advanced/storage）
 ```
-> 原型 `prototype/assets/js/*.js` 中的纯逻辑（scoring/data/ishihara）已作为 `lib/` 实现的**参考真值**完成移植；v1.7.5 起原型判读已反向对齐应用实现（见 `.codebuddy/memory/2026-09-08.md`）。
+> 原型 `prototype/assets/js/*.js` 中的纯逻辑（scoring/data/ishihara）已作为 `lib/` 实现的**参考真值**完成移植；v1.7.5 起原型判读已反向对齐应用实现（见 `.codebuddy/memory/MEMORY.md`）。
 
 ### 2.3 运行形态
 纯前端、客户端渲染为主；无强制登录、无 PII 上传、无传统后端（与 PRD「隐私优先」一致）。**不承诺服务端并发能力**——PRD §4.1「支持 1000 并发用户」与纯前端架构矛盾，予以作废，改为「静态托管可水平扩展」表述。
@@ -125,19 +126,19 @@ lib/
 | 4 | 色觉人格分享卡 | 结果页 | Canvas 手绘（`sharecard.js`）：雷达 + 称号 + 三轴条，本地 `toDataURL` 导出 PNG，零依赖 |
 | 5 | 换一双眼睛 | 结果页 | 第 4 版转换图（标准答案 29）五种色觉视角切换，复用 `CC.renderPlate` 的 `cvd` 参数（键名须用 `CVD_MATRIX` 的 `protanopia/deuteranopia/tritanopia/achromatopsia`） |
 | 6 | 三轴互动科普 | 结果页 | 点维度条展开日常生活影响（`CC.dimScenes`），`aria-expanded` 状态可键盘操作 |
-| 7 | 「趣味体验」总开关 | 设置面板 | 导航栏「设置」模态；`localStorage` 键 `cc.funMode`，默认开；关闭后称号/人格化文案回退中性措辞 |
+| 7 | 「趣味体验」总开关 | 设置面板 | 导航栏「设置」模态；`localStorage` 键 `cc.settings.v1` 的 `funMode` 字段，默认开；关闭后称号/人格化文案回退中性措辞 |
 
 ¹ 开关控制范围：称号与人格化文案（#4/#5 之外的文案）、章末过渡（#2）、里程碑仪式感（#1）。中性反馈（#3）属于基础体验，恒开。
 
 ### 3.6 页脚版本号与构建号（v1.14.0 起规范）
 - 页脚（`components/layout/Footer.tsx`）以单一 token 展示版本与构建号，格式固定为 `V{版本号}· build {构建号}`：大写 `V`、版本号后紧接 `·`（无空格）、再 ` build `（空格-英文 build-空格）、最后 10 位构建号。
-- **版本号直读 `package.json`**（单一来源），禁止硬编码；展示示例 `V1.14.0· build 2611061430`。
+- **版本号直读 `package.json`**（单一来源），禁止硬编码；展示示例 `V1.14.1· build 2611061430`。
 - **构建号为 10 位 `yymmddhhmm`**（2 位年份 + 月日时分），由 `next.config.mjs` 在**构建时**按构建机本地时间生成并注入 `NEXT_PUBLIC_BUILD_ID`（Next 自动暴露客户端）；`dev` / `build` 均生效，无需手工维护、杜绝版本/构建号脱节。缺失（如本地未注入）时回退为版本号。
 - 页脚其余文案（`© {年}`、品牌名、用途 `footer.purpose`）保持原样，不随版本/build token 改动。
 
 ## 4. 原型契约（CC.* 全局 API）
 
-原型以 `window.CC` 命名空间暴露真实逻辑，是判读与绘制的**参考真值**。
+原型以 `window.CC` 命名空间暴露原型自身逻辑，仅作设计验证参考；应用判读与绘制以 `lib/` 为权威实现（见 §6）。
 
 ### 4.1 数据层 `prototype/assets/js/data.js`
 - `CC.questions`：石原氏题库（38 题）。
@@ -153,7 +154,7 @@ lib/
 - `CC.articles`：科普文章列表。
 - `CC.routes`：页面路由清单（home/guide/select/ishihara/path/hue/result/history/learn/learnDetail）。
 
-### 4.2 判读引擎 `prototype/assets/js/scoring.js`
+### 4.2 原型判读引擎 `prototype/assets/js/scoring.js`（设计验证参考）
 - `CC.scoreIshihara(answers, questions)` → `IshiharaScoringResult`。
 - `CC.scoreHue(order)` → 色相排列 TES 结果。
 - `CC.scorePath(userPath, standardPath, tolerance?)` → 路径重合度（0–100，默认容差 0.055）。
@@ -185,7 +186,7 @@ interface IshiharaQuestion {
   // 规划扩展（原型未含）：answerTritan?: string; inQuickSet?: boolean;
 }
 ```
-**决议**：PRD 的 `timeLimit`/`suggestedTime`、DATA-SPEC 的 `tritanopiaAnswer`/`inQuickSet` 原型均未使用。v1.0 采用 `quick` 表达快速版纳入，废用 `timeLimit`/`inQuickSet`；三色弱题通过 `answerTritan?` 扩展支持，v1.0 暂不实现。
+**决议**：PRD 的 `timeLimit`/`suggestedTime`、DATA-SPEC 的 `answerTritan?`/`inQuickSet` 原型均未使用。v1.0 采用 `quick` 表达快速版纳入，废用 `timeLimit`/`inQuickSet`；三色弱题通过 `answerTritan?` 扩展支持，v1.0 暂不实现。
 
 ### 5.2 答题记录 `AnswerRecord`
 ```ts
@@ -303,9 +304,9 @@ interface SignalTestResult {
 ```
 **决议**：信号灯辨识为驾驶场景专项（数字等效 lantern test），题库 9 题（6 辨色 + 3 含义）；结果不持久化、不进入 `TestResult` 聚合结构（§5.3），与历史/分享链路解耦。
 
-## 6. 判读算法（权威，以 `scoring.js` 实现为准）
+## 6. 判读算法（权威，以 `lib/scoring.ts` 实现为准）
 
-> 本节为算法唯一权威，解决 ARCHITECTURE §3.2 与 DATA-SPEC §7 的扣分/阈值矛盾。**参考实现：`prototype/assets/js/scoring.js`。**
+> 本节为算法唯一权威，解决 ARCHITECTURE §3.2 与 DATA-SPEC §7 的扣分/阈值矛盾。**实现真值：`lib/scoring.ts` 等 `lib/*-scoring.ts`；原型 `prototype/assets/js/scoring.js` 仅作参考。**
 
 ### 6.1 正确性判定 `isCorrect(q, ua)`
 - `hidden` 题：空答案（`ua.trim()===''`）为正确。
@@ -379,8 +380,9 @@ clamp(confidence, 0, 100)
 ### 8.2 版本管理
 - 每次修改 bump 最小版本（patch 优先；新功能 minor；破坏性 major）。
 - 源码文件头统一 `// path vX.Y.Z`；**仅被改动文件更新头注释，禁止全仓库批量刷写**。
-- 项目的**版本单一来源已确立**：仓库根 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.13.4`）为权威；每次发版须同步二者并新增 `CHANGELOG.md` 条目。各文档头注释版本（如 SPEC `v1.14.0`）与 `VERSION` 保持一致；分册"文档版本 v1.0"为文档初版标记，与项目发布版本分属两套体系。原型文件头 `v0.1.2` 为原型内部迭代号，不随项目版本刷写（见 CHANGELOG 说明）。
-- 文档版本当前统一标注 v1.0（产品目标）；原型文件头为 v0.1.0（原型阶段），二者分阶段对齐，不混用。
+- 项目的**版本单一来源已确立**：仓库根 `VERSION` 文件、`package.json` 与 `package-lock.json` 的 `version` 字段（当前 `1.14.1`）为权威；每次发版须同步三者并新增 `CHANGELOG.md` 条目。各文档头注释版本（如 SPEC `v1.14.1`）与 `VERSION` 保持一致
+；分册"文档版本 v1.0"为文档初版标记，与项目发布版本分属两套体系。原型文件头 `v0.1.2` 为原型内部迭代号，不随项目版本刷写（见 CHANGELOG 说明）。
+- 文档版本当前统一标注 v1.0（产品目标）；原型文件头为 v0.1.x（各文件独立迭代号，与项目版本解耦），二者分阶段对齐，不混用。
 
 ### 8.3 文档结构
 - 9 份分册 + 本 SPEC；本 SPEC 为总纲，分册冲突以本规范为准。
@@ -388,14 +390,14 @@ clamp(confidence, 0, 100)
 - 变更须记录 CHANGELOG（实现阶段建立）。
 
 ### 8.4 测试与质量门禁
-- **Vitest 测试套件（v1.7.6 落地）**：判读引擎全量单测（`scoring` / `hue-scoring` / `path-scoring` / `signal-scoring` / `advanced-scoring`，39 例）+ `storage` 健壮性 13 例；`npm test` = `vitest run`，`npm run test:coverage` 走 `@vitest/coverage-v8`。测试环境为 node（`vitest.setup.ts` 注入内存 Storage，无 jsdom/happy-dom）。
+- **Vitest 测试套件（v1.7.6 落地，当前 14 文件 97 例）**：`lib/*.test.ts` 平铺覆盖判读引擎、存储、格式化、导出导入、分享卡等；`npm test` = `vitest run`，`npm run test:coverage` 走 `@vitest/coverage-v8`。测试环境为 node（`vitest.setup.ts` 注入内存 Storage，无 jsdom/happy-dom），组件测试与 E2E 尚未落地。
 - 实现阶段质量门禁：ESLint + TypeScript strict；无 `console.log`/`debugger`；CI（`.github/workflows/ci.yml`）跑 type-check + lint + build + test（e2e 安全跳过）。
 - **安全响应头（v1.7.6 起）**：`next.config.mjs` 配置 CSP / X-Frame-Options / X-Content-Type-Options / Referrer-Policy / Permissions-Policy。
 
 ## 9. 实现状态与待办（对齐 ROADMAP）
 - **已完成（v1.0–v1.7）**：文档体系（9 分册 + SPEC 总纲）、高保真静态原型（4 页，判读已对齐应用）、Next.js 14 应用、石原氏检测全流程（38 板）、结果/历史/科普/隐私页、导出（PNG/打印/复制）/分享卡、路径追踪（v1.1）、色相排列 D15（v1.2）、进阶联合判读（v1.3）、趣味性体验包（v1.4）、38 板完整图谱（v1.5）、GA4 匿名统计（v1.5.1）、SEO/GEO（v1.6.0）、驾驶员场景专项（v1.7.0：驾照合规栏/信号灯辨识/屏幕校准/图版明度/严肃场景隐藏趣味）、Vitest 测试套件（v1.7.6）、安全响应头（v1.7.6）。
-> 任务清单见 [tasks.md](./tasks.md)。
+> 任务清单见 [TASKS.md](./TASKS.md)。
 - **信号灯辨识（驾驶场景专项）**：独立路由 `/test/signal` 已实现（题库 9 题 + `scoreSignal` 判读），结果不计入历史，与 `TestMode` 枚举解耦。
 
 ---
-*本文档为 ChromaCheck 权威规范总纲 v1.14.0。分册应据本规范修订以消除前述字段/算法/范围冲突。*
+*本文档为 ChromaCheck 权威规范总纲 v1.14.1。分册应据本规范修订以消除前述字段/算法/范围冲突。*

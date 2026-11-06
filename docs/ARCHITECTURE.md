@@ -1,7 +1,7 @@
 # 色辨 ChromaCheck 技术架构文档
 
-> **规范遵循**：本文档为 [docs/SPEC.md](docs/SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。
-> **实现状态**：v1.0–v1.14.0 已实现（Next.js 14 应用；石原氏 38 板 / 路径追踪 v1.1 / 色相排列 D15 v1.2 / 进阶联合 v1.3 / 趣味包 v1.4 / GA4 v1.5.1 / SEO·GEO v1.6 / 驾驶员场景 v1.7 / 设置面板 v1.10.0 / FAQ 手风琴 v1.11.0 / i18n 子模块化 v1.11.1 / lockfile 与 SEO metadata 补齐 v1.11.2 / 无障碍走查与测试覆盖优化 v1.12.0）。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [TASKS.md](./TASKS.md)。
+> **规范遵循**：本文档为 [SPEC.md](./SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。
+> **实现状态**：v1.0–v1.14.1 已实现（Next.js 14 应用；石原氏 38 板 / 路径追踪 v1.1 / 色相排列 D15 v1.2 / 进阶联合 v1.3 / 趣味包 v1.4 / GA4 v1.5.1 / SEO·GEO v1.6 / 驾驶员场景 v1.7 / 设置面板 v1.10.0 / FAQ 手风琴 v1.11.0 / i18n 子模块化 v1.11.1 / lockfile 与 SEO metadata 补齐 v1.11.2 / 无障碍走查与测试覆盖优化 v1.12.0）。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [TASKS.md](./TASKS.md)。
 > **原型定位**：`prototype/` 为独立的高保真原型与设计验证参考（含早期 JS 移植源），**非应用运行依赖**；应用源码以 `lib/` 与 `components/` 为准，删除 `prototype/` 不影响构建与运行。
 
 | 项目 | 内容 |
@@ -102,13 +102,16 @@ app/                          # Next.js App Router 页面
 ├── icon.svg                  # 站点图标
 ├── robots.ts / sitemap.ts / llms.txt/route.ts   # SEO/GEO（v1.6）
 ├── guide/page.tsx            # 检测前指引（含屏幕校准提示 v1.7）
+├── offline/page.tsx          # PWA 离线兜底页
 ├── test/
-│   ├── page.tsx              # 模式选择（快速 / 标准 / 路径追踪 / 色相排列 / 进阶联合）
-│   ├── ishihara/[mode]/page.tsx      # 石原氏测试
+│   ├── page.tsx              # 模式选择（快速 / 标准 / 路径追踪 / 色相排列 / 进阶联合 / 信号灯 / 批量 / 儿童）
+│   ├── ishihara/[mode]/page.tsx      # 石原氏测试（支持实体键盘数字键输入）
 │   ├── path-tracking/[mode]/page.tsx # 路径追踪测试（v1.1）
 │   ├── hue-arrangement/[mode]/page.tsx # 色相排列测试（v1.2）
 │   ├── advanced/page.tsx     # 进阶联合检测（v1.3）
-│   └── signal/page.tsx       # 信号灯辨识专项（v1.7，不计入历史）
+│   ├── signal/page.tsx       # 信号灯辨识专项（v1.7，不计入历史）
+│   ├── batch/page.tsx        # 批量检测
+│   └── child/page.tsx        # 儿童图形识别
 ├── result/[id]/page.tsx      # 结果页（按测试类型守卫渲染）
 ├── learn/
 │   ├── page.tsx              # 科普列表
@@ -130,7 +133,7 @@ lib/
 ├── questions.ts              # 石原氏题库（38 题）
 ├── questions/                # 子题库（path-tracking.ts、hue-arrangement.ts、signal.ts）
 ├── scoring.ts / scoring-text.ts   # 石原氏判读引擎 + 文案
-├── path-scoring.ts           # 路径追踪判读（IoU，v1.1）
+├── path-scoring.ts           # 路径追踪判读（pathF1，F1 重合度，非 IoU；v1.1）
 ├── hue-scoring.ts            # 色相排列 TES 判读（v1.2）
 ├── signal-scoring.ts         # 信号灯辨识判读（v1.7）
 ├── advanced-scoring.ts       # 进阶联合交叉验证判读（v1.3）
@@ -141,7 +144,7 @@ lib/
 ├── license.ts                # 驾照辨色力合规映射（v1.7）
 ├── site.ts                   # SITE_URL 单一来源
 ├── learn-data.ts / format.ts  # 科普数据与格式化
-└── *.test.ts                 # Vitest 单测（6 文件 52 例，v1.7.6）
+└── *.test.ts                 # Vitest 单测（14 文件 97 例，node 环境）
 docs/                         # 项目文档（SPEC.md 为权威总纲，TASKS.md 为任务 SSOT）
 ```
 
@@ -153,7 +156,7 @@ docs/                         # 项目文档（SPEC.md 为权威总纲，TASKS.m
 |----------|----------|------|
 | 检测进行中状态 | React 组件本地状态（useState / useReducer） | 当前题目索引、答案等，仅在检测流程内共享 |
 | 结果数据 | URL Search Params + localStorage | 检测完成后将结果 ID 存入 URL，结果页从 localStorage 读取详情 |
-| UI 状态（主题、设置） | React Context (`SettingsContext`) | 深色模式、音效开关等，持久化到 localStorage |
+| UI 状态（主题、语言、设置） | React Context（`ThemeProvider` / `LangProvider`） | 主题、语言、色觉安全、趣味体验等，持久化到 `cc.settings.v1` |
 | 组件局部状态 | `useState` / `useReducer` | 输入框值、展开/收起等 |
 
 
@@ -165,11 +168,15 @@ docs/                         # 项目文档（SPEC.md 为权威总纲，TASKS.m
 | `/` | SSG | 首页 |
 | `/guide` | CSR | 检测前指引（含屏幕校准提示） |
 | `/test` | CSR | 测试模式选择 |
-| `/test/ishihara/[mode]` | CSR | 石原氏测试（`?mode=quick\|standard`） |
+| `/test/ishihara/[mode]` | CSR | 石原氏测试（`{quick\|standard}`，支持实体键盘数字键输入） |
 | `/test/path-tracking/[mode]` | CSR | 路径追踪测试（v1.1） |
 | `/test/hue-arrangement/[mode]` | CSR | 色相排列测试（v1.2） |
 | `/test/advanced` | CSR | 进阶联合检测（v1.3） |
 | `/test/signal` | CSR | 信号灯辨识专项（v1.7，结果不入历史） |
+| `/test/batch` | CSR | 批量检测（多档案） |
+| `/test/child` | CSR | 儿童图形识别 |
+| `/offline` | SSG | PWA 离线兜底页 |
+| `/privacy` | SSG | 隐私政策 |
 | `/result/[id]` | CSR | 结果展示页（从 localStorage 按 ID 读取） |
 | `/learn` | SSG | 科普文章列表 |
 | `/learn/[slug]` | SSG | 科普文章详情 |
@@ -179,21 +186,20 @@ docs/                         # 项目文档（SPEC.md 为权威总纲，TASKS.m
 ### 2.5 性能优化策略
 
 1. **图片优化**：
-   - 检测图使用 Next.js `<Image>` 组件，自动 WebP/AVIF 转换、懒加载。
-   - 预加载下一题图片（`next/image` priority + 预取）。
-   - 检测图使用 SVG 格式（如自绘）或高压缩 WebP，单图 < 100KB。
+   - 检测图由 `components/test/IshiharaPlate.tsx` 用 Canvas 点阵自绘（零图片请求），不使用 `next/image`，也无需预加载下一题图片。
+   - 色觉模拟与 CVD 矩阵在客户端即时计算，避免外部图集资源。
 
 2. **代码分割**：
    - 每个页面自动代码分割。
    - 重型交互组件（如路径追踪画布、色相排列网格）按需动态导入（`next/dynamic`）。
    - 结果图表组件懒加载。
 
-3. **字体优化**：
-   - 使用 `next/font` 加载中文字体（思源黑体），自动预加载、避免 FOIT。
-   - 字体子集化，仅加载常用字符。
+3. **字体优化（v1.13.3 起真自托管）**：
+   - `app/font-defs.ts` 用 `next/font/local` 注入 `app/fonts/` 下 8 个 latin 子集 woff2（Archivo 400–800 / IBM Plex Mono 400–600，来源 `@fontsource/*`），`display: 'swap'`；构建期**不访问** `fonts.gstatic.com`，离线 CI 可用。
+   - CSS 变量分层：`--font-archivo` / `--font-plex-mono` 为中间变量，`globals.css` 的 `--font-sans` / `--font-mono` 组合 PingFang SC / Microsoft YaHei / system-ui 中文回退链。
 
 4. **缓存策略**：
-   - 静态资源（检测图、JS/CSS）设置长期缓存（`Cache-Control: public, max-age=31536000, immutable`）。
+   - 静态资源（JS/CSS、自托管 woff2）设置长期缓存（`Cache-Control: public, max-age=31536000, immutable`）。
    - SSG 页面使用 ISR（Incremental Static Regeneration），科普文章 `revalidate: 3600`。
 
 5. **检测流程优化**：
@@ -244,7 +250,7 @@ export const getStandardSet = (): IshiharaQuestion[] => {
 输入：用户答案数组（每题：题目ID、用户答案、答题时长）
 输出：评估结果（总体结论、异常类型、程度、置信度）
 
-判读逻辑（详见 docs/SPEC.md §6，以 prototype/assets/js/scoring.js 真值为准）：
+判读逻辑（详见 docs/SPEC.md §6，以 `lib/scoring.ts` 实现为准，原型仅作参考）：
 1. 演示题校验：若演示题答错，标记"未理解测试要求"，降低置信度。
 2. 按题目类型分组统计：
    - vanishing 题（正常可见，异常不可见）：答错数 → 异常程度
@@ -256,9 +262,10 @@ export const getStandardSet = (): IshiharaQuestion[] => {
    - 蓝色盲评分：tritan 相关题目
 4. 总体结论：
    - 答题覆盖 < 50% → inconclusive
-   - vanishing 错误 >= 4 或总错误 >= 8 → suspected_blindness
-   - vanishing 错误 >= 2 或总错误 >= 4 或 hidden 答对 >= 半数 → suspected_deficiency
-   - 演示题错且 protan/deutan 匹配均为 0 且错误 < 4 → inconclusive
+   - 已答数 < 总题数 50% → inconclusive
+   - `vanishWrong >= 4` 或 `wrongRate >= 0.6` → suspected_blindness
+   - `vanishWrong >= 2` 或 `wrongRate >= 0.3` 或 hidden 答对 >= 半数 → suspected_deficiency
+   - 演示题错且 protan/deutan 匹配均为 0 且 `wrongRate < 0.3` → inconclusive
 5. 类型与程度（详见 SPEC §6.4）：
    - 轴选择：deutanHit >= protanHit 选 deutan 轴，否则 protan 轴
    - 类型：suspected_blindness → *opia，suspected_deficiency → *anomaly
@@ -319,7 +326,7 @@ export interface IshiharaScoringResult {
 
 3. **判读算法**：
    - 将用户轨迹与标准路径进行点集匹配。
-   - 计算重合度（IoU）：用户轨迹覆盖标准路径的比例。
+   - 用 `pathF1` 计算重合度（F1 思路，非 IoU）：覆盖率与精确率的调和平均。
    - 重合度 > 70% → 该类型色觉正常；< 30% → 疑似异常。
 
 ### 3.4 色相排列模块
@@ -405,12 +412,14 @@ cc.progress.v1     # 进行中的检测进度（模式 / 题号 / 答题记录 /
 
 ### 5.1 API 路由列表
 
-| 方法 | 路径 | 说明 | 认证 |
+> **现状（v1.14.1）**：纯前端应用**无任何服务端 API 路由**，`app/` 下仅 `app/llms.txt/route.ts` 一个 Route Handler（SEO/GEO 文本）。下表接口均为 **v1.1+ 规划或历史设计，当前未实现**；访问统计仅由 GA4 `pageview` 上报（`lib/analytics.ts`），不走本站接口。
+
+| 方法 | 路径 | 说明 | 状态 |
 |------|------|------|------|
-| GET | `/api/health` | 健康检查 | 否 |
-| POST | `/api/analytics/event` | 匿名事件上报（v1.9.0 已移除，不再提供服务） | 否 |
-| GET | `/api/questions/version` | 题库版本查询（用于客户端更新判断） | 否 |
-| GET | `/api/questions/:type` | 获取题库数据（远期，支持远程更新） | 否 |
+| GET | `/api/health` | 健康检查 | 规划中，未实现 |
+| POST | `/api/analytics/event` | 匿名事件上报 | **v1.9.0 已移除**，不再提供 |
+| GET | `/api/questions/version` | 题库版本查询 | 规划中，未实现 |
+| GET | `/api/questions/:type` | 题库远程更新 | 远期规划，未实现 |
 
 ### 5.2 事件上报接口
 
@@ -456,10 +465,12 @@ interface AnalyticsEvent {
 - 配置 CSP（Content Security Policy）Header：
   ```
   default-src 'self';
-  script-src 'self' 'unsafe-inline' (Next.js 需要);
+  script-src 'self' 'unsafe-inline' https://www.googletagmanager.com;
   style-src 'self' 'unsafe-inline';
-  img-src 'self' data: blob:;
-  connect-src 'self' https://*.vercel-analytics.com;
+  img-src 'self' data: blob: https://www.google-analytics.com https://*.google-analytics.com;
+  connect-src 'self' https://www.google-analytics.com https://*.google-analytics.com https://*.analytics.google.com;
+  font-src 'self' data:;
+  object-src 'none'; base-uri 'self'; form-action 'self'; frame-ancestors 'self';
   ```
 - 检测图资源同源，不引用外部图片。
 
@@ -477,9 +488,9 @@ interface AnalyticsEvent {
 ### 7.1 单元测试（v1.7.6 已落地）
 
 - **框架**：Vitest（node 环境，`vitest.setup.ts` 注入内存 Storage，无 jsdom/happy-dom）
-- **实际覆盖**：6 个测试文件 52 例——
-  - 判读引擎全量（`scoring` / `hue-scoring` / `path-scoring` / `signal-scoring` / `advanced-scoring`，39 例）
-  - `storage` 健壮性（13 例，含 safeSet 降级与类型守卫）
+- **实际覆盖**：14 个 `lib/*.test.ts` 平铺文件、共 97 例——
+  - 判读引擎与题库（scoring / hue-scoring / path-scoring / signal-scoring / advanced-scoring / child-scoring / ishihara / path-field）
+  - 存储与档案（storage / profile / export-import）、格式化与文案（format / scoring-text）、分享卡（sharecard）
 - **运行**：`npm test`（vitest run）、`npm run test:watch`、`npm run test:coverage`（@vitest/coverage-v8）
 - **后续目标**：业务逻辑覆盖率持续提升；组件测试与 E2E 尚未引入。
 
@@ -512,16 +523,16 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
-          node-version: 20
-          cache: 'npm'
-      - run: npm ci
+          node-version: 22
+      - run: npm install
       - run: npm run lint
-      - run: npm run type-check
-      - run: npm run test
+      - run: npx tsc --noEmit
+      - run: npm test
       - run: npm run build
+      - run: echo "E2E 跳过：当前版本未配置 e2e"
 ```
 
 ### 8.2 持续部署
@@ -536,10 +547,8 @@ jobs:
 
 ### 9.1 性能监控
 
-- **Google Analytics 4**（v1.5.1 已接入）：匿名页面浏览与访问量，衡量 ID 见 `lib/analytics.ts`，仅生产环境加载。
-- **Vercel Analytics**：页面访问量、PV/UV、跳出率。
-- **Web Vitals**：LCP、FID、CLS 指标采集（`next/web-vitals`）。
-- **自定义指标**：检测完成率、平均检测时长、报告导出率（`lib/analytics.ts` 的 `trackEvent` 已预留，暂未埋点）。
+- **Google Analytics 4**（v1.5.1 已接入）：唯一的统计通道，仅生产环境加载；`lib/analytics.ts` 只暴露 `GA_MEASUREMENT_ID` 与 `pageview`，采集匿名页面浏览指标，衡量 ID 可用 `NEXT_PUBLIC_GA_ID` 覆盖。
+- 以下均为**规划项，当前未实现**：Vercel Analytics（PV/UV、跳出率）、Web Vitals（LCP/FID/CLS）、自定义指标（检测完成率 / 平均时长 / 导出率）。不存在 `trackEvent` 埋点或服务端事件上报。
 
 ### 9.2 错误监控
 
@@ -556,4 +565,4 @@ jobs:
 
 ## 10. 扩展规划
 
-> 任务清单见 [tasks.md](./tasks.md)。
+> 任务清单见 [TASKS.md](./TASKS.md)。

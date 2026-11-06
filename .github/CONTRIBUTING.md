@@ -1,7 +1,7 @@
 # 贡献指南
 
 > **规范遵循**：本文档为 [../docs/SPEC.md](../docs/SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。
-> **实现状态**：v1.0 应用已实现，§开发环境 的 npm 流程（install / dev / build / lint）当前可直接使用。
+> **实现状态**：v1.0–v1.14.1 已实现，§开发环境 的 npm 流程（install / dev / build / lint / type-check / test）当前可直接使用。
 
 感谢你对色辨 ChromaCheck 的关注！本文档描述了如何参与项目贡献。
 
@@ -55,7 +55,7 @@ git checkout -b feature/your-feature-name
 
 ### 2. 开发
 
-- 遵循项目代码规范（ESLint + Prettier）
+- 遵循项目代码规范（ESLint，`npm run lint`）
 - 新增功能需编写对应的单元测试
 - 保持提交粒度合理，每个提交做一件事
 
@@ -131,7 +131,7 @@ Closes #xxx
 ### TypeScript
 
 - 所有文件使用 TypeScript，禁止使用 `any`（如必须使用，需加注释说明原因）。
-- 类型定义放在 `types/` 目录，组件内联类型优先。
+- 全局类型定义集中在 `lib/types.ts`，组件内联类型优先。
 - 使用 `interface` 定义对象类型，`type` 定义联合类型和工具类型。
 
 ### React
@@ -176,7 +176,7 @@ Closes #xxx
 尝试清除缓存后重新安装：
 
 ```bash
-rm -rf node_modules package-lock.json
+rm -rf node_modules
 npm install
 ```
 

@@ -1,7 +1,7 @@
 # 色辨 ChromaCheck 数据规范文档
 
-> **规范遵循**：本文档为 [docs/SPEC.md](docs/SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。类型别名（ColorDeficiencyType / OverallResult / SeverityLevel / TestMode）以 SPEC §5.5 为权威定义。
-> **实现状态**：v1.0–v1.14.0 已实现（Next.js 14 应用；石原氏 38 板 / 路径追踪 v1.1 / 色相排列 D15 v1.2 / 进阶联合 v1.3 / 趣味包 v1.4 / GA4 v1.5.1 / SEO·GEO v1.6 / 驾驶员场景 v1.7 / 设置面板 v1.10.0 / FAQ 手风琴 v1.11.0 / i18n 子模块化 v1.11.1 / lockfile 与 SEO metadata 补齐 v1.11.2 / 无障碍走查与测试覆盖优化 v1.12.0）。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [TASKS.md](./TASKS.md)。
+> **规范遵循**：本文档为 [SPEC.md](./SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。类型别名（ColorDeficiencyType / OverallResult / SeverityLevel / TestMode）以 SPEC §5.5 为权威定义。
+> **实现状态**：v1.0–v1.14.1 已实现（Next.js 14 应用；石原氏 38 板 / 路径追踪 v1.1 / 色相排列 D15 v1.2 / 进阶联合 v1.3 / 趣味包 v1.4 / GA4 v1.5.1 / SEO·GEO v1.6 / 驾驶员场景 v1.7 / 设置面板 v1.10.0 / FAQ 手风琴 v1.11.0 / i18n 子模块化 v1.11.1 / lockfile 与 SEO metadata 补齐 v1.11.2 / 无障碍走查与测试覆盖优化 v1.12.0）。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [TASKS.md](./TASKS.md)。
 
 | 项目 | 内容 |
 |------|------|
@@ -119,19 +119,13 @@ interface HueArrangementQuestion {
 interface AnswerRecord {
   /** 题目 ID */
   questionId: string;
-  /** 用户输入答案（空串表示未作答 / hidden 题留空） */
+  /** 用户输入答案（空串表示未作答 / hidden 题留空 /「看不清」） */
   userAnswer: string;
-  /** 是否选择"看不清/无数字" */
-  cannotSee: boolean;
   /** 答题时长（毫秒） */
   durationMs: number;
-  /** 答题时间戳 ISO 字符串 */
-  timestamp: string;
-  /** 是否正确（由判读引擎计算，详见 docs/SPEC.md §6.1；原型无此字段，实现阶段补入） */
-  correct: boolean;
-  /** 冗余存正确答案，便于结果复核 */
-  expectedAnswer: string;
 }
+
+> 字段以 `lib/types.ts` 的 `AnswerRecord` 为权威（仅 3 个字段）；正确性由判读引擎按题目答案现场计算，不落库、不冗余存正确答案。
 ```
 
 ---
@@ -236,8 +230,8 @@ interface TestResult {
   version: string;
   /** ISO8601 完成时间 */
   createdAt: string;
-  /** 测试模式：quick / standard / advanced（v1.3 已实现） */
-  testMode: 'quick' | 'standard';
+  /** 测试模式（TestMode：quick / standard / advanced / child） */
+  testMode: TestMode;
   /** 综合判定 */
   overall: OverallResult;
   /** 疑似色觉异常类型（无则 null） */
@@ -250,8 +244,8 @@ interface TestResult {
   durationMs: number;
   /** 逐题作答记录 */
   answers: AnswerRecord[];
-  /** 判读引擎输出（见 §4） */
-  ishihara: IshiharaScoringResult;
+  /** 判读引擎输出（见 §4）；纯路径追踪测试为 undefined */
+  ishihara?: IshiharaResult;
   /** 文字解读 */
   analysis: string;
   /** 置信度说明 */
@@ -269,14 +263,27 @@ interface TestResult {
 ### 6.1 存储 Key 规范
 
 ```
-cc.settings.v1      # 用户设置（AppSettings：theme + cvdSafe）
+cc.settings.v1      # 用户设置（AppSettings：theme + cvdSafe + funMode）
 cc.results.v1       # 检测历史（TestResult[]，保留最近 30 条）
 cc.progress.v1      # 进行中的检测进度（TestProgress）
 
-> v1.0 实际以 `lib/storage.ts` 与 `docs/SPEC.md §5.4` 为准：使用上述三个扁平键，无聚合 `LocalStorageData`、无 `soundEnabled`/`autoNext`/`analyticsEnabled`/`system` 主题（均推迟至 v1.1）。
+> 实际以 `lib/storage.ts` 与 `docs/SPEC.md §5.4` 为准：使用上述三个扁平键，无聚合 `LocalStorageData`；`soundEnabled` / `autoNext` / `analyticsEnabled` / `'system'` 主题均为早期规划字段，**至今未实现**。下方 §6.2–§6.4 的结构为早期规划草案，现行结构见各节标注。
 ```
 
 ### 6.2 用户设置（Settings）
+
+> **现行实现**：`lib/types.ts` 的 `AppSettings`（默认 `{ theme: 'light', cvdSafe: false, funMode: true }`），存于 `cc.settings.v1`。下方 `UserSettings` 为早期规划草案，**未实现**。
+
+```typescript
+interface AppSettings {
+  theme: 'light' | 'dark';
+  cvdSafe: boolean;
+  /** 趣味体验开关（称号 / 章末过渡 / 里程碑仪式感），默认开 */
+  funMode: boolean;
+}
+```
+
+<details><summary>早期规划草案（未实现）</summary>
 
 ```typescript
 interface UserSettings {
@@ -291,22 +298,24 @@ interface UserSettings {
 }
 ```
 
+</details>
+
 ### 6.3 检测进度（CurrentTest）
 
+> **现行实现**：`lib/storage.ts` 的 `TestProgress`，存于 `cc.progress.v1`；`answers` 为数组而非字典，`startedAt` 为毫秒时间戳。
+
 ```typescript
-interface CurrentTestProgress {
-  /** 测试模式 */
-  testMode: 'quick' | 'standard' | 'advanced';  // advanced 已于 v1.3 实现
-  /** 当前题目索引 */
-  currentIndex: number;
-  /** 已答题目 */
-  answers: Record<string, AnswerRecord>;
-  /** 开始时间 */
-  startTime: string;
+export interface TestProgress {
+  mode: TestMode;                 // quick / standard / advanced / child
+  index: number;                  // 下一题索引
+  answers: AnswerRecord[];
+  startedAt: number;
 }
 ```
 
 ### 6.4 历史记录摘要（HistorySummary）
+
+> **早期规划草案，未采用**：现行历史为 `cc.results.v1` 中完整 `TestResult[]`（最多 30 条，含逐题作答），不单独存摘要；字段以 `lib/types.ts` 的 `TestResult` 与 `docs/SPEC.md §5.3` 为权威。
 
 ```typescript
 interface HistorySummary {

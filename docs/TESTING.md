@@ -1,7 +1,7 @@
 # 色辨 ChromaCheck 测试策略文档
 
-> **规范遵循**：本文档为 [docs/SPEC.md](docs/SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。判读引擎测试以 SPEC §6 与 `prototype/assets/js/scoring.js` 为权威。
-> **实现状态**：v1.14.0：Vitest 测试套件共 14 文件 97 例（`lib/*.test.ts`：scoring / hue-scoring / path-scoring / advanced-scoring / signal-scoring / child-scoring / profile / storage / export-import / format / scoring-text / path-field / ishihara / sharecard），node 环境。CI `.github/workflows/ci.yml` 跑 type-check + lint + build + test。组件测试与 Playwright E2E 尚未落地。判读引擎测试以 SPEC §6 与 `lib/scoring.ts` 为权威。
+> **规范遵循**：本文档为 [SPEC.md](./SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。判读引擎测试以 SPEC §6 与 `lib/scoring.ts` 为权威。
+> **实现状态**：v1.14.1：Vitest 测试套件共 14 文件 97 例（`lib/*.test.ts`：scoring / hue-scoring / path-scoring / advanced-scoring / signal-scoring / child-scoring / profile / storage / export-import / format / scoring-text / path-field / ishihara / sharecard），node 环境。CI `.github/workflows/ci.yml` 跑 type-check + lint + build + test。组件测试与 Playwright E2E 尚未落地。判读引擎测试以 SPEC §6 与 `lib/scoring.ts` 为权威。
 
 | 项目 | 内容 |
 |------|------|
@@ -16,10 +16,10 @@
 
 | 层级 | 工具 | 重点 |
 |------|------|------|
-| 单元测试 | Vitest + React Testing Library | 判读算法、工具函数、存储封装 |
-| 组件测试 | Vitest + React Testing Library | UI 组件渲染与交互 |
-| 集成测试 | Playwright | 核心用户流程 |
-| 端到端测试 | Playwright | 完整检测链路 |
+| 单元测试 | Vitest（node 环境） | 判读算法、工具函数、存储封装 —— **已落地，14 文件 97 例** |
+| 组件测试 | Vitest + React Testing Library | UI 组件渲染与交互 —— **规划中，未落地**（无 jsdom/happy-dom、无 RTL 依赖） |
+| 集成测试 | Playwright | 核心用户流程 —— **规划中，未落地** |
+| 端到端测试 | Playwright | 完整检测链路 —— **规划中，未落地**（CI 以 `echo` 占位跳过） |
 | 手动测试 | 人工 | 兼容性、无障碍、色彩准确性 |
 
 ---
@@ -28,12 +28,12 @@
 
 ### 2.1 测试范围
 
-#### 判读算法（`lib/scoring/`）— 最高优先级
+#### 判读算法（`lib/scoring.ts` 等 `lib/*-scoring.ts`）— 最高优先级
 
 | 文件 | 测试重点 |
 |------|----------|
-| `ishihara-scoring.ts` | 各题型答题模式的边界用例、异常类型判定、程度判定、置信度计算 |
-| `path-scoring.ts` | 路径重合度计算、IoU 阈值判定 |
+| `scoring.ts` | 各题型答题模式的边界用例、异常类型判定、程度判定、判读稳定性计算 |
+| `path-scoring.ts` | 路径 `pathF1` 重合度计算与阈值判定（F1 思路，非 IoU） |
 | `hue-scoring.ts` | TES 计算、偏差方向判定 |
 
 **判读算法测试用例清单**：
@@ -53,34 +53,29 @@ describe('scoreIshiharaTest')
   - 答题矛盾 → 置信度降低
 ```
 
-#### 工具函数（`lib/utils.ts`）
+#### 工具函数（`lib/format.ts`）
 
-- `cn()` 类名合并
-- `generateId()` 唯一性
-- `formatDate()` / `formatDateTime()` 格式
-- `formatDuration()` 时长格式
-- `clamp()` 边界
-- `percentage()` 除零处理
-- `safeJsonParse()` 异常 JSON
+- `formatDate()` 日期格式
+- `formatDuration()` 时长格式（含中英双语）
+- `detectDevice()` 设备/UA 摘要（含中英双语）
 
-#### 存储封装（`lib/storage/`）
+#### 存储封装（`lib/storage.ts`）
 
-- 设置读写与默认值合并
-- 测试进度保存/恢复/清除
-- 结果保存与历史记录联动
-- 历史条数上限（20 条）
-- 完整结果上限（5 条）
+- 设置读写与默认值合并（`cc.settings.v1`）
+- 测试进度保存/恢复/清除（`cc.progress.v1`）
+- 结果保存与历史记录联动（`cc.results.v1`）
+- 历史条数上限（30 条完整 `TestResult`，含逐题作答）
 - 删除与清空
 
 ### 2.2 测试文件结构
 
 ```
 lib/
-├── scoring/
-│   ├── ishihara-scoring.ts
-│   └── ishihara-scoring.test.ts
-├── utils.ts
-└── utils.test.ts
+├── scoring.ts / hue-scoring.ts / path-scoring.ts
+├── signal-scoring.ts / advanced-scoring.ts / child-scoring.ts
+├── storage.ts / profile.ts / export-import.ts / format.ts
+├── ishihara.ts / path-field.ts / sharecard.ts / scoring-text.ts
+└── *.test.ts            # 14 个平铺测试文件，共 97 例
 ```
 
 ### 2.3 覆盖率目标
@@ -216,7 +211,7 @@ test('完整检测流程', async ({ page }) => {
 
   // 选择快速检测
   await page.getByRole('button', { name: /快速检测/ }).click();
-  await expect(page).toHaveURL(/\/test\/ishihara\?mode=quick/);
+  await expect(page).toHaveURL(/\/test\/ishihara\/quick/);
 
   // 答题
   for (let i = 0; i < 10; i++) {
@@ -225,7 +220,7 @@ test('完整检测流程', async ({ page }) => {
   }
 
   // 结果页
-  await expect(page).toHaveURL(/\/result\?id=/);
+  await expect(page).toHaveURL(/\/result\/[^/]+/);
   await expect(page.getByText(/色觉正常|疑似色/)).toBeVisible();
 });
 ```
@@ -236,8 +231,8 @@ test('完整检测流程', async ({ page }) => {
 # 安装 Playwright 浏览器（首次）
 npx playwright install
 
-# 运行 E2E 测试
-npm run test:e2e
+# 运行 E2E 测试（脚本尚未配置，以下为规划示例）
+npx playwright test
 
 # 指定浏览器
 npx playwright test --project=chromium
@@ -338,27 +333,17 @@ jobs:
   test:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
+      - uses: actions/checkout@v5
+      - uses: actions/setup-node@v5
         with:
-          node-version: 20
-          cache: 'npm'
-      - run: npm ci
+          node-version: 22
+      - run: npm install
       - run: npm run lint
-      - run: npm run type-check
-      - run: npm run test
+      - run: npx tsc --noEmit
+      - run: npm test
       - run: npm run build
-  e2e:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: 20
-      - run: npm ci
-      - run: npx playwright install --with-deps
-      - run: npm run build
-      - run: npm run test:e2e
+      - run: echo "E2E 跳过：当前版本未配置 e2e"
+
 ```
 
 ### 7.2 发布门禁

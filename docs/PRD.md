@@ -1,7 +1,7 @@
 # 色辨 ChromaCheck 产品需求文档（PRD）
 
-> **规范遵循**：本文档为 [docs/SPEC.md](docs/SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。
-> **实现状态**：v1.0–v1.14.0 已实现（Next.js 14 应用；石原氏 38 板 / 路径追踪 v1.1 / 色相排列 D15 v1.2 / 进阶联合 v1.3 / 趣味包 v1.4 / GA4 v1.5.1 / SEO·GEO v1.6 / 驾驶员场景 v1.7 / 设置面板 v1.10.0 / FAQ 手风琴 v1.11.0 / i18n 子模块化 v1.11.1 / lockfile 与 SEO metadata 补齐 v1.11.2 / 无障碍走查与测试覆盖优化 v1.12.0）。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [TASKS.md](./TASKS.md)。
+> **规范遵循**：本文档为 [SPEC.md](./SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。
+> **实现状态**：v1.0–v1.14.1 已实现（Next.js 14 应用；石原氏 38 板 / 路径追踪 v1.1 / 色相排列 D15 v1.2 / 进阶联合 v1.3 / 趣味包 v1.4 / GA4 v1.5.1 / SEO·GEO v1.6 / 驾驶员场景 v1.7 / 设置面板 v1.10.0 / FAQ 手风琴 v1.11.0 / i18n 子模块化 v1.11.1 / lockfile 与 SEO metadata 补齐 v1.11.2 / 无障碍走查与测试覆盖优化 v1.12.0）。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [TASKS.md](./TASKS.md)。
 
 | 项目 | 内容 |
 |------|------|
@@ -63,8 +63,8 @@
 
 1. **多范式测试**：不仅有石原氏数字图，还包含路径追踪图、色相排列测试（Farnsworth-Munsell 简化版）。
 2. **科学判读算法**：基于答题模式（不仅看对错，还看错误类型）推断色觉异常类型与程度。
-3. **中文本土化**：全中文界面，结果解读贴合国内职业体检标准（如《机动车驾驶证申领和使用规定》色觉要求）。
-4. **隐私优先**：检测数据本地存储，不强制注册，用户可自主选择是否上传。
+3. **本土化与双语**：中英双语界面（`lib/i18n/`），结果解读贴合国内职业体检标准（如《机动车驾驶证申领和使用规定》色觉要求）。
+4. **隐私优先**：检测数据仅存本地浏览器、不强制注册；除 GA4 匿名访问统计外，不存在任何服务端数据上传通道。
 
 ---
 
@@ -95,7 +95,7 @@
 │   └── 就医指南
 └── 用户中心（轻量）
     ├── 历史记录（本地存储）
-    └── 设置（音效、对比度等）
+    └── 设置（语言、主题、色觉安全模式、趣味体验）
 ```
 
 ### 3.2 核心功能详述
@@ -128,7 +128,7 @@
 | 题目类型 | 数字图（正常色觉可见数字，异常者不可见或看到不同数字）、设计图（用于区分正常与伪色盲） |
 | 页面元素 | 检测图（居中，最大尺寸限制）、题目进度指示器、输入框（数字键盘或手动输入）、"看不清/无数字"选项、上一题/下一题按钮 |
 | 交互规则 | 1. 每题无时间限制，但记录答题时长（过长可能提示异常）；2. 允许返回修改；3. 输入后自动进入下一题（可配置）；4. 演示题提供正确答案反馈，正式题不反馈 |
-| 数据记录 | 每题：题目 ID、用户答案、正确答案、是否正确、答题时长、是否选择"看不清" |
+| 数据记录 | 每题：题目 ID、用户答案、答题时长（`AnswerRecord` 仅 3 字段；正确与否由判读引擎现场计算） |
 | 验收标准 | 图片加载无闪烁；输入支持键盘回车提交；进度条实时更新；移动端数字键盘友好 |
 
 #### F4. 路径追踪图测试（进阶，v1.1+ 实现，见 SPEC §1.2）
@@ -146,7 +146,7 @@
 | 字段 | 说明 |
 |------|------|
 | 功能描述 | 用户按色相顺序排列色卡，检测色觉辨别精度（简化版 Farnsworth-Munsell D15） |
-| 题量 | 1 组（15 张色卡 + 1 张固定首尾卡） |
+| 题量 | 1 组（15 张可移动色卡 + 2 张固定首尾卡，`cardCount: 17`） |
 | 页面元素 | 色卡列表（可拖拽排序）、参考首尾色卡、提交按钮 |
 | 交互 | 拖拽/点击交换色卡位置；提交后计算总误差分数（TES） |
 | 验收标准 | 拖拽流畅；色卡颜色准确（sRGB 色域）；支持移动端点击排序 |
@@ -184,7 +184,7 @@
 | 字段 | 说明 |
 |------|------|
 | 功能描述 | 在用户本地浏览器保存检测历史，无需注册 |
-| 存储方式 | localStorage（加密存储基本结果，不存储原始答题数据） |
+| 存储方式 | localStorage（`cc.results.v1` 以 JSON **明文**保存完整 `TestResult[]`，含逐题作答，未加密；最多 30 条） |
 | 功能 | 查看历史结果列表、对比历次结果、删除单条记录、清空全部 |
 | 隐私 | 明确告知数据仅存于本地；提供一键清除 |
 | 验收标准 | 关闭浏览器后数据不丢失；清除后不可恢复；存储容量不超过 1MB |
@@ -223,14 +223,14 @@
 ### 4.4 隐私与安全
 
 - **数据最小化**：不强制收集个人信息，检测数据默认本地存储。
-- **匿名化**：如用户选择上传数据，仅上传脱敏后的统计数据，不含个人标识。
+- **无上传通道**：检测数据不向任何服务端上传；仅 GA4 采集匿名页面浏览指标，不含检测内容与身份信息。
 - **HTTPS**：全站强制 HTTPS。
 - **免责声明**：明确说明本工具仅为筛查参考，不能替代专业医学诊断。
 - **合规**：遵循《个人信息保护法》《数据安全法》，不将用户数据用于未经授权的用途。
 
 ### 4.5 可维护性
 
-- 代码遵循 ESLint + Prettier 规范。
+- 代码遵循 ESLint（`npm run lint`）与 TypeScript strict（`npm run type-check`）规范；未引入 Prettier。
 - 组件粒度合理，单一职责。
 - 测试数据与业务逻辑分离，便于后续扩充题库。
 - 判读算法独立模块，支持版本迭代和 A/B 测试。
@@ -248,7 +248,7 @@
     ↓
 检测前指引页 → 勾选确认 → 开始
     ↓
-石原氏数字图测试（10题/快速版 或 24题/标准版）
+石原氏数字图测试（10 题/快速版 或 38 题/标准版）
     ↓
 提交答案
     ↓
@@ -278,7 +278,7 @@
 
 ### 6.1 检测题库数据结构
 
-> 字段名与枚举以 [docs/SPEC.md §5.1](docs/SPEC.md) 为权威（原型 `prototype/assets/js/data.js` 实证）。
+> 字段名与枚举以 [SPEC.md §5.1](./SPEC.md) 为权威（原型 `prototype/assets/js/data.js` 实证）。
 
 ```typescript
 interface IshiharaQuestion {
@@ -296,20 +296,47 @@ interface IshiharaQuestion {
 
 ### 6.2 检测结果数据结构
 
-> 字段以 [docs/SPEC.md §5.3](docs/SPEC.md) 为权威（TestResult 内聚 `ishihara` 评分对象，含 `correctCount`）。
+> 字段以 [SPEC.md §5.3](./SPEC.md) 与 `lib/types.ts` 为权威；下方 `TestResult` 为早期草案，现行实现见该节。
+
+> **早期规划草案，未采用**：`userId` / `startTime` / `endTime` / `advancedResults` 均不在现行结构中。
 
 ```typescript
+// 早期草案（未实现）
 interface TestResult {
   id: string;
   userId: string | null;          // 匿名用户为 null
-  testMode: 'quick' | 'standard' | 'advanced';  // advanced 已于 v1.3 实现
+  testMode: 'quick' | 'standard' | 'advanced';
   startTime: string;              // ISO 时间
   endTime: string;
-  ishihara: IshiharaScoringResult; // 含 overall/type/severity/confidence/dimensions，定义见 SPEC §5.3
-  advancedResults?: {       // v1.1/v1.2 已实现（路径追踪 v1.1 / 色相排列 v1.2）
+  ishihara: IshiharaScoringResult;
+  advancedResults?: {
     pathTracking?: PathTrackingResult;
     hueArrangement?: HueArrangementResult;
   };
+}
+
+// 现行实现（lib/types.ts，节选）
+interface TestResult {
+  id: string;
+  schema: string;
+  version: string;
+  createdAt: string;
+  testMode: TestMode;             // quick / standard / advanced / child
+  overall: Overall;
+  type: DeficiencyType;
+  severity: Severity;
+  confidence: number;
+  durationMs: number;
+  answers: AnswerRecord[];
+  ishihara?: IshiharaResult;      // 纯路径追踪测试为 undefined
+  pathTracking?: PathTrackingResult[];
+  hueArrangement?: HueArrangementResult;
+  child?: ChildResult;
+  analysis: string;
+  confidenceNote: string;
+  device: string;
+  scene?: Scene;
+  profileId?: string;
 }
 ```
 
@@ -348,19 +375,22 @@ interface LocalStorageData {
 
 ## 7. 技术选型（概要）
 
+> 运行时依赖仅 `next` / `react` / `react-dom`；下表为**现行实现**，`shadcn/ui` / `Radix UI` / `Recharts` / `@dnd-kit` / `html2canvas` / `jsPDF` / `Vercel Analytics` 均为早期规划，**未引入**。
+
 | 层级 | 技术 | 说明 |
 |------|------|------|
-| 前端框架 | Next.js 14 (App Router) | SSR/SSG 混合，SEO 友好 |
-| 语言 | TypeScript | 类型安全 |
-| 样式 | Tailwind CSS | 原子化 CSS，快速开发 |
-| UI 组件 | shadcn/ui + Radix UI | 可访问性好，可定制 |
-| 图表 | Recharts | 结果可视化 |
+| 前端框架 | Next.js 14 (App Router) | SSG/CSR 混合，SEO 友好 |
+| 语言 | TypeScript（strict） | 类型安全 |
+| 样式 | 设计令牌 + CSS 变量（`globals.css`），Tailwind 3 | 深色 / 色觉安全模式 |
+| UI 组件 | 自研组件（`components/` 五域） | 零 UI 库依赖 |
+| 图表 | 内联 SVG | 结果可视化零 bundle |
 | 状态管理 | React Context + useState | 轻量，无需 Redux |
-| 画布 | Canvas API | 路径追踪测试 |
-| 拖拽 | @dnd-kit/core | 色相排列测试 |
-| 导出 | html2canvas + jsPDF | 报告导出 |
-| 部署 | Vercel | 与 Next.js 原生集成 |
-| 分析 | Vercel Analytics / 自建 | 隐私友好的访问统计 |
+| 画布 | Canvas API | 路径追踪描线、石原氏点阵自绘、报告 PNG |
+| 拖拽/排序 | 原生指针事件 + 点击交换 | 色相排列 D15 |
+| 导出 | Canvas `toDataURL()`（PNG）+ `window.print()`（PDF） | 无第三方导出库 |
+| 字体 | `next/font/local` 自托管 8 个 woff2 | 构建期不联网 |
+| 部署 | Vercel / standalone Docker | `output: 'standalone'` |
+| 分析 | Google Analytics 4 `pageview` | 仅生产环境、匿名访问统计 |
 
 详细技术架构见 `docs/ARCHITECTURE.md`。
 
