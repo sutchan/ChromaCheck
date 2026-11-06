@@ -1,4 +1,4 @@
-// next.config.mjs v1.13.5
+// next.config.mjs v1.14.0
 /** @type {import('next').NextConfig} */
 
 // 构建号：本地构建时间到分钟，结构 yymmddhhmm（2 位年份，共 10 位）；注入 NEXT_PUBLIC_BUILD_ID 供客户端（页脚）读取

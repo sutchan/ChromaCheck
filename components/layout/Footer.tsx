@@ -1,5 +1,5 @@
 // components/layout/Footer.tsx — 页脚
-// chromacheck v1.13.5
+// chromacheck v1.14.0
 'use client';
 
 import React from 'react';
