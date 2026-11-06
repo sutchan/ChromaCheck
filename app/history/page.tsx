@@ -1,5 +1,5 @@
 // app/history/page.tsx — 历史记录（含档案筛选 / 导出导入 / 汇总）
-// chromacheck v1.9.1
+// chromacheck v1.13.4
 'use client';
 
 import React, { useEffect, useRef, useState } from 'react';
@@ -72,37 +72,25 @@ export default function HistoryPage() {
   }
 
   return (
-    <div id="history-page" className="wrap stack" style={{ paddingBlock: 'var(--s-6)', gap: 'var(--s-5)' }}>
-      <div className="stack" style={{ gap: 'var(--s-3)' }}>
-        <div className="row between" style={{ flexWrap: 'wrap', gap: 'var(--s-3)' }}>
-          <div className="stack" style={{ gap: 4 }}>
-            <h1 style={{ margin: 0 }}>{t('nav.history')}</h1>
-            <span className="muted" style={{ fontSize: '0.9rem' }}>
-              {t('history.localOnly')}
-            </span>
+    <div id="history-page" className="wrap stack history-page">
+      <div className="stack history-head">
+        <div className="row between history-head-row">
+          <div className="stack history-title-group">
+            <h1>{t('nav.history')}</h1>
+            <span className="muted history-sub">{t('history.localOnly')}</span>
           </div>
-          <div className="row" style={{ gap: 'var(--s-2)', flexWrap: 'wrap' }}>
-            <button type="button" className="btn btn-ghost" style={{ fontSize: '0.85rem' }} onClick={handleExport}>
+          <div className="row history-actions">
+            <button type="button" className="btn btn-ghost btn-sm" onClick={handleExport}>
               <Icon name="download" size={16} /> {t('history.export')}
             </button>
-            <button
-              type="button"
-              className="btn btn-ghost"
-              style={{ fontSize: '0.85rem' }}
-              onClick={() => fileRef.current?.click()}
-            >
+            <button type="button" className="btn btn-ghost btn-sm" onClick={() => fileRef.current?.click()}>
               <Icon name="upload" size={16} /> {t('history.import')}
             </button>
-            <button type="button" className="btn btn-ghost" style={{ fontSize: '0.85rem' }} onClick={handleSummary}>
+            <button type="button" className="btn btn-ghost btn-sm" onClick={handleSummary}>
               <Icon name="chart" size={16} /> {t('history.exportSummary')}
             </button>
             {items.length > 0 && !confirming && (
-              <button
-                type="button"
-                className="btn btn-ghost"
-                style={{ fontSize: '0.85rem' }}
-                onClick={() => setConfirming(true)}
-              >
+              <button type="button" className="btn btn-ghost btn-sm" onClick={() => setConfirming(true)}>
                 <Icon name="trash" size={16} /> {t('history.clear')}
               </button>
             )}
@@ -115,15 +103,15 @@ export default function HistoryPage() {
       {notice && <Callout icon="info">{notice}</Callout>}
 
       {!loaded ? (
-        <div className="skel" style={{ height: 120 }} />
+        <div className="skel history-skel" />
       ) : items.length === 0 ? (
-        <div className="card stack" style={{ alignItems: 'center', textAlign: 'center', gap: 'var(--s-3)' }}>
+        <div className="card stack history-empty">
           <Icon name="history" size={36} />
-          <p className="muted" style={{ margin: 0 }}>{t('history.empty')}</p>
+          <p className="muted">{t('history.empty')}</p>
           <Link href="/test" className="btn btn-primary">{t('history.firstTest')}</Link>
         </div>
       ) : (
-        <div className="stack" style={{ gap: 'var(--s-3)' }}>
+        <div className="stack history-list">
           {items.map((r) => (
             <HistoryCard key={r.id} r={r} lang={lang} showProfile={activeId === '__all__'} onRemove={remove} />
           ))}
@@ -131,12 +119,11 @@ export default function HistoryPage() {
       )}
 
       {confirming && (
-        <div className="row" style={{ gap: 'var(--s-2)', flexWrap: 'wrap', alignItems: 'center' }}>
-          <span className="muted" style={{ fontSize: '0.85rem' }}>{t('history.clearConfirm')}</span>
+        <div className="row history-confirm-row">
+          <span className="muted history-confirm-hint">{t('history.clearConfirm')}</span>
           <button
             type="button"
-            className="btn btn-primary"
-            style={{ fontSize: '0.85rem' }}
+            className="btn btn-primary btn-sm"
             onClick={() => {
               clearResults();
               setItems([]);
@@ -145,7 +132,7 @@ export default function HistoryPage() {
           >
             {t('history.clearOk')}
           </button>
-          <button type="button" className="btn btn-ghost" style={{ fontSize: '0.85rem' }} onClick={() => setConfirming(false)}>
+          <button type="button" className="btn btn-ghost btn-sm" onClick={() => setConfirming(false)}>
             {t('history.cancel')}
           </button>
         </div>
@@ -155,7 +142,7 @@ export default function HistoryPage() {
         type="file"
         accept="application/json,.json"
         ref={fileRef}
-        style={{ display: 'none' }}
+        className="hidden-input"
         onChange={handleImportFile}
       />
 

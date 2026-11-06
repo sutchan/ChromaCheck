@@ -517,6 +517,75 @@
   .between {
     justify-content: space-between;
   }
+
+  /* 历史页（收敛内联样式，docs/TASKS.md R8a） */
+  .history-page {
+    padding-block: var(--s-6);
+    gap: var(--s-5);
+  }
+  .history-head {
+    gap: var(--s-3);
+  }
+  .history-head-row {
+    flex-wrap: wrap;
+    gap: var(--s-3);
+  }
+  .history-title-group {
+    gap: 4px;
+  }
+  .history-title-group h1 {
+    margin: 0;
+  }
+  .history-sub {
+    font-size: 0.9rem;
+  }
+  .history-actions {
+    gap: var(--s-2);
+    flex-wrap: wrap;
+  }
+  .btn-sm {
+    font-size: 0.85rem;
+  }
+  .history-skel {
+    height: 120px;
+  }
+  .history-empty {
+    align-items: center;
+    text-align: center;
+    gap: var(--s-3);
+  }
+  .history-empty p {
+    margin: 0;
+  }
+  .history-list {
+    gap: var(--s-3);
+  }
+  .history-confirm-row {
+    gap: var(--s-2);
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .history-confirm-hint {
+    font-size: 0.85rem;
+  }
+  .hidden-input {
+    display: none;
+  }
+  /* 历史页错误边界 */
+  .history-error {
+    padding-block: var(--s-8);
+    align-items: center;
+    text-align: center;
+    gap: var(--s-3);
+  }
+  .history-error h1 {
+    margin: 0;
+  }
+  .history-error-row {
+    justify-content: center;
+    gap: var(--s-3);
+    flex-wrap: wrap;
+  }
 }
 
 /* 尊重系统「减弱动态效果」偏好（WCAG 2.3.3）：关停装饰性动画与过渡 */

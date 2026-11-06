@@ -1,5 +1,5 @@
 // components/test/IshiharaFlow.tsx — 石原氏答题流程（独立组件，供标准/进阶模式复用）
-// chromacheck v1.9.0
+// chromacheck v1.13.4
 'use client';
 
 import React from 'react';
@@ -25,6 +25,7 @@ export function IshiharaFlow({
   funMode = false,
   onProgress,
   onDone,
+  id = 'ishihara-flow',
 }: {
   questions: Question[];
   /** 恢复进行中的进度（index 为下一题索引） */
@@ -35,6 +36,8 @@ export function IshiharaFlow({
   onProgress?: (index: number, answers: AnswerRecord[]) => void;
   /** 全部作答完成 */
   onDone: (answers: AnswerRecord[]) => void;
+  /** 根容器语义 id（TestRunner 以 runKey 区分重挂载实例） */
+  id?: string;
 }) {
   const { t, lang } = useLang();
   const f = useIshiharaFlow({ questions, initial, funMode, onProgress, onDone, lang });
@@ -53,7 +56,7 @@ export function IshiharaFlow({
   }
 
   return (
-    <div className="stack" id="ishihara-flow" style={{ gap: 'var(--s-4)' }}>
+    <div className="stack" id={id} style={{ gap: 'var(--s-4)' }}>
       <TestProgress index={idx} total={total} current={q} />
 
       <div className="row between" style={{ flexWrap: 'wrap', gap: 'var(--s-2)' }}>
