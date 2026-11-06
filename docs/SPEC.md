@@ -1,6 +1,6 @@
-<!-- docs/SPEC.md v1.14.1 — ChromaCheck 项目规范总纲（单一事实来源） -->
+<!-- ./SPEC.md v1.14.2 — ChromaCheck 项目规范总纲（单一事实来源） -->
 <!-- 地位：本规范为权威总纲。当与各分册（PRD/ARCHITECTURE/API/DATA-SPEC/DEPLOYMENT/TESTING/CONTRIBUTING/PRIVACY/ROADMAP）冲突时，以本规范为准。 -->
-<!-- 实现状态：Next.js 14 应用已落地——石原氏检测（38板）、路径追踪、色相排列 D15、进阶联合、信号灯专项、趣味性体验包、结果/历史/科普/隐私、首页 FAQ 双栏问答（12 条）、GA4 匿名统计、SEO/GEO、Vitest 测试套件（14 文件 97 例）；原型仅作设计验证参考。当前版本 v1.14.1。 -->
+<!-- 实现状态：Next.js 14 应用已落地——石原氏检测（38板）、路径追踪、色相排列 D15、进阶联合、信号灯专项、趣味性体验包、结果/历史/科普/隐私、首页 FAQ 双栏问答（12 条）、GA4 匿名统计、SEO/GEO、Vitest 测试套件（14 文件 97 例）；原型仅作设计验证参考。当前版本 v1.14.2。 -->
 
 # 色辨 ChromaCheck 项目规范（SPEC）
 
@@ -11,18 +11,18 @@
 
 | 文档 | 角色 | 状态 |
 |------|------|------|
-| `docs/SPEC.md`（本文件） | **权威总纲**：产品/架构/数据/算法/设计/合规/治理 | 生效 |
-| `docs/PRD.md` | 产品需求分册 | 已对齐 SPEC，生效 |
-| `docs/ARCHITECTURE.md` | 架构分册 | 已对齐 SPEC，生效 |
-| `docs/API.md` | 事件/分析 API 分册 | 已对齐 SPEC，生效 |
-| `docs/DATA-SPEC.md` | 数据结构分册 | 已对齐 SPEC，生效 |
-| `docs/DEPLOYMENT.md` | 部署分册 | 已对齐 SPEC，生效 |
-| `docs/TESTING.md` | 测试分册 | 已对齐 SPEC，生效 |
+| `./SPEC.md`（本文件） | **权威总纲**：产品/架构/数据/算法/设计/合规/治理 | 生效 |
+| `./PRD.md` | 产品需求分册 | 已对齐 SPEC，生效 |
+| `./ARCHITECTURE.md` | 架构分册 | 已对齐 SPEC，生效 |
+| `./API.md` | 事件/分析 API 分册 | 已对齐 SPEC，生效 |
+| `./DATA-SPEC.md` | 数据结构分册 | 已对齐 SPEC，生效 |
+| `./DEPLOYMENT.md` | 部署分册 | 已对齐 SPEC，生效 |
+| `./TESTING.md` | 测试分册 | 已对齐 SPEC，生效 |
 | `.github/CONTRIBUTING.md` | 贡献约定分册（已归位 .github/） | 生效 |
-| `docs/PRIVACY.md` | 隐私政策分册 | 已对齐 SPEC，生效 |
-| `docs/ROADMAP.md` | 路线图分册 | 已对齐 SPEC，生效 |
+| `./PRIVACY.md` | 隐私政策分册 | 已对齐 SPEC，生效 |
+| `./ROADMAP.md` | 路线图分册 | 已对齐 SPEC，生效 |
 
-**实现状态声明（必须写入各文档顶部）**：ChromaCheck 已完成 v1.0 实现并持续迭代至 v1.14.1——Next.js 14 应用 + 石原氏检测（38 板）+ 结果/历史/科普/隐私页均已落地，`npm install / npm run dev / npm run build / npm test`（Vitest）均可正常执行（见 README「快速开始」）。路径追踪（F4）已于 v1.1 实现，色相排列（F5）已于 v1.2 实现，进阶联合判读（advanced）已于 v1.3 实现，趣味性体验包已于 v1.4 实现，38 板完整图谱已于 v1.5 实现，GA4 匿名统计已于 v1.5.1 接入，SEO/GEO 已于 v1.6.0 完善，驾驶员场景专项已于 v1.7.0 落地，Vitest 测试套件已于 v1.7.6 引入；v1.10.0 设置面板、v1.11.0 FAQ 手风琴、v1.11.1 i18n 字典子模块化、v1.11.2 引入 package-lock.json 与 SEO metadata 补齐、v1.12.0 无障碍走查与测试覆盖优化（Vitest 14 文件 97 例）及反模式清理均已落地；v1.13.0 修正色觉检测科学性问题（二色觉模拟矩阵改为秩-2 投影、路径追踪等亮度混淆配色、D15 色卡与色相远端固定卡、题库题型降级为消失型、科普文案对齐）已落地；v1.13.2 首页 FAQ 改为双栏布局（简介吸附侧栏 + 受控手风琴）并将问答扩充至 12 条已落地；v1.13.3 CI 升级 Node 22 LTS 与 checkout / setup-node v5（消除 Node 20 弃用告警）已落地；v1.13.4 历史页内联样式收敛（R8a）与 TestRunner 复用 IshiharaFlow 消除答题流程重复 JSX（R8b）已落地；v1.14.0 石原氏检测支持实体键盘输入数字（全局 keydown 监听，输入框聚焦时交由原生处理，未聚焦时数字键 / 退格 / 回车路由到作答）与页脚版本号/构建号展示规范化（格式 `V{ver}· build {yymmddhhmm}`，10 位构建号由 next.config.mjs 注入 NEXT_PUBLIC_BUILD_ID）已落地；v1.14.1 对 SPEC + 8 个分册 + TASKS/tasks-done + README/CHANGELOG + `.github/` 文档做全量校订（工程事实、字体/CSP、判读权威、测试口径、数据结构、路由与交叉引用对齐现行代码）已落地；原型仅作设计验证参考。
+**实现状态声明（必须写入各文档顶部）**：ChromaCheck 已完成 v1.0 实现并持续迭代至 v1.14.2——Next.js 14 应用 + 石原氏检测（38 板）+ 结果/历史/科普/隐私页均已落地，`npm install / npm run dev / npm run build / npm test`（Vitest）均可正常执行（见 README「快速开始」）。路径追踪（F4）已于 v1.1 实现，色相排列（F5）已于 v1.2 实现，进阶联合判读（advanced）已于 v1.3 实现，趣味性体验包已于 v1.4 实现，38 板完整图谱已于 v1.5 实现，GA4 匿名统计已于 v1.5.1 接入，SEO/GEO 已于 v1.6.0 完善，驾驶员场景专项已于 v1.7.0 落地，Vitest 测试套件已于 v1.7.6 引入；v1.10.0 设置面板、v1.11.0 FAQ 手风琴、v1.11.1 i18n 字典子模块化、v1.11.2 引入 package-lock.json 与 SEO metadata 补齐、v1.12.0 无障碍走查与测试覆盖优化（Vitest 14 文件 97 例）及反模式清理均已落地；v1.13.0 修正色觉检测科学性问题（二色觉模拟矩阵改为秩-2 投影、路径追踪等亮度混淆配色、D15 色卡与色相远端固定卡、题库题型降级为消失型、科普文案对齐）已落地；v1.13.2 首页 FAQ 改为双栏布局（简介吸附侧栏 + 受控手风琴）并将问答扩充至 12 条已落地；v1.13.3 CI 升级 Node 22 LTS 与 checkout / setup-node v5（消除 Node 20 弃用告警）已落地；v1.13.4 历史页内联样式收敛（R8a）与 TestRunner 复用 IshiharaFlow 消除答题流程重复 JSX（R8b）已落地；v1.14.0 石原氏检测支持实体键盘输入数字（全局 keydown 监听，输入框聚焦时交由原生处理，未聚焦时数字键 / 退格 / 回车路由到作答）与页脚版本号/构建号展示规范化（格式 `V{ver}· build {yymmddhhmm}`，10 位构建号由 next.config.mjs 注入 NEXT_PUBLIC_BUILD_ID）已落地；v1.14.2 对 SPEC + 8 个分册 + TASKS/tasks-done + README/CHANGELOG + `.github/` 文档做全量校订（工程事实、字体/CSP、判读权威、测试口径、数据结构、路由与交叉引用对齐现行代码）已落地；原型仅作设计验证参考。
 
 ## 1. 产品定位与功能范围
 
@@ -167,32 +167,33 @@ lib/
 
 ## 5. 数据模型（权威定义）
 
-> 本节为数据结构的**唯一权威**，解决 PRD §6 与 DATA-SPEC §2/§4/§5/§6 的字段与枚举冲突。优先采用原型真实字段；原型未含、规划必需的字段以「可选」标注。
+> 本节为数据结构的**唯一权威**，解决 PRD §6 与 DATA-SPEC §2/§4/§5/§6 的字段与枚举冲突；历史决议曾以原型字段为参考，现行字段名与枚举一律以下述实现权威为准。
+>
+> **实现权威**：字段名、可选性与枚举以 `lib/types.ts` / `lib/storage.ts` 为最终真值；本节为结构说明，个别早期命名（如 `IshiharaQuestion`、`IshiharaScoringResult`）已在实现中分别更名为 `Question`、`IshiharaResult`。
 
-### 5.1 题库 `IshiharaQuestion`
+### 5.1 题库 `Question`（`lib/types.ts`）
 ```ts
-type QuestionType =
+type PlateType =
   | 'demonstration' | 'normal' | 'transformation'
   | 'vanishing' | 'hidden' | 'classification';
-interface IshiharaQuestion {
+interface Question {
   id: string;          // 如 'ishihara-01'
   plate: number;       // 图版号
-  type: QuestionType;  // 6 值枚举（原型实证，含 'normal'）
-  answer: string;      // 正常视觉应读数字（hidden 题为空串）
-  protan: string;      // 红色觉异常典型误读（空串=无）
-  deutan: string;      // 绿色觉异常典型误读（空串=无）
-  difficulty: 1 | 2 | 3;
+  type: PlateType;     // 6 值枚举；题库实际仅用 demonstration / vanishing（另含 2 题 normal）
+  answer: string;      // 正常视觉应读数字
+  protan: string;      // 预留字段：38 题预期值均已清空，不参与类型判读
+  deutan: string;      // 预留字段：38 题预期值均已清空，不参与类型判读
+  difficulty: number;  // 难度等级
   quick: boolean;      // 是否纳入快速版
-  // 规划扩展（原型未含）：answerTritan?: string; inQuickSet?: boolean;
 }
 ```
-**决议**：PRD 的 `timeLimit`/`suggestedTime`、DATA-SPEC 的 `answerTritan?`/`inQuickSet` 原型均未使用。v1.0 采用 `quick` 表达快速版纳入，废用 `timeLimit`/`inQuickSet`；三色弱题通过 `answerTritan?` 扩展支持，v1.0 暂不实现。
+**决议**：PRD 的 `timeLimit`/`suggestedTime`、DATA-SPEC 的 `answerTritan?`/`inQuickSet` 均未实现；v1.13.0 起题库统一降级为消失型，不再有转换 / 隐藏 / 分类题（详见 §6 实现现状）。
 
 ### 5.2 答题记录 `AnswerRecord`
 ```ts
 interface AnswerRecord {
   questionId: string;
-  userAnswer: string;     // 用户原始输入（空串表示未作答/隐藏题留空）
+  userAnswer: string;     // 用户原始输入（空串表示未作答）
   durationMs: number;     // 作答用时（>0 有效）
 }
 ```
@@ -309,7 +310,9 @@ interface SignalTestResult {
 > 本节为算法唯一权威，解决 ARCHITECTURE §3.2 与 DATA-SPEC §7 的扣分/阈值矛盾。**实现真值：`lib/scoring.ts` 等 `lib/*-scoring.ts`；原型 `prototype/assets/js/scoring.js` 仅作参考。**
 
 ### 6.1 正确性判定 `isCorrect(q, ua)`
-- `hidden` 题：空答案（`ua.trim()===''`）为正确。
+
+> **实现现状（v1.13.0 起，务必先读）**：`lib/questions.ts` 的 38 题仅使用 `demonstration` / `vanishing`（含 2 题 `normal`），已无 `transformation` / `classification` / `hidden` 题，且 `protan` / `deutan` 预期值全部清空。`PlateType` 的 6 值枚举在 `lib/types.ts` 中保留，但题库只用到 3 值。因此本节所有依赖转换 / 分类 / 隐藏题的分支**在当前题库下均不可达**；保留其定义仅为兼容旧题库与说明算法结构。
+- `hidden` 题：空答案（`ua.trim()===''`）为正确（**兼容分支**：现行题库无 hidden 题，不可达）。
 - 其余题：空答案=false；否则 `ua === q.answer`。
 
 ### 6.2 维度评分
@@ -318,9 +321,9 @@ wrong = total - correct
 base  = round(min(100, (wrong/total) * 130))
 protan = clamp(base + protanHit*8 - deutanHit*3, 0, 100)
 deutan = clamp(base + deutanHit*8 - protanHit*3, 0, 100)
-tritan = round(base * 0.35)
+tritan = round(base * 0.35)   // 推算值，非独立测量
 ```
-（`protanHit`/`deutanHit` = 转换/分类题中答案匹配对应异常典型值的计数）
+（`protanHit`/`deutanHit` = 转换/分类题中答案匹配对应异常典型值的计数；**当前题库下两者恒为 0**，故 `protan === deutan === base`；`tritan` 恒 ≤35，仅为推算参考值。）
 
 ### 6.3 总体结论
 
@@ -330,29 +333,30 @@ tritan = round(base * 0.35)
 if answered < total*0.5                          → inconclusive
 else if vanishWrong >= 4 || wrongRate >= 0.6     → suspected_blindness
 else if vanishWrong >= 2 || wrongRate >= 0.3
-        || hiddenRight >= ceil(hiddenTotal/2)    → suspected_deficiency
+        || hiddenRight >= ceil(hiddenTotal/2)    → suspected_deficiency  // hidden 分支当前不可达
 if demoWrong>0 && protanHit===0 && deutanHit===0
-        && wrongRate < 0.3                       → inconclusive  // 演示题错且模式不稳定
+        && wrongRate < 0.3                       → inconclusive  // 当前退化为 demoWrong>0 && wrongRate<0.3
 ```
 
 ### 6.4 类型与程度
 - 轴选择：`deutanHit >= protanHit` 选 deutan 轴，否则 protan 轴。
 - 类型：`suspected_blindness`→`*opia`，`suspected_deficiency`→`*anomaly`。
 - 程度：`rate = wrong/total`；`>=0.7` 重度，`>=0.4` 中度，否则轻度。
+- **能力边界（硬约束）**：两命中数恒为 0 使 `deutanHit >= protanHit` 恒真，`type` 只能为 `deuteranopia` / `deuteranomaly`（或 `null`）。**本项目不能可靠区分红 / 绿 / 蓝黄异常类型**；任何面向用户的文案（结果分析、FAQ、模式描述、科普、README）均不得宣称可区分类型或列出转换 / 隐藏 / 分类题。`type` 字段仅为兼容既有数据结构而保留，`tritan` 不得解释为独立的蓝黄测量结果。
 
 ### 6.5 置信度
 ```
 confidence = 100
            + demoWrong * (-25)        // 演示题错（DATA-SPEC -25 为准，非 ARCHITECTURE -20）
            + fastCount * (-2)         // <1s 作答
-if protanHit>0 && deutanHit>0 → +(-15)   // 矛盾模式
+if protanHit>0 && deutanHit>0 → +(-15)   // 矛盾模式（当前不可达）
 if answered < total*0.5         → +(-20) // 覆盖不足
 clamp(confidence, 0, 100)
 ```
 **决议**：演示题扣分值以 DATA-SPEC `-25` 为准；ARCHITECTURE 的「设计题 -20」「答题数<50% -20 仅 DATA-SPEC 有」等差异，统一以本算法（覆盖 `demoWrong`/`fastCount`/矛盾/覆盖不足四因子）为权威。
 
 ### 6.6 辅助评分
-- 路径重合 `scorePath`：容差默认 `0.055`，命中比例 ×100。
+- 路径重合：应用侧为 `pathF1`（F1 重合度，`lib/path-scoring.ts`；弧长等距重采样，容差 `TOL=0.07`），**非 IoU、非原型 `CC.scorePath` 的命中比例 ×100**。
 - 色相排列 `scoreHue`：相邻位置偏差求和（首末位置偏差 `max(0,d-1)`，中间 `max(0,d-1)*2`），`TES < 20` 判正常。
 
 ### 6.7 信号灯辨识判读（`scoreSignal`）
@@ -380,9 +384,8 @@ clamp(confidence, 0, 100)
 ### 8.2 版本管理
 - 每次修改 bump 最小版本（patch 优先；新功能 minor；破坏性 major）。
 - 源码文件头统一 `// path vX.Y.Z`；**仅被改动文件更新头注释，禁止全仓库批量刷写**。
-- 项目的**版本单一来源已确立**：仓库根 `VERSION` 文件、`package.json` 与 `package-lock.json` 的 `version` 字段（当前 `1.14.1`）为权威；每次发版须同步三者并新增 `CHANGELOG.md` 条目。各文档头注释版本（如 SPEC `v1.14.1`）与 `VERSION` 保持一致
-；分册"文档版本 v1.0"为文档初版标记，与项目发布版本分属两套体系。原型文件头 `v0.1.2` 为原型内部迭代号，不随项目版本刷写（见 CHANGELOG 说明）。
-- 文档版本当前统一标注 v1.0（产品目标）；原型文件头为 v0.1.x（各文件独立迭代号，与项目版本解耦），二者分阶段对齐，不混用。
+- 项目的**版本单一来源已确立**：仓库根 `VERSION` 文件、`package.json` 与 `package-lock.json` 的 `version` 字段（以 `VERSION` 实时值为准，当前 `1.14.2`）为权威；每次发版须同步三者，并新增 `CHANGELOG.md` 条目、同步 README 与 docs 各分册「实现状态」行。
+- 各文档头注释版本（如 SPEC `v1.14.2`）与 `VERSION` 保持一致；各分册「文档版本」表亦统一标注当前项目版本 v1.14.2（不再沿用 v1.0 初版标记）。原型文件头为 v0.1.x（原型内部迭代号，与项目发布版本解耦，不随发版刷写）。
 
 ### 8.3 文档结构
 - 9 份分册 + 本 SPEC；本 SPEC 为总纲，分册冲突以本规范为准。
@@ -400,4 +403,4 @@ clamp(confidence, 0, 100)
 - **信号灯辨识（驾驶场景专项）**：独立路由 `/test/signal` 已实现（题库 9 题 + `scoreSignal` 判读），结果不计入历史，与 `TestMode` 枚举解耦。
 
 ---
-*本文档为 ChromaCheck 权威规范总纲 v1.14.1。分册应据本规范修订以消除前述字段/算法/范围冲突。*
+*本文档为 ChromaCheck 权威规范总纲 v1.14.2。分册应据本规范修订以消除前述字段/算法/范围冲突。*

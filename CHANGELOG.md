@@ -1,7 +1,18 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件、`package.json` 与 `package-lock.json` 的 `version` 字段（当前 `1.14.1`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件、`package.json` 与 `package-lock.json` 的 `version` 字段（当前 `1.14.2`）。
+
+## [1.14.2] - 2026-11-06
+
+### 改进（全量文档更新）
+- 对 README、CHANGELOG、docs/ 全部 11 份文档、.github/ 全部社区文档与项目记忆索引做全量更新，消除与现行代码的失实描述。
+- 判读口径：题库仅含 demonstration / vanishing（含 2 题 normal），无 transformation / classification / hidden 题；protanHit / deutanHit 恒为 0，异常类型判定恒落 deuteran*，tritan 为推算值。全部文档不再宣称可区分红/绿/蓝黄异常类型。
+- 数据结构与符号：SPEC §5.1 的 `Question` / `PlateType` 定义、题库字段实况（`protan` / `deutan` 为已清空的预留字段、`difficulty` 为 `number`）、`scoreIshihara` 函数签名与 `pathF1`（F1 非 IoU）口径对齐 `lib/types.ts` 与 `lib/scoring.ts`；`IshiharaQuestion` / `IshiharaScoringResult` 标注为历史命名。
+- **已知限制（需后续代码改动）**：本次仅更新文档，未改任何 `.ts` / `.tsx` 源码。用户可见的 i18n 文案（结果分析 `analysis.abnormal`、FAQ、模式描述、趣味章末科普、题型标签）仍按旧题型描述；`lib/scoring.ts` 的 `type` 退化输出亦未在代码中收敛。文档已统一声明「不能可靠区分异常类型」，但页面文案仍待对齐，详见 `.codebuddy/project-review.md` P0-1。
+- 工程事实：Docker 命令补「需先自建 Dockerfile」前置说明；环境变量表收敛为 NEXT_PUBLIC_GA_ID（另 NEXT_PUBLIC_BUILD_ID 构建期注入）；CI / Node 版本 / e2e 未落地状态统一；各分册相对引用改为 ./XXX.md，「文档版本」表统一到当前项目版本。
+- README：补实体键盘输入细节、断点续测、汇总 CSV、驾驶场景、漏列 lib 模块与错误边界；校正 FAQ 布局、五种色觉视角位置与历史/导出范围表述。
+- 版本单一来源同步至 `1.14.2`（`VERSION` / `package.json` / `package-lock.json` / README / docs 各分册「实现状态」行与 SPEC 头注释）；页脚版本直读 `package.json`，无需改动。
 
 ## [1.14.1] - 2026-11-06
 

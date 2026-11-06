@@ -1,7 +1,9 @@
 # 贡献指南
 
 > **规范遵循**：本文档为 [../docs/SPEC.md](../docs/SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。
-> **实现状态**：v1.0–v1.14.1 已实现，§开发环境 的 npm 流程（install / dev / build / lint / type-check / test）当前可直接使用。
+> **实现状态**：v1.0–v1.14.2 已实现，§开发环境 的 npm 流程（install / dev / build / start / lint / type-check / test / test:watch / test:coverage）当前可直接使用。
+>
+> **分支说明**：当前仓库仅维护 `main`；文中提及的 `develop` 为可选集成分支，若远程不存在请直接从 `main` 切功能分支并向 `main` 提交 PR。
 
 感谢你对色辨 ChromaCheck 的关注！本文档描述了如何参与项目贡献。
 
@@ -9,7 +11,7 @@
 
 ### 前置要求
 
-- Node.js >= 18.17.0
+- Node.js 22 LTS（最低 >= 18.17.0，与 CI 一致）
 - npm >= 9.0.0（或 pnpm / yarn）
 - Git
 
@@ -164,19 +166,26 @@ Closes #xxx
 - 测试用例描述清晰，使用 `describe` + `it` 结构。
 - 判读算法必须覆盖边界用例和异常输入。
 
-### 集成测试
+### 集成 / E2E 测试（尚未落地）
 
-- 使用 Playwright，测试文件放在 `e2e/` 目录。
-- 覆盖核心用户流程（检测、结果、导出）。
+- 当前仓库**未引入** Playwright 或 `@testing-library/react`，无 `e2e/` 目录。
+- CI 的 E2E 步骤为占位跳过（`echo "E2E 跳过：当前版本未配置 e2e"`）。
+- 现有自动化仅 Vitest 单元测试（`npm test`）；组件测试与 E2E 属规划项。
 
 ## 常见问题
+
+### 环境变量
+
+- 唯一可配置项为 `NEXT_PUBLIC_GA_ID`（见 `.env.example`），置空即停用 GA4 匿名统计，且仅生产环境加载。
+- `NEXT_PUBLIC_BUILD_ID` 由 `next.config.mjs` 在构建期自动生成并注入，无需（也不应）手工配置。
+- `NEXT_PUBLIC_APP_URL` / `NEXT_PUBLIC_APP_NAME` / `NEXT_PUBLIC_ANALYTICS_ENABLED` 等为早期规划，代码零引用。
 
 ### 依赖安装失败
 
 尝试清除缓存后重新安装：
 
 ```bash
-rm -rf node_modules
+rm -rf node_modules   # Windows PowerShell: Remove-Item -Recurse -Force node_modules
 npm install
 ```
 
@@ -199,8 +208,7 @@ npm install
 
 ## 联系方式
 
-- 项目地址：[GitHub Repository]
-- 问题反馈：[Issues]
-- 邮箱：[contact@chromacheck.example]
+- 项目地址：<https://github.com/sutchan/ChromaCheck>
+- 问题反馈：<https://github.com/sutchan/ChromaCheck/issues>
 
 再次感谢你的贡献！

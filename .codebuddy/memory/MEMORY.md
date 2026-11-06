@@ -1,14 +1,16 @@
 # 记忆索引
 
 ## 项目：ChromaCheck（e:/Github/ChromaCheck）
-- 纯前端 Next.js 14(App Router)+React 18+TS(strict)+Tailwind 3，本地优先、无后端、无重型依赖；图表内联 SVG，报告 Canvas(PNG)+`window.print()`(PDF)。当前版本 **v1.14.0**（2026-11-06；外部进程已自行推进至 v1.14.0（含石原氏键盘输入 + 页脚版本/build 规范，提交 `ad56cb7`），并会自行 bump/提交甚至直接 commit 工作区改动；改版本前必须重读 `VERSION` 并 `git status --short --untracked-files=all`）。
-- 版本单一来源：`VERSION`(=1.14.0) 与 `package.json`/`package-lock.json` 一致；代码改后同步 `README`/`CHANGELOG` 顶部版本与 `docs/` 各分册「实现状态」行。任务清单 `docs/TASKS.md`（磁盘大小写与跟踪名不一致，Windows 下同文件）待办已清零，新待办自 R9+ 顺延。原型文件头 v0.1.3（已反向对齐应用，与正式版本解耦）。**历史坑**：某次会话把 CHANGELOG 写成 1.13.2 却漏 bump `VERSION`（停在 1.13.1），改版本须三处（VERSION/package.json/CHANGELOG）一并核对；CHANGELOG 目标版本节已存在则**追加**，勿新建重复节。
+- 纯前端 Next.js 14(App Router)+React 18+TS(strict)+Tailwind 3，本地优先、无后端、无重型依赖；图表内联 SVG，报告 Canvas(PNG)+`window.print()`(PDF)。当前版本 **v1.14.2**（2026-11-06；外部进程曾自行推进至 v1.14.1（含石原氏键盘输入 + 页脚版本/build 规范，提交 `ad56cb7`），并会自行 bump/提交甚至直接 commit 工作区改动；改版本前必须重读 `VERSION` 并 `git status --short --untracked-files=all`）。
+- 版本单一来源：`VERSION`(=1.14.2) 与 `package.json`/`package-lock.json` 一致；代码改后同步 `README`/`CHANGELOG` 顶部版本与 `docs/` 各分册「实现状态」行。任务清单 `docs/TASKS.md`（磁盘大小写与跟踪名不一致，Windows 下同文件）待办已清零，新待办自 R9+ 顺延。原型文件头 v0.1.3（已反向对齐应用，与正式版本解耦）。**历史坑**：某次会话把 CHANGELOG 写成 1.13.2 却漏 bump `VERSION`（停在 1.13.1），改版本须同步 VERSION/package.json/package-lock.json + CHANGELOG 顶部 + README/docs 实现状态行；CHANGELOG 目标版本节已存在则**追加**，勿新建重复节。
 - 审查与修复要点（JSON-LD 转义、语义 id 覆盖、SPEC §6.3 判读阈值口径、测试环境限制、构建坑）见 [review-2026-11-05.md](review-2026-11-05.md)。
 - 字体（v1.13.3 真自托管）：`app/font-defs.ts` 用 `next/font/local` 注入 `app/fonts/` 下 8 个 latin woff2（Archivo 400–800 / IBM Plex Mono 400–600，来源 `@fontsource/*`）；构建期**不联网**，离线 CI 可用。中间变量 `--font-archivo`/`--font-plex-mono` 由 `globals.css` 组合中文回退链。**禁止改回 `next/font/google`**（构建期需访问 gstatic，离线必失败）。详见全局记忆 `font_selfhost_offline_build.md`。`lib/site.ts` 的 `SITE_UPDATED` 现仅用于隐私页「最后更新」，页脚为 `V{ver}· build {NEXT_PUBLIC_BUILD_ID}`（10 位 `yymmddhhmm`）。
 - 导航（v1.7.5）：页眉 Navbar 仅「首页/开始检测/历史」；科普/隐私入口在页脚 Footer。
 
 ### 功能/路由（详见 CHANGELOG）
-石原氏(quick10/standard38)+智能判读、路径追踪、色相排列D15、进阶联合判读、信号灯(`/test/signal`)、批量(`/test/batch`)、儿童、趣味包(可关)、历史多档案+导出导入、响应式+深色+色觉安全+五视角、中英 i18n、PWA、设置面板、GA4。`/test/`：ishihara/path-tracking/hue-arrangement/advanced/signal/batch/child；**FAQ 是首页区块 `components/home/HomeFaq.tsx`，非独立路由**。
+
+补充：断点续测草稿 `cc.progress.v1`、历史/批量汇总 CSV 导出、`scene=driver` 驾驶合规提示、SkipLink、FAQPage JSON-LD、4 处 error.tsx 错误边界；信号灯/批量结果不落历史。
+石原氏(quick10/standard38)+规则化初筛、路径追踪、色相排列D15、进阶联合判读、信号灯(`/test/signal`)、批量(`/test/batch`)、儿童、趣味包(可关)、历史多档案+导出导入、响应式+深色+色觉安全+结果页五视角(首页模拟器 4 种)、中英 i18n、PWA、设置面板、GA4。`/test/`：ishihara/path-tracking/hue-arrangement/advanced/signal/batch/child；**FAQ 是首页区块 `components/home/HomeFaq.tsx`，非独立路由**。
 
 ### 关键模块（长期有效）
 - i18n：`lib/i18n/`(dict/zh-*/en-*/t/lang)，40+ 组件 `useLang()`；含 metadata 静态页=服务端 page 导中文 metadata + client 内容组件 `useLang()`（范例 `app/test/page.tsx`→`TestSelectContent.tsx`）；长文本走 `lib/privacy-data.ts`/`lib/learn-data.ts`。
@@ -23,7 +25,7 @@
 
 ### 坑/约束
 - 构建：`next build` cleanup 被腾讯 coding-copilot 的 node-safe-delete-shim 拦截致 ETIMEDOUT；构建前 `$env:CODEBUDDY_SAFE_DELETE_ENABLED='0'`。
-- CI：仓库**不提交** lock 文件，`.github/workflows/ci.yml` 的 setup-node **勿配 `cache: npm`**，安装用 `npm install`（非 `npm ci`）。
+- CI：仓库**已提交** `package-lock.json`（v1.11.2 起），`.github/workflows/ci.yml` 的 setup-node **不配 `cache`**（避免 v5 按 packageManager 自动缓存），安装用 `npm install`（非 `npm ci`）。
 - 版本漂移：改版本前必重读 VERSION+package.json+CHANGELOG 头；目标版本节已存在则追加，勿新建重复节。
 
 ## 跨项目通用（沿用）

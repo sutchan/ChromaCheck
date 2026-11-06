@@ -1,18 +1,18 @@
 # 色辨 ChromaCheck 测试策略文档
 
 > **规范遵循**：本文档为 [SPEC.md](./SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。判读引擎测试以 SPEC §6 与 `lib/scoring.ts` 为权威。
-> **实现状态**：v1.14.1：Vitest 测试套件共 14 文件 97 例（`lib/*.test.ts`：scoring / hue-scoring / path-scoring / advanced-scoring / signal-scoring / child-scoring / profile / storage / export-import / format / scoring-text / path-field / ishihara / sharecard），node 环境。CI `.github/workflows/ci.yml` 跑 type-check + lint + build + test。组件测试与 Playwright E2E 尚未落地。判读引擎测试以 SPEC §6 与 `lib/scoring.ts` 为权威。
+> **实现状态**：v1.14.2：Vitest 测试套件共 14 文件 97 例（`lib/*.test.ts`：scoring / hue-scoring / path-scoring / advanced-scoring / signal-scoring / child-scoring / profile / storage / export-import / format / scoring-text / path-field / ishihara / sharecard），node 环境。CI `.github/workflows/ci.yml` 跑 type-check + lint + build + test。组件测试与 Playwright E2E 尚未落地。判读引擎测试以 SPEC §6 与 `lib/scoring.ts` 为权威。
 
 | 项目 | 内容 |
 |------|------|
-| 文档版本 | v1.0 |
+| 文档版本 | v1.14.2 |
 | 创建日期 | 2026-09-03 |
 
 ---
 
 ## 1. 测试总览
 
-本项目采用分层测试策略，覆盖单元测试、集成测试、端到端测试和手动测试。
+本项目采用分层测试策略，当前覆盖单元测试与手动检查清单；集成 / 组件 / E2E 尚未落地。
 
 | 层级 | 工具 | 重点 |
 |------|------|------|
@@ -32,7 +32,7 @@
 
 | 文件 | 测试重点 |
 |------|----------|
-| `scoring.ts` | 各题型答题模式的边界用例、异常类型判定、程度判定、判读稳定性计算 |
+| `scoring.ts` | 消失题 / 演示题边界用例、hit 恒 0 下的类型退化（恒 deuteran*）、tritan 推算值、程度与判读稳定性计算 |
 | `path-scoring.ts` | 路径 `pathF1` 重合度计算与阈值判定（F1 思路，非 IoU） |
 | `hue-scoring.ts` | TES 计算、偏差方向判定 |
 
@@ -44,13 +44,13 @@ describe('scoreIshiharaTest')
   - 全部答错（正常色觉答案）→ suspected_blindness
   - 消失题答错 2 题 → suspected_deficiency
   - 消失题答错 4 题 → suspected_blindness
-  - 转换题答案匹配 protan → type = protanopia/protanomaly
-  - 转换题答案匹配 deutan → type = deuteranopia/deuteranomaly
+  - 转换题答案匹配 protan → protanopia/protanomaly（**当前题库无转换题，protan 分支不可达**）
+  - 无转换 / 分类题时 protanHit = deutanHit = 0 → type 恒为 deuteranopia/deuteranomaly
   - 演示题答错 → inconclusive 或降低置信度
   - 答题过快 → 置信度降低
   - 空答案数组 → 边界处理
   - 未知题目 ID → 忽略处理
-  - 答题矛盾 → 置信度降低
+  - 答题矛盾 → 置信度降低（当前不可达）
 ```
 
 #### 工具函数（`lib/format.ts`）
@@ -103,6 +103,8 @@ npx vitest run --coverage
 ---
 
 ## 3. 组件测试
+
+> 本章与 §4 E2E 章节均为**规划示例**：当前仓库未引入 @testing-library/react / Playwright，CI 的 E2E 步骤为占位跳过。
 
 ### 3.1 测试重点
 
@@ -352,7 +354,7 @@ jobs:
 
 - [ ] 单元测试全部通过
 - [ ] 覆盖率达标
-- [ ] E2E 测试通过
+- [ ] E2E 暂不纳入门禁（CI 为占位跳过）
 - [ ] 手动测试清单完成
 - [ ] 无新增安全告警
 
@@ -367,7 +369,7 @@ jobs:
 | 正常色觉 | 所有题答对 | normal, confidence 100 |
 | 绿色盲 | vanishing 全错 + deutan 匹配 | suspected_blindness, deuteranopia |
 | 绿色弱 | vanishing 错 2 + 部分匹配 | suspected_deficiency, deuteranomaly |
-| 红色盲 | vanishing 全错 + protan 匹配 | suspected_blindness, protanopia |
+| 红色盲 | vanishing 全错 + protan 匹配 | **不可达**（题库无 protan 预期值，实际输出 deuteran*） |
 | 伪色盲 | 演示题答错 + 其他全对 | inconclusive 或低置信度 |
 | 过快答题 | 所有题 < 1s | 置信度降低 |
 

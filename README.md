@@ -16,17 +16,20 @@
 
 **在线试用**：<https://chroma.ewuse.com/> — 打开即用，无需注册，检测数据仅存于本地浏览器。
 
-> **当前版本 v1.14.1**（版本单一来源见 `VERSION`）。已实现：石原氏数字图（快速 10 / 标准 38 题）与智能判读、路径追踪、色相排列（D15）、进阶联合判读、儿童模式、趣味体验包、中英双语、PWA 离线兜底、设置面板、首页 FAQ 双栏问答（12 条）等。权威规范见 [docs/SPEC.md](docs/SPEC.md)。
+> **当前版本 v1.14.2**（版本单一来源见 `VERSION`）。已实现能力见下方「功能特性」；权威规范见 [docs/SPEC.md](docs/SPEC.md)。
 
 ## 功能特性
 
-- 石原氏数字图测试（快速 10 / 标准 38 题）与智能判读（异常类型 / 程度 / 三轴维度），答题支持实体键盘数字键直接输入
+- 石原氏数字图测试（快速 10 / 标准 38 题）与规则化初筛（总体结论 / 程度 / 判读稳定性 / 维度参考值）；答题支持实体键盘数字键直接输入（数字键追加、`Backspace` 删除、`Enter` 提交，附中英操作提示）
 - 路径追踪描线、色相排列（D15）、进阶联合判读、信号灯辨识、儿童图形识别、批量检测等多种范式
-- 结果可视化（维度条形图 / 答题明细）与报告导出（PNG / 打印 PDF / 复制文字）
-- 检测历史本地存储，支持多档案与导出 / 导入
-- 响应式 + 深色模式 + 色觉安全模式 + 五种色觉视角切换
+- 结果可视化（维度条形图 / 答题明细）与报告导出（PNG / 打印 PDF / 复制文字 / 色觉人格分享卡）
+- 检测历史本地存储，支持多档案、JSON 导出导入与汇总 CSV；答题草稿本机断点续测
+- 响应式 + 深色模式 + 色觉安全模式 + 减少动效；结果页五种色觉视角切换（首页模拟器为 4 种）
 - 趣味体验包（进度点阵 / 章末轻科普 / 色觉人格分享卡 / 旅人称号），可一键关闭
+- 驾驶场景（`scene=driver`）与合规提示、无障碍跳转链接、自托管字体、FAQPage 结构化数据与页面错误边界
 - 中英双语（i18n）、PWA 离线兜底、Google Analytics 匿名访问统计
+
+> **判读能力边界**：题库仅含演示题与消失型题（另含 2 张常规数字题），未实现真正的双数字变形 / 隐藏版，因此**不能可靠区分红 / 绿 / 蓝黄异常类型**；异常类型字段为退化输出，三轴中的 tritan 为推算参考值。结果仅供初筛参考，不能替代专业医学诊断。
 
 ## 界面预览
 
@@ -54,10 +57,10 @@ Next.js 14（App Router）+ TypeScript + Tailwind CSS（设计令牌 / CSS 变�
 
 ## 快速开始
 
-要求 Node.js ≥ 18.17。
+要求 Node.js 22 LTS（最低 ≥ 18.17；CI 固定 Node 22）。
 
 ```bash
-npm install          # 安装依赖（亦可用 pnpm / yarn）
+npm install          # 安装依赖（仓库已提交 package-lock.json，CI 固定 npm install）
 npm run dev          # 开发服务器 → http://localhost:3000
 npm run build && npm run start   # 构建并启动生产版本
 npm run lint && npm run type-check && npm test   # 代码检查 / 类型检查 / 单元测试
@@ -69,18 +72,22 @@ npm run lint && npm run type-check && npm test   # 代码检查 / 类型检查 /
 chromacheck/
 ├── app/            # 页面：首页（色觉模拟 + FAQ 区块）、检测指引、模式选择、
 │                   #   各测试（ishihara / path-tracking / hue-arrangement / advanced / signal / batch / child）、
-│                   #   结果、历史、科普、隐私、离线兜底、PWA manifest 与 SEO（robots / sitemap / llms.txt）
+│                   #   结果、历史、科普、隐私、离线兜底、PWA manifest 与 SEO（robots / sitemap / llms.txt）；
+│                   #   另有 4 处 error.tsx 错误边界与 app/layout.tsx 的无障碍跳转链接
 ├── components/     # common / layout（导航·页脚·主题·语言·设置面板）/ home /
 │                   #   test（各测试交互与渲染）/ result（摘要·图表·导出·分享卡）/
-│                   #   history（档案切换·历史卡片）/ analytics / pwa
-├── lib/            # types / site / 题库（questions + questions/）/ 判读（scoring、path-scoring、
-│                   #   hue-scoring、advanced-scoring、child-scoring）/ 趣味（fun、sharecard）/
+│                   #   history（档案切换·历史卡片）/ analytics / pwa / seo
+├── lib/            # types / site / 题库（questions + questions/）/
+│                   #   判读（scoring、scoring-text、path-scoring、hue-scoring、advanced-scoring、
+│                   #         signal-scoring、child-scoring、path-field）/
+│                   #   画布导出（report-canvas、sharecard-canvas）/ 趣味（fun、sharecard）/
 │                   #   i18n/（中英字典与 t()）/ profile / export-import / ishihara / storage /
-│                   #   learn-data / format / analytics
+│                   #   learn-data / privacy-data / license / format / analytics
 ├── docs/           # 项目文档（SPEC.md 为权威总纲）
 ├── prototype/      # 高保真静态原型（设计验证参考，无运行依赖）
 ├── .github/        # 贡献指南 + CI
-└── 配置文件与元数据  # next.config / tailwind / postcss / tsconfig / eslint / VERSION / LICENSE
+└── 配置文件与元数据  # next.config.mjs / tailwind / postcss / tsconfig / eslint / VERSION /
+                    #   package-lock.json / .env.example / metadata.json / LICENSE
 ```
 
 ## 文档
@@ -93,11 +100,13 @@ chromacheck/
 
 ## 开发规范
 
-提交遵循 [Conventional Commits](https://www.conventionalcommits.org/)：`feat` / `fix` / `docs` / `style` / `refactor` / `perf` / `test` / `chore`。分支：`main`（生产）/ `develop` / `feature/*`。
+提交遵循 [Conventional Commits](https://www.conventionalcommits.org/)：`feat` / `fix` / `docs` / `style` / `refactor` / `perf` / `test` / `chore`。分支：`main`（生产）/ `develop`（可选）/ `feature/*`；当前仓库仅维护 `main`。
 
 ## 部署
 
-**Vercel（推荐）**：导入仓库，构建命令自动识别为 `next build`。**Docker**：
+**Vercel（推荐）**：导入仓库，构建命令自动识别为 `next build`。唯一可选环境变量为 `NEXT_PUBLIC_GA_ID`（置空即停用 GA4）；`NEXT_PUBLIC_BUILD_ID` 由 `next.config.mjs` 在构建期自动注入，无需配置。
+
+**Docker**：本仓库**不提供 `Dockerfile`**，需先按 [docs/DEPLOYMENT.md §3.1](docs/DEPLOYMENT.md) 在根目录自行创建（`node:22-alpine` + `npm install`，`output: 'standalone'` 已配置），再执行：
 
 ```bash
 docker build -t chromacheck . && docker run -p 3000:3000 chromacheck

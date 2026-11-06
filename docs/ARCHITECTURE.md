@@ -1,12 +1,12 @@
 # 色辨 ChromaCheck 技术架构文档
 
 > **规范遵循**：本文档为 [SPEC.md](./SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。
-> **实现状态**：v1.0–v1.14.1 已实现（Next.js 14 应用；石原氏 38 板 / 路径追踪 v1.1 / 色相排列 D15 v1.2 / 进阶联合 v1.3 / 趣味包 v1.4 / GA4 v1.5.1 / SEO·GEO v1.6 / 驾驶员场景 v1.7 / 设置面板 v1.10.0 / FAQ 手风琴 v1.11.0 / i18n 子模块化 v1.11.1 / lockfile 与 SEO metadata 补齐 v1.11.2 / 无障碍走查与测试覆盖优化 v1.12.0）。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [TASKS.md](./TASKS.md)。
+> **实现状态**：v1.0–v1.14.2 已实现（Next.js 14 应用；石原氏 38 板 / 路径追踪 v1.1 / 色相排列 D15 v1.2 / 进阶联合 v1.3 / 趣味包 v1.4 / GA4 v1.5.1 / SEO·GEO v1.6 / 驾驶员场景 v1.7 / 设置面板 v1.10.0 / FAQ 手风琴 v1.11.0 / i18n 子模块化 v1.11.1 / lockfile 与 SEO metadata 补齐 v1.11.2 / 无障碍走查与测试覆盖优化 v1.12.0）。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [TASKS.md](./TASKS.md)。
 > **原型定位**：`prototype/` 为独立的高保真原型与设计验证参考（含早期 JS 移植源），**非应用运行依赖**；应用源码以 `lib/` 与 `components/` 为准，删除 `prototype/` 不影响构建与运行。
 
 | 项目 | 内容 |
 |------|------|
-| 文档版本 | v1.0 |
+| 文档版本 | v1.14.2 |
 | 创建日期 | 2026-09-03 |
 | 技术负责人 | ChromaCheck 团队 |
 
@@ -48,7 +48,7 @@
 │  └────────────┘  └────────────┘  └──────────────┘      │
 └─────────────────────────────────────────────────────────┘
                           │
-                          │ HTTPS (可选数据上报)
+                          │ HTTPS（由托管平台提供）
                           ▼
 ┌─────────────────────────────────────────────────────────┐
 │                      服务端 (Vercel)                       │
@@ -69,7 +69,7 @@
 
 ### 1.3 设计原则
 
-1. **隐私优先**：默认纯前端运行，不收集用户数据；可选上报需用户明确同意。
+1. **隐私优先**：默认纯前端运行，不收集用户数据；除 GA4 外无服务端上报通道。
 2. **性能优先**：检测图预加载、代码分割、懒加载，确保检测流程流畅。
 3. **可维护性**：题库数据与判读逻辑分离，组件单一职责，类型全覆盖。
 4. **可访问性**：遵循 WCAG 2.1 AA 标准，支持键盘导航、屏幕阅读器。
@@ -129,7 +129,7 @@ components/
                               #   Numpad、PathTrackingCanvas(rAF 节流)、PathTrackingRunner、SignalRunner、
                               #   TestProgress、TestRunner、useIshiharaFlow
 lib/
-├── types.ts                  # 全局类型（以 docs/SPEC.md §5 为权威）
+├── types.ts                  # 全局类型（以 ./SPEC.md §5 为权威）
 ├── questions.ts              # 石原氏题库（38 题）
 ├── questions/                # 子题库（path-tracking.ts、hue-arrangement.ts、signal.ts）
 ├── scoring.ts / scoring-text.ts   # 石原氏判读引擎 + 文案
@@ -224,7 +224,7 @@ docs/                         # 项目文档（SPEC.md 为权威总纲，TASKS.m
 
 ```typescript
 // lib/questions.ts（实际位置；38 题完整版）
-export const ISHIHARA_VERSION = '1.0.0';
+// 题库集由 lib/questions.ts 的 quick 标记筛选，无独立常量
 
 export const ishiharaQuestions: IshiharaQuestion[] = [
   // ...题目数据
@@ -248,33 +248,31 @@ export const getStandardSet = (): IshiharaQuestion[] => {
 
 ```
 输入：用户答案数组（每题：题目ID、用户答案、答题时长）
-输出：评估结果（总体结论、异常类型、程度、置信度）
+输出：评估结果（总体结论、程度、判读稳定性、维度参考值；异常类型为退化输出，见下）
 
-判读逻辑（详见 docs/SPEC.md §6，以 `lib/scoring.ts` 实现为准，原型仅作参考）：
+判读逻辑（详见 ./SPEC.md §6，以 `lib/scoring.ts` 实现为准，原型仅作参考）：
 1. 演示题校验：若演示题答错，标记"未理解测试要求"，降低置信度。
-2. 按题目类型分组统计：
-   - vanishing 题（正常可见，异常不可见）：答错数 → 异常程度
-   - transformation 题（正常和异常看到不同数字）：答案匹配哪种异常 → 异常类型
-   - hidden 题（异常可见，正常不可见）：答对 → 提示异常
-3. 综合评分：
-   - 红色盲/红色弱评分：protan 相关题目错误模式
-   - 绿色盲/绿色弱评分：deutan 相关题目错误模式
-   - 蓝色盲评分：tritan 相关题目
+2. 按题目类型分组统计（现行题库仅 demonstration / vanishing / 2 题 normal）：
+   - vanishing 题答错数 → 异常程度；演示题答错 → 降低置信度
+   - transformation / classification / hidden 题在题库中不存在，相关分支不可达
+3. 综合评分（base = round(min(100, wrong/total*130))）：
+   - protanHit / deutanHit 恒为 0 → protan === deutan === base
+   - tritan = round(base * 0.35)，为推算参考值，无独立题目
 4. 总体结论：
    - 答题覆盖 < 50% → inconclusive
    - 已答数 < 总题数 50% → inconclusive
    - `vanishWrong >= 4` 或 `wrongRate >= 0.6` → suspected_blindness
-   - `vanishWrong >= 2` 或 `wrongRate >= 0.3` 或 hidden 答对 >= 半数 → suspected_deficiency
-   - 演示题错且 protan/deutan 匹配均为 0 且 `wrongRate < 0.3` → inconclusive
+   - `vanishWrong >= 2` 或 `wrongRate >= 0.3` 或 hidden 答对 >= 半数（不可达） → suspected_deficiency
+   - 演示题错且 protan/deutan 匹配均为 0（恒真）且 `wrongRate < 0.3` → inconclusive
 5. 类型与程度（详见 SPEC §6.4）：
-   - 轴选择：deutanHit >= protanHit 选 deutan 轴，否则 protan 轴
+   - 轴选择：deutanHit >= protanHit 恒真 → 恒选 deutan 轴 → type 只能为 deuteran*，无法区分异常类型
    - 类型：suspected_blindness → *opia，suspected_deficiency → *anomaly
    - 程度：错误率 >= 0.7 重度，>= 0.4 中度，否则轻度
 6. 置信度计算（详见 SPEC §6.5）：
    - 基础 100
    - 演示题错误 -25
    - 答题过快（< 1s）每题 -2
-   - 答题矛盾（protan 与 deutan 命中并存）-15
+   - 答题矛盾（protan 与 deutan 命中并存）-15（当前不可达）
    - 答题覆盖不足（< 50%）-20
    - 最低 0
 ```
@@ -283,17 +281,17 @@ export const getStandardSet = (): IshiharaQuestion[] => {
 
 ```typescript
 // lib/scoring.ts（实际位置；另有 path-scoring.ts / hue-scoring.ts / signal-scoring.ts / advanced-scoring.ts 分域）
-export function scoreIshiharaTest(
+export function scoreIshihara(
   answers: AnswerRecord[],
   questions: IshiharaQuestion[]
-): IshiharaScoringResult {
+): IshiharaResult {
   // 纯函数实现
 }
 
-export interface IshiharaScoringResult {
+export interface IshiharaResult {
   overall: 'normal' | 'suspected_deficiency' | 'suspected_blindness' | 'inconclusive';
-  type?: ColorDeficiencyType;
-  severity?: 'mild' | 'moderate' | 'severe';
+  type: DeficiencyType（必填，含 null）;
+  severity: Severity（必填，含 null） 'mild' | 'moderate' | 'severe';
   confidence: number;
   dimensions: {
     protan: number;    // 红色觉异常评分 0-100
@@ -348,7 +346,7 @@ export interface IshiharaScoringResult {
    - 计算每张色卡与正确位置的偏差。
    - 相邻色卡偏差求和得到 TES。
    - TES < 20 → 正常；20-40 → 轻度异常；> 40 → 明显异常。
-   - 偏差方向（偏红/偏绿/偏蓝）指示异常类型。
+   - 偏差方向为 `'deutan' | 'tritan' | 'none'`，用于提示 D15 排列趋势，不能细分 protan / deutan 类型。
 
 ### 3.5 报告导出模块
 
@@ -412,7 +410,7 @@ cc.progress.v1     # 进行中的检测进度（模式 / 题号 / 答题记录 /
 
 ### 5.1 API 路由列表
 
-> **现状（v1.14.1）**：纯前端应用**无任何服务端 API 路由**，`app/` 下仅 `app/llms.txt/route.ts` 一个 Route Handler（SEO/GEO 文本）。下表接口均为 **v1.1+ 规划或历史设计，当前未实现**；访问统计仅由 GA4 `pageview` 上报（`lib/analytics.ts`），不走本站接口。
+> **现状（v1.14.2）**：纯前端应用**无任何服务端 API 路由**，`app/` 下仅 `app/llms.txt/route.ts` 一个 Route Handler（SEO/GEO 文本）。下表接口均为 **v1.1+ 规划或历史设计，当前未实现**；访问统计仅由 GA4 `pageview` 上报（`lib/analytics.ts`），不走本站接口。
 
 | 方法 | 路径 | 说明 | 状态 |
 |------|------|------|------|
@@ -424,7 +422,7 @@ cc.progress.v1     # 进行中的检测进度（模式 / 题号 / 答题记录 /
 ### 5.2 事件上报接口
 
 ```typescript
-// POST /api/analytics/event —— 字段以 docs/API.md §3.2 与 docs/SPEC.md §5.6 为权威
+// POST /api/analytics/event —— 字段以 ./API.md §3.2 与 ./SPEC.md §5.6 为权威
 // v1.9.0 已移除：该端点不再存在，以下保留作历史设计记录
 interface AnalyticsEvent {
   eventId: string;          // 事件唯一 ID

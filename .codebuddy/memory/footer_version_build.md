@@ -12,4 +12,4 @@ type: feedback
 
 **Why:** 用户 2026-11-06 明确要求统一页脚版本/build 编号为 `V{ver}· build {yymmddhhmm}`（yymmddhhmm 为 10 位）。旧实现是小写 `v` + 12 位 `yyyymmddhhmm` + 空格分隔（`v{ver} · build {yyyymmddhhmm}`），不一致。已于 v1.14.0（提交 `ad56cb7`）落地，并写入 `docs/SPEC.md` §3.6。
 
-**How to apply:** 任何改动 `Footer.tsx` / `next.config.mjs` 时，保持上述格式与 10 位构建号；改应用版本只动 `package.json` / `VERSION`，页脚自动跟随（勿在页脚硬编码版本号）。如外部/并行进程再次重排页脚，核对格式与位数未被改回。
+**How to apply:** 任何改动 `Footer.tsx` / `next.config.mjs` 时，保持上述格式与 10 位构建号；改应用版本须同步 `VERSION` / `package.json` / `package-lock.json`（+ CHANGELOG、README、docs 状态行），页脚自动跟随（勿在页脚硬编码版本号）。如外部/并行进程再次重排页脚，核对格式与位数未被改回。

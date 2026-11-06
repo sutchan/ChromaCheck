@@ -1,11 +1,11 @@
 # 色辨 ChromaCheck 部署文档
 
 > **规范遵循**：本文档为 [SPEC.md](./SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。
-> **实现状态**：v1.0–v1.14.1 已部署上线。Vercel 自动部署；v1.9.0 起 CSP `frame-ancestors` 收紧为 `'self'`，v1.11.2 引入 `package-lock.json`；v1.7.6 起 `next.config.mjs` 配置安全响应头（CSP/X-Frame-Options 等）。静态原型仍可单独托管预览。
+> **实现状态**：v1.0–v1.14.2 已部署上线。Vercel 自动部署；v1.9.0 起 CSP `frame-ancestors` 收紧为 `'self'`，v1.11.2 引入 `package-lock.json`；v1.7.6 起 `next.config.mjs` 配置安全响应头（CSP/X-Frame-Options 等）。静态原型仍可单独托管预览。
 
 | 项目 | 内容 |
 |------|------|
-| 文档版本 | v1.0 |
+| 文档版本 | v1.14.2 |
 | 创建日期 | 2026-09-03 |
 
 ---
@@ -64,10 +64,9 @@
 
    | 变量名 | 说明 | 示例值 |
    |--------|------|--------|
-   | `NEXT_PUBLIC_APP_NAME` | 应用名称 | 色辨 ChromaCheck |
-   | `NEXT_PUBLIC_APP_URL` | 应用 URL | https://chromacheck.example.com |
-   | `NEXT_PUBLIC_GA_ID` | Google Analytics 4 衡量 ID（置空即停用心智统计） | G-0F9QWS1PDX |
-   | `NEXT_PUBLIC_ANALYTICS_ENABLED` | 是否启用分析 | false |
+   | `NEXT_PUBLIC_GA_ID` | Google Analytics 4 衡量 ID（置空即停用匿名统计，仅生产环境加载） | G-0F9QWS1PDX |
+
+   > 这是代码中唯一实际读取的环境变量（见 `.env.example`）。`NEXT_PUBLIC_BUILD_ID` 由 `next.config.mjs` 在构建期自动注入，无需配置；`NEXT_PUBLIC_APP_NAME` / `NEXT_PUBLIC_APP_URL` / `NEXT_PUBLIC_ANALYTICS_ENABLED` 均为早期规划，代码零引用、未实现。
 
    > 注意：环境变量应在 Production 和 Preview 环境中分别配置。
 
@@ -151,7 +150,6 @@ docker build -t chromacheck:latest .
 docker run -d \
   --name chromacheck \
   -p 3000:3000 \
-  -e NEXT_PUBLIC_APP_URL=https://chromacheck.example.com \
   --restart unless-stopped \
   chromacheck:latest
 ```
@@ -161,7 +159,6 @@ docker run -d \
 创建 `docker-compose.yml`：
 
 ```yaml
-version: '3.8'
 
 services:
   chromacheck:
@@ -171,7 +168,6 @@ services:
       - '3000:3000'
     environment:
       - NODE_ENV=production
-      - NEXT_PUBLIC_APP_URL=https://chromacheck.example.com
     restart: unless-stopped
     healthcheck:
       test: ['CMD', 'wget', '-qO-', 'http://localhost:3000/']
@@ -247,7 +243,7 @@ ufw deny 3000/tcp  # 3000 端口仅内网访问
 
 ## 5. 环境变量清单
 
-> 代码中实际读取的环境变量仅下列两项；`NEXT_PUBLIC_ANALYTICS_ENABLED` / `NEXT_PUBLIC_SENTRY_DSN` / `NEXT_PUBLIC_VERCEL_ANALYTICS_ID` 均为早期规划，**未实现**。
+> 代码中实际读取的环境变量仅下列两项；`NEXT_PUBLIC_APP_NAME` / `NEXT_PUBLIC_APP_URL` / `NEXT_PUBLIC_ANALYTICS_ENABLED` / `NEXT_PUBLIC_SENTRY_DSN` / `NEXT_PUBLIC_VERCEL_ANALYTICS_ID` 均为早期规划，代码零引用、**未实现**。
 
 | 变量名 | 必需 | 说明 |
 |--------|------|------|

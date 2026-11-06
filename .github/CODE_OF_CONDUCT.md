@@ -34,7 +34,7 @@
 
 可通过以下方式向维护团队举报骚扰或不可接受的行为：
 
-- GitHub Issues（私人反馈）或邮件：[contact@chromacheck.example]
+- GitHub Security Advisory 或维护者私信渠道（请勿使用公开 Issue）
 
 所有投诉都会被及时、公正地审查与调查。维护者会尊重举报者的隐私。
 

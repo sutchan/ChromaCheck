@@ -24,7 +24,8 @@ assignees: ''
 - 操作系统：
 - 浏览器及版本：
 - ChromaCheck 版本（见页面底部或 `VERSION`）：
-- 检测模式（快速/标准）：
+- 检测模式（ishihara quick/standard、path-tracking、hue-arrangement、advanced、signal、batch、child）：
+- 场景（general / driver）：
 
 ## 额外上下文
 其他可能有帮助的信息（控制台报错、网络状况等）。

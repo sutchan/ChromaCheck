@@ -9,7 +9,6 @@
 如果你发现 ChromaCheck 存在安全漏洞，请**不要**通过公开 Issue 披露。请通过以下方式私密报告：
 
 - **GitHub Security Advisory（推荐）**：在仓库 **Security → Report a vulnerability** 中提交
-- **或发送邮件至**：[contact@chromacheck.example]
 
 请在报告中尽量包含：
 
@@ -29,7 +28,7 @@ ChromaCheck 是**纯前端、本地优先**的色觉筛查应用：
 
 ## 安全实践
 
-- 依赖定期审计（`npm outdated` / Dependabot）。
-- 生产环境强制 HTTPS。
+- 依赖由维护者手动执行 `npm outdated` / `npm audit` 定期审计（Dependabot 尚未配置）。
+- 生产环境 HTTPS 由 Vercel 等托管平台提供（应用代码未做 HTTPS 重定向 / HSTS）。
 - 代码与日志中不得包含密钥、Token。
 - 用户输入在渲染前经过校验与转义，防范 XSS。

@@ -1,11 +1,11 @@
 # 色辨 ChromaCheck 数据规范文档
 
 > **规范遵循**：本文档为 [SPEC.md](./SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。类型别名（ColorDeficiencyType / OverallResult / SeverityLevel / TestMode）以 SPEC §5.5 为权威定义。
-> **实现状态**：v1.0–v1.14.1 已实现（Next.js 14 应用；石原氏 38 板 / 路径追踪 v1.1 / 色相排列 D15 v1.2 / 进阶联合 v1.3 / 趣味包 v1.4 / GA4 v1.5.1 / SEO·GEO v1.6 / 驾驶员场景 v1.7 / 设置面板 v1.10.0 / FAQ 手风琴 v1.11.0 / i18n 子模块化 v1.11.1 / lockfile 与 SEO metadata 补齐 v1.11.2 / 无障碍走查与测试覆盖优化 v1.12.0）。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [TASKS.md](./TASKS.md)。
+> **实现状态**：v1.0–v1.14.2 已实现（Next.js 14 应用；石原氏 38 板 / 路径追踪 v1.1 / 色相排列 D15 v1.2 / 进阶联合 v1.3 / 趣味包 v1.4 / GA4 v1.5.1 / SEO·GEO v1.6 / 驾驶员场景 v1.7 / 设置面板 v1.10.0 / FAQ 手风琴 v1.11.0 / i18n 子模块化 v1.11.1 / lockfile 与 SEO metadata 补齐 v1.11.2 / 无障碍走查与测试覆盖优化 v1.12.0）。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [TASKS.md](./TASKS.md)。
 
 | 项目 | 内容 |
 |------|------|
-| 文档版本 | v1.0 |
+| 文档版本 | v1.14.2 |
 | 创建日期 | 2026-09-03 |
 
 ---
@@ -25,34 +25,31 @@
 
 ## 2. 题库数据结构
 
-### 2.1 石原氏题目（IshiharaQuestion）
+### 2.1 石原氏题目（Question）
 
 ```typescript
-interface IshiharaQuestion {
+interface Question {
   /** 题目唯一标识，格式：ishihara-序号 */
   id: string;
   /** 石原氏图版号（原型字段 `plate`，早期文档误作 `plateNumber`） */
   plate: number;
   /**
-   * 题目类型（6 值枚举，定义见 docs/SPEC.md §5.1）：
+   * 题目类型（PlateType 6 值枚举，定义见 ./SPEC.md §5.1；
+   * 题库实际仅使用 demonstration / vanishing（另含 2 题 normal），
+   * transformation / hidden / classification 题均已降级移除）：
    * - demonstration: 演示题
    * - normal: 常规数字题
-   * - transformation: 转换题（正常/异常看到不同数字）
-   * - vanishing: 消失题（正常可见、异常不可见）
-   * - hidden: 隐藏题（异常可见、正常不可见）
-   * - classification: 分类题（区分红/绿色盲）
+   * - vanishing: 消失题（等亮度混淆配色，正常可见、异常难辨）
    */
   type: 'demonstration' | 'normal' | 'transformation' | 'vanishing' | 'hidden' | 'classification';
-  /** 正常色觉应读数字；hidden 题为 ''（空串表示不可见） */
+  /** 正常色觉应读数字 */
   answer: string;
-  /** 红色觉异常典型误读（'' 表示无） */
-  protan?: string;
-  /** 绿色觉异常典型误读（'' 表示无） */
-  deutan?: string;
-  /** 蓝色觉异常典型误读（v1.0 暂未启用，保留扩展） */
-  answerTritan?: string;
-  /** 难度等级 1-3 */
-  difficulty: 1 | 2 | 3;
+  /** 预留字段：红色觉异常典型误读；38 题预期值均已清空，不参与类型判读 */
+  protan: string;
+  /** 预留字段：绿色觉异常典型误读；38 题预期值均已清空，不参与类型判读 */
+  deutan: string;
+  /** 难度等级（number） */
+  difficulty: number;
   /** 是否纳入快速版题库（原型字段 `quick`，早期文档误作 `inQuickSet`） */
   quick: boolean;
 }
@@ -63,10 +60,10 @@ interface IshiharaQuestion {
 | 题型 | 正常色觉 | 异常色觉 | 判读用途 |
 |------|----------|----------|----------|
 | `demonstration` | 看到数字 | 也能看到 | 确认用户理解测试 |
-| `vanishing` | 看到数字 | 看不到 | 判断是否存在异常 |
-| `transformation` | 看到 A | 看到 B | 判断异常类型 |
-| `hidden` | 看不到 | 看到数字 | 辅助判断异常 |
-| `classification` | 看到 A | 红盲看 B，绿盲看 C | 区分红/绿色盲 |
+| `normal` | 看到数字 | 也能看到 | 常规数字题（仅 2 张） |
+| `vanishing` | 看到数字 | 难以辨认 | 判断是否存在异常 |
+
+> `transformation` / `hidden` / `classification` 仅保留在类型枚举中，**题库已无此类题目**，其「判断异常类型 / 区分红绿色盲」用途在当前实现下不可达。
 
 ### 2.2 路径追踪题目（PathTrackingQuestion）
 
@@ -132,10 +129,10 @@ interface AnswerRecord {
 
 ## 4. 判读结果
 
-### 4.1 石原氏判读结果（IshiharaScoringResult）
+### 4.1 石原氏判读结果（IshiharaResult）
 
 ```typescript
-interface IshiharaScoringResult {
+interface IshiharaResult {
   /** 总体结论 */
   overall:
     | 'normal'        // 色觉正常
@@ -218,7 +215,7 @@ interface HueArrangementResult {
 
 ## 5. 完整测试结果
 
-> 以下结构与 `docs/SPEC.md §5.3` 及 `lib/types.ts` 对齐（权威）。路径追踪 / 色相排列为 v1.1 扩展，v1.0 不产生。
+> 以下结构与 `./SPEC.md §5.3` 及 `lib/types.ts` 对齐（权威）。路径追踪 / 色相排列为 v1.1 扩展，v1.0 不产生。
 
 ```typescript
 interface TestResult {
@@ -267,7 +264,7 @@ cc.settings.v1      # 用户设置（AppSettings：theme + cvdSafe + funMode）
 cc.results.v1       # 检测历史（TestResult[]，保留最近 30 条）
 cc.progress.v1      # 进行中的检测进度（TestProgress）
 
-> 实际以 `lib/storage.ts` 与 `docs/SPEC.md §5.4` 为准：使用上述三个扁平键，无聚合 `LocalStorageData`；`soundEnabled` / `autoNext` / `analyticsEnabled` / `'system'` 主题均为早期规划字段，**至今未实现**。下方 §6.2–§6.4 的结构为早期规划草案，现行结构见各节标注。
+> 实际以 `lib/storage.ts` 与 `./SPEC.md §5.4` 为准：使用上述三个扁平键，无聚合 `LocalStorageData`；`soundEnabled` / `autoNext` / `analyticsEnabled` / `'system'` 主题均为早期规划字段，**至今未实现**。下方 §6.2–§6.4 的结构为早期规划草案，现行结构见各节标注。
 ```
 
 ### 6.2 用户设置（Settings）
@@ -315,7 +312,7 @@ export interface TestProgress {
 
 ### 6.4 历史记录摘要（HistorySummary）
 
-> **早期规划草案，未采用**：现行历史为 `cc.results.v1` 中完整 `TestResult[]`（最多 30 条，含逐题作答），不单独存摘要；字段以 `lib/types.ts` 的 `TestResult` 与 `docs/SPEC.md §5.3` 为权威。
+> **早期规划草案，未采用**：现行历史为 `cc.results.v1` 中完整 `TestResult[]`（最多 30 条，含逐题作答），不单独存摘要；字段以 `lib/types.ts` 的 `TestResult` 与 `./SPEC.md §5.3` 为权威。
 
 ```typescript
 interface HistorySummary {
@@ -352,12 +349,12 @@ interface HistorySummary {
 2. 按题型分组统计
    - vanishing 题错误数 ≥ 2 → 疑似色弱
    - vanishing 题错误数 ≥ 4 → 疑似色盲
-   - hidden 题答对 ≥ 50% → 提示异常
+   - hidden 题答对 ≥ 50% → 提示异常（兼容分支，当前不可达）
 
-3. 异常类型判定（transformation + classification 题）
-   - protan 匹配 > deutan 匹配 → 红色觉异常
-   - deutan 匹配 > protan 匹配 → 绿色觉异常
-   - 无法区分时默认提示绿色觉异常（最常见）
+3. 异常类型判定（当前为退化分支）
+   - 题库无 transformation / classification 题 → protanHit / deutanHit 恒为 0
+   - `deutanHit >= protanHit` 恒真 → `type` 恒为 deuteranopia / deuteranomaly
+   - **无法可靠区分红 / 绿 / 蓝黄异常类型**；tritan 维度为 `base * 0.35` 推算参考值
 
 4. 程度判定
    - 色盲 + 消失题错误率 ≥ 70% → 重度
@@ -368,7 +365,7 @@ interface HistorySummary {
    - 基础 100 分
    - 演示题错误 -25
    - 答题过快（<1s）每题 -2
-   - 答题矛盾 -15
+   - 答题矛盾 -15（当前不可达）
    - 答题数 < 50% -20
 ```
 
@@ -377,6 +374,8 @@ interface HistorySummary {
 | 维度 | 正常范围 | 轻度异常 | 明显异常 |
 |------|----------|----------|----------|
 | protan / deutan / tritan | 0-30 | 30-60 | 60-100 |
+
+> `tritan` 恒为 `base * 0.35`（≤35），「明显异常 60-100」对 tritan 不可达；三轴数值为参考值，不作异常类型判据。
 
 ---
 
