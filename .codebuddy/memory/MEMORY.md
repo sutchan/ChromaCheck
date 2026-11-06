@@ -1,8 +1,8 @@
 # 记忆索引
 
 ## 项目：ChromaCheck（e:/Github/ChromaCheck）
-- 纯前端 Next.js 14(App Router)+React 18+TS(strict)+Tailwind 3，本地优先、无后端、无重型依赖；图表内联 SVG，报告 Canvas(PNG)+`window.print()`(PDF)。当前版本 **v1.13.3**（2026-11-05；会话间隙用户/外部进程会自行 bump/提交，改版本前必须重读 `VERSION` 并 `git status --short --untracked-files=all`）。
-- 版本单一来源：`VERSION`(=1.13.3) 与 `package.json`/`package-lock.json` 一致；代码改后同步 `README`/`CHANGELOG` 顶部版本与 `docs/` 各分册「实现状态」行。原型文件头 v0.1.3（已反向对齐应用，与正式版本解耦）。**历史坑**：某次会话把 CHANGELOG 写成 1.13.2 却漏 bump `VERSION`（停在 1.13.1），改版本须三处（VERSION/package.json/CHANGELOG）一并核对；CHANGELOG 目标版本节已存在则**追加**，勿新建重复节。
+- 纯前端 Next.js 14(App Router)+React 18+TS(strict)+Tailwind 3，本地优先、无后端、无重型依赖；图表内联 SVG，报告 Canvas(PNG)+`window.print()`(PDF)。当前版本 **v1.13.4**（2026-11-06；会话间隙用户/外部进程会自行 bump/提交甚至把工作区改动直接 commit（如 6b03e46），改版本前必须重读 `VERSION` 并 `git status --short --untracked-files=all`）。
+- 版本单一来源：`VERSION`(=1.13.4) 与 `package.json`/`package-lock.json` 一致；代码改后同步 `README`/`CHANGELOG` 顶部版本与 `docs/` 各分册「实现状态」行。任务清单 `docs/TASKS.md`（磁盘大小写与跟踪名不一致，Windows 下同文件）待办已清零，新待办自 R9+ 顺延。原型文件头 v0.1.3（已反向对齐应用，与正式版本解耦）。**历史坑**：某次会话把 CHANGELOG 写成 1.13.2 却漏 bump `VERSION`（停在 1.13.1），改版本须三处（VERSION/package.json/CHANGELOG）一并核对；CHANGELOG 目标版本节已存在则**追加**，勿新建重复节。
 - 审查与修复要点（JSON-LD 转义、语义 id 覆盖、SPEC §6.3 判读阈值口径、测试环境限制、构建坑）见 [review-2026-11-05.md](review-2026-11-05.md)。
 - 字体（v1.13.3 真自托管）：`app/font-defs.ts` 用 `next/font/local` 注入 `app/fonts/` 下 8 个 latin woff2（Archivo 400–800 / IBM Plex Mono 400–600，来源 `@fontsource/*`）；构建期**不联网**，离线 CI 可用。中间变量 `--font-archivo`/`--font-plex-mono` 由 `globals.css` 组合中文回退链。**禁止改回 `next/font/google`**（构建期需访问 gstatic，离线必失败）。详见全局记忆 `font_selfhost_offline_build.md`。`lib/site.ts` 的 `SITE_UPDATED` 现仅用于隐私页「最后更新」，页脚为 `v{ver} · build {NEXT_PUBLIC_BUILD_ID}`。
 - 导航（v1.7.5）：页眉 Navbar 仅「首页/开始检测/历史」；科普/隐私入口在页脚 Footer。

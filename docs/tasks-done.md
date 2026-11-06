@@ -1,7 +1,7 @@
 # 已完成任务归档
 
 > 来源：`docs/TASKS.md`。已完成的条目从任务清单移入本文档，保留目标与实现摘要以便回溯。
-> **最后更新：2026-11-05**（当前版本 **v1.13.3**）：归档范围覆盖 T1–T6、C1–C9、R1/R2，以及审查遗留项 R3–R7（v1.11.1–v1.12.0）；R8 部分完成（见 §六）。未完成任务见 `docs/TASKS.md` §6（仅余 R8）。
+> **最后更新：2026-11-06**（当前版本 **v1.13.4**）：归档范围覆盖 T1–T6、C1–C9、R1/R2、审查遗留项 R3–R7（v1.11.1–v1.12.0）及 R8 全量收口（v1.12.0 共享 hook + v1.13.4 R8a/R8b，见 §六）。未完成任务见 `docs/TASKS.md`（已清零）。
 
 ---
 
@@ -139,9 +139,10 @@
 - 新增 6 模块单测：`child-scoring` / `format` / `scoring-text` / `path-field` / `ishihara` / `sharecard`(computeRadar)，套件由 73 → 97 例。
 - 限制：vitest 为 node 环境，`sharecard`(`drawShareCard`)/`report-canvas`(`drawReport`) 的 Canvas 绘制依赖 DOM 不可单测；80% 覆盖率门禁未硬性达成，列为后续。
 
-### R8 反模式（部分完成，v1.12.0）
-- ✅ 已将 `TestRunner` 与 `AdvancedRunner` 重复的 mounted 水合守卫 + 进度恢复逻辑提取为共享 hook `components/test/useResumeProgress.ts`。
-- ⏳ 仍待办：`history` 页内联 style 与 Tailwind 混用、result props 透传 6+ 层（二者属既定设计风格，改动风险高，列为后续迭代）。
+### R8 反模式（✅ 全量完成，v1.12.0 + v1.13.4）
+- ✅ v1.12.0：将 `TestRunner` 与 `AdvancedRunner` 重复的 mounted 水合守卫 + 进度恢复逻辑提取为共享 hook `components/test/useResumeProgress.ts`。
+- ✅ v1.13.4（R8a）：`app/history/page.tsx`（16 处内联 style 清零）与 `app/history/error.tsx` 收敛至 `globals.css` 语义类（`.history-*` / `.btn-sm` / `.hidden-input`），沿 `.faq-*` 页面级样式先例。
+- ✅ v1.13.4（R8b）：`TestRunner` 改为复用 `IshiharaFlow`（`key=runKey` 重挂载保留「重新开始」语义，`IshiharaFlow` 新增可选 `id` prop），消除近乎逐行重复的答题流程 JSX；原「result props 透传 6+ 层」经 2026-11-06 复核已过时（现行经 Context 与 2–3 层回调，无深透传），销项。
 
 ---
 

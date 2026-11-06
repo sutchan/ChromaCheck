@@ -1,7 +1,7 @@
 # 任务文档：驾驶员场景色觉检测改进
 
 > 来源：2026-09-06 对 ChromaCheck v1.6.0 检测覆盖度评估。
-> **最后更新：2026-11-05**（当前版本 **v1.13.3**）。已完成任务（T1–T6、C1–C9、R1–R7）已全量归档至 `docs/tasks-done.md`（§一~§六）；本文档仅保留**未完成待办清单**（R8）。
+> **最后更新：2026-11-06**（当前版本 **v1.13.4**）。已完成任务（T1–T6、C1–C9、R1–R8）已全量归档至 `docs/tasks-done.md`（§一~§六）；本文档待办清单已清零。
 
 ## 1. 背景与评估结论
 
@@ -23,12 +23,10 @@
 - `docs/PRD.md` — 产品定位与「贴合国内职业体检标准」目标
 - `docs/SPEC.md` — 检测范式权威定义
 - `lib/scoring.ts` / `lib/ishihara.ts` / `lib/hue-scoring.ts` — 判读与图版实现
-- `docs/tasks-done.md` — 已完成任务归档（T1–T6、C1–C9、R1–R7）
+- `docs/tasks-done.md` — 已完成任务归档（T1–T6、C1–C9、R1–R8）
 
-## 3. 未完成待办清单（R8）
+## 3. 未完成待办清单（无）
 
-> 来源：2026-10-15 代码库全面审查遗留项。R1–R7 已于 v1.9.0–v1.12.0 完成并归档至 `docs/tasks-done.md` §五~§六；下表仅余 **R8**，状态 2026-11-03（v1.12.1）复核。
+> 来源：2026-10-15 代码库全面审查遗留项。R1–R7 已于 v1.9.0–v1.12.0 完成并归档至 `docs/tasks-done.md` §五~§六；R8 于 v1.12.0（`useResumeProgress` 共享 hook）与 **v1.13.4（2026-11-06：R8a 历史页内联样式收敛至 `globals.css` 语义类 / R8b `TestRunner` 复用 `IshiharaFlow` 消除答题流程重复 JSX）** 全量完成，已归档至 `docs/tasks-done.md` §六。
 
-| 编号 | 问题 | 优先级 | 状态 |
-|------|------|--------|------|
-| R8 | 轻微反模式：mounted 进度恢复逻辑重复（✅ 已于 v1.12.0 提取为 `useResumeProgress` 共享 hook）、history 页内联 style 与 Tailwind 混用、result props 透传 6+ 层 | P2 | 🟡 部分完成（history 内联 style / result props 透传列为后续，二者为既定设计风格、改动风险高） |
+**当前无未完成任务。** 后续新增待办请在本节登记（编号顺延 R9+，注明来源 / 优先级 / 状态与登记日期）。

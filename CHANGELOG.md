@@ -3,6 +3,15 @@
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
 版本号的单一来源为仓库根目录 `VERSION` 文件与 `package.json` 的 `version` 字段（当前 `1.13.3`）。
 
+## [1.13.4] - 2026-11-06
+
+### 改进（任务清单收口：R8a / R8b）
+- R8a：历史页内联样式收敛——`app/history/page.tsx`（16 处内联 `style={{…}}` 清零）与 `app/history/error.tsx` 改用 `globals.css` 新增语义类（`.history-*` / `.btn-sm` / `.hidden-input`），沿 `.faq-*` 页面级样式先例、置于 `@layer components` 末尾确保覆盖 `.stack` / `.row` 默认值。
+- R8b：`components/test/TestRunner.tsx` 不再内联复刻答题流程 JSX，改为复用 `IshiharaFlow`（`key=runKey` 重挂载保持「重新开始」语义；`IshiharaFlow` 新增可选 `id` prop 保留 runKey 实例标识）。原「result props 透传 6+ 层」经复核已过时——现行架构经 Context（`useLang` / `useSettings`）与 2–3 层回调 props 无深透传，一并销项。
+- 验证：`tsc --noEmit`、`next lint`、Vitest 14 文件 97 例、离线 `next build`（8 个自托管 woff2 打包）全部通过。
+- 任务文档：R8 全量归档至 `docs/tasks-done.md` §六；`docs/TASKS.md` 待办清零并记录 2026-11-06 时间戳。
+- 版本单一来源同步至 `1.13.4`（`VERSION` / `package.json` / `package-lock.json` / `README` / `docs/SPEC.md` 状态行）。
+
 ## [1.13.3] - 2026-11-05
 
 ### 修复（CI 运行时）
