@@ -1,10 +1,10 @@
 # 记忆索引
 
 ## 项目：ChromaCheck（e:/Github/ChromaCheck）
-- 纯前端 Next.js 14(App Router)+React 18+TS(strict)+Tailwind 3，本地优先、无后端、无重型依赖；图表内联 SVG，报告 Canvas(PNG)+`window.print()`(PDF)。当前版本 **v1.13.4**（2026-11-06；会话间隙用户/外部进程会自行 bump/提交甚至把工作区改动直接 commit（如 6b03e46），改版本前必须重读 `VERSION` 并 `git status --short --untracked-files=all`）。
-- 版本单一来源：`VERSION`(=1.13.4) 与 `package.json`/`package-lock.json` 一致；代码改后同步 `README`/`CHANGELOG` 顶部版本与 `docs/` 各分册「实现状态」行。任务清单 `docs/TASKS.md`（磁盘大小写与跟踪名不一致，Windows 下同文件）待办已清零，新待办自 R9+ 顺延。原型文件头 v0.1.3（已反向对齐应用，与正式版本解耦）。**历史坑**：某次会话把 CHANGELOG 写成 1.13.2 却漏 bump `VERSION`（停在 1.13.1），改版本须三处（VERSION/package.json/CHANGELOG）一并核对；CHANGELOG 目标版本节已存在则**追加**，勿新建重复节。
+- 纯前端 Next.js 14(App Router)+React 18+TS(strict)+Tailwind 3，本地优先、无后端、无重型依赖；图表内联 SVG，报告 Canvas(PNG)+`window.print()`(PDF)。当前版本 **v1.14.0**（2026-11-06；外部进程已自行推进至 v1.14.0（含石原氏键盘输入 + 页脚版本/build 规范，提交 `ad56cb7`），并会自行 bump/提交甚至直接 commit 工作区改动；改版本前必须重读 `VERSION` 并 `git status --short --untracked-files=all`）。
+- 版本单一来源：`VERSION`(=1.14.0) 与 `package.json`/`package-lock.json` 一致；代码改后同步 `README`/`CHANGELOG` 顶部版本与 `docs/` 各分册「实现状态」行。任务清单 `docs/TASKS.md`（磁盘大小写与跟踪名不一致，Windows 下同文件）待办已清零，新待办自 R9+ 顺延。原型文件头 v0.1.3（已反向对齐应用，与正式版本解耦）。**历史坑**：某次会话把 CHANGELOG 写成 1.13.2 却漏 bump `VERSION`（停在 1.13.1），改版本须三处（VERSION/package.json/CHANGELOG）一并核对；CHANGELOG 目标版本节已存在则**追加**，勿新建重复节。
 - 审查与修复要点（JSON-LD 转义、语义 id 覆盖、SPEC §6.3 判读阈值口径、测试环境限制、构建坑）见 [review-2026-11-05.md](review-2026-11-05.md)。
-- 字体（v1.13.3 真自托管）：`app/font-defs.ts` 用 `next/font/local` 注入 `app/fonts/` 下 8 个 latin woff2（Archivo 400–800 / IBM Plex Mono 400–600，来源 `@fontsource/*`）；构建期**不联网**，离线 CI 可用。中间变量 `--font-archivo`/`--font-plex-mono` 由 `globals.css` 组合中文回退链。**禁止改回 `next/font/google`**（构建期需访问 gstatic，离线必失败）。详见全局记忆 `font_selfhost_offline_build.md`。`lib/site.ts` 的 `SITE_UPDATED` 现仅用于隐私页「最后更新」，页脚为 `v{ver} · build {NEXT_PUBLIC_BUILD_ID}`。
+- 字体（v1.13.3 真自托管）：`app/font-defs.ts` 用 `next/font/local` 注入 `app/fonts/` 下 8 个 latin woff2（Archivo 400–800 / IBM Plex Mono 400–600，来源 `@fontsource/*`）；构建期**不联网**，离线 CI 可用。中间变量 `--font-archivo`/`--font-plex-mono` 由 `globals.css` 组合中文回退链。**禁止改回 `next/font/google`**（构建期需访问 gstatic，离线必失败）。详见全局记忆 `font_selfhost_offline_build.md`。`lib/site.ts` 的 `SITE_UPDATED` 现仅用于隐私页「最后更新」，页脚为 `V{ver}· build {NEXT_PUBLIC_BUILD_ID}`（10 位 `yymmddhhmm`）。
 - 导航（v1.7.5）：页眉 Navbar 仅「首页/开始检测/历史」；科普/隐私入口在页脚 Footer。
 
 ### 功能/路由（详见 CHANGELOG）
@@ -17,7 +17,7 @@
 - **v1.12.0 审查项收口（2026-11-03）**：R4 aria 走查——`IshiharaPlate` 的 `<canvas>` 加 `role="img"`+类型化 `aria-label`（不剧透答案）、`AnswerReview` 表头 `scope="col"`/表 `aria-label`、`Numpad` 加 `role="group"`（新增 i18n 键 `ishihara.plateAria`/`test.numpadLabel`）；R5 新增 6 模块单测（child-scoring/format/scoring-text/path-field/ishihara/sharecard 的 computeRadar），套件 73→97 例（canvas 绘制因 vitest 为 node 环境不可单测）；R8 提取 `TestRunner`/`AdvancedRunner` 重复的 mounted 水合守卫+进度恢复为共享 hook `components/test/useResumeProgress.ts`。R3/R6/R7 已于 v1.11.1–v1.11.2 由并行会话完成；R8 的 history 内联 style / result props 透传仍列为后续（既定设计风格、改动风险高）。详见 `CHANGELOG.md`[1.12.0] 与 `docs/tasks-done.md` §六。
 - 判读：`lib/{scoring,hue-scoring,path-scoring,signal-scoring,advanced-scoring}.ts`+`lib/ishihara.ts`；题库 `lib/questions.ts`(38)+`lib/questions/*`；`pathOverlap` 实为 F1；「置信度」已改「判读稳定性」。
 - 隐私：v1.9.0 已移除 `reportServerEvent`/`app/api/analytics/event`，**仅 GA4 上报**（口径见 `lib/privacy-data.ts`）。
-- **页脚构建号（v1.12.2 起，符合全局「页脚展示版本号+build 编号」规范）**：`components/layout/Footer.tsx`（`id="app-footer"`）展示 `© · v{version} · build {NEXT_PUBLIC_BUILD_ID} · {用途}`；版本号直读 `package.json`（`pkg.version`），构建号由 `next.config.mjs` 在构建时按本地时间生成 `yyyymmddhhmm` 注入 `NEXT_PUBLIC_BUILD_ID`（dev/build 均生效，缺失回退 `pkg.version`）。**不再展示更新日期**；`lib/site.ts` 的 `SITE_UPDATED` 现仅用于隐私页「最后更新」。
+- **页脚版本/构建号格式（v1.14.0 起规范，详见 `footer_version_build.md`）**：`components/layout/Footer.tsx`（`id="app-footer"`）展示 `© {年} ChromaCheck · V{version}· build {NEXT_PUBLIC_BUILD_ID} · {用途}`——大写 `V`、版本后紧接 `·`、再 ` build `、最后 **10 位 `yymmddhhmm`**（2 位年份）。构建号由 `next.config.mjs` 在构建时按本地时间生成并注入 `NEXT_PUBLIC_BUILD_ID`（dev/build 均生效，缺失回退 `pkg.version`）。**不再展示更新日期**；`lib/site.ts` 的 `SITE_UPDATED` 现仅用于隐私页「最后更新」。
 - 原型 `prototype/`：4 页纯 HTML 设计验证，**判读算法须以 app/lib 为准**（已对齐 v0.1.x，与 VERSION 解耦）；`CVD_MATRIX` 键名 protanopia/deuteranopia/tritanopia/achromatopsia（非 protan/deutan/tritan/mono）。
 - **仓库结构（长期有效）**：`.github/` 已规范化——含 CODE_OF_CONDUCT/CONTRIBUTING/SECURITY/SUPPORT/PULL_REQUEST_TEMPLATE/ISSUE_TEMPLATE/workflows；**未建 FUNDING.yml**；遵守全局规则**禁止新建 `.github/readme.md`**。根目录其余文件（README/LICENSE/CHANGELOG/package.json/VERSION/各构建配置/metadata.json/ChromaCheck.code-workspace）均属项目核心，按惯例留根，不应移入 .github/（用户 2026-10-17 核查确认）。
 
