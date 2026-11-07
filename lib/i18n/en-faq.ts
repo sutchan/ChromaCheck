@@ -10,7 +10,7 @@ export const EN_FAQ = {
   'faq.q1': 'What is the difference between color blindness and color weakness?',
   'faq.a1': 'Color blindness means one class of cone cells is entirely absent, while color weakness means those cells are still present but function weakly, with reduced sensitivity. The number of colors you can tell apart and the impact on daily life differ markedly, but an online screen cannot precisely distinguish “blind” from “weak” — a definitive diagnosis needs professional instruments.',
   'faq.q2': 'Is ChromaCheck’s online color vision test accurate?',
-  'faq.a2': 'ChromaCheck is based on the isoluminant principle of Ishihara plates and cross-checks transformation, vanishing and hidden plates from multiple angles to screen for color vision deficiency and whether it leans red-green or blue-yellow. It is a screening tool: results are for reference only and cannot replace a professional eye examination.',
+  'faq.a2': 'ChromaCheck is based on the isoluminant principle of Ishihara plates and screens mainly with vanishing digit plates, indicating whether a color vision deficiency tendency exists (the current plate set cannot precisely distinguish protan from deutan deficiencies). It is a screening tool: results are for reference only and cannot replace a professional eye examination.',
   'faq.q3': 'How long does one test take?',
   'faq.a3': 'The quick version has 10 core items and takes about 3 minutes, good for a first self-test; the standard version has 38 items and takes about 12 minutes with more stable results; path tracking takes about 2 minutes, hue arrangement about 3 minutes, and the advanced combined test about 19 minutes.',
   'faq.q4': 'Is my test data safe?',

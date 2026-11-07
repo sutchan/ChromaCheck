@@ -1,7 +1,15 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件、`package.json` 与 `package-lock.json` 的 `version` 字段（当前 `1.15.0`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件、`package.json` 与 `package-lock.json` 的 `version` 字段（当前 `1.15.1`）。
+
+## [1.15.1] - 2026-11-07
+
+### 修复（判读类型退化输出收敛，审查报告 P0-1 代码部分）
+- `lib/scoring.ts`：无转换/分类题命中（`protanHit === 0 && deutanHit === 0`）时 `type` 输出 `null`（未分型），不再默认输出 deutan 系（历史行为恒为「绿色弱/盲」，属误导）；题库恢复转换/分类题后自动恢复类型判定。
+- `lib/license.ts`：未分型盲级（`suspected_blindness` + `type` 为 null）映射为「无法确认」，不再误称「属于色弱而非色盲」；新增 `license.untypedBlind*` 三语文案。
+- i18n 文案对齐题库实况（三语同步）：`analysis.abnormal` 删除「转换题与分类题典型表现」表述、`faq.a2` 改为「以消失型数字图为主筛查」、`feat.dims.text` 标注红/绿轴为推算值。
+- `lib/scoring.test.ts`：2 处类型判定断言更新为 null。
 
 ## [1.15.0] - 2026-11-07
 

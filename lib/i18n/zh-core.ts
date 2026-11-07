@@ -18,7 +18,7 @@ export const ZH_CORE = {
   'feat.quick.title': '快速筛查',
   'feat.quick.text': '快速版 10 题约 3 分钟，标准版 38 题约 12 分钟，随时在浏览器完成。',
   'feat.dims.title': '维度分析',
-  'feat.dims.text': '输出红 / 绿 / 蓝三轴异常倾向与判读稳定性，比“通过 / 不通过”更有信息量。',
+  'feat.dims.text': '输出色觉维度倾向与判读稳定性（红/绿轴为推算值），比“通过 / 不通过”更有信息量。',
   'feat.privacy.title': '隐私优先',
   'feat.privacy.text': '检测数据与历史仅存于本机浏览器，不上传服务器，可随时查看与删除。',
   'step1.title': '选择模式',

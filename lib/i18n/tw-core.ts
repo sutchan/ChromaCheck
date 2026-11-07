@@ -18,7 +18,7 @@ export const TW_CORE = {
   'feat.quick.title': '快速篩查',
   'feat.quick.text': '快速版 10 題約 3 分鐘，標準版 38 題約 12 分鐘，隨時在瀏覽器完成。',
   'feat.dims.title': '維度分析',
-  'feat.dims.text': '輸出紅 / 綠 / 藍三軸異常傾向與判讀穩定性，比“通過 / 不通過”更有資訊量。',
+  'feat.dims.text': '輸出色覺維度傾向與判讀穩定性（紅/綠軸為推算值），比“通過 / 不通過”更有資訊量。',
   'feat.privacy.title': '隱私優先',
   'feat.privacy.text': '檢測資料與歷史僅存於本機瀏覽器，不上傳伺服器，可隨時檢視與刪除。',
   'step1.title': '選擇模式',

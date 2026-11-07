@@ -1,5 +1,5 @@
 // lib/license.ts — 结果映射至驾照辨色力要求（172 号令第十二条）
-// chromacheck v1.9.0
+// chromacheck v1.15.1
 import type { DeficiencyType, Overall, Severity, TestResult } from './types';
 import { t, type Lang } from './i18n';
 
@@ -51,6 +51,18 @@ export function mapToLicense(result: TestResult, lang: Lang = 'zh'): LicenseRef 
 
   // suspected_deficiency（色弱）或 suspected_blindness（色盲）
   const isBlindness = overall === 'suspected_blindness';
+
+  // 未分型（当前题库无转换/分类题，type 为 null）：不能断言色弱或色盲，按「无法确认」处理
+  if (isBlindness && !type) {
+    return {
+      verdict: 'uncertain',
+      title: t(lang, 'license.untypedBlindTitle'),
+      detail: `${t(lang, 'license.untypedBlindDetail')}${reg}`,
+      touchesProhibition: false,
+      note: t(lang, 'license.untypedBlindNote'),
+    };
+  }
+
   const typeText = type
     ? type.includes('protan')
       ? t(lang, 'license.typeProtan')
@@ -72,7 +84,7 @@ export function mapToLicense(result: TestResult, lang: Lang = 'zh'): LicenseRef 
     };
   }
 
-  // 色弱（或蓝黄色觉异常、未明确分型的红绿色弱）
+  // 色弱（或蓝黄色觉异常）
   return {
     verdict: 'deficiency_only',
     title: t(lang, 'license.deficiencyTitle'),

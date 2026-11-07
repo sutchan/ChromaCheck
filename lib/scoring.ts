@@ -1,5 +1,5 @@
 // lib/scoring.ts — 判读引擎（移植自 prototype/scoring.js，纯函数）
-// chromacheck v1.9.0
+// chromacheck v1.15.1
 import type {
   AnswerRecord,
   DeficiencyType,
@@ -100,8 +100,15 @@ export function scoreIshihara(answers: AnswerRecord[], questions: Question[], la
   let type: DeficiencyType = null;
   let severity: Severity = null;
   if (overall === 'suspected_deficiency' || overall === 'suspected_blindness') {
-    if (deutanHit >= protanHit) type = overall === 'suspected_blindness' ? 'deuteranopia' : 'deuteranomaly';
-    else type = overall === 'suspected_blindness' ? 'protanopia' : 'protanomaly';
+    if (protanHit === 0 && deutanHit === 0) {
+      // 题库当前仅含 vanishing / demonstration（转换/分类题未启用），无轴命中依据：
+      // 不再默认输出 deutan 系（历史行为恒为「绿色弱/盲」，属误导）；类型留待转换/分类题恢复后判定
+      type = null;
+    } else if (deutanHit >= protanHit) {
+      type = overall === 'suspected_blindness' ? 'deuteranopia' : 'deuteranomaly';
+    } else {
+      type = overall === 'suspected_blindness' ? 'protanopia' : 'protanomaly';
+    }
     const rate = wrong / Math.max(total, 1);
     severity = rate >= 0.7 ? 'severe' : rate >= 0.4 ? 'moderate' : 'mild';
   }

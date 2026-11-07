@@ -19,7 +19,7 @@ export const EN_CORE: Record<CoreKey, string> = {
   'feat.quick.title': 'Fast screening',
   'feat.quick.text': 'Quick mode: 10 plates in about 3 minutes; standard mode: 38 plates in about 12 minutes — right in your browser.',
   'feat.dims.title': 'Axis analysis',
-  'feat.dims.text': 'Reports protan / deutan / tritan tendency with a reading-stability score — far richer than pass or fail.',
+  'feat.dims.text': 'Reports color-dimension tendencies with a reading-stability score (protan/deutan axes are estimates) — far richer than pass or fail.',
   'feat.privacy.title': 'Privacy first',
   'feat.privacy.text': 'Results and history stay in your own browser, never uploaded; review or delete them any time.',
   'step1.title': 'Pick a mode',

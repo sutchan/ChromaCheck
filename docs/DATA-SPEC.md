@@ -1,11 +1,11 @@
 # 色辨 ChromaCheck 数据规范文档
 
 > **规范遵循**：本文档为 [SPEC.md](./SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。类型别名（ColorDeficiencyType / OverallResult / SeverityLevel / TestMode）以 SPEC §5.5 为权威定义。
-> **实现状态**：v1.0–v1.15.0 已实现（Next.js 14 应用；石原氏 38 板 / 路径追踪 v1.1 / 色相排列 D15 v1.2 / 进阶联合 v1.3 / 趣味包 v1.4 / GA4 v1.5.1 / SEO·GEO v1.6 / 驾驶员场景 v1.7 / 设置面板 v1.10.0 / FAQ 手风琴 v1.11.0 / i18n 子模块化 v1.11.1 / lockfile 与 SEO metadata 补齐 v1.11.2 / 无障碍走查与测试覆盖优化 v1.12.0）。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [TASKS.md](./TASKS.md)。
+> **实现状态**：v1.0–v1.15.1 已实现（Next.js 14 应用；石原氏 38 板 / 路径追踪 v1.1 / 色相排列 D15 v1.2 / 进阶联合 v1.3 / 趣味包 v1.4 / GA4 v1.5.1 / SEO·GEO v1.6 / 驾驶员场景 v1.7 / 设置面板 v1.10.0 / FAQ 手风琴 v1.11.0 / i18n 子模块化 v1.11.1 / lockfile 与 SEO metadata 补齐 v1.11.2 / 无障碍走查与测试覆盖优化 v1.12.0）。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [TASKS.md](./TASKS.md)。
 
 | 项目 | 内容 |
 |------|------|
-| 文档版本 | v1.15.0 |
+| 文档版本 | v1.15.1 |
 | 创建日期 | 2026-09-03 |
 
 ---
@@ -351,9 +351,9 @@ interface HistorySummary {
    - vanishing 题错误数 ≥ 4 → 疑似色盲
    - hidden 题答对 ≥ 50% → 提示异常（兼容分支，当前不可达）
 
-3. 异常类型判定（当前为退化分支）
+3. 异常类型判定（v1.15.1 起未分型收敛）
    - 题库无 transformation / classification 题 → protanHit / deutanHit 恒为 0
-   - `deutanHit >= protanHit` 恒真 → `type` 恒为 deuteranopia / deuteranomaly
+   - 两命中均为 0 → `type` 输出 null（未分型）；有命中时 `deutanHit >= protanHit` → deuteran*，否则 protan*；驾照映射对未分型盲级输出「无法确认」
    - **无法可靠区分红 / 绿 / 蓝黄异常类型**；tritan 维度为 `base * 0.35` 推算参考值
 
 4. 程度判定

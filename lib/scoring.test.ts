@@ -1,4 +1,4 @@
-// lib/scoring.test.ts v1.7.6
+// lib/scoring.test.ts v1.15.1
 import { describe, it, expect } from 'vitest';
 import { scoreIshihara, computeResult } from './scoring';
 import type { AnswerRecord, Question } from './types';
@@ -44,12 +44,12 @@ describe('scoreIshihara', () => {
     expect(r.details.correctCount).toBe(0);
   });
 
-  it('消失题错误 ≥ 4 → suspected_blindness + deuteranopia + severe，维度饱和', () => {
+  it('消失题错误 ≥ 4 → suspected_blindness + 未分型（type null）+ severe，维度饱和', () => {
     const questions = [q('v1'), q('v2'), q('v3'), q('v4'), q('v5'), q('v6')];
     const answers = questions.map((x) => a(x.id, '99'));
     const r = scoreIshihara(answers, questions);
     expect(r.overall).toBe('suspected_blindness');
-    expect(r.type).toBe('deuteranopia');
+    expect(r.type).toBeNull(); // 无转换/分类题命中 → 不再默认输出 deutan 系
     expect(r.severity).toBe('severe');
     expect(r.dimensions.protan).toBe(100);
     expect(r.dimensions.deutan).toBe(100);
@@ -109,7 +109,7 @@ describe('scoreIshihara', () => {
     const answers = [a('h1', '5'), a('h2', '')];
     const r = scoreIshihara(answers, questions);
     expect(r.overall).toBe('suspected_deficiency');
-    expect(r.type).toBe('deuteranomaly'); // 无轴命中时默认 deutan 侧
+    expect(r.type).toBeNull(); // 无轴命中时未分型（v1.15.1 起不再默认 deutan 系）
     expect(r.severity).toBe('moderate');
   });
 });
