@@ -1,7 +1,7 @@
 # 贡献指南
 
 > **规范遵循**：本文档为 [../docs/SPEC.md](../docs/SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。
-> **实现状态**：v1.0–v1.16.1 已实现，§开发环境 的 npm 流程（install / dev / build / start / lint / type-check / test / test:watch / test:coverage）当前可直接使用。
+> **实现状态**：v1.0–v1.16.2 已实现，§开发环境 的 npm 流程（install / dev / build / start / lint / type-check / test / test:watch / test:coverage）当前可直接使用。
 >
 > **分支说明**：当前仓库仅维护 `main`；文中提及的 `develop` 为可选集成分支，若远程不存在请直接从 `main` 切功能分支并向 `main` 提交 PR。
 
@@ -11,7 +11,7 @@
 
 ### 前置要求
 
-- Node.js 22 LTS（最低 >= 18.17.0，与 CI 一致）
+- Node.js 22 LTS（CI 固定 Node 22；Next.js 14.2.15 要求最低 >= 18.17.0，见 `package-lock.json` 中 `next.engines`）
 - npm >= 9.0.0（或 pnpm / yarn）
 - Git
 
@@ -40,11 +40,11 @@ npm run dev
 
 ### 1. 创建分支
 
-从 `develop` 分支创建功能分支：
+从 `main` 分支创建功能分支（当前仓库仅维护 `main`）：
 
 ```bash
-git checkout develop
-git pull origin develop
+git checkout main
+git pull origin main
 git checkout -b feature/your-feature-name
 ```
 
@@ -101,7 +101,7 @@ Closes #123
 git push origin feature/your-feature-name
 ```
 
-在 GitHub 上创建 Pull Request，目标分支为 `develop`。
+在 GitHub 上创建 Pull Request，目标分支为 `main`（若团队启用可选 `develop` 集成分支再改为 `develop`）。
 
 PR 描述模板：
 

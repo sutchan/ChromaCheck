@@ -1,7 +1,25 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件、`package.json` 与 `package-lock.json` 的 `version` 字段（当前 `1.16.1`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件、`package.json` 与 `package-lock.json` 的 `version` 字段（当前 `1.16.2`）。
+
+## [1.16.2] - 2026-11-07
+
+### 文档（全量审查，逐项对齐代码实况）
+
+- `README.md`：项目结构树补齐 `components/` 四个缺失域、`public/` / `scripts/` / `docs/images/`、Vitest 测试文件与配置清单；题库常规数字题 2 → 3 张；区分「在线试用入口」与 `lib/site.ts` 的规范域名；版本升至 v1.16.2。
+- `docs/API.md`：Base URL 改为「无服务端 API + `SITE_URL` 规范域名 + 试用入口」，删除 `chromacheck.app/api` 为「规划域名」的不实表述。
+- `docs/ARCHITECTURE.md`：§2.2 目录树移除已删除的 `ThemeToggle`、补组件域并改称「核心结构摘要」；§3.1 题库导出名改为 `QUESTIONS` / `getQuestions(mode)`；§3.2 `scoreIshihara` 补齐第三参数 `lang` 与题目类型 `Question[]`，修正 `IshiharaResult` 无效 TS 签名；常规数字题 2 → 3；§6.1 安全表删除未配置的 Dependabot / CI 漏洞扫描与已废止的 Origin 校验，并更正 XSS 描述（JsonLd 使用转义后的 `dangerouslySetInnerHTML`，无 Markdown 渲染库）。
+- `docs/DATA-SPEC.md`：`IshiharaResult.type/severity` 类型签名补 `| null`；`ErrorPattern.type` 改 `string` 并列实际取值；`TestResult.version` 改 `1.9.0`，补 `child/scene/profileId` 等现行可选字段；`PathTrackingQuestion` 补 `kind/seed`；色相排列改 `fixedColors` 并补 `questionId/order`；存储键由「三个」改为六个并补档案键；结果结构版本与 i18n 字典类型化口径订正；常规数字题 2 → 3。
+- `docs/SPEC.md`：`TestMode` 补 `child`；§3.5 进度点阵改为按题量（10/38）、色觉视角改用 `DICHROMAT` 键；§5.3 结果结构版本改 `1.9.0`、补 `child/profileId`；§5.4 存储键补齐六个；§5.7 信号灯补 `labelEn/promptEn`；§6.3 `wrongRate` 分母改 `max(answered,1)`；§6.4 改为「无轴命中即 `type = null`」；常规数字题 2 → 3。
+- `docs/PRD.md`：F3 删除转换图/设计图题型、常规数字题 2 → 3 并修复表格断行；F4 题量改「标准 3 / 快速 1」；F6 判读算法描述对齐 `lib/scoring.ts` / `lib/advanced-scoring.ts`；F9 删除未实现的「对比历次结果」并补档案筛选与导出；§6.1 用现行 `Question` 结构替换早期草案。
+- `docs/PRIVACY.md`：§2.1 补「本地档案」一行（`cc.profiles.v1` / `cc.activeProfile.v1`）。
+- `docs/ROADMAP.md`：儿童模式 / 色觉模拟器 / 批量检测 / 家庭共享补「已实现」标注（本地优先实现，云同步/账号仍未实现）。
+- `docs/DEPLOYMENT.md`：实现状态 v1.16.0 → v1.16.2。
+- `.github/CONTRIBUTING.md`：分支流程由 `develop` 改为 `main`，Node 版本要求区分 CI 固定 22 与 Next.js 最低 18.17。
+- `docs/DATA-SPEC.md` §8：删除从未实现的 `ISHIHARA_VERSION` / `STORAGE_VERSION` 规划常量，改述真实的 `schema` / `version` / `*.v1` 键后缀机制；§6.5 订正字典完整性校验方式（`Record<keyof ZH_*, string>` 与 `DICTS: Record<Lang, Dict>`）。
+- 术语与格式：统一「未分型（type = null）」「三语（zh / zh-TW / en）」「规范域名 / 试用入口」表述；订正「38 题预期值均已清空」为「32 道消失题已清空」（演示题 / 常规题仍保留与答案相同的值，见 `lib/questions.ts`）；PRD「文档状态：初稿」改为「已落地，持续维护」；修复 PRD 表格断行、DATA-SPEC §6.1 引用块嵌在代码块内的格式问题。
+- 版本同步：`VERSION` / `package.json` / `package-lock.json`（仅根版本）、README、CHANGELOG 及全部 docs 分册 / `.github/CONTRIBUTING.md` 的版本与实现状态行统一为 v1.16.2；未改动的源码文件头注释保持 v1.16.1 不变。
 
 ## [1.16.1] - 2026-11-07
 

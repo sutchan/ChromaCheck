@@ -1,11 +1,11 @@
 # 色辨 ChromaCheck 数据规范文档
 
 > **规范遵循**：本文档为 [SPEC.md](./SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。类型别名（ColorDeficiencyType / OverallResult / SeverityLevel / TestMode）以 SPEC §5.5 为权威定义。
-> **实现状态**：v1.0–v1.16.1 已实现（Next.js 14 应用；石原氏 38 板 / 路径追踪 v1.1 / 色相排列 D15 v1.2 / 进阶联合 v1.3 / 趣味包 v1.4 / GA4 v1.5.1 / SEO·GEO v1.6 / 驾驶员场景 v1.7 / 设置面板 v1.10.0 / FAQ 手风琴 v1.11.0 / i18n 子模块化 v1.11.1 / lockfile 与 SEO metadata 补齐 v1.11.2 / 无障碍走查与测试覆盖优化 v1.12.0）。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [TASKS.md](./TASKS.md)。
+> **实现状态**：v1.0–v1.16.2 已实现（Next.js 14 应用；石原氏 38 板 / 路径追踪 v1.1 / 色相排列 D15 v1.2 / 进阶联合 v1.3 / 趣味包 v1.4 / GA4 v1.5.1 / SEO·GEO v1.6 / 驾驶员场景 v1.7 / 设置面板 v1.10.0 / FAQ 手风琴 v1.11.0 / i18n 子模块化 v1.11.1 / lockfile 与 SEO metadata 补齐 v1.11.2 / 无障碍走查与测试覆盖优化 v1.12.0）。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [TASKS.md](./TASKS.md)。
 
 | 项目 | 内容 |
 |------|------|
-| 文档版本 | v1.16.1 |
+| 文档版本 | v1.16.2 |
 | 创建日期 | 2026-09-03 |
 
 ---
@@ -35,7 +35,7 @@ interface Question {
   plate: number;
   /**
    * 题目类型（PlateType 6 值枚举，定义见 ./SPEC.md §5.1；
-   * 题库实际仅使用 demonstration / vanishing（另含 2 题 normal），
+   * 题库实际仅使用 demonstration / vanishing（另含 3 题 normal），
    * transformation / hidden / classification 题均已降级移除）：
    * - demonstration: 演示题
    * - normal: 常规数字题
@@ -44,9 +44,9 @@ interface Question {
   type: 'demonstration' | 'normal' | 'transformation' | 'vanishing' | 'hidden' | 'classification';
   /** 正常色觉应读数字 */
   answer: string;
-  /** 预留字段：红色觉异常典型误读；38 题预期值均已清空，不参与类型判读 */
+  /** 预留字段：红色觉异常典型误读；32 道消失题已清空，演示题 / 常规题保留与 answer 相同的值；不参与类型判读 */
   protan: string;
-  /** 预留字段：绿色觉异常典型误读；38 题预期值均已清空，不参与类型判读 */
+  /** 预留字段：绿色觉异常典型误读；32 道消失题已清空，演示题 / 常规题保留与 answer 相同的值；不参与类型判读 */
   deutan: string;
   /** 难度等级（number） */
   difficulty: number;
@@ -60,7 +60,7 @@ interface Question {
 | 题型 | 正常色觉 | 异常色觉 | 判读用途 |
 |------|----------|----------|----------|
 | `demonstration` | 看到数字 | 也能看到 | 确认用户理解测试 |
-| `normal` | 看到数字 | 也能看到 | 常规数字题（仅 2 张） |
+| `normal` | 看到数字 | 也能看到 | 常规数字题（3 张：ishihara-23 / 24 / 38） |
 | `vanishing` | 看到数字 | 难以辨认 | 判断是否存在异常 |
 
 > `transformation` / `hidden` / `classification` 仅保留在类型枚举中，**题库已无此类题目**，其「判断异常类型 / 区分红绿色盲」用途在当前实现下不可达。
@@ -83,13 +83,17 @@ interface PathTrackingQuestion {
     color: string;
     /** 半径范围 */
     radiusRange: [number, number];
-    /** 密度（每 100x100px 的点数） */
+    /** 密度（规划字段，渲染由 seed 决定，当前恒为 0） */
     density: number;
   };
   /** 路径色点颜色 */
   pathDotColor: string;
   /** 该题用于检测的异常类型 */
   targets: Array<'protan' | 'deutan'>;
+  /** 标准路径形态：0=S 形，1=螺旋，2=之字形 */
+  kind: 0 | 1 | 2;
+  /** 确定性随机种子（渲染点阵用，保证每次渲染一致） */
+  seed: number;
 }
 ```
 
@@ -99,12 +103,12 @@ interface PathTrackingQuestion {
 interface HueArrangementQuestion {
   /** 题目唯一标识 */
   id: string;
-  /** 色卡数量（含首尾固定卡） */
+  /** 色卡数量（含首尾固定参考卡） */
   cardCount: 17; // 15 可移动 + 2 固定
-  /** 色卡 sRGB 颜色值（按正确顺序排列） */
+  /** 15 张可移动色卡 sRGB 颜色（按正确渐变顺序） */
   cards: string[];
-  /** 固定卡索引（首尾） */
-  fixedIndices: [number, number];
+  /** 首尾固定参考卡颜色 */
+  fixedColors: [string, string];
 }
 ```
 
@@ -139,17 +143,11 @@ interface IshiharaResult {
     | 'suspected_deficiency'  // 疑似色弱
     | 'suspected_blindness'   // 疑似色盲
     | 'inconclusive';  // 无法判定
-  /** 异常类型（必填，含 null：无转换/分类题命中时为 null 未分型，v1.15.1） */
-  type:
-    | 'protanopia'   // 红色盲
-    | 'deuteranopia' // 绿色盲
-    | 'protanomaly'  // 红色弱
-    | 'deuteranomaly'// 绿色弱
-    | 'tritanopia'   // 蓝色盲
-    | 'tritanomaly'  // 蓝色弱
-    | 'achromatopsia'; // 全色盲
-  /** 异常程度（必填，含 null：仅异常结论时非空） */
-  severity: 'mild' | 'moderate' | 'severe';
+  /** 异常类型（必填，可为 null：无转换/分类题命中时为 null 未分型，v1.15.1） */
+  type: DeficiencyType;  // = 'protanopia' | 'protanomaly' | 'deuteranopia' | 'deuteranomaly'
+                         //   | 'tritanopia' | 'tritanomaly' | 'achromatopsia' | null
+  /** 异常程度（必填，可为 null：仅异常结论时非空） */
+  severity: Severity;    // = 'mild' | 'moderate' | 'severe' | null
   /** 置信度 0-100 */
   confidence: number;
   /** 各维度异常评分（越高越异常） */
@@ -167,7 +165,7 @@ interface IshiharaResult {
 }
 
 interface ErrorPattern {
-  type: 'protan' | 'deutan' | 'tritan' | 'mixed' | 'random';
+  type: string;  // 实际取值：deutan | protan | mixed | random（题库无 tritan 命中，lib/scoring.ts）
   questionCount: number;
   description: string;
 }
@@ -192,13 +190,17 @@ interface PathTrackingResult {
 
 ```typescript
 interface HueArrangementResult {
+  /** 题目 ID */
+  questionId: string;
+  /** 用户最终排列（可移动色卡索引序列，0-14） */
+  order: number[];
   /** 总误差分数（TES） */
   totalErrorScore: number;
-  /** 每张色卡位置偏差 */
+  /** 相邻色卡位置误差（首末权重 1、中间权重 2） */
   cardErrors: number[];
-  /** 偏差方向（指示异常类型） */
+  /** 偏差方向（D15 不足以细分 protan / deutan，故不输出 protan） */
   deviationDirection: 'deutan' | 'tritan' | 'none';
-  /** 是否正常 */
+  /** TES < 20 视为正常 */
   normal: boolean;
 }
 ```
@@ -223,7 +225,7 @@ interface TestResult {
   id: string;
   /** 结果结构标记，固定 'cc.result/v1' */
   schema: string;
-  /** 结果结构版本，当前 '1.0.0' */
+  /** 结果结构版本，当前 '1.9.0'（lib/scoring.ts 等判读模块） */
   version: string;
   /** ISO8601 完成时间 */
   createdAt: string;
@@ -243,13 +245,22 @@ interface TestResult {
   answers: AnswerRecord[];
   /** 判读引擎输出（见 §4）；纯路径追踪测试为 undefined */
   ishihara?: IshiharaResult;
+  /** 路径追踪结果（v1.1） */
+  pathTracking?: PathTrackingResult[];
+  /** 色相排列 D15 结果（v1.2） */
+  hueArrangement?: HueArrangementResult;
+  /** 儿童图形识别结果（v1.7.9） */
+  child?: ChildResult;
   /** 文字解读 */
   analysis: string;
   /** 置信度说明 */
   confidenceNote: string;
   /** 设备/UA 摘要 */
   device: string;
-  /** v1.1 扩展：pathTracking 已于 v1.1 实现；hueArrangement 已于 v1.2 实现 */
+  /** 检测场景（v1.7）：driver 隐藏趣味元素 */
+  scene?: Scene;
+  /** 归属档案（v1.8.1）；旧记录缺失时归默认档案 */
+  profileId?: string;
 }
 ```
 
@@ -260,13 +271,15 @@ interface TestResult {
 ### 6.1 存储 Key 规范
 
 ```
-cc.settings.v1      # 用户设置（AppSettings：theme + cvdSafe + funMode）
-cc.lang.v1          # 界面语言偏好（Lang：zh / zh-TW / en，lib/i18n/lang.ts）
-cc.results.v1       # 检测历史（TestResult[]，保留最近 30 条）
-cc.progress.v1      # 进行中的检测进度（TestProgress）
-
-> 实际以 `lib/storage.ts` 与 `./SPEC.md §5.4` 为准：使用上述三个扁平键，无聚合 `LocalStorageData`；`soundEnabled` / `autoNext` / `analyticsEnabled` / `'system'` 主题均为早期规划字段，**至今未实现**。下方 §6.2–§6.4 的结构为早期规划草案，现行结构见各节标注。
+cc.settings.v1       # 用户设置（AppSettings：theme + cvdSafe + funMode，lib/storage.ts）
+cc.results.v1        # 检测历史（TestResult[]，保留最近 30 条，lib/storage.ts）
+cc.progress.v1       # 进行中的检测进度（TestProgress，lib/storage.ts）
+cc.lang.v1           # 界面语言偏好（Lang：zh / zh-TW / en，lib/i18n/lang.ts）
+cc.profiles.v1       # 本地多成员档案（Profile[]，lib/profile.ts）
+cc.activeProfile.v1  # 当前档案 ID（lib/profile.ts）
 ```
+
+> 实际以 `lib/storage.ts`、`lib/i18n/lang.ts`、`lib/profile.ts` 与 `./SPEC.md §5.4` 为准：共 **6 个扁平键**，无聚合 `LocalStorageData`；`soundEnabled` / `autoNext` / `analyticsEnabled` / `'system'` 主题均为早期规划字段，**至今未实现**。下方 §6.2–§6.4 的结构为早期规划草案，现行结构见各节标注。
 
 ### 6.2 用户设置（Settings）
 
@@ -353,7 +366,7 @@ lib/i18n/
 └── index.ts       # 汇出（零依赖）
 ```
 
-- 键集合由简体中文字典派生，繁体 / 英文字典类型化为 `Dict`，缺失键在编译期报错（`npx tsc --noEmit` 即门禁，无独立运行时测试）。
+- 键集合由简体中文字典派生：英文字典用 `Record<keyof ZH_*, string>` 约束键集合，繁体字典经 `dict.ts` 的 `DICTS: Record<Lang, Dict>` 校验完整性；缺失 / 多余键由 `tsc --noEmit` 在编译期报错（无独立运行时测试）。
 - 内容型文案（`learn-data.ts` 科普、隐私长文、信号灯题库、儿童图形标签、`fun.ts` 的 `LocalizedText`）为简 / 英双语，选择繁体时回退简体展示。
 - 语言与国际化规范详见 [./SPEC.md §8.5](./SPEC.md)。
 
@@ -401,13 +414,16 @@ lib/i18n/
 
 ## 8. 数据版本管理
 
-| 数据版本 | 说明 |
-|----------|------|
-| `ISHIHARA_VERSION` | 石原氏题库版本（如 `1.0.0`） |
-| `STORAGE_VERSION` | 本地存储结构版本（如 `1.0.0`） |
+> **现行实现**：`ISHIHARA_VERSION` / `STORAGE_VERSION` 两个常量**从未实现**，下表仅为早期规划，勿据此解析数据。
 
-- 题库版本升级不影响本地已存储的历史结果（结果按检测时题库版本归档）。
-- 本地存储结构升级时，通过版本号前缀兼容旧数据。
+| 现行机制 | 说明 |
+|----------|------|
+| `TestResult.schema` | 固定 `'cc.result/v1'`（结果结构标记） |
+| `TestResult.version` | 判读模块统一写 `'1.9.0'`（`lib/scoring.ts` 等），解析方须对未知字段保持兼容 |
+| localStorage 键后缀 | `*.v1`（`cc.results.v1` / `cc.settings.v1` / `cc.progress.v1` / `cc.lang.v1` / `cc.profiles.v1` / `cc.activeProfile.v1`） |
+
+- 题库版本升级不影响本地已存储的历史结果（结果保存了检测时的答案与判读输出）。
+- 存储结构升级时由 `lib/storage.ts` 的运行时类型守卫与默认值兜底兼容旧数据。
 
 ---
 

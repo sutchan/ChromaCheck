@@ -1,12 +1,12 @@
 # 色辨 ChromaCheck 技术架构文档
 
 > **规范遵循**：本文档为 [SPEC.md](./SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。
-> **实现状态**：v1.0–v1.16.1 已实现（Next.js 14 应用；石原氏 38 板 / 路径追踪 v1.1 / 色相排列 D15 v1.2 / 进阶联合 v1.3 / 趣味包 v1.4 / GA4 v1.5.1 / SEO·GEO v1.6 / 驾驶员场景 v1.7 / 设置面板 v1.10.0 / FAQ 手风琴 v1.11.0 / i18n 子模块化 v1.11.1 / lockfile 与 SEO metadata 补齐 v1.11.2 / 无障碍走查与测试覆盖优化 v1.12.0 / 判读科学性修正 v1.13.0 / 键盘输入与构建号 v1.14.0 / 三语国际化 v1.15.0 / 判读类型未分型收敛 v1.15.1 / CI 自动发布 v1.16.0）。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [TASKS.md](./TASKS.md)。
+> **实现状态**：v1.0–v1.16.2 已实现（Next.js 14 应用；石原氏 38 板 / 路径追踪 v1.1 / 色相排列 D15 v1.2 / 进阶联合 v1.3 / 趣味包 v1.4 / GA4 v1.5.1 / SEO·GEO v1.6 / 驾驶员场景 v1.7 / 设置面板 v1.10.0 / FAQ 手风琴 v1.11.0 / i18n 子模块化 v1.11.1 / lockfile 与 SEO metadata 补齐 v1.11.2 / 无障碍走查与测试覆盖优化 v1.12.0 / 判读科学性修正 v1.13.0 / 键盘输入与构建号 v1.14.0 / 三语国际化 v1.15.0 / 判读类型未分型收敛 v1.15.1 / CI 自动发布 v1.16.0）。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [TASKS.md](./TASKS.md)。
 > **原型定位**：`prototype/` 为独立的高保真原型与设计验证参考（含早期 JS 移植源），**非应用运行依赖**；应用源码以 `lib/` 与 `components/` 为准，删除 `prototype/` 不影响构建与运行。
 
 | 项目 | 内容 |
 |------|------|
-| 文档版本 | v1.16.1 |
+| 文档版本 | v1.16.2 |
 | 创建日期 | 2026-09-03 |
 | 技术负责人 | ChromaCheck 团队 |
 
@@ -92,7 +92,7 @@
 ### 2.2 目录结构说明
 
 ```
-> 下方为实际落地结构（与 `README.md` 项目结构树一致）。
+> 下方为核心结构摘要（完整文件清单以仓库目录与 `README.md` 项目结构树为准，二者相互补充）。
 
 app/                          # Next.js App Router 页面
 ├── layout.tsx                # 根布局（含 ThemeProvider、GoogleAnalytics、skip link）
@@ -120,19 +120,25 @@ app/                          # Next.js App Router 页面
 └── privacy/page.tsx          # 隐私政策
 components/
 ├── common/                   # Callout、Icon
-├── home/                     # CvdSimulator、HomeFaq
-├── layout/                   # Footer（版本直读 package.json）、Navbar、ThemeProvider、ThemeToggle、
-│                             #   LangProvider（三语上下文）、SettingsDialog / 语言切换
+├── home/                     # CvdSimulator、HomeFaq（双栏 12 条）
+├── layout/                   # Footer（版本 + build）、Navbar、ThemeProvider、SkipLink、
+│                             #   LangProvider（三语上下文）、SettingsButton / SettingsDialog / SettingsSwitchRow
 ├── analytics/                # GoogleAnalytics（GA4 注入与路由上报）
 ├── result/                   # AnswerReview、AxisChart、DriverCompliance、EyesSwitcher、
 │                             #   HueArrangementSummary、PathTrackingSummary、ReportActions、ResultSummary、DimScenes
-└── test/                     # AdvancedRunner、FunBits、HueArrangementGrid/Runner、IshiharaFlow/Plate、
-                              #   Numpad、PathTrackingCanvas(rAF 节流)、PathTrackingRunner、SignalRunner、
-                              #   TestProgress、TestRunner、useIshiharaFlow
+├── test/                     # AdvancedRunner、FunBits、HueArrangementGrid/Runner、IshiharaFlow/Plate、
+│                             #   Numpad、PathTrackingCanvas(rAF 节流)、PathTrackingRunner、SignalRunner、
+│                             #   TestProgress、TestRunner、useIshiharaFlow
+├── history/ guide/ learn/    # 历史档案、检测指引、科普
+├── offline/ privacy/ pwa/ seo/  # 离线兜底、隐私、PWA、SEO/结构化数据
+└── NotFoundClient.tsx        # 404 客户端组件（ThemeToggle / LangToggle 已删除）
 lib/
 ├── types.ts                  # 全局类型（以 ./SPEC.md §5 为权威）
 ├── questions.ts              # 石原氏题库（38 题）
-├── questions/                # 子题库（path-tracking.ts、hue-arrangement.ts、signal.ts）
+├── questions/                # 子题库（path-tracking.ts、hue-arrangement.ts、signal.ts、child.ts）
+├── child-scoring.ts          # 儿童图形识别判读（v1.7.9）
+├── profile.ts / export-import.ts  # 本地档案、JSON 导入导出与汇总 CSV（v1.8.1）
+├── privacy-data.ts           # 隐私政策长文内容
 ├── scoring.ts / scoring-text.ts   # 石原氏判读引擎 + 文案
 ├── path-scoring.ts           # 路径追踪判读（pathF1，F1 重合度，非 IoU；v1.1）
 ├── hue-scoring.ts            # 色相排列 TES 判读（v1.2）
@@ -227,21 +233,12 @@ docs/                         # 项目文档（SPEC.md 为权威总纲，TASKS.m
 **题库版本管理**：
 
 ```typescript
-// lib/questions.ts（实际位置；38 题完整版）
-// 题库集由 lib/questions.ts 的 quick 标记筛选，无独立常量
-
-export const ishiharaQuestions: IshiharaQuestion[] = [
-  // ...题目数据
-];
-
-export const getQuickSet = (): IshiharaQuestion[] => {
-  // 从完整题库中筛选快速版题目（10题）
-  return ishiharaQuestions.filter(q => q.quick === true);
-};
-
-export const getStandardSet = (): IshiharaQuestion[] => {
-  return ishiharaQuestions.filter(q => q.type !== 'demonstration');
-};
+// lib/questions.ts（38 题完整版，导出名以实码为准）
+export const QUESTIONS: Question[] = [ /* ...题目数据 */ ];
+export const HERO_PLATE: Question;                       // 首页 Hero 展示用图版
+export function getQuestion(id: string): Question | undefined;
+/** quick 取 quick:true 的 10 题；standard / advanced / child 取全部 38 题 */
+export function getQuestions(mode: TestMode): Question[];
 ```
 
 ### 3.2 判读引擎
@@ -256,15 +253,14 @@ export const getStandardSet = (): IshiharaQuestion[] => {
 
 判读逻辑（详见 ./SPEC.md §6，以 `lib/scoring.ts` 实现为准，原型仅作参考）：
 1. 演示题校验：若演示题答错，标记"未理解测试要求"，降低置信度。
-2. 按题目类型分组统计（现行题库仅 demonstration / vanishing / 2 题 normal）：
+2. 按题目类型分组统计（现行题库仅 demonstration / vanishing / 3 题 normal）：
    - vanishing 题答错数 → 异常程度；演示题答错 → 降低置信度
    - transformation / classification / hidden 题在题库中不存在，相关分支不可达
 3. 综合评分（base = round(min(100, wrong/total*130))）：
    - protanHit / deutanHit 恒为 0 → protan === deutan === base
    - tritan = round(base * 0.35)，为推算参考值，无独立题目
-4. 总体结论：
-   - 答题覆盖 < 50% → inconclusive
-   - 已答数 < 总题数 50% → inconclusive
+4. 总体结论（阈值用 `wrongRate = wrong / max(answered, 1)`；程度用 `rate = wrong / total`）：
+   - 答题覆盖 < 50%（`answered < total * 0.5`）→ inconclusive
    - `vanishWrong >= 4` 或 `wrongRate >= 0.6` → suspected_blindness
    - `vanishWrong >= 2` 或 `wrongRate >= 0.3` 或 hidden 答对 >= 半数（不可达） → suspected_deficiency
    - 演示题错且 protan/deutan 匹配均为 0（恒真）且 `wrongRate < 0.3` → inconclusive
@@ -287,15 +283,14 @@ export const getStandardSet = (): IshiharaQuestion[] => {
 // lib/scoring.ts（实际位置；另有 path-scoring.ts / hue-scoring.ts / signal-scoring.ts / advanced-scoring.ts 分域）
 export function scoreIshihara(
   answers: AnswerRecord[],
-  questions: IshiharaQuestion[]
-): IshiharaResult {
-  // 纯函数实现
-}
+  questions: Question[],
+  lang: Lang = 'zh'
+): IshiharaResult;
 
 export interface IshiharaResult {
-  overall: 'normal' | 'suspected_deficiency' | 'suspected_blindness' | 'inconclusive';
-  type: DeficiencyType（必填，含 null）;
-  severity: Severity（必填，含 null） 'mild' | 'moderate' | 'severe';
+  overall: Overall;                  // 'normal' | 'suspected_deficiency' | 'suspected_blindness' | 'inconclusive'
+  type: DeficiencyType;              // 含 null（无轴命中时未分型，v1.15.1 起）
+  severity: Severity;                // 'mild' | 'moderate' | 'severe' | null
   confidence: number;
   dimensions: {
     protan: number;    // 红色觉异常评分 0-100
@@ -414,7 +409,7 @@ cc.progress.v1     # 进行中的检测进度（模式 / 题号 / 答题记录 /
 
 ### 5.1 API 路由列表
 
-> **现状（v1.16.1）**：纯前端应用**无任何服务端 API 路由**，`app/` 下仅 `app/llms.txt/route.ts` 一个 Route Handler（SEO/GEO 文本）。下表接口均为 **v1.1+ 规划或历史设计，当前未实现**；访问统计仅由 GA4 `pageview` 上报（`lib/analytics.ts`），不走本站接口。
+> **现状（v1.16.2）**：纯前端应用**无任何服务端 API 路由**，`app/` 下仅 `app/llms.txt/route.ts` 一个 Route Handler（SEO/GEO 文本）。下表接口均为 **v1.1+ 规划或历史设计，当前未实现**；访问统计仅由 GA4 `pageview` 上报（`lib/analytics.ts`），不走本站接口。
 
 | 方法 | 路径 | 说明 | 状态 |
 |------|------|------|------|
@@ -457,9 +452,9 @@ interface AnalyticsEvent {
 
 | 风险 | 防护措施 |
 |------|----------|
-| XSS | React 默认转义；不使用 `dangerouslySetInnerHTML`（科普文章使用 Markdown 渲染库，默认转义） |
-| CSRF | 无状态 API，不使用 Cookie 认证；事件上报使用 Origin 校验 |
-| 依赖漏洞 | 定期 `npm audit`；Dependabot 自动更新；CI 中运行漏洞扫描 |
+| XSS | React 默认转义；仅 `components/seo/JsonLd.tsx` 使用 `dangerouslySetInnerHTML`，且经 `safeJson()` 转义 `</script` 注入；无 Markdown 渲染库 |
+| CSRF | 无服务端写入接口（v1.9.0 起移除 `/api/analytics/event`），不使用 Cookie 认证；GA4 上报为第三方统计，无本站 CSRF 面 |
+| 依赖漏洞 | 维护者定期手动执行 `npm outdated` / `npm audit`；Dependabot 与 CI 漏洞扫描均未配置（见 `.github/SECURITY.md`） |
 | 敏感信息泄露 | 前端代码中不包含 API Key、数据库连接等敏感信息 |
 
 ### 6.2 内容安全

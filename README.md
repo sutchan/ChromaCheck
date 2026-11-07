@@ -16,7 +16,9 @@
 
 **在线试用**：<https://chroma.ewuse.com/> — 打开即用，无需注册，检测数据仅存于本地浏览器。
 
-> **当前版本 v1.16.1**（版本单一来源见 `VERSION`）。已实现能力见下方「功能特性」；权威规范见 [docs/SPEC.md](docs/SPEC.md)。
+**规范域名（canonical）**：<https://chromacheck.app>（`lib/site.ts` 的 `SITE_URL`，用于 metadata / sitemap / robots / OG URL）；当前与试用入口并存，域名收敛计划待确认。
+
+> **当前版本 v1.16.2**（版本单一来源见 `VERSION`）。已实现能力见下方「功能特性」；权威规范见 [docs/SPEC.md](docs/SPEC.md)。
 
 ## 功能特性
 
@@ -29,7 +31,7 @@
 - 驾驶场景（`scene=driver`）与合规提示、无障碍跳转链接、自托管字体、FAQPage 结构化数据与页面错误边界
 - 三语支持（简体中文默认 / 繁體中文 / English，i18n）、PWA 离线兜底、Google Analytics 匿名访问统计
 
-> **判读能力边界**：题库仅含演示题与消失型题（另含 2 张常规数字题），未实现真正的双数字变形 / 隐藏版，因此**不能可靠区分红 / 绿 / 蓝黄异常类型**；异常类型字段在无转换/分类题命中时输出 null（未分型，v1.15.1 起不再默认输出「绿色弱/盲」），三轴中的 tritan 为推算参考值。结果仅供初筛参考，不能替代专业医学诊断。
+> **判读能力边界**：题库仅含演示题与消失型题（另含 3 张常规数字题），未实现真正的双数字变形 / 隐藏版，因此**不能可靠区分红 / 绿 / 蓝黄异常类型**；异常类型字段在无转换/分类题命中时输出 null（未分型，v1.15.1 起不再默认输出「绿色弱/盲」），三轴中的 tritan 为推算参考值。结果仅供初筛参考，不能替代专业医学诊断。
 
 ## 界面预览
 
@@ -75,19 +77,23 @@ chromacheck/
 │                   #   结果、历史、科普、隐私、离线兜底、PWA manifest 与 SEO（robots / sitemap / llms.txt）；
 │                   #   另有 4 处 error.tsx 错误边界与 app/layout.tsx 的无障碍跳转链接
 ├── components/     # common / layout（导航·页脚·主题·语言·设置面板）/ home /
-│                   #   test（各测试交互与渲染）/ result（摘要·图表·导出·分享卡）/
-│                   #   history（档案切换·历史卡片）/ analytics / pwa / seo
+│                   #   test / result / history / guide / learn / offline / privacy /
+│                   #   analytics / pwa / seo（另含根级 NotFoundClient.tsx）
 ├── lib/            # types / site / 题库（questions + questions/）/
 │                   #   判读（scoring、scoring-text、path-scoring、hue-scoring、advanced-scoring、
 │                   #         signal-scoring、child-scoring、path-field）/
 │                   #   画布导出（report-canvas、sharecard-canvas）/ 趣味（fun、sharecard）/
 │                   #   i18n/（简繁英字典与 t()）/ profile / export-import / ishihara / storage /
-│                   #   learn-data / privacy-data / license / format / analytics
-├── docs/           # 项目文档（SPEC.md 为权威总纲）
+│                   #   learn-data / privacy-data / license / format / analytics /
+│                   #   *.test.ts（Vitest 14 文件 97 例）
+├── public/         # PWA sw.js / og-default.svg / icons/（3 个 PNG 图标）
+├── scripts/        # 构建辅助脚本目录（当前为空）
+├── docs/           # 项目文档（SPEC.md 为权威总纲）+ images/ 界面截图
 ├── prototype/      # 高保真静态原型（设计验证参考，无运行依赖）
-├── .github/        # 贡献指南 + CI
-└── 配置文件与元数据  # next.config.mjs / tailwind / postcss / tsconfig / eslint / VERSION /
-                    #   package-lock.json / .env.example / metadata.json / LICENSE
+├── .github/        # 贡献指南 + CI workflow + issue/PR 模板
+└── 配置与元数据     # package.json / package-lock.json / next.config.mjs / tailwind / postcss /
+                    #   tsconfig / eslint / vitest.config.ts / vitest.setup.ts / VERSION /
+                    #   .env.example / metadata.json / .gitignore / LICENSE
 ```
 
 ## 文档

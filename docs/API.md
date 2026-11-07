@@ -1,13 +1,13 @@
 # 色辨 ChromaCheck API 接口文档
 
 > **规范遵循**：本文档为 [SPEC.md](./SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。
-> **实现状态**：v1.0–v1.16.1 已实现（Next.js 14 应用；石原氏 38 板 / 路径追踪 v1.1 / 色相排列 D15 v1.2 / 进阶联合 v1.3 / 趣味包 v1.4 / GA4 v1.5.1 / SEO·GEO v1.6 / 驾驶员场景 v1.7 / 设置面板 v1.10.0 / FAQ 手风琴 v1.11.0 / i18n 子模块化 v1.11.1 / lockfile 与 SEO metadata 补齐 v1.11.2 / 无障碍走查与测试覆盖优化 v1.12.0）。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [TASKS.md](./TASKS.md)。
+> **实现状态**：v1.0–v1.16.2 已实现（Next.js 14 应用；石原氏 38 板 / 路径追踪 v1.1 / 色相排列 D15 v1.2 / 进阶联合 v1.3 / 趣味包 v1.4 / GA4 v1.5.1 / SEO·GEO v1.6 / 驾驶员场景 v1.7 / 设置面板 v1.10.0 / FAQ 手风琴 v1.11.0 / i18n 子模块化 v1.11.1 / lockfile 与 SEO metadata 补齐 v1.11.2 / 无障碍走查与测试覆盖优化 v1.12.0）。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [TASKS.md](./TASKS.md)。
 
 | 项目 | 内容 |
 |------|------|
-| 文档版本 | v1.16.1 |
+| 文档版本 | v1.16.2 |
 | 创建日期 | 2026-09-03 |
-| Base URL | `https://chroma.ewuse.com`（当前站点；`chromacheck.app/api` 为规划域名，当前无服务端） |
+| Base URL | 无服务端 API；站点规范域名取自 `lib/site.ts` 的 `SITE_URL`（当前 `https://chromacheck.app`），线上试用入口为 `https://chroma.ewuse.com`；仓库不含 `/api` 路由 |
 
 > 本分册描述的服务端 API 均为**历史规划 / 未落地**设计；当前仓库除 GA4 外无任何服务端接口，见 ./ARCHITECTURE.md §5.1。
 

@@ -1,6 +1,6 @@
-<!-- ./SPEC.md v1.16.1 — ChromaCheck 项目规范总纲（单一事实来源） -->
+<!-- ./SPEC.md v1.16.2 — ChromaCheck 项目规范总纲（单一事实来源） -->
 <!-- 地位：本规范为权威总纲。当与各分册（PRD/ARCHITECTURE/API/DATA-SPEC/DEPLOYMENT/TESTING/CONTRIBUTING/PRIVACY/ROADMAP）冲突时，以本规范为准。 -->
-<!-- 实现状态：Next.js 14 应用已落地——石原氏检测（38板）、路径追踪、色相排列 D15、进阶联合、信号灯专项、趣味性体验包、结果/历史/科普/隐私、首页 FAQ 双栏问答（12 条）、GA4 匿名统计、SEO/GEO、Vitest 测试套件（14 文件 97 例）；原型仅作设计验证参考。当前版本 v1.16.1。 -->
+<!-- 实现状态：Next.js 14 应用已落地——石原氏检测（38板）、路径追踪、色相排列 D15、进阶联合、信号灯专项、趣味性体验包、结果/历史/科普/隐私、首页 FAQ 双栏问答（12 条）、GA4 匿名统计、SEO/GEO、Vitest 测试套件（14 文件 97 例）；原型仅作设计验证参考。当前版本 v1.16.2。 -->
 
 # 色辨 ChromaCheck 项目规范（SPEC）
 
@@ -22,7 +22,7 @@
 | `./PRIVACY.md` | 隐私政策分册 | 已对齐 SPEC，生效 |
 | `./ROADMAP.md` | 路线图分册 | 已对齐 SPEC，生效 |
 
-**实现状态声明（必须写入各文档顶部）**：ChromaCheck 已完成 v1.0 实现并持续迭代至 v1.16.1——Next.js 14 应用 + 石原氏检测（38 板）+ 结果/历史/科普/隐私页均已落地，`npm install / npm run dev / npm run build / npm test`（Vitest）均可正常执行（见 README「快速开始」）。路径追踪（F4）已于 v1.1 实现，色相排列（F5）已于 v1.2 实现，进阶联合判读（advanced）已于 v1.3 实现，趣味性体验包已于 v1.4 实现，38 板完整图谱已于 v1.5 实现，GA4 匿名统计已于 v1.5.1 接入，SEO/GEO 已于 v1.6.0 完善，驾驶员场景专项已于 v1.7.0 落地，Vitest 测试套件已于 v1.7.6 引入；v1.10.0 设置面板、v1.11.0 FAQ 手风琴、v1.11.1 i18n 字典子模块化、v1.11.2 引入 package-lock.json 与 SEO metadata 补齐、v1.12.0 无障碍走查与测试覆盖优化（Vitest 14 文件 97 例）及反模式清理均已落地；v1.13.0 修正色觉检测科学性问题（二色觉模拟矩阵改为秩-2 投影、路径追踪等亮度混淆配色、D15 色卡与色相远端固定卡、题库题型降级为消失型、科普文案对齐）已落地；v1.13.2 首页 FAQ 改为双栏布局（简介吸附侧栏 + 受控手风琴）并将问答扩充至 12 条已落地；v1.13.3 CI 升级 Node 22 LTS 与 checkout / setup-node v5（消除 Node 20 弃用告警）已落地；v1.13.4 历史页内联样式收敛（R8a）与 TestRunner 复用 IshiharaFlow 消除答题流程重复 JSX（R8b）已落地；v1.14.0 石原氏检测支持实体键盘输入数字（全局 keydown 监听，输入框聚焦时交由原生处理，未聚焦时数字键 / 退格 / 回车路由到作答）与页脚版本号/构建号展示规范化（格式 `V{ver}· build {yymmddhhmm}`，10 位构建号由 next.config.mjs 注入 NEXT_PUBLIC_BUILD_ID）已落地；v1.14.2 对 SPEC + 8 个分册 + TASKS/tasks-done + README/CHANGELOG + `.github/` 文档做全量校订（工程事实、字体/CSP、判读权威、测试口径、数据结构、路由与交叉引用对齐现行代码）已落地；v1.15.0 界面语言升级为三语（简体中文默认 > 繁体中文 > 英语，规范见 §8.5）已落地；v1.15.1 判读类型退化输出收敛已落地；v1.16.0 GitHub Releases 自动发布（全绿后 release job，规范见 §8.6）已落地；v1.16.1 文档全面校订（CI 描述、判读未分型口径、三语架构补记、发版流程入 CONTRIBUTING）已落地；原型仅作设计验证参考。
+**实现状态声明（必须写入各文档顶部）**：ChromaCheck 已完成 v1.0 实现并持续迭代至 v1.16.2——Next.js 14 应用 + 石原氏检测（38 板）+ 结果/历史/科普/隐私页均已落地，`npm install / npm run dev / npm run build / npm test`（Vitest）均可正常执行（见 README「快速开始」）。路径追踪（F4）已于 v1.1 实现，色相排列（F5）已于 v1.2 实现，进阶联合判读（advanced）已于 v1.3 实现，趣味性体验包已于 v1.4 实现，38 板完整图谱已于 v1.5 实现，GA4 匿名统计已于 v1.5.1 接入，SEO/GEO 已于 v1.6.0 完善，驾驶员场景专项已于 v1.7.0 落地，Vitest 测试套件已于 v1.7.6 引入；v1.10.0 设置面板、v1.11.0 FAQ 手风琴、v1.11.1 i18n 字典子模块化、v1.11.2 引入 package-lock.json 与 SEO metadata 补齐、v1.12.0 无障碍走查与测试覆盖优化（Vitest 14 文件 97 例）及反模式清理均已落地；v1.13.0 修正色觉检测科学性问题（二色觉模拟矩阵改为秩-2 投影、路径追踪等亮度混淆配色、D15 色卡与色相远端固定卡、题库题型降级为消失型、科普文案对齐）已落地；v1.13.2 首页 FAQ 改为双栏布局（简介吸附侧栏 + 受控手风琴）并将问答扩充至 12 条已落地；v1.13.3 CI 升级 Node 22 LTS 与 checkout / setup-node v5（消除 Node 20 弃用告警）已落地；v1.13.4 历史页内联样式收敛（R8a）与 TestRunner 复用 IshiharaFlow 消除答题流程重复 JSX（R8b）已落地；v1.14.0 石原氏检测支持实体键盘输入数字（全局 keydown 监听，输入框聚焦时交由原生处理，未聚焦时数字键 / 退格 / 回车路由到作答）与页脚版本号/构建号展示规范化（格式 `V{ver}· build {yymmddhhmm}`，10 位构建号由 next.config.mjs 注入 NEXT_PUBLIC_BUILD_ID）已落地；v1.14.2 对 SPEC + 8 个分册 + TASKS/tasks-done + README/CHANGELOG + `.github/` 文档做全量校订（工程事实、字体/CSP、判读权威、测试口径、数据结构、路由与交叉引用对齐现行代码）已落地；v1.15.0 界面语言升级为三语（简体中文默认 > 繁体中文 > 英语，规范见 §8.5）已落地；v1.15.1 判读类型退化输出收敛已落地；v1.16.0 GitHub Releases 自动发布（全绿后 release job，规范见 §8.6）已落地；v1.16.1 文档全面校订（CI 描述、判读未分型口径、三语架构补记、发版流程入 CONTRIBUTING）已落地；v1.16.2 全量文档审查（目录结构、接口签名、存储键、判读口径与格式统一）已落地；原型仅作设计验证参考。
 
 ## 1. 产品定位与功能范围
 
@@ -35,7 +35,7 @@
 - **纳入 v1.0（核心）**：首页、检测前指引、模式选择、石原氏测试、结果页、历史记录、科普列表与详情、**隐私政策页**（PRIVACY §6 要求，补入 PRD 功能架构）、结果导出（PDF/图片）、结果分享。
 - **排除 v1.0（推迟至 v1.1+）**：路径追踪测试（F4）、色相排列测试（F5）。二者已在原型中作演示，但 v1.0 不实现正式模块。（路径追踪已于 v1.1 实现，色相排列已于 v1.2 实现）
 
-检测模式：`quick`（快速，10 题）/ `standard`（标准，38 题）/ `advanced`（进阶联合，v1.3 实现）。
+检测模式：`quick`（快速，10 题）/ `standard`（标准，38 题）/ `advanced`（进阶联合，v1.3 实现）/ `child`（儿童图形识别，v1.7.9 实现；见 `lib/types.ts` 的 `TestMode`）。
 
 - **信号灯辨识（驾驶场景专项，已实现）**：独立路由 `/test/signal`，模拟路口与夜间行车的红/绿/黄信号辨色与信号含义识别。与 `TestMode` 枚举**解耦**——其结果为瞬时判读，不计入 `TestResult`、不写入历史，仅作驾驶场景参考（详见 §5.7 / §6.7）。
 
@@ -61,7 +61,7 @@ components/       # 按域：common/ home/ layout/ result/ test/ analytics/ seo/
 lib/
   types.ts        # 全局类型（以本文档 §5 为权威）
   questions.ts    # 石原氏题库（38 题，v1.5 扩充）
-  questions/      # 专项题库子目录：hue-arrangement.ts / path-tracking.ts / signal.ts
+  questions/      # 专项题库子目录：hue-arrangement.ts / path-tracking.ts / signal.ts / child.ts
   scoring.ts      # 石原氏判读引擎 + scoring-text.ts（判读文案）
   hue-scoring.ts  # 色相排列 D15 判读（TES）
   path-scoring.ts # 路径追踪判读（pathF1，F1 重合度，非 IoU）
@@ -120,12 +120,12 @@ lib/
 
 | # | 功能 | 位置 | 说明 |
 |---|------|------|------|
-| 1 | 进度点阵仪式感 | 答题页 | 24 圆点母题进度条；每完成 8 题触发脉冲 + 「已完成 N / 24 版」轻提示 |
-| 2 | 章末轻科普过渡 | 答题页 | 题型分 3 章（热身/主体/深水），章节交替处插入过渡卡（`CC.chapters`），回车或按钮继续 |
+| 1 | 进度点阵仪式感 | 答题页 | 圆点数与题目总数一致（快速 10 / 标准 38，`components/test/FunBits.tsx`）；每完成 8 题触发脉冲 + 「已完成 {a} / {t} 版」轻提示 |
+| 2 | 章末轻科普过渡 | 答题页 | 题型分 3 章（热身/主体/深水），章节交替处插入过渡卡（`lib/fun.ts` 的 `CHAPTERS`），回车或按钮继续 |
 | 3 | 中性提交反馈 | 答题页 | 提交后「✓ 已记录」+ 420ms 缓冲（¹恒开，不随开关关闭） |
-| 4 | 色觉人格分享卡 | 结果页 | Canvas 手绘（`sharecard.js`）：雷达 + 称号 + 三轴条，本地 `toDataURL` 导出 PNG，零依赖 |
-| 5 | 换一双眼睛 | 结果页 | 第 4 版转换图（标准答案 29）五种色觉视角切换，复用 `CC.renderPlate` 的 `cvd` 参数（键名须用 `CVD_MATRIX` 的 `protanopia/deuteranopia/tritanopia/achromatopsia`） |
-| 6 | 三轴互动科普 | 结果页 | 点维度条展开日常生活影响（`CC.dimScenes`），`aria-expanded` 状态可键盘操作 |
+| 4 | 色觉人格分享卡 | 结果页 | Canvas 手绘（`lib/sharecard-canvas.ts`）：雷达 + 称号 + 三轴条，本地 `toDataURL` 导出 PNG，零依赖 |
+| 5 | 换一双眼睛 | 结果页 | 第 4 版（答案 29，消失型题）正常 + 4 种色觉视角切换，复用 `components/test/IshiharaPlate` 的 `cvd` 参数（取值对应 `lib/ishihara.ts` 的 `DICHROMAT` 键） |
+| 6 | 三轴互动科普 | 结果页 | 点维度条展开日常生活影响（`lib/fun.ts` 的 `DIM_SCENES`），`aria-expanded` 状态可键盘操作 |
 | 7 | 「趣味体验」总开关 | 设置面板 | 导航栏「设置」模态；`localStorage` 键 `cc.settings.v1` 的 `funMode` 字段，默认开；关闭后称号/人格化文案回退中性措辞 |
 
 ¹ 开关控制范围：称号与人格化文案（#4/#5 之外的文案）、章末过渡（#2）、里程碑仪式感（#1）。中性反馈（#3）属于基础体验，恒开。
@@ -179,10 +179,10 @@ type PlateType =
 interface Question {
   id: string;          // 如 'ishihara-01'
   plate: number;       // 图版号
-  type: PlateType;     // 6 值枚举；题库实际仅用 demonstration / vanishing（另含 2 题 normal）
+  type: PlateType;     // 6 值枚举；题库实际仅用 demonstration / vanishing（另含 3 题 normal）
   answer: string;      // 正常视觉应读数字
-  protan: string;      // 预留字段：38 题预期值均已清空，不参与类型判读
-  deutan: string;      // 预留字段：38 题预期值均已清空，不参与类型判读
+  protan: string;      // 预留字段：32 道消失题已清空；演示题/常规题保留与 answer 相同的值，不参与类型判读
+  deutan: string;      // 预留字段：32 道消失题已清空；演示题/常规题保留与 answer 相同的值，不参与类型判读
   difficulty: number;  // 难度等级
   quick: boolean;      // 是否纳入快速版
 }
@@ -216,7 +216,7 @@ interface IshiharaScoringResult {
 interface TestResult {
   id: string;                       // crypto.randomUUID()
   schema: string;                   // 固定 'cc.result/v1'
-  version: string;                  // 结果结构版本，当前 '1.0.0'
+  version: string;                  // 结果结构版本，当前 '1.9.0'
   createdAt: string;                // ISO8601 完成时间
   testMode: TestMode;               // 实际字段名（非 mode）
   overall: OverallResult;
@@ -228,16 +228,18 @@ interface TestResult {
   ishihara?: IshiharaScoringResult; // 石原氏判读输出（纯路径追踪测试为 undefined）
   pathTracking?: PathTrackingResult[];   // v1.1 路径追踪
   hueArrangement?: HueArrangementResult;  // v1.2 色相排列 D15
+  child?: ChildResult;              // v1.7.9 儿童图形识别
   analysis: string;                 // 文字解读
   confidenceNote: string;           // 置信度说明
   device: string;                   // 设备/UA 摘要
   scene?: 'general' | 'driver';     // v1.7 检测场景；driver 隐藏趣味元素
+  profileId?: string;               // v1.8.1 归属档案；旧记录缺失时归默认档案
 }
 ```
 **决议**：采用 DATA-SPEC 结构（`testMode` + `ishihara` 内聚 `correctCount`），废用 PRD 顶层 `correctCount` 与 `testType` 命名。`pathTracking`/`hueArrangement`/`scene` 均为可选扩展字段，结果页与历史按测试类型守卫渲染。
 
 ### 5.4 本地存储（以 `lib/storage.ts` 实现为准）
-> v1.0 实际落地：使用三个独立的 `localStorage` 键，不聚合为单一 `LocalStorageData` 对象；无用户账号、无 PII、无分析开关（均推迟至 v1.1）。
+> 实际落地：共 **6 个**扁平 `localStorage` 键（`lib/storage.ts` 3 个 + `lib/i18n/lang.ts` 1 个 + `lib/profile.ts` 2 个），不聚合为单一 `LocalStorageData` 对象；无用户账号、无 PII、无分析开关。
 
 ```ts
 interface AppSettings {            // 键 cc.settings.v1
@@ -245,8 +247,11 @@ interface AppSettings {            // 键 cc.settings.v1
   cvdSafe: boolean;               // 色觉安全模式开关
   funMode: boolean;               // v1.4 趣味体验开关（称号/章末过渡/里程碑仪式感），默认 true
 }
-// 键 cc.results.v1    → TestResult[]（保留最近 30 条，按 createdAt 倒序）
-// 键 cc.progress.v1   → { mode: TestMode; index: number; answers: AnswerRecord[]; startedAt: number }
+// 键 cc.results.v1        → TestResult[]（保留最近 30 条，按 createdAt 倒序）
+// 键 cc.progress.v1       → { mode: TestMode; index: number; answers: AnswerRecord[]; startedAt: number }
+// 键 cc.lang.v1           → Lang（'zh' | 'zh-TW' | 'en'，lib/i18n/lang.ts）
+// 键 cc.profiles.v1       → Profile[]（昵称 / emoji / 关系 / 创建时间，lib/profile.ts）
+// 键 cc.activeProfile.v1  → 当前档案 ID
 ```
 **决议**：DATA-SPEC 的 `UserSettings{theme: 'light'|'dark'|'system'; analyticsEnabled}`、`HistorySummary`、`LocalStorageData` 聚合结构与代码不符。采用上述扁平结构；`system` 主题与 `analyticsEnabled` 服务端上报留作 v1.1 规划。`funMode` 已于 v1.4 落地（键 `cc.settings.v1` 内字段，非独立 localStorage 键）。
 
@@ -257,7 +262,7 @@ type ColorDeficiencyType =
   | 'deuteranomaly' | 'tritanopia' | 'tritanomaly' | 'achromatopsia';
 type OverallResult = 'normal' | 'suspected_deficiency' | 'suspected_blindness' | 'inconclusive';
 type SeverityLevel = 'mild' | 'moderate' | 'severe';
-type TestMode = 'quick' | 'standard' | 'advanced';  // advanced（进阶联合）已于 v1.3 实现
+type TestMode = 'quick' | 'standard' | 'advanced' | 'child';  // child（儿童图形识别）v1.7.9 实现
 ```
 **决议**：DATA-SPEC §4/§5 引用的 `ColorDeficiencyType`/`OverallResult`/`SeverityLevel` 在此统一定义，分册不得另起别名。（代码实现别名为 `DeficiencyType`/`Overall`/`Severity`，语义一致，分册以本文类型为准）。
 
@@ -284,11 +289,12 @@ interface AnalyticsEvent {
 
 ```ts
 type SignalTaskKind = 'light' | 'meaning';   // light=辨色 / meaning=信号含义识别
-interface SignalOption { label: string; value: string }
+interface SignalOption { label: string; labelEn: string; value: string }  // v1.9.0 简/英标签
 interface SignalTask {
   id: string;
   kind: SignalTaskKind;
   prompt: string;
+  promptEn: string;        // 题干英文（v1.9.0，繁体回退简体）
   color?: string;          // 待辨识灯色（展示用；meaning 题留空）
   options: SignalOption[]; // light 题固定 COLORS3：红/绿/黄
   answer: string;          // 正确选项 value
@@ -311,7 +317,7 @@ interface SignalTestResult {
 
 ### 6.1 正确性判定 `isCorrect(q, ua)`
 
-> **实现现状（v1.13.0 起，务必先读）**：`lib/questions.ts` 的 38 题仅使用 `demonstration` / `vanishing`（含 2 题 `normal`），已无 `transformation` / `classification` / `hidden` 题，且 `protan` / `deutan` 预期值全部清空。`PlateType` 的 6 值枚举在 `lib/types.ts` 中保留，但题库只用到 3 值。因此本节所有依赖转换 / 分类 / 隐藏题的分支**在当前题库下均不可达**；保留其定义仅为兼容旧题库与说明算法结构。
+> **实现现状（v1.13.0 起，务必先读）**：`lib/questions.ts` 的 38 题仅使用 `demonstration` / `vanishing`（含 3 题 `normal`），已无 `transformation` / `classification` / `hidden` 题，且 32 道消失题的 `protan` / `deutan` 预期值已清空（演示题 / 常规题保留与 `answer` 相同的值）。`PlateType` 的 6 值枚举在 `lib/types.ts` 中保留，但题库只用到 3 值。因此本节所有依赖转换 / 分类 / 隐藏题的分支**在当前题库下均不可达**；保留其定义仅为兼容旧题库与说明算法结构。
 - `hidden` 题：空答案（`ua.trim()===''`）为正确（**兼容分支**：现行题库无 hidden 题，不可达）。
 - 其余题：空答案=false；否则 `ua === q.answer`。
 
@@ -327,7 +333,7 @@ tritan = round(base * 0.35)   // 推算值，非独立测量
 
 ### 6.3 总体结论
 
-> 阈值以**比例** `wrongRate = wrong / total` 表达，确保 quick(10)/standard(38) 等不同题量下判定一致（与 `lib/scoring.ts` 实现及单元测试对齐）。
+> 阈值以**比例** `wrongRate = wrong / Math.max(answered, 1)` 表达（分母为有效作答数，`wrong = Math.max(total - correct, 0)`，未作答也计入错）；程度判定另用 `rate = wrong / Math.max(total, 1)`。两者口径不同，勿混用（与 `lib/scoring.ts` L80/L89/L112 及单元测试对齐）。
 
 ```
 if answered < total*0.5                          → inconclusive
@@ -339,10 +345,11 @@ if demoWrong>0 && protanHit===0 && deutanHit===0
 ```
 
 ### 6.4 类型与程度
-- 轴选择：`deutanHit >= protanHit` 选 deutan 轴，否则 protan 轴。
+- **未分型优先（v1.15.1 起）**：`protanHit === 0 && deutanHit === 0` → `type = null`（不再默认输出 deutan 系）；`severity` 在非异常结论时同为 `null`。
+- 轴选择：有命中时 `deutanHit >= protanHit` 选 deutan 轴，否则 protan 轴。
 - 类型：`suspected_blindness`→`*opia`，`suspected_deficiency`→`*anomaly`。
-- 程度：`rate = wrong/total`；`>=0.7` 重度，`>=0.4` 中度，否则轻度。
-- **能力边界（硬约束）**：两命中数恒为 0 使 `deutanHit >= protanHit` 恒真，`type` 只能为 `deuteranopia` / `deuteranomaly`（或 `null`）。**本项目不能可靠区分红 / 绿 / 蓝黄异常类型**；任何面向用户的文案（结果分析、FAQ、模式描述、科普、README）均不得宣称可区分类型或列出转换 / 隐藏 / 分类题。`type` 字段仅为兼容既有数据结构而保留，`tritan` 不得解释为独立的蓝黄测量结果。
+- 程度：`rate = wrong/max(total,1)`；`>=0.7` 重度，`>=0.4` 中度，否则轻度。
+- **能力边界（硬约束）**：当前题库两命中数恒为 0，故 `type` 恒为 `null`（未分型）。**本项目不能可靠区分红 / 绿 / 蓝黄异常类型**；任何面向用户的文案（结果分析、FAQ、模式描述、科普、README）均不得宣称可区分类型或列出转换 / 隐藏 / 分类题。`type` 字段仅为兼容既有数据结构而保留，`tritan` 不得解释为独立的蓝黄测量结果。
 
 ### 6.5 置信度
 ```
@@ -385,7 +392,7 @@ clamp(confidence, 0, 100)
 - 每次修改 bump 最小版本（patch 优先；新功能 minor；破坏性 major）。
 - 源码文件头统一 `// path vX.Y.Z`；**仅被改动文件更新头注释，禁止全仓库批量刷写**。
 - 项目的**版本单一来源已确立**：仓库根 `VERSION` 文件、`package.json` 与 `package-lock.json` 的 `version` 字段（以 `VERSION` 实时值为准）为权威；每次发版须同步三者，并新增 `CHANGELOG.md` 条目、同步 README 与 docs 各分册「实现状态」行。
-- 各文档头注释版本（如 SPEC `v1.16.1`）与 `VERSION` 保持一致；各分册「文档版本」表亦统一标注当前项目版本（不再沿用 v1.0 初版标记）。原型文件头为 v0.1.x（原型内部迭代号，与项目发布版本解耦，不随发版刷写）。
+- 各文档头注释版本（如 SPEC `v1.16.2`）与 `VERSION` 保持一致；各分册「文档版本」表亦统一标注当前项目版本（不再沿用 v1.0 初版标记）。原型文件头为 v0.1.x（原型内部迭代号，与项目发布版本解耦，不随发版刷写）。
 
 ### 8.3 文档结构
 - 9 份分册 + 本 SPEC；本 SPEC 为总纲，分册冲突以本规范为准。
@@ -419,4 +426,4 @@ clamp(confidence, 0, 100)
 - **信号灯辨识（驾驶场景专项）**：独立路由 `/test/signal` 已实现（题库 9 题 + `scoreSignal` 判读），结果不计入历史，与 `TestMode` 枚举解耦。
 
 ---
-*本文档为 ChromaCheck 权威规范总纲 v1.16.1。分册应据本规范修订以消除前述字段/算法/范围冲突。*
+*本文档为 ChromaCheck 权威规范总纲 v1.16.2。分册应据本规范修订以消除前述字段/算法/范围冲突。*
