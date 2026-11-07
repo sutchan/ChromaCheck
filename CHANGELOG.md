@@ -1,7 +1,18 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件、`package.json` 与 `package-lock.json` 的 `version` 字段（当前 `1.14.2`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件、`package.json` 与 `package-lock.json` 的 `version` 字段（当前 `1.15.0`）。
+
+## [1.15.0] - 2026-11-07
+
+### 新增（多语言升级：简体中文 > 繁体中文 > 英语）
+- 新增繁体中文（台湾）字典 `lib/i18n/tw-*.ts` 七组（core / faq / ui / ui.flow / ui.guide / ui.result / result），全量覆盖界面文案；由 OpenCC 台湾用语（s2twp）转换生成并复核，繁体与英文字典均受 TS 编译期键完整性校验。
+- `Lang` 扩展为 `'zh' | 'zh-TW' | 'en'`：设置面板语言按钮自动支持三语；`htmlLang()` 映射 BCP 47（zh-CN / zh-TW / en）写入 `<html lang>`；语言偏好恢复兼容三语。
+- 全局项目规范 SPEC 新增 §8.5 语言与国际化规范：默认语言简体中文，第二繁体中文，第三英语。
+
+### 变更
+- 修正石原氏标准版页 SEO 描述残留的旧题型文案（「转换 / 消失 / 隐藏 / 分类」→「消失型数字图」），对齐题库实况。
+- 内容型文案（科普 / 隐私长文 / 信号灯 / 儿童图形标签）当前为简英双语，繁体回退简体展示；界面文案三语全量覆盖。
 
 ## [1.14.2] - 2026-11-06
 

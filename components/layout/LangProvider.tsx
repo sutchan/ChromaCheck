@@ -1,8 +1,8 @@
 'use client';
-// components/layout/LangProvider.tsx — 界面语言上下文（zh / en，存 localStorage）
-// chromacheck v1.7.9
+// components/layout/LangProvider.tsx — 界面语言上下文（zh / zh-TW / en，存 localStorage）
+// chromacheck v1.15.0
 import React, { createContext, useCallback, useContext, useEffect, useMemo, useState } from 'react';
-import { DEFAULT_LANG, LANG_STORAGE_KEY, t as translate, type DictKey, type Lang } from '@/lib/i18n';
+import { DEFAULT_LANG, LANGS, LANG_STORAGE_KEY, htmlLang, t as translate, type DictKey, type Lang } from '@/lib/i18n';
 
 export interface LangContextValue {
   lang: Lang;
@@ -24,7 +24,7 @@ export function LangProvider({ children }: { children: React.ReactNode }) {
   useEffect(() => {
     try {
       const saved = window.localStorage.getItem(LANG_STORAGE_KEY);
-      if (saved === 'zh' || saved === 'en') setLangState(saved);
+      if (saved && (LANGS as string[]).includes(saved)) setLangState(saved as Lang);
     } catch {
       /* 隐私模式禁用存储时保持默认 */
     }
@@ -34,7 +34,7 @@ export function LangProvider({ children }: { children: React.ReactNode }) {
     setLangState(next);
     try {
       window.localStorage.setItem(LANG_STORAGE_KEY, next);
-      document.documentElement.setAttribute('lang', next === 'en' ? 'en' : 'zh-CN');
+      document.documentElement.setAttribute('lang', htmlLang(next));
     } catch {
       /* 写入失败不影响界面切换 */
     }

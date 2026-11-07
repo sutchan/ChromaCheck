@@ -16,7 +16,7 @@
 
 **在线试用**：<https://chroma.ewuse.com/> — 打开即用，无需注册，检测数据仅存于本地浏览器。
 
-> **当前版本 v1.14.2**（版本单一来源见 `VERSION`）。已实现能力见下方「功能特性」；权威规范见 [docs/SPEC.md](docs/SPEC.md)。
+> **当前版本 v1.15.0**（版本单一来源见 `VERSION`）。已实现能力见下方「功能特性」；权威规范见 [docs/SPEC.md](docs/SPEC.md)。
 
 ## 功能特性
 
@@ -27,7 +27,7 @@
 - 响应式 + 深色模式 + 色觉安全模式 + 减少动效；结果页五种色觉视角切换（首页模拟器为 4 种）
 - 趣味体验包（进度点阵 / 章末轻科普 / 色觉人格分享卡 / 旅人称号），可一键关闭
 - 驾驶场景（`scene=driver`）与合规提示、无障碍跳转链接、自托管字体、FAQPage 结构化数据与页面错误边界
-- 中英双语（i18n）、PWA 离线兜底、Google Analytics 匿名访问统计
+- 三语支持（简体中文默认 / 繁體中文 / English，i18n）、PWA 离线兜底、Google Analytics 匿名访问统计
 
 > **判读能力边界**：题库仅含演示题与消失型题（另含 2 张常规数字题），未实现真正的双数字变形 / 隐藏版，因此**不能可靠区分红 / 绿 / 蓝黄异常类型**；异常类型字段为退化输出，三轴中的 tritan 为推算参考值。结果仅供初筛参考，不能替代专业医学诊断。
 
@@ -81,7 +81,7 @@ chromacheck/
 │                   #   判读（scoring、scoring-text、path-scoring、hue-scoring、advanced-scoring、
 │                   #         signal-scoring、child-scoring、path-field）/
 │                   #   画布导出（report-canvas、sharecard-canvas）/ 趣味（fun、sharecard）/
-│                   #   i18n/（中英字典与 t()）/ profile / export-import / ishihara / storage /
+│                   #   i18n/（简繁英字典与 t()）/ profile / export-import / ishihara / storage /
 │                   #   learn-data / privacy-data / license / format / analytics
 ├── docs/           # 项目文档（SPEC.md 为权威总纲）
 ├── prototype/      # 高保真静态原型（设计验证参考，无运行依赖）

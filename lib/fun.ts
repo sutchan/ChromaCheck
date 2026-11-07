@@ -1,18 +1,19 @@
 // lib/fun.ts — 趣味性数据与文案（移植自 prototype data.js §6.5，受「趣味体验」开关控制）
-// chromacheck v1.9.0
+// chromacheck v1.15.0
 import type { AxisKey, DeficiencyType, Overall, PlateType } from './types';
 import type { Lang } from './i18n';
 
 /** 边界：答题中永不显示对错；称号为旅人隐喻、去污名化，仅本机展示，可随开关关闭。 */
 
-/** 双语文案：展示处经 loc(text, lang) 取当前语言，缺失时回退中文 */
+/** 内容型文案（简/英双语）：展示处经 loc(text, lang) 取当前语言；繁体（zh-TW）回退简体（SPEC §8.5） */
 export interface LocalizedText {
   zh: string;
   en: string;
 }
 
 export function loc(text: LocalizedText, lang: Lang): string {
-  return text[lang] ?? text.zh;
+  if (lang === 'en') return text.en || text.zh;
+  return text.zh; // zh / zh-TW：内容型文案繁体回退简体
 }
 
 /* 检测章节（按题型分组）：0 暖身 / 1 主体 / 2 深水 */

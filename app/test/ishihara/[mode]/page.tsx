@@ -1,5 +1,5 @@
 // app/test/ishihara/[mode]/page.tsx — 石原氏测试页
-// chromacheck v1.13.1
+// chromacheck v1.15.0
 import React from 'react';
 import { notFound } from 'next/navigation';
 import { TestRunner } from '@/components/test/TestRunner';
@@ -15,7 +15,7 @@ export function generateMetadata({ params }: { params: { mode: string } }): Meta
   const title = isQuick ? '快速版色觉检测（石原氏 10 题）' : '标准版色觉检测（石原氏 38 题）';
   const desc = isQuick
     ? 'ChromaCheck 快速版石原氏色觉检测：10 道核心题目，约 3 分钟，纯本地自测。'
-    : 'ChromaCheck 标准版石原氏色觉检测：完整 38 题，覆盖转换 / 消失 / 隐藏 / 分类题型，约 12 分钟。';
+    : 'ChromaCheck 标准版石原氏色觉检测：完整 38 题消失型数字图，约 12 分钟，纯本地自测。';
   return {
     title,
     description: desc,
