@@ -1,11 +1,11 @@
 # 色辨 ChromaCheck 部署文档
 
 > **规范遵循**：本文档为 [SPEC.md](./SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。
-> **实现状态**：v1.0–v1.15.1 已部署上线。Vercel 自动部署；v1.9.0 起 CSP `frame-ancestors` 收紧为 `'self'`，v1.11.2 引入 `package-lock.json`；v1.7.6 起 `next.config.mjs` 配置安全响应头（CSP/X-Frame-Options 等）。静态原型仍可单独托管预览。
+> **实现状态**：v1.0–v1.16.0 已部署上线。Vercel 自动部署；v1.9.0 起 CSP `frame-ancestors` 收紧为 `'self'`，v1.11.2 引入 `package-lock.json`；v1.7.6 起 `next.config.mjs` 配置安全响应头（CSP/X-Frame-Options 等）。静态原型仍可单独托管预览。
 
 | 项目 | 内容 |
 |------|------|
-| 文档版本 | v1.15.1 |
+| 文档版本 | v1.16.0 |
 | 创建日期 | 2026-09-03 |
 
 ---
@@ -300,6 +300,19 @@ docker run -d --name chromacheck-rollback -p 3000:3000 chromacheck:<old-tag>
 - **告警**：配置错误率告警（Sentry 或自建），日错误率 > 1% 触发通知。
 - **备份**：本项目为无状态应用，无需数据库备份；本地存储数据由用户自持。
 - **升级**：关注 Next.js 和依赖的安全更新，定期 `npm audit`。
+
+---
+
+## 9. 版本发布（GitHub Releases 自动发布，v1.16.0 起）
+
+规范见 [SPEC.md §8.6](./SPEC.md)。要点：
+
+- **触发**：`push` 到 `main` 且 CI workflow 所有 job 全绿后，`release` job 自动执行；PR / `develop` / 非 push 事件不发布。
+- **版本来源**：仓库根 `VERSION`（tag 与 Release 标题为 `v{VERSION}`）；发版前须按规范同步 `VERSION` / `package.json` / `package-lock.json` 三源与 CHANGELOG。
+- **幂等**：同名 tag 已存在则跳过，同一版本永不重复发布；发布新版本必须先 bump 版本。
+- **Release 内容**：notes 取自 `CHANGELOG.md` 当前版本节（`awk` 提取，为空回退占位说明）；tag 指向全绿的那次 commit。
+- **权限**：`permissions: contents: write`，内置 `github.token`，无第三方发布 Action。
+- **与部署的关系**：Releases 仅承载版本归档与变更说明；生产部署仍由 Vercel 独立自动承接（push main 即部署），二者互不阻塞。
 
 ---
 

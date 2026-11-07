@@ -1,7 +1,16 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件、`package.json` 与 `package-lock.json` 的 `version` 字段（当前 `1.15.1`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件、`package.json` 与 `package-lock.json` 的 `version` 字段（当前 `1.16.0`）。
+
+## [1.16.0] - 2026-11-07
+
+### 新增（GitHub Releases 自动发布）
+- CI workflow 新增 `release` job：`push` 到 `main` 且所有 job 全绿后，自动创建 `v{VERSION}` tag 与 GitHub Release（规范固化于 SPEC §8.6「发布流程」）。
+- 版本单一来源为仓库根 `VERSION`；同名 tag 已存在则跳过（幂等，同一版本永不重复发布）。
+- Release notes 自动提取 `CHANGELOG.md` 当前版本节，提取为空时回退占位说明。
+- 权限最小化：`permissions: contents: write` + 内置 `github.token`，无第三方发布 Action。
+- `docs/DEPLOYMENT.md` 新增 §9「版本发布」章节；README 部署节补充自动发布说明。
 
 ## [1.15.1] - 2026-11-07
 

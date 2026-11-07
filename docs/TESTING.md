@@ -1,11 +1,11 @@
 # 色辨 ChromaCheck 测试策略文档
 
 > **规范遵循**：本文档为 [SPEC.md](./SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。判读引擎测试以 SPEC §6 与 `lib/scoring.ts` 为权威。
-> **实现状态**：v1.15.1：Vitest 测试套件共 14 文件 97 例（`lib/*.test.ts`：scoring / hue-scoring / path-scoring / advanced-scoring / signal-scoring / child-scoring / profile / storage / export-import / format / scoring-text / path-field / ishihara / sharecard），node 环境。CI `.github/workflows/ci.yml` 跑 type-check + lint + build + test。组件测试与 Playwright E2E 尚未落地。判读引擎测试以 SPEC §6 与 `lib/scoring.ts` 为权威。
+> **实现状态**：v1.16.0：Vitest 测试套件共 14 文件 97 例（`lib/*.test.ts`：scoring / hue-scoring / path-scoring / advanced-scoring / signal-scoring / child-scoring / profile / storage / export-import / format / scoring-text / path-field / ishihara / sharecard），node 环境。CI `.github/workflows/ci.yml` 跑 type-check + lint + build + test。组件测试与 Playwright E2E 尚未落地。判读引擎测试以 SPEC §6 与 `lib/scoring.ts` 为权威。
 
 | 项目 | 内容 |
 |------|------|
-| 文档版本 | v1.15.1 |
+| 文档版本 | v1.16.0 |
 | 创建日期 | 2026-09-03 |
 
 ---

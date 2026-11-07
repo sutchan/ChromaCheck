@@ -16,7 +16,7 @@
 
 **在线试用**：<https://chroma.ewuse.com/> — 打开即用，无需注册，检测数据仅存于本地浏览器。
 
-> **当前版本 v1.15.0**（版本单一来源见 `VERSION`）。已实现能力见下方「功能特性」；权威规范见 [docs/SPEC.md](docs/SPEC.md)。
+> **当前版本 v1.16.0**（版本单一来源见 `VERSION`）。已实现能力见下方「功能特性」；权威规范见 [docs/SPEC.md](docs/SPEC.md)。
 
 ## 功能特性
 
@@ -111,6 +111,8 @@ chromacheck/
 ```bash
 docker build -t chromacheck . && docker run -p 3000:3000 chromacheck
 ```
+
+**版本发布**：`push` 到 `main` 且 CI 全绿后自动创建 `v{VERSION}` tag 与 GitHub Release（notes 取自 CHANGELOG，同名 tag 已存在则跳过；详见 [docs/DEPLOYMENT.md §9](docs/DEPLOYMENT.md) 与 SPEC §8.6）。
 
 ## 隐私与免责
 

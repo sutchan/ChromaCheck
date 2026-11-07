@@ -1,10 +1,12 @@
 # CI 工作流 — ChromaCheck
-# 规范依据：docs/SPEC.md §8.4 / docs/ARCHITECTURE.md §8.1 / docs/TESTING.md §7.1
+# 规范依据：docs/SPEC.md §8.4 / §8.6 / docs/ARCHITECTURE.md §8.1 / docs/TESTING.md §7.1
 # 注：当前项目已为 Next.js 14 应用（package.json + lint/type-check/test/build 脚本齐备）。
 #     测试门禁：Vitest（npm test）；e2e 暂未配置。
 # 安装步骤统一用 `npm install`；不配置 setup-node 的 `cache` 选项，
 # 避免 v5 依据 package.json 的 packageManager 字段自动启用缓存而改变构建可复现性。
 # checkout / setup-node 使用 v5（动作运行时 Node 24），项目运行时用 Node 22 LTS。
+# 发布（v1.16.0 起）：release job 在所有前置 job 全绿且 push 到 main 时执行，
+# 以 VERSION 为版本单一来源创建 tag 与 GitHub Release；tag 已存在则跳过（幂等）。
 name: CI
 
 on:
@@ -42,3 +44,39 @@ jobs:
 
       - name: E2E tests
         run: echo "E2E 跳过：当前版本未配置 e2e"
+
+  release:
+    needs: build-and-test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v5
+
+      - name: Read version
+        id: ver
+        run: echo "version=$(tr -d '[:space:]' < VERSION)" >> "$GITHUB_OUTPUT"
+
+      - name: Create tag and GitHub Release
+        env:
+          GH_TOKEN: ${{ github.token }}
+          VERSION: ${{ steps.ver.outputs.version }}
+        run: |
+          TAG="v${VERSION}"
+          if git ls-remote --tags origin "refs/tags/${TAG}" | grep -q "refs/tags/${TAG}$"; then
+            echo "Tag ${TAG} 已存在，跳过发布"
+            exit 0
+          fi
+          awk -v t="${VERSION}" '
+            $0 ~ ("^## \\[" t "\\]") { f = 1; next }
+            f && /^## \[/ { exit }
+            f { print }
+          ' CHANGELOG.md > RELEASE_NOTES.md
+          if [ ! -s RELEASE_NOTES.md ]; then
+            echo "发布 v${VERSION}（详见 CHANGELOG.md）" > RELEASE_NOTES.md
+          fi
+          git tag "${TAG}"
+          git push origin "${TAG}"
+          gh release create "${TAG}" --title "v${VERSION}" --notes-file RELEASE_NOTES.md
