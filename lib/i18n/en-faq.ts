@@ -1,5 +1,5 @@
 // lib/i18n/en-faq.ts — English home FAQ dictionary (mirrors ZH_FAQ keys)
-// chromacheck v1.13.2
+// chromacheck v1.16.1
 
 export const EN_FAQ = {
   'faq.chip': 'FAQ',

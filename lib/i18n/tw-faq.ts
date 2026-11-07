@@ -1,5 +1,5 @@
 // lib/i18n/tw-faq.ts — 繁体中文（台湾）字典（由 zh-faq 转换，v1.15.0 新增）
-// chromacheck v1.15.0
+// chromacheck v1.16.1
 
 export const TW_FAQ = {
   'faq.chip': '常見問題',

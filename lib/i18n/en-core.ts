@@ -1,5 +1,5 @@
 // lib/i18n/en-core.ts — English core dictionary (mirrors zh-core keys)
-// chromacheck v1.13.2
+// chromacheck v1.16.1
 import type { DictKey } from './dict';
 
 export const EN_CORE: Record<CoreKey, string> = {

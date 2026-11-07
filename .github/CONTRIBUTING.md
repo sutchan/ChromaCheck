@@ -1,7 +1,7 @@
 # 贡献指南
 
 > **规范遵循**：本文档为 [../docs/SPEC.md](../docs/SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。
-> **实现状态**：v1.0–v1.14.2 已实现，§开发环境 的 npm 流程（install / dev / build / start / lint / type-check / test / test:watch / test:coverage）当前可直接使用。
+> **实现状态**：v1.0–v1.16.1 已实现，§开发环境 的 npm 流程（install / dev / build / start / lint / type-check / test / test:watch / test:coverage）当前可直接使用。
 >
 > **分支说明**：当前仓库仅维护 `main`；文中提及的 `develop` 为可选集成分支，若远程不存在请直接从 `main` 切功能分支并向 `main` 提交 PR。
 
@@ -106,6 +106,13 @@ git push origin feature/your-feature-name
 PR 描述模板：
 
 ```
+## 版本发布
+
+- 版本单一来源为仓库根 `VERSION`，发版须同步 `package.json` / `package-lock.json` 三者并新增 `CHANGELOG.md` 条目（详见 [docs/SPEC.md §8.2](../docs/SPEC.md)）。
+- **自动发布（v1.16.0 起）**：PR 合入 `main` 且 CI 全部 job 通过后，`release` job 自动创建 `v{VERSION}` tag 与 GitHub Release（notes 取自 CHANGELOG 当前版本节；同名 tag 已存在则跳过）。详见 [docs/DEPLOYMENT.md §9](../docs/DEPLOYMENT.md) 与 [docs/SPEC.md §8.6](../docs/SPEC.md)。
+- 维护者无需手动创建 Release；发布未出现通常是版本号重复（bump 后重推）或 CHANGELOG 缺少对应版本节。
+
+---
 ## 变更内容
 简要描述本次变更的内容。
 

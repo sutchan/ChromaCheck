@@ -1,5 +1,5 @@
 // lib/i18n/en-result.ts — English scoring text (labels + analysis templates)
-// chromacheck v1.9.0
+// chromacheck v1.16.1
 
 type ResultKey = keyof typeof import('./zh-result').ZH_RESULT;
 

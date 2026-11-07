@@ -1,11 +1,11 @@
 # 色辨 ChromaCheck 测试策略文档
 
 > **规范遵循**：本文档为 [SPEC.md](./SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。判读引擎测试以 SPEC §6 与 `lib/scoring.ts` 为权威。
-> **实现状态**：v1.16.0：Vitest 测试套件共 14 文件 97 例（`lib/*.test.ts`：scoring / hue-scoring / path-scoring / advanced-scoring / signal-scoring / child-scoring / profile / storage / export-import / format / scoring-text / path-field / ishihara / sharecard），node 环境。CI `.github/workflows/ci.yml` 跑 type-check + lint + build + test。组件测试与 Playwright E2E 尚未落地。判读引擎测试以 SPEC §6 与 `lib/scoring.ts` 为权威。
+> **实现状态**：v1.16.1：Vitest 测试套件共 14 文件 97 例（`lib/*.test.ts`：scoring / hue-scoring / path-scoring / advanced-scoring / signal-scoring / child-scoring / profile / storage / export-import / format / scoring-text / path-field / ishihara / sharecard），node 环境。CI `.github/workflows/ci.yml` 跑 type-check + lint + build + test。组件测试与 Playwright E2E 尚未落地。判读引擎测试以 SPEC §6 与 `lib/scoring.ts` 为权威。
 
 | 项目 | 内容 |
 |------|------|
-| 文档版本 | v1.16.0 |
+| 文档版本 | v1.16.1 |
 | 创建日期 | 2026-09-03 |
 
 ---
@@ -32,7 +32,7 @@
 
 | 文件 | 测试重点 |
 |------|----------|
-| `scoring.ts` | 消失题 / 演示题边界用例、hit 恒 0 下的类型退化（恒 deuteran*）、tritan 推算值、程度与判读稳定性计算 |
+| `scoring.ts` | 消失题 / 演示题边界用例、hit 恒 0 下的类型退化（type 输出 null 未分型，v1.15.1 起不再默认输出 deutan 系）、tritan 推算值、程度与判读稳定性计算 |
 | `path-scoring.ts` | 路径 `pathF1` 重合度计算与阈值判定（F1 思路，非 IoU） |
 | `hue-scoring.ts` | TES 计算、偏差方向判定 |
 
@@ -45,7 +45,7 @@ describe('scoreIshiharaTest')
   - 消失题答错 2 题 → suspected_deficiency
   - 消失题答错 4 题 → suspected_blindness
   - 转换题答案匹配 protan → protanopia/protanomaly（**当前题库无转换题，protan 分支不可达**）
-  - 无转换 / 分类题时 protanHit = deutanHit = 0 → type 恒为 deuteranopia/deuteranomaly
+  - 无转换 / 分类题时 protanHit = deutanHit = 0 → type 恒为 null（未分型，v1.15.1）
   - 演示题答错 → inconclusive 或降低置信度
   - 答题过快 → 置信度降低
   - 空答案数组 → 边界处理
@@ -328,11 +328,15 @@ npx playwright test --ui
 每次 push / PR 自动运行：
 
 ```yaml
-# .github/workflows/ci.yml
+# .github/workflows/ci.yml（节选，完整版以仓库文件为准）
 name: CI
-on: [push, pull_request]
+on:
+  push:
+    branches: [main, develop]
+  pull_request:
+    branches: [main, develop]
 jobs:
-  test:
+  build-and-test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
@@ -346,7 +350,14 @@ jobs:
       - run: npm run build
       - run: echo "E2E 跳过：当前版本未配置 e2e"
 
+  release:
+    # v1.16.0 起：build-and-test 全绿且 push main 时自动发布（详见 ./DEPLOYMENT.md §9）
+    needs: build-and-test
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    permissions: { contents: write }
 ```
+
+> **i18n 键完整性校验**：繁体 / 英文字典键集合类型化派生自简体基准（`DictKey = keyof ZH`），缺失键由 TypeScript 编译期报错——CI 的 type-check 步骤即为门禁，无独立运行时测试。
 
 ### 7.2 发布门禁
 
@@ -367,9 +378,9 @@ jobs:
 | 场景 | 输入 | 期望输出 |
 |------|------|----------|
 | 正常色觉 | 所有题答对 | normal, confidence 100 |
-| 绿色盲 | vanishing 全错 + deutan 匹配 | suspected_blindness, deuteranopia |
-| 绿色弱 | vanishing 错 2 + 部分匹配 | suspected_deficiency, deuteranomaly |
-| 红色盲 | vanishing 全错 + protan 匹配 | **不可达**（题库无 protan 预期值，实际输出 deuteran*） |
+| 绿色盲 | vanishing 全错（无轴命中） | suspected_blindness, type 未分型（null）, severity severe |
+| 绿色弱 | vanishing 错 2（无轴命中） | suspected_deficiency, type 未分型（null）, severity moderate |
+| 红色盲 | vanishing 全错 + protan 匹配 | **不可达**（题库无 protan 预期值；输出 protan* 需转换/分类题命中） |
 | 伪色盲 | 演示题答错 + 其他全对 | inconclusive 或低置信度 |
 | 过快答题 | 所有题 < 1s | 置信度降低 |
 

@@ -1,7 +1,19 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件、`package.json` 与 `package-lock.json` 的 `version` 字段（当前 `1.16.0`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件、`package.json` 与 `package-lock.json` 的 `version` 字段（当前 `1.16.1`）。
+
+## [1.16.1] - 2026-11-07
+
+### 文档（全面校订，对齐代码实况）
+- `docs/TESTING.md`：判读类型期望改为「type 未分型（null）」（v1.15.1 口径）；§7.1 CI yaml 对齐实况（job 名 `build-and-test`、分支过滤、`release` job）；补 i18n 键完整性校验说明。
+- `docs/ARCHITECTURE.md`：§8.1 CI yaml 对齐实况并补发布流程；lib/ 目录树与 layout 组件清单补 `i18n/` 与 `LangProvider`/`SettingsDialog`；§2.3 补三语语言状态说明；实现状态行补 v1.13.0–v1.16.0。
+- `docs/DATA-SPEC.md`：新增 §6.5 i18n 字典数据结构；`IshiharaResult.type/severity` 改必填含 null 口径；存储键清单补 `cc.lang.v1`。
+- `docs/ROADMAP.md`：§3.2 功能清单补「已实现」标注（导出/分享 v1.4、校准 v1.7.0、PWA v1.7.9、三语 v1.15.0）；§7 v1.1 行 i18n 更新为三语演进。
+- `.github/CONTRIBUTING.md`：实现状态更新至 v1.16.1；新增「版本发布」小节（v1.16.0 自动发布流程）。
+- `docs/tasks-done.md`：新增 §七，归档 v1.15.0 三语 / v1.15.1 判读收敛 / v1.16.0 自动发布。
+- `docs/API.md`：修复 Markdown 表格被 blockquote 截断；Base URL 标注当前站点与规划域名。
+- 注释类：9 个 i18n 字典与 `scoring-text.ts` 头注释升级并修正「zh / en」旧描述；README「中英操作提示」改「多语言」；PRIVACY 注明语言偏好独立键。
 
 ## [1.16.0] - 2026-11-07
 

@@ -1,9 +1,9 @@
 // lib/scoring-text.ts — 判读文本映射与文案（移植自 prototype/scoring.js）
-// chromacheck v1.9.0
+// chromacheck v1.16.1
 import type { DeficiencyType, Overall, Severity, TestMode } from './types';
 import { t, type DictKey, type Lang } from './i18n';
 
-/** 判读标签键映射：值取自 lib/i18n 的 result.* 字典（zh / en） */
+/** 判读标签键映射：值取自 lib/i18n 的 result.* 字典（三语：zh / zh-TW / en） */
 const TYPE_KEY: Record<Exclude<DeficiencyType, null>, DictKey> = {
   protanopia: 'result.type.protanopia',
   protanomaly: 'result.type.protanomaly',

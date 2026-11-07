@@ -1,5 +1,5 @@
 // lib/i18n/zh-result.ts — 中文判读文本（结果标签 + 判读分析模板，由判读引擎按语言生成）
-// chromacheck v1.9.0
+// chromacheck v1.16.1
 
 export const ZH_RESULT = {
   // 判读标签（uiText）

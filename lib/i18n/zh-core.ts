@@ -1,5 +1,5 @@
 // lib/i18n/zh-core.ts — 中文核心字典（导航 / 首页 / 模式选择 / 档案 / 历史 / 批量）
-// chromacheck v1.13.2
+// chromacheck v1.16.1
 
 export const ZH_CORE = {
   'nav.home': '首页',

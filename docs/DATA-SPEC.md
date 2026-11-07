@@ -1,11 +1,11 @@
 # 色辨 ChromaCheck 数据规范文档
 
 > **规范遵循**：本文档为 [SPEC.md](./SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。类型别名（ColorDeficiencyType / OverallResult / SeverityLevel / TestMode）以 SPEC §5.5 为权威定义。
-> **实现状态**：v1.0–v1.16.0 已实现（Next.js 14 应用；石原氏 38 板 / 路径追踪 v1.1 / 色相排列 D15 v1.2 / 进阶联合 v1.3 / 趣味包 v1.4 / GA4 v1.5.1 / SEO·GEO v1.6 / 驾驶员场景 v1.7 / 设置面板 v1.10.0 / FAQ 手风琴 v1.11.0 / i18n 子模块化 v1.11.1 / lockfile 与 SEO metadata 补齐 v1.11.2 / 无障碍走查与测试覆盖优化 v1.12.0）。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [TASKS.md](./TASKS.md)。
+> **实现状态**：v1.0–v1.16.1 已实现（Next.js 14 应用；石原氏 38 板 / 路径追踪 v1.1 / 色相排列 D15 v1.2 / 进阶联合 v1.3 / 趣味包 v1.4 / GA4 v1.5.1 / SEO·GEO v1.6 / 驾驶员场景 v1.7 / 设置面板 v1.10.0 / FAQ 手风琴 v1.11.0 / i18n 子模块化 v1.11.1 / lockfile 与 SEO metadata 补齐 v1.11.2 / 无障碍走查与测试覆盖优化 v1.12.0）。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [TASKS.md](./TASKS.md)。
 
 | 项目 | 内容 |
 |------|------|
-| 文档版本 | v1.16.0 |
+| 文档版本 | v1.16.1 |
 | 创建日期 | 2026-09-03 |
 
 ---
@@ -139,8 +139,8 @@ interface IshiharaResult {
     | 'suspected_deficiency'  // 疑似色弱
     | 'suspected_blindness'   // 疑似色盲
     | 'inconclusive';  // 无法判定
-  /** 异常类型 */
-  type?:
+  /** 异常类型（必填，含 null：无转换/分类题命中时为 null 未分型，v1.15.1） */
+  type:
     | 'protanopia'   // 红色盲
     | 'deuteranopia' // 绿色盲
     | 'protanomaly'  // 红色弱
@@ -148,8 +148,8 @@ interface IshiharaResult {
     | 'tritanopia'   // 蓝色盲
     | 'tritanomaly'  // 蓝色弱
     | 'achromatopsia'; // 全色盲
-  /** 异常程度 */
-  severity?: 'mild' | 'moderate' | 'severe';
+  /** 异常程度（必填，含 null：仅异常结论时非空） */
+  severity: 'mild' | 'moderate' | 'severe';
   /** 置信度 0-100 */
   confidence: number;
   /** 各维度异常评分（越高越异常） */
@@ -261,6 +261,7 @@ interface TestResult {
 
 ```
 cc.settings.v1      # 用户设置（AppSettings：theme + cvdSafe + funMode）
+cc.lang.v1          # 界面语言偏好（Lang：zh / zh-TW / en，lib/i18n/lang.ts）
 cc.results.v1       # 检测历史（TestResult[]，保留最近 30 条）
 cc.progress.v1      # 进行中的检测进度（TestProgress）
 
@@ -338,6 +339,25 @@ interface HistorySummary {
 
 ---
 
+### 6.5 i18n 字典数据结构（v1.15.0 起三语）
+
+```
+lib/i18n/
+├── lang.ts        # Lang = 'zh' | 'zh-TW' | 'en'；语言优先级（默认简体中文 > 繁体中文 > 英语）、
+│                  #   存储键 cc.lang.v1、htmlLang()（BCP 47：zh-CN / zh-TW / en）
+├── zh-*.ts        # 简体基准字典 × core / faq / ui / ui.flow / ui.guide / ui.result / result 七组
+├── tw-*.ts        # 繁体（台湾）字典 × 七组（键集合与简体严格对称）
+├── en-*.ts        # 英文字典 × 七组（键集合与简体严格对称）
+├── dict.ts        # 合并与键集合：DictKey = keyof ZH，Dict = Record<DictKey, string>
+├── t.ts           # t(lang, key, vars)：取译文；缺失键回退简体中文
+└── index.ts       # 汇出（零依赖）
+```
+
+- 键集合由简体中文字典派生，繁体 / 英文字典类型化为 `Dict`，缺失键在编译期报错（`npx tsc --noEmit` 即门禁，无独立运行时测试）。
+- 内容型文案（`learn-data.ts` 科普、隐私长文、信号灯题库、儿童图形标签、`fun.ts` 的 `LocalizedText`）为简 / 英双语，选择繁体时回退简体展示。
+- 语言与国际化规范详见 [./SPEC.md §8.5](./SPEC.md)。
+
+---
 ## 7. 判读规则说明
 
 ### 7.1 石原氏判读规则

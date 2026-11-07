@@ -1,5 +1,5 @@
 // lib/i18n/zh-faq.ts — 中文首页常见问题（FAQ）字典（与 HomeFaq 一一对应）
-// chromacheck v1.13.2
+// chromacheck v1.16.1
 
 export const ZH_FAQ = {
   'faq.chip': '常见问题',
