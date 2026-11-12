@@ -37,7 +37,7 @@ export const ZH_CORE = {
   'mode.quick.desc': '10 道核心题目，3 分钟左右，适合初次自测与定期复检。',
   'mode.quick.meta': '约 3 分钟 · 10 题',
   'mode.standard.title': '标准版',
-  'mode.standard.desc': '完整 38 题，覆盖转换、消失、隐藏与分类题型，结果更稳定。',
+  'mode.standard.desc': '完整 38 题消失型数字图，结果更稳定。',
   'mode.standard.meta': '约 12 分钟 · 38 题',
   'mode.path.title': '路径追踪',
   'mode.path.desc': '沿嵌入色点连成的路径描线，辅助判断红/绿色觉异常（v1.1 新增）。',
@@ -133,7 +133,7 @@ export const ZH_CORE = {
 
   // 首页色觉模拟
   'cvd.title': '看看不同色觉看到的世界',
-  'cvd.desc': '同一张检测图，切换不同色觉类型，观察数字是否“消失”或“变形”。',
+  'cvd.desc': '同一张检测图，切换不同色觉类型，观察数字是否清晰可辨或难以辨认。',
   'cvd.none': '正常色觉',
   'cvd.protanopia': '红色觉异常',
   'cvd.deuteranopia': '绿色觉异常',

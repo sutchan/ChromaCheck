@@ -1,5 +1,5 @@
 /* app/globals.css — ChromaCheck 设计令牌与基础样式（移植自 prototype 设计系统） */
-/* chromacheck v1.13.3 */
+/* chromacheck v1.16.3 */
 
 @tailwind base;
 @tailwind components;
@@ -390,30 +390,6 @@
     font-size: 0.78rem;
     letter-spacing: 0.08em;
     color: var(--fg-mute);
-  }
-  .faq-links {
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: var(--s-2) var(--s-4);
-    padding-top: var(--s-3);
-    border-top: 1px dashed var(--border);
-  }
-  .faq-links-title {
-    width: 100%;
-    font-size: 0.74rem;
-    font-weight: 600;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: var(--fg-mute);
-  }
-  .faq-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 4px;
-    font-size: 0.88rem;
-    font-weight: 600;
-    color: var(--brand);
   }
   .faq-list {
     display: flex;

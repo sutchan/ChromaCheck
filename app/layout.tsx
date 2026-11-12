@@ -1,5 +1,5 @@
 // app/layout.tsx — 根布局
-// chromacheck v1.13.3
+// chromacheck v1.17.0
 import React from 'react';
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
@@ -31,6 +31,17 @@ export const metadata: Metadata = {
   alternates: {
     canonical: '/',
   },
+  // 站点验证令牌由部署环境注入；未配置时不输出，避免写入虚构的验证值
+  verification: {
+    ...(process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION
+      ? { google: process.env.NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION }
+      : {}),
+    other: {
+      ...(process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION
+        ? { 'msvalidate.01': process.env.NEXT_PUBLIC_BING_SITE_VERIFICATION }
+        : {}),
+    },
+  },
   robots: {
     index: true,
     follow: true,
@@ -51,17 +62,18 @@ export const metadata: Metadata = {
     description: '基于石原氏检测原理的在线色觉筛查工具：快速版 10 题、标准版 38 题，即时生成判读结果与维度分析。',
     url: SITE_URL,
     images: [
-      { url: '/og-default.svg', width: 1200, height: 630, alt: 'ChromaCheck 在线色觉筛查' },
+      { url: '/og-default.png', width: 1200, height: 630, alt: 'ChromaCheck 在线色觉筛查' },
     ],
   },
   twitter: {
     card: 'summary_large_image',
     title: '色辨 ChromaCheck — 在线色觉筛查',
     description: '基于石原氏检测原理的在线色觉筛查工具，快速了解你的色彩世界。',
-    images: ['/og-default.svg'],
+    images: ['/og-default.png'],
   },
   other: {
     'llms-txt': '/llms.txt',
+    'llms-full-txt': '/llms-full.txt',
   },
   appleWebApp: {
     capable: true,
@@ -87,11 +99,30 @@ const webAppLd = {
     price: '0',
     priceCurrency: 'CNY',
   },
-  publisher: {
-    '@type': 'Organization',
-    name: 'ChromaCheck',
-    url: SITE_URL,
-  },
+  isPartOf: { '@id': `${SITE_URL}/#website` },
+  publisher: { '@id': `${SITE_URL}/#organization` },
+};
+
+// 站点级实体：WebSite + Organization，与 WebApplication 以 @id 互链，供生成式引擎辨认站点主体
+const webSiteLd = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  '@id': `${SITE_URL}/#website`,
+  url: SITE_URL,
+  name: '色辨 ChromaCheck',
+  alternateName: 'ChromaCheck',
+  inLanguage: 'zh-CN',
+  publisher: { '@id': `${SITE_URL}/#organization` },
+};
+
+const organizationLd = {
+  '@context': 'https://schema.org',
+  '@type': 'Organization',
+  '@id': `${SITE_URL}/#organization`,
+  name: '色辨 ChromaCheck',
+  alternateName: 'ChromaCheck',
+  url: SITE_URL,
+  logo: { '@type': 'ImageObject', url: `${SITE_URL}/icon.svg` },
 };
 
 export const viewport: Viewport = {
@@ -116,6 +147,8 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
           }}
         />
         <link rel="alternate" type="text/plain" href="/llms.txt" title="llms.txt" />
+        <link rel="alternate" type="text/plain" href="/llms-full.txt" title="llms-full.txt" />
+        <link rel="sitemap" type="application/xml" href="/sitemap.xml" title="Sitemap" />
       </head>
       <body suppressHydrationWarning>
         <script
@@ -124,7 +157,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
               "(function(){try{var s=localStorage.getItem('cc.settings.v1');if(s&&JSON.parse(s).cvdSafe)document.body.classList.add('cvd-safe');}catch(e){}})();",
           }}
         />
-        <JsonLd data={webAppLd} />
+        <JsonLd data={[webAppLd, webSiteLd, organizationLd]} />
         <ServiceWorkerRegistrar />
         <GoogleAnalytics />
         <ThemeProvider>

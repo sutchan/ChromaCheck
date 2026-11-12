@@ -38,7 +38,7 @@ export const EN_CORE: Record<CoreKey, string> = {
   'mode.quick.desc': '10 core plates, about 3 minutes — ideal for a first check or periodic re-test.',
   'mode.quick.meta': '~3 min · 10 plates',
   'mode.standard.title': 'Standard',
-  'mode.standard.desc': 'All 38 plates covering transformation, vanishing, hidden and classification types for a steadier result.',
+  'mode.standard.desc': 'All 38 vanishing-digit plates for a steadier result.',
   'mode.standard.meta': '~12 min · 38 plates',
   'mode.path.title': 'Path tracking',
   'mode.path.desc': 'Trace the path hidden among colored dots to probe red/green discrimination (added in v1.1).',
@@ -134,7 +134,7 @@ export const EN_CORE: Record<CoreKey, string> = {
 
   // Home color vision simulator
   'cvd.title': 'See the world through different color vision',
-  'cvd.desc': 'The same test plate — switch the color vision type and watch whether the number “disappears” or “transforms”.',
+  'cvd.desc': 'The same test plate — switch the color vision type and see whether the digit stays legible or becomes hard to read.',
   'cvd.none': 'Normal color vision',
   'cvd.protanopia': 'Red deficiency',
   'cvd.deuteranopia': 'Green deficiency',

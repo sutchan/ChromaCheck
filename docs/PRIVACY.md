@@ -1,11 +1,11 @@
 # 色辨 ChromaCheck 隐私与合规文档
 
 > **规范遵循**：本文档为 [SPEC.md](./SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。
-> **实现状态**：v1.0–v1.16.2。隐私政策页 `/privacy` 已上线；纯前端、数据仅存本地。**v1.5.1 起 GA4 匿名访问统计**（采集范围见 §2.2）；**v1.7.6 起 next.config.mjs 配置安全响应头**（CSP 等）；**v1.9.0 起移除服务端匿名事件上报**（`/api/analytics/event` 已删除，仅保留 GA4），CSP `frame-ancestors` 收紧为 `'self'` 并补 `X-Frame-Options`。
+> **实现状态**：v1.0–v1.17.0。隐私政策页 `/privacy` 已上线；纯前端、数据仅存本地。**v1.5.1 起 GA4 匿名访问统计**（采集范围见 §2.2）；**v1.7.6 起 next.config.mjs 配置安全响应头**（CSP 等）；**v1.9.0 起移除服务端匿名事件上报**（`/api/analytics/event` 已删除，仅保留 GA4），CSP `frame-ancestors` 收紧为 `'self'` 并补 `X-Frame-Options`。
 
 | 项目 | 内容 |
 |------|------|
-| 文档版本 | v1.16.2 |
+| 文档版本 | v1.17.0 |
 | 创建日期 | 2026-09-03 |
 
 ---

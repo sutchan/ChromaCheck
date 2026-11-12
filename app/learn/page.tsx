@@ -1,7 +1,8 @@
 // app/learn/page.tsx — 科普列表（服务端壳，metadata 静态；内容见 LearnListContent）
-// chromacheck v1.13.2
+// chromacheck v1.17.0
 import React from 'react';
 import type { Metadata } from 'next';
+import { Breadcrumbs } from '@/components/seo/Breadcrumbs';
 import { LearnListContent } from '@/components/learn/LearnListContent';
 
 export const metadata: Metadata = {
@@ -22,6 +23,7 @@ export const metadata: Metadata = {
 export default function LearnPage() {
   return (
     <div id="learn-page" className="wrap stack" style={{ paddingBlock: 'var(--s-6)', gap: 'var(--s-5)' }}>
+      <Breadcrumbs items={[{ name: '首页', path: '/' }, { name: '色觉科普', path: '/learn' }]} />
       <LearnListContent />
     </div>
   );

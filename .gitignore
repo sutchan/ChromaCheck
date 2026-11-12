@@ -57,3 +57,8 @@ Thumbs.db
 .cache/
 *tmp-*
 *.txt
+# llms.txt / llms-full.txt 是 Next.js Route Handler 目录名，须随仓库提交
+!app/llms.txt/
+!app/llms-full.txt/
+!app/llms.txt/**/*
+!app/llms-full.txt/**/*

@@ -1,5 +1,5 @@
 // components/layout/Footer.tsx — 页脚
-// chromacheck v1.14.0
+// chromacheck v1.16.3
 'use client';
 
 import React from 'react';
@@ -21,12 +21,15 @@ export function Footer() {
         <div className="row between" style={{ flexWrap: 'wrap', gap: 'var(--s-4)' }}>
           <div className="stack" style={{ gap: 'var(--s-2)' }}>
             <strong>色辨 ChromaCheck</strong>
-            <span className="muted" style={{ fontSize: '0.9rem', maxWidth: 420 }}>
+            {/* 描述保持单行；窄屏以省略号兜底，避免长文案撑破页脚布局 */}
+            <span
+              className="muted"
+              style={{ fontSize: '0.9rem', whiteSpace: 'nowrap', overflow: 'hidden', textOverflow: 'ellipsis' }}
+            >
               {t('footer.desc')}
             </span>
           </div>
           <div className="row" style={{ gap: 'var(--s-5)', flexWrap: 'wrap' }}>
-            <Link href="/test" className="muted" style={{ fontSize: '0.9rem' }}>{t('nav.test')}</Link>
             <Link href="/learn" className="muted" style={{ fontSize: '0.9rem' }}>{t('footer.learn')}</Link>
             <Link href="/privacy" className="muted" style={{ fontSize: '0.9rem' }}>{t('footer.privacy')}</Link>
             <a href="https://github.com/sutchan/ChromaCheck" target="_blank" rel="noreferrer" className="muted" style={{ fontSize: '0.9rem' }} aria-label={t('footer.githubAria')}>GitHub</a>

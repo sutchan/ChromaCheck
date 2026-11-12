@@ -1,15 +1,14 @@
 // components/home/HomeFaq.tsx — 首页常见问题（双栏布局 + 可访问手风琴 + FAQPage 结构化数据）
-// chromacheck v1.13.2
+// chromacheck v1.16.3
 'use client';
 
 import React, { useCallback, useMemo, useState } from 'react';
-import Link from 'next/link';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { Icon } from '@/components/common/Icon';
 import { useLang } from '@/components/layout/LangProvider';
 import type { DictKey } from '@/lib/i18n';
 
-/** FAQ 问答键对：文案在 lib/i18n/zh-faq.ts 与 en-faq.ts */
+/** FAQ 问答键对：文案在 lib/i18n 的 zh / zh-TW / en FAQ 字典中三语对齐 */
 const QA_KEYS: Array<{ q: DictKey; a: DictKey }> = [
   { q: 'faq.q1', a: 'faq.a1' },
   { q: 'faq.q2', a: 'faq.a2' },
@@ -64,17 +63,6 @@ export function HomeFaq() {
             {t('faq.note')}
           </p>
           <span className="faq-count">{t('faq.count', { n: faqs.length })}</span>
-          <div id="faq-links" className="faq-links">
-            <span className="faq-links-title">{t('faq.linksTitle')}</span>
-            <Link href="/learn" className="faq-link">
-              {t('footer.learn')}
-              <Icon name="arrowRight" size={15} />
-            </Link>
-            <Link href="/privacy" className="faq-link">
-              {t('footer.privacy')}
-              <Icon name="arrowRight" size={15} />
-            </Link>
-          </div>
         </aside>
 
         {/* 右侧问答：单卡片分隔式手风琴 */}

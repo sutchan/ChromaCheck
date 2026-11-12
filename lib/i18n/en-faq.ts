@@ -1,12 +1,11 @@
 // lib/i18n/en-faq.ts — English home FAQ dictionary (mirrors ZH_FAQ keys)
-// chromacheck v1.16.1
+// chromacheck v1.16.3
 
 export const EN_FAQ = {
   'faq.chip': 'FAQ',
   'faq.title': 'About color vision screening — things you may want to know',
   'faq.note': 'The answers below are based on public medical knowledge and the principles behind this site’s test, for popular-science reference only.',
   'faq.count': '{n} questions',
-  'faq.linksTitle': 'Further reading',
   'faq.q1': 'What is the difference between color blindness and color weakness?',
   'faq.a1': 'Color blindness means one class of cone cells is entirely absent, while color weakness means those cells are still present but function weakly, with reduced sensitivity. The number of colors you can tell apart and the impact on daily life differ markedly, but an online screen cannot precisely distinguish “blind” from “weak” — a definitive diagnosis needs professional instruments.',
   'faq.q2': 'Is ChromaCheck’s online color vision test accurate?',

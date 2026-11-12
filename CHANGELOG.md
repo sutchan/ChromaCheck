@@ -1,7 +1,30 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件、`package.json` 与 `package-lock.json` 的 `version` 字段（当前 `1.16.2`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件、`package.json` 与 `package-lock.json` 的 `version` 字段（当前 `1.17.0`）。
+
+## [1.17.0] - 2026-11-12
+
+### 新增（SEO / GEO 完善）
+
+- **路由单一数据源** `lib/seo-routes.ts`：sitemap / llms.txt / llms-full.txt / robots UA 清单统一派生；sitemap 补 `/test/child`，lastModified 改用内容审阅日期（非构建时间）。
+- **GEO 资产**：重写 `/llms.txt`（覆盖全部可索引 URL、结构化关键事实、Optional 分区、更新时间、复用 SITE_URL）；新增 `/llms-full.txt`（12 组 FAQ + 6 篇科普正文 + 隐私政策全文）；首页新增 SSR 简体「关键事实」块（与 `SITE_FACTS` 同源）。
+- **SEO**：新增静态 PNG 社交图 `public/og-default.png`（1200×630）替换 SVG（修复 Twitter/X / 微信预览无图；不引入运行时图像生成依赖）；根布局补 `verification`（环境变量驱动）、WebSite + Organization 结构化数据并 `@id` 互链、llms-full / sitemap 发现链接；4 个栏目页补 BreadcrumbList；科普 Article 补日期与实体互链；404 移除指向首页的 canonical；hue/path `quick` 变体 canonical 收敛到 `standard`。
+- **AI 抓取策略**：robots.txt 显式放行 GPTBot / CCBot / ClaudeBot / PerplexityBot / Google-Extended / Applebot-Extended 等，私有路径统一 disallow。
+- **事实一致性**：三语字典 `mode.standard.desc` / `cvd.desc` 去除与题库实况冲突的「转换 / 隐藏 / 分类 / 变形」题型描述。
+- **安全修复**：`components/seo/JsonLd.tsx` 的 `safeJson()` 原 `\u003c` 等替换为 no-op（等于原字符），未真正阻断 `</script>` 逃逸；改为写入字面 JSON 转义序列并补回归测试。
+- **回归测试**：新增 `lib/seo.test.ts`（10 例），`vitest.config.ts` 补 `@/` 别名以加载 app/ 模块；测试套件 14 文件 97 例 → 15 文件 107 例。
+- 规范固化：SPEC 新增 §8.7「SEO / GEO 规范」；README / docs 状态行同步 v1.17.0。
+
+## [1.16.3] - 2026-11-09
+
+### 界面（首页 FAQ 与页脚精简）
+
+- `components/home/HomeFaq.tsx`：删除左侧简介栏的「延伸阅读」链接块，移除不再使用的 `next/link` 引入；`/learn`、`/privacy` 入口仍由页脚提供。
+- `app/globals.css`：删除配套的 `.faq-links` / `.faq-links-title` / `.faq-link` 死样式。
+- `lib/i18n/{zh,tw,en}-faq.ts`：删除三语字典中已无引用的 `faq.linksTitle` 死键，保持三语键集合对称。
+- `components/layout/Footer.tsx`：删除页脚「开始检测」链接（检测入口仍保留在页眉与首页 Hero），描述改为单行显示，窄屏以省略号兜底避免撑破布局。
+- 版本同步：`VERSION` / `package.json` / `package-lock.json`、README、CHANGELOG 及全部 docs 分册 / `.github/CONTRIBUTING.md` 的版本与实现状态行统一为 v1.16.3；仅本次改动的 6 个源码 / 字典 / 样式文件更新头注释，其余源码头注释保持不变。
 
 ## [1.16.2] - 2026-11-07
 

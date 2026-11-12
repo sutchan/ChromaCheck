@@ -1,7 +1,7 @@
 # 贡献指南
 
 > **规范遵循**：本文档为 [../docs/SPEC.md](../docs/SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。
-> **实现状态**：v1.0–v1.16.2 已实现，§开发环境 的 npm 流程（install / dev / build / start / lint / type-check / test / test:watch / test:coverage）当前可直接使用。
+> **实现状态**：v1.0–v1.17.0 已实现，§开发环境 的 npm 流程（install / dev / build / start / lint / type-check / test / test:watch / test:coverage）当前可直接使用。
 >
 > **分支说明**：当前仓库仅维护 `main`；文中提及的 `develop` 为可选集成分支，若远程不存在请直接从 `main` 切功能分支并向 `main` 提交 PR。
 

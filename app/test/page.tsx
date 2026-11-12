@@ -1,7 +1,8 @@
 // app/test/page.tsx — 模式选择
-// chromacheck v1.7.9
+// chromacheck v1.17.0
 import React from 'react';
 import type { Metadata } from 'next';
+import { Breadcrumbs } from '@/components/seo/Breadcrumbs';
 import { TestSelectContent } from '@/components/test/TestSelectContent';
 
 export const metadata: Metadata = {
@@ -23,6 +24,7 @@ export const metadata: Metadata = {
 export default function TestSelectPage() {
   return (
     <div id="test-select-page" className="wrap stack" style={{ paddingBlock: 'var(--s-7)', gap: 'var(--s-5)' }}>
+      <Breadcrumbs items={[{ name: '首页', path: '/' }, { name: '选择检测模式', path: '/test' }]} />
       <TestSelectContent />
     </div>
   );

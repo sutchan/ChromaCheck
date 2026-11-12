@@ -1,12 +1,12 @@
 # 色辨 ChromaCheck 技术架构文档
 
 > **规范遵循**：本文档为 [SPEC.md](./SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。
-> **实现状态**：v1.0–v1.16.2 已实现（Next.js 14 应用；石原氏 38 板 / 路径追踪 v1.1 / 色相排列 D15 v1.2 / 进阶联合 v1.3 / 趣味包 v1.4 / GA4 v1.5.1 / SEO·GEO v1.6 / 驾驶员场景 v1.7 / 设置面板 v1.10.0 / FAQ 手风琴 v1.11.0 / i18n 子模块化 v1.11.1 / lockfile 与 SEO metadata 补齐 v1.11.2 / 无障碍走查与测试覆盖优化 v1.12.0 / 判读科学性修正 v1.13.0 / 键盘输入与构建号 v1.14.0 / 三语国际化 v1.15.0 / 判读类型未分型收敛 v1.15.1 / CI 自动发布 v1.16.0）。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [TASKS.md](./TASKS.md)。
+> **实现状态**：v1.0–v1.17.0 已实现（Next.js 14 应用；石原氏 38 板 / 路径追踪 v1.1 / 色相排列 D15 v1.2 / 进阶联合 v1.3 / 趣味包 v1.4 / GA4 v1.5.1 / SEO·GEO v1.6 / 驾驶员场景 v1.7 / 设置面板 v1.10.0 / FAQ 手风琴 v1.11.0 / i18n 子模块化 v1.11.1 / lockfile 与 SEO metadata 补齐 v1.11.2 / 无障碍走查与测试覆盖优化 v1.12.0 / 判读科学性修正 v1.13.0 / 键盘输入与构建号 v1.14.0 / 三语国际化 v1.15.0 / 判读类型未分型收敛 v1.15.1 / CI 自动发布 v1.16.0）。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [TASKS.md](./TASKS.md)。
 > **原型定位**：`prototype/` 为独立的高保真原型与设计验证参考（含早期 JS 移植源），**非应用运行依赖**；应用源码以 `lib/` 与 `components/` 为准，删除 `prototype/` 不影响构建与运行。
 
 | 项目 | 内容 |
 |------|------|
-| 文档版本 | v1.16.2 |
+| 文档版本 | v1.17.0 |
 | 创建日期 | 2026-09-03 |
 | 技术负责人 | ChromaCheck 团队 |
 
@@ -149,10 +149,10 @@ lib/
 ├── fun.ts / sharecard.ts / sharecard-canvas.ts / report-canvas.ts  # 趣味与报告 Canvas（v1.4）
 ├── analytics.ts              # GA4 衡量 ID 与上报辅助（v1.5.1）
 ├── license.ts                # 驾照辨色力合规映射（v1.7）
-├── site.ts                   # SITE_URL 单一来源
+├── site.ts / seo-routes.ts   # SITE_URL 单一来源；SEO/GEO 可索引路由单一数据源
 ├── learn-data.ts / format.ts  # 科普数据与格式化
 ├── i18n/                      # 三语字典与查表（zh/tw/en × core/faq/ui/ui.flow/ui.guide/ui.result/result 七组 + lang/dict/t；SPEC §8.5）
-└── *.test.ts                 # Vitest 单测（14 文件 97 例，node 环境）
+└── *.test.ts                 # Vitest 单测（15 文件 107 例，node 环境）
 docs/                         # 项目文档（SPEC.md 为权威总纲，TASKS.md 为任务 SSOT）
 ```
 
@@ -409,7 +409,7 @@ cc.progress.v1     # 进行中的检测进度（模式 / 题号 / 答题记录 /
 
 ### 5.1 API 路由列表
 
-> **现状（v1.16.2）**：纯前端应用**无任何服务端 API 路由**，`app/` 下仅 `app/llms.txt/route.ts` 一个 Route Handler（SEO/GEO 文本）。下表接口均为 **v1.1+ 规划或历史设计，当前未实现**；访问统计仅由 GA4 `pageview` 上报（`lib/analytics.ts`），不走本站接口。
+> **现状（v1.17.0）**：纯前端应用**无任何服务端 API 路由**，`app/` 下仅 `app/llms.txt/route.ts` 与 `app/llms-full.txt/route.ts` 两个 Route Handler（SEO/GEO 纯文本索引）。下表接口均为 **v1.1+ 规划或历史设计，当前未实现**；访问统计仅由 GA4 `pageview` 上报（`lib/analytics.ts`），不走本站接口。
 
 | 方法 | 路径 | 说明 | 状态 |
 |------|------|------|------|

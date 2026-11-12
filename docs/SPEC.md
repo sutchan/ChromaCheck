@@ -1,6 +1,6 @@
-<!-- ./SPEC.md v1.16.2 — ChromaCheck 项目规范总纲（单一事实来源） -->
+<!-- ./SPEC.md v1.17.0 — ChromaCheck 项目规范总纲（单一事实来源） -->
 <!-- 地位：本规范为权威总纲。当与各分册（PRD/ARCHITECTURE/API/DATA-SPEC/DEPLOYMENT/TESTING/CONTRIBUTING/PRIVACY/ROADMAP）冲突时，以本规范为准。 -->
-<!-- 实现状态：Next.js 14 应用已落地——石原氏检测（38板）、路径追踪、色相排列 D15、进阶联合、信号灯专项、趣味性体验包、结果/历史/科普/隐私、首页 FAQ 双栏问答（12 条）、GA4 匿名统计、SEO/GEO、Vitest 测试套件（14 文件 97 例）；原型仅作设计验证参考。当前版本 v1.16.2。 -->
+<!-- 实现状态：Next.js 14 应用已落地——石原氏检测（38板）、路径追踪、色相排列 D15、进阶联合、信号灯专项、趣味性体验包、结果/历史/科普/隐私、首页 FAQ 双栏问答（12 条）、GA4 匿名统计、SEO/GEO、Vitest 测试套件（15 文件 107 例）；原型仅作设计验证参考。当前版本 v1.17.0。 -->
 
 # 色辨 ChromaCheck 项目规范（SPEC）
 
@@ -22,7 +22,7 @@
 | `./PRIVACY.md` | 隐私政策分册 | 已对齐 SPEC，生效 |
 | `./ROADMAP.md` | 路线图分册 | 已对齐 SPEC，生效 |
 
-**实现状态声明（必须写入各文档顶部）**：ChromaCheck 已完成 v1.0 实现并持续迭代至 v1.16.2——Next.js 14 应用 + 石原氏检测（38 板）+ 结果/历史/科普/隐私页均已落地，`npm install / npm run dev / npm run build / npm test`（Vitest）均可正常执行（见 README「快速开始」）。路径追踪（F4）已于 v1.1 实现，色相排列（F5）已于 v1.2 实现，进阶联合判读（advanced）已于 v1.3 实现，趣味性体验包已于 v1.4 实现，38 板完整图谱已于 v1.5 实现，GA4 匿名统计已于 v1.5.1 接入，SEO/GEO 已于 v1.6.0 完善，驾驶员场景专项已于 v1.7.0 落地，Vitest 测试套件已于 v1.7.6 引入；v1.10.0 设置面板、v1.11.0 FAQ 手风琴、v1.11.1 i18n 字典子模块化、v1.11.2 引入 package-lock.json 与 SEO metadata 补齐、v1.12.0 无障碍走查与测试覆盖优化（Vitest 14 文件 97 例）及反模式清理均已落地；v1.13.0 修正色觉检测科学性问题（二色觉模拟矩阵改为秩-2 投影、路径追踪等亮度混淆配色、D15 色卡与色相远端固定卡、题库题型降级为消失型、科普文案对齐）已落地；v1.13.2 首页 FAQ 改为双栏布局（简介吸附侧栏 + 受控手风琴）并将问答扩充至 12 条已落地；v1.13.3 CI 升级 Node 22 LTS 与 checkout / setup-node v5（消除 Node 20 弃用告警）已落地；v1.13.4 历史页内联样式收敛（R8a）与 TestRunner 复用 IshiharaFlow 消除答题流程重复 JSX（R8b）已落地；v1.14.0 石原氏检测支持实体键盘输入数字（全局 keydown 监听，输入框聚焦时交由原生处理，未聚焦时数字键 / 退格 / 回车路由到作答）与页脚版本号/构建号展示规范化（格式 `V{ver}· build {yymmddhhmm}`，10 位构建号由 next.config.mjs 注入 NEXT_PUBLIC_BUILD_ID）已落地；v1.14.2 对 SPEC + 8 个分册 + TASKS/tasks-done + README/CHANGELOG + `.github/` 文档做全量校订（工程事实、字体/CSP、判读权威、测试口径、数据结构、路由与交叉引用对齐现行代码）已落地；v1.15.0 界面语言升级为三语（简体中文默认 > 繁体中文 > 英语，规范见 §8.5）已落地；v1.15.1 判读类型退化输出收敛已落地；v1.16.0 GitHub Releases 自动发布（全绿后 release job，规范见 §8.6）已落地；v1.16.1 文档全面校订（CI 描述、判读未分型口径、三语架构补记、发版流程入 CONTRIBUTING）已落地；v1.16.2 全量文档审查（目录结构、接口签名、存储键、判读口径与格式统一）已落地；原型仅作设计验证参考。
+**实现状态声明（必须写入各文档顶部）**：ChromaCheck 已完成 v1.0 实现并持续迭代至 v1.17.0——Next.js 14 应用 + 石原氏检测（38 板）+ 结果/历史/科普/隐私页均已落地，`npm install / npm run dev / npm run build / npm test`（Vitest）均可正常执行（见 README「快速开始」）。路径追踪（F4）已于 v1.1 实现，色相排列（F5）已于 v1.2 实现，进阶联合判读（advanced）已于 v1.3 实现，趣味性体验包已于 v1.4 实现，38 板完整图谱已于 v1.5 实现，GA4 匿名统计已于 v1.5.1 接入，SEO/GEO 已于 v1.6.0 完善，驾驶员场景专项已于 v1.7.0 落地，Vitest 测试套件已于 v1.7.6 引入；v1.10.0 设置面板、v1.11.0 FAQ 手风琴、v1.11.1 i18n 字典子模块化、v1.11.2 引入 package-lock.json 与 SEO metadata 补齐、v1.12.0 无障碍走查与测试覆盖优化（Vitest 15 文件 107 例）及反模式清理均已落地；v1.13.0 修正色觉检测科学性问题（二色觉模拟矩阵改为秩-2 投影、路径追踪等亮度混淆配色、D15 色卡与色相远端固定卡、题库题型降级为消失型、科普文案对齐）已落地；v1.13.2 首页 FAQ 改为双栏布局（简介吸附侧栏 + 受控手风琴）并将问答扩充至 12 条已落地；v1.13.3 CI 升级 Node 22 LTS 与 checkout / setup-node v5（消除 Node 20 弃用告警）已落地；v1.13.4 历史页内联样式收敛（R8a）与 TestRunner 复用 IshiharaFlow 消除答题流程重复 JSX（R8b）已落地；v1.14.0 石原氏检测支持实体键盘输入数字（全局 keydown 监听，输入框聚焦时交由原生处理，未聚焦时数字键 / 退格 / 回车路由到作答）与页脚版本号/构建号展示规范化（格式 `V{ver}· build {yymmddhhmm}`，10 位构建号由 next.config.mjs 注入 NEXT_PUBLIC_BUILD_ID）已落地；v1.14.2 对 SPEC + 8 个分册 + TASKS/tasks-done + README/CHANGELOG + `.github/` 文档做全量校订（工程事实、字体/CSP、判读权威、测试口径、数据结构、路由与交叉引用对齐现行代码）已落地；v1.15.0 界面语言升级为三语（简体中文默认 > 繁体中文 > 英语，规范见 §8.5）已落地；v1.15.1 判读类型退化输出收敛已落地；v1.16.0 GitHub Releases 自动发布（全绿后 release job，规范见 §8.6）已落地；v1.16.1 文档全面校订（CI 描述、判读未分型口径、三语架构补记、发版流程入 CONTRIBUTING）已落地；v1.16.2 全量文档审查（目录结构、接口签名、存储键、判读口径与格式统一）已落地；v1.16.3 首页 FAQ 移除延伸阅读入口、页脚移除「开始检测」并让描述单行显示已落地；v1.17.0 SEO/GEO 完善（路由单一数据源、llms-full.txt、站点级结构化数据、PNG 社交图与回归测试）已落地；原型仅作设计验证参考。
 
 ## 1. 产品定位与功能范围
 
@@ -392,7 +392,7 @@ clamp(confidence, 0, 100)
 - 每次修改 bump 最小版本（patch 优先；新功能 minor；破坏性 major）。
 - 源码文件头统一 `// path vX.Y.Z`；**仅被改动文件更新头注释，禁止全仓库批量刷写**。
 - 项目的**版本单一来源已确立**：仓库根 `VERSION` 文件、`package.json` 与 `package-lock.json` 的 `version` 字段（以 `VERSION` 实时值为准）为权威；每次发版须同步三者，并新增 `CHANGELOG.md` 条目、同步 README 与 docs 各分册「实现状态」行。
-- 各文档头注释版本（如 SPEC `v1.16.2`）与 `VERSION` 保持一致；各分册「文档版本」表亦统一标注当前项目版本（不再沿用 v1.0 初版标记）。原型文件头为 v0.1.x（原型内部迭代号，与项目发布版本解耦，不随发版刷写）。
+- 各文档头注释版本（如 SPEC `v1.17.0`）与 `VERSION` 保持一致；各分册「文档版本」表亦统一标注当前项目版本（不再沿用 v1.0 初版标记）。原型文件头为 v0.1.x（原型内部迭代号，与项目发布版本解耦，不随发版刷写）。
 
 ### 8.3 文档结构
 - 9 份分册 + 本 SPEC；本 SPEC 为总纲，分册冲突以本规范为准。
@@ -400,7 +400,7 @@ clamp(confidence, 0, 100)
 - 变更须记录 CHANGELOG（实现阶段建立）。
 
 ### 8.4 测试与质量门禁
-- **Vitest 测试套件（v1.7.6 落地，当前 14 文件 97 例）**：`lib/*.test.ts` 平铺覆盖判读引擎、存储、格式化、导出导入、分享卡等；`npm test` = `vitest run`，`npm run test:coverage` 走 `@vitest/coverage-v8`。测试环境为 node（`vitest.setup.ts` 注入内存 Storage，无 jsdom/happy-dom），组件测试与 E2E 尚未落地。
+- **Vitest 测试套件（v1.7.6 落地，当前 15 文件 107 例）**：`lib/*.test.ts` 平铺覆盖判读引擎、存储、格式化、导出导入、分享卡等；`npm test` = `vitest run`，`npm run test:coverage` 走 `@vitest/coverage-v8`。测试环境为 node（`vitest.setup.ts` 注入内存 Storage，无 jsdom/happy-dom），组件测试与 E2E 尚未落地。
 - 实现阶段质量门禁：ESLint + TypeScript strict；无 `console.log`/`debugger`；CI（`.github/workflows/ci.yml`）跑 type-check + lint + build + test（e2e 安全跳过）。
 - **安全响应头（v1.7.6 起）**：`next.config.mjs` 配置 CSP / X-Frame-Options / X-Content-Type-Options / Referrer-Policy / Permissions-Policy。
 
@@ -419,6 +419,17 @@ clamp(confidence, 0, 100)
 - **权限最小化**：release job 仅声明 `permissions: contents: write`；使用内置 `github.token`，不引入第三方发布 Action 与个人令牌。
 - **实现位置**：`.github/workflows/ci.yml` 的 `release` job（与 CI 同 workflow，发布强依赖测试门禁）；部署仍由 Vercel 独立承接，Releases 仅承载版本归档与变更说明。
 
+### 8.7 SEO / GEO 规范（v1.17.0 起）
+
+- **路由单一数据源**：`lib/seo-routes.ts` 的 `SEO_ROUTES` 是全部可索引 URL 的唯一清单；`app/sitemap.ts`、`app/llms.txt/route.ts`、`app/llms-full.txt/route.ts` 与 `app/robots.ts` 的 UA 清单均由此派生。新增页面须先登记路由表；私有页（`/result/`、`/history/`、`/test/batch/`、`/offline`）一律不登记且 noindex。
+- **sitemap**：`lastModified` 取 `SITE_UPDATED`（内容审阅日期），禁止使用构建时间；重复内容变体（如 `quick`）canonical 统一指向 `standard`。
+- **metadata 与社交图**：根布局统一 `metadataBase` / title 模板 / robots / OG / twitter；社交图必须为静态 PNG（`public/og-default.png`，1200×630），禁用 SVG（多数链接预览不支持）；不使用运行时图像生成（`@vercel/og` 在 Node 26 下资源加载失败）。站点验证令牌仅由 `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` / `NEXT_PUBLIC_BING_SITE_VERIFICATION` 注入，未配置不输出。
+- **结构化数据**：根布局输出 WebApplication + WebSite + Organization 并以 `@id` 互链；首页 FAQPage、科普 Article + BreadcrumbList、栏目页 BreadcrumbList；`components/seo/JsonLd.tsx` 的 `safeJson()` 必须转义 `< > &` 与 U+2028/U+2029（v1.17.0 修复历史 no-op）；Article 的日期取 `SITE_UPDATED`。
+- **GEO 资产**：`/llms.txt` 主索引（全部可索引 URL + 关键事实 + Optional）、`/llms-full.txt` 全文索引（FAQ / 科普 / 隐私正文）；两者 `force-static`、`text/plain; charset=utf-8`，并在 `<head>` 与根 `other` 中声明发现入口。`SITE_FACTS` 为「关键事实」唯一来源，首页 SSR 事实块与 llms.txt 共用。
+- **AI 抓取策略**：`app/robots.ts` 显式放行 GPTBot / CCBot / ClaudeBot / PerplexityBot / Google-Extended / Applebot-Extended 等（默认 UA 本已 allow），私有路径一律 disallow。
+- **语言与事实口径**：SSR metadata、JSON-LD、llms*.txt 与首页事实块恒为简体中文（§8.5）；三语字典与 llms.txt 不得出现与题库实况冲突的题型描述（仅消失型数字图）；`lib/seo.test.ts` 对 URL 集合、事实文案、robots 与 safeJson 做回归断言。
+- **边界（需人工确认）**：无语言化可抓取 URL，故不输出 hreflang（避免指向同内容变体）；验证令牌与站点域名由部署方确认。
+
 ## 9. 实现状态与待办（对齐 ROADMAP）
 
 - **已完成（v1.0–v1.7）**：文档体系（9 分册 + SPEC 总纲）、高保真静态原型（4 页，判读已对齐应用）、Next.js 14 应用、石原氏检测全流程（38 板）、结果/历史/科普/隐私页、导出（PNG/打印/复制）/分享卡、路径追踪（v1.1）、色相排列 D15（v1.2）、进阶联合判读（v1.3）、趣味性体验包（v1.4）、38 板完整图谱（v1.5）、GA4 匿名统计（v1.5.1）、SEO/GEO（v1.6.0）、驾驶员场景专项（v1.7.0：驾照合规栏/信号灯辨识/屏幕校准/图版明度/严肃场景隐藏趣味）、Vitest 测试套件（v1.7.6）、安全响应头（v1.7.6）、三语国际化（v1.15.0）、判读类型退化输出收敛（v1.15.1）、GitHub Releases 自动发布（v1.16.0）、文档全面校订（v1.16.1）。
@@ -426,4 +437,4 @@ clamp(confidence, 0, 100)
 - **信号灯辨识（驾驶场景专项）**：独立路由 `/test/signal` 已实现（题库 9 题 + `scoreSignal` 判读），结果不计入历史，与 `TestMode` 枚举解耦。
 
 ---
-*本文档为 ChromaCheck 权威规范总纲 v1.16.2。分册应据本规范修订以消除前述字段/算法/范围冲突。*
+*本文档为 ChromaCheck 权威规范总纲 v1.17.0。分册应据本规范修订以消除前述字段/算法/范围冲突。*

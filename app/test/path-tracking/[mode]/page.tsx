@@ -1,5 +1,5 @@
 // app/test/path-tracking/[mode]/page.tsx — 路径追踪测试页
-// chromacheck v1.13.1
+// chromacheck v1.17.0
 import React from 'react';
 import { notFound } from 'next/navigation';
 import { PathTrackingRunner } from '@/components/test/PathTrackingRunner';
@@ -16,7 +16,8 @@ export function generateMetadata({ params }: { params: { mode: string } }): Meta
   return {
     title,
     description: desc,
-    alternates: { canonical: `/test/path-tracking/${params.mode}` },
+    // 仅预生成 standard；quick 为同内容动态变体，canonical 统一指向 standard 避免重复内容
+    alternates: { canonical: `/test/path-tracking/standard` },
     openGraph: {
       type: 'website',
       title: `${title} · 色辨 ChromaCheck`,

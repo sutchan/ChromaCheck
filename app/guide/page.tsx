@@ -1,7 +1,8 @@
 // app/guide/page.tsx — 检测前指引（服务端壳，metadata 静态；内容见 GuideContent）
-// chromacheck v1.13.2
+// chromacheck v1.17.0
 import React from 'react';
 import type { Metadata } from 'next';
+import { Breadcrumbs } from '@/components/seo/Breadcrumbs';
 import { GuideContent } from '@/components/guide/GuideContent';
 
 export const metadata: Metadata = {
@@ -22,6 +23,7 @@ export const metadata: Metadata = {
 export default function GuidePage() {
   return (
     <div id="guide-page" className="wrap stack" style={{ paddingBlock: 'var(--s-6)', gap: 'var(--s-5)' }}>
+      <Breadcrumbs items={[{ name: '首页', path: '/' }, { name: '检测前指引', path: '/guide' }]} />
       <GuideContent />
     </div>
   );

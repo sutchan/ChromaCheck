@@ -1,11 +1,11 @@
 # 色辨 ChromaCheck 测试策略文档
 
 > **规范遵循**：本文档为 [SPEC.md](./SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。判读引擎测试以 SPEC §6 与 `lib/scoring.ts` 为权威。
-> **实现状态**：v1.16.2：Vitest 测试套件共 14 文件 97 例（`lib/*.test.ts`：scoring / hue-scoring / path-scoring / advanced-scoring / signal-scoring / child-scoring / profile / storage / export-import / format / scoring-text / path-field / ishihara / sharecard），node 环境。CI `.github/workflows/ci.yml` 跑 type-check + lint + build + test。组件测试与 Playwright E2E 尚未落地。判读引擎测试以 SPEC §6 与 `lib/scoring.ts` 为权威。
+> **实现状态**：v1.17.0：Vitest 测试套件共 15 文件 107 例（`lib/*.test.ts`：scoring / hue-scoring / path-scoring / advanced-scoring / signal-scoring / child-scoring / profile / storage / export-import / format / scoring-text / path-field / ishihara / sharecard / seo），node 环境。SEO/GEO 回归测试覆盖路由单一数据源、llms.txt 全文索引、robots UA 策略与 JSON-LD 转义。CI `.github/workflows/ci.yml` 跑 type-check + lint + build + test。组件测试与 Playwright E2E 尚未落地。判读引擎测试以 SPEC §6 与 `lib/scoring.ts` 为权威。
 
 | 项目 | 内容 |
 |------|------|
-| 文档版本 | v1.16.2 |
+| 文档版本 | v1.17.0 |
 | 创建日期 | 2026-09-03 |
 
 ---
@@ -16,7 +16,7 @@
 
 | 层级 | 工具 | 重点 |
 |------|------|------|
-| 单元测试 | Vitest（node 环境） | 判读算法、工具函数、存储封装 —— **已落地，14 文件 97 例** |
+| 单元测试 | Vitest（node 环境） | 判读算法、工具函数、存储封装 —— **已落地，15 文件 107 例** |
 | 组件测试 | Vitest + React Testing Library | UI 组件渲染与交互 —— **规划中，未落地**（无 jsdom/happy-dom、无 RTL 依赖） |
 | 集成测试 | Playwright | 核心用户流程 —— **规划中，未落地** |
 | 端到端测试 | Playwright | 完整检测链路 —— **规划中，未落地**（CI 以 `echo` 占位跳过） |

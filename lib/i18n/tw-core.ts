@@ -37,7 +37,7 @@ export const TW_CORE = {
   'mode.quick.desc': '10 道核心題目，3 分鐘左右，適合初次自測與定期複檢。',
   'mode.quick.meta': '約 3 分鐘 · 10 題',
   'mode.standard.title': '標準版',
-  'mode.standard.desc': '完整 38 題，覆蓋轉換、消失、隱藏與分類題型，結果更穩定。',
+  'mode.standard.desc': '完整 38 題消失型數字圖，結果更穩定。',
   'mode.standard.meta': '約 12 分鐘 · 38 題',
   'mode.path.title': '路徑追蹤',
   'mode.path.desc': '沿嵌入色點連成的路徑描線，輔助判斷紅/綠色覺異常（v1.1 新增）。',
@@ -133,7 +133,7 @@ export const TW_CORE = {
 
   // 首頁色覺模擬
   'cvd.title': '看看不同色覺看到的世界',
-  'cvd.desc': '同一張檢測圖，切換不同色覺型別，觀察數字是否“消失”或“變形”。',
+  'cvd.desc': '同一張檢測圖，切換不同色覺型別，觀察數字是否清晰可辨或難以辨認。',
   'cvd.none': '正常色覺',
   'cvd.protanopia': '紅色覺異常',
   'cvd.deuteranopia': '綠色覺異常',

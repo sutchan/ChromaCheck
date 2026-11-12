@@ -1,12 +1,11 @@
 // lib/i18n/zh-faq.ts — 中文首页常见问题（FAQ）字典（与 HomeFaq 一一对应）
-// chromacheck v1.16.1
+// chromacheck v1.16.3
 
 export const ZH_FAQ = {
   'faq.chip': '常见问题',
   'faq.title': '关于色觉筛查，你可能想知道',
   'faq.note': '以下回答基于公开医学常识与本站检测原理整理，仅供科普参考。',
   'faq.count': '共 {n} 个问题',
-  'faq.linksTitle': '延伸阅读',
   'faq.q1': '色盲和色弱有什么区别？',
   'faq.a1': '色盲指某一类视锥细胞完全缺失，色弱则是该类细胞仍在但功能减弱、敏感度下降。两者的可辨颜色数量与日常影响差别明显，但仅凭在线筛查无法精确区分“盲”与“弱”，确诊需专业仪器。',
   'faq.q2': 'ChromaCheck 在线色觉检测准确吗？',

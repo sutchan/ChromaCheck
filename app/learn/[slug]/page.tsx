@@ -1,5 +1,5 @@
 // app/learn/[slug]/page.tsx — 科普详情（服务端壳：metadata / JSON-LD；正文见 ArticleContent）
-// chromacheck v1.9.0
+// chromacheck v1.17.0
 import React from 'react';
 import { notFound } from 'next/navigation';
 import type { Metadata } from 'next';
@@ -7,7 +7,7 @@ import { ARTICLES, getArticle } from '@/lib/learn-data';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { ArticleContent } from '@/components/learn/ArticleContent';
 
-import { SITE_URL } from '@/lib/site';
+import { SITE_URL, SITE_UPDATED } from '@/lib/site';
 
 const BASE = SITE_URL;
 
@@ -31,7 +31,7 @@ export function generateMetadata({ params }: { params: { slug: string } }): Meta
       siteName: 'ChromaCheck',
       locale: 'zh_CN',
       images: [
-        { url: '/og-default.svg', width: 1200, height: 630, alt: article.title },
+        { url: '/og-default.png', width: 1200, height: 630, alt: article.title },
       ],
     },
   };
@@ -47,6 +47,11 @@ export default function ArticlePage({ params }: { params: { slug: string } }) {
     headline: article.title,
     description: article.excerpt,
     inLanguage: 'zh-CN',
+    '@id': `${BASE}/learn/${article.slug}#article`,
+    datePublished: SITE_UPDATED,
+    dateModified: SITE_UPDATED,
+    author: { '@id': `${SITE_URL}/#organization` },
+    isPartOf: { '@id': `${SITE_URL}/#website` },
     articleSection: article.cat,
     mainEntityOfPage: { '@type': 'WebPage', '@id': `${BASE}/learn/${article.slug}` },
     publisher: { '@type': 'Organization', name: 'ChromaCheck' },

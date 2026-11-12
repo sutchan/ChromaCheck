@@ -18,7 +18,7 @@
 
 **规范域名（canonical）**：<https://chromacheck.app>（`lib/site.ts` 的 `SITE_URL`，用于 metadata / sitemap / robots / OG URL）；当前与试用入口并存，域名收敛计划待确认。
 
-> **当前版本 v1.16.2**（版本单一来源见 `VERSION`）。已实现能力见下方「功能特性」；权威规范见 [docs/SPEC.md](docs/SPEC.md)。
+> **当前版本 v1.17.0**（版本单一来源见 `VERSION`）。已实现能力见下方「功能特性」；权威规范见 [docs/SPEC.md](docs/SPEC.md)。
 
 ## 功能特性
 
@@ -26,6 +26,7 @@
 - 路径追踪描线、色相排列（D15）、进阶联合判读、信号灯辨识、儿童图形识别、批量检测等多种范式
 - 结果可视化（维度条形图 / 答题明细）与报告导出（PNG / 打印 PDF / 复制文字 / 色觉人格分享卡）
 - 检测历史本地存储，支持多档案、JSON 导出导入与汇总 CSV；答题草稿本机断点续测
+- SEO / GEO：sitemap / robots / llms.txt 与 llms-full.txt 全文索引、站点级结构化数据、PNG 社交分享图与 SSR 关键事实块
 - 响应式 + 深色模式 + 色觉安全模式 + 减少动效；结果页五种色觉视角切换（首页模拟器为 4 种）
 - 趣味体验包（进度点阵 / 章末轻科普 / 色觉人格分享卡 / 旅人称号），可一键关闭
 - 驾驶场景（`scene=driver`）与合规提示、无障碍跳转链接、自托管字体、FAQPage 结构化数据与页面错误边界
@@ -85,7 +86,7 @@ chromacheck/
 │                   #   画布导出（report-canvas、sharecard-canvas）/ 趣味（fun、sharecard）/
 │                   #   i18n/（简繁英字典与 t()）/ profile / export-import / ishihara / storage /
 │                   #   learn-data / privacy-data / license / format / analytics /
-│                   #   *.test.ts（Vitest 14 文件 97 例）
+│                   #   *.test.ts（Vitest 15 文件 107 例）
 ├── public/         # PWA sw.js / og-default.svg / icons/（3 个 PNG 图标）
 ├── scripts/        # 构建辅助脚本目录（当前为空）
 ├── docs/           # 项目文档（SPEC.md 为权威总纲）+ images/ 界面截图
