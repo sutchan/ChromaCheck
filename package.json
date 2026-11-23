@@ -3,7 +3,20 @@
   "version": "1.17.1",
   "private": true,
   "description": "色辨 ChromaCheck — 在线色觉检测 Web 应用（Next.js 14 + TS + Tailwind）",
-  "keywords": ["color-blindness", "color-vision", "ishihara", "color-vision-test", "d15", "hue-arrangement", "nextjs", "typescript", "tailwindcss", "pwa", "accessibility", "screening"],
+  "keywords": [
+    "color-blindness",
+    "color-vision",
+    "ishihara",
+    "color-vision-test",
+    "d15",
+    "hue-arrangement",
+    "nextjs",
+    "typescript",
+    "tailwindcss",
+    "pwa",
+    "accessibility",
+    "screening"
+  ],
   "scripts": {
     "dev": "next dev -p 3000 -H 0.0.0.0",
     "build": "next build",
@@ -31,5 +44,8 @@
     "tailwindcss": "3.4.10",
     "typescript": "5.4.5",
     "vitest": "2.1.9"
+  },
+  "allowScripts": {
+    "esbuild@0.21.5": true
   }
 }
