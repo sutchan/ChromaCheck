@@ -1,11 +1,11 @@
 # 色辨 ChromaCheck API 接口文档
 
 > **规范遵循**：本文档为 [SPEC.md](./SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。
-> **实现状态**：v1.0–v1.17.0 已实现（Next.js 14 应用；石原氏 38 板 / 路径追踪 v1.1 / 色相排列 D15 v1.2 / 进阶联合 v1.3 / 趣味包 v1.4 / GA4 v1.5.1 / SEO·GEO v1.6 / 驾驶员场景 v1.7 / 设置面板 v1.10.0 / FAQ 手风琴 v1.11.0 / i18n 子模块化 v1.11.1 / lockfile 与 SEO metadata 补齐 v1.11.2 / 无障碍走查与测试覆盖优化 v1.12.0）。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [TASKS.md](./TASKS.md)。
+> **实现状态**：v1.0–v1.17.1 已实现（按 [SPEC.md](./SPEC.md) §0.3 分类清单）；纯前端、无服务端 API 路由。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [TASKS.md](./TASKS.md)。
 
 | 项目 | 内容 |
 |------|------|
-| 文档版本 | v1.17.0 |
+| 文档版本 | v1.17.1 |
 | 创建日期 | 2026-09-03 |
 | Base URL | 无服务端 API；站点规范域名取自 `lib/site.ts` 的 `SITE_URL`（当前 `https://chromacheck.app`），线上试用入口为 `https://chroma.ewuse.com`；仓库不含 `/api` 路由 |
 
@@ -93,13 +93,13 @@
 
 ### 3.1 健康检查
 
-#### GET `/health`
+#### GET `/api/health`（未实现）
 
 检查服务是否正常运行。
 
 **请求示例**：
 ```bash
-curl https://chromacheck.example.com/api/health
+curl https://chromacheck.app/api/health
 ```
 
 **响应示例**：
@@ -108,7 +108,7 @@ curl https://chromacheck.example.com/api/health
   "ok": true,
   "data": {
     "status": "healthy",
-    "version": "1.0.0",
+    "version": "1.17.1",
     "timestamp": "2026-09-03T10:00:00.000Z"
   }
 }
@@ -145,7 +145,7 @@ interface AnalyticsEventRequest {
 
 **请求示例**：
 ```bash
-curl -X POST https://chromacheck.example.com/api/analytics/event \
+curl -X POST https://chromacheck.app/api/analytics/event \
   -H "Content-Type: application/json" \
   -d '{
     "event": "test_complete",
@@ -177,13 +177,13 @@ curl -X POST https://chromacheck.example.com/api/analytics/event \
 
 ### 3.3 题库版本查询
 
-#### GET `/questions/version`
+#### GET `/api/questions/version`（未实现）
 
 查询当前题库版本，客户端据此判断是否需要更新本地题库。
 
 **请求示例**：
 ```bash
-curl https://chromacheck.example.com/api/questions/version
+curl https://chromacheck.app/api/questions/version
 ```
 
 **响应示例**：
@@ -203,7 +203,7 @@ curl https://chromacheck.example.com/api/questions/version
 
 ### 3.4 获取题库数据（远期）
 
-#### GET `/questions/:type`
+#### GET `/api/questions/:type`（未实现）
 
 获取指定类型的题库数据，用于客户端远程更新题库。
 
@@ -222,7 +222,7 @@ curl https://chromacheck.example.com/api/questions/version
 
 **请求示例**：
 ```bash
-curl "https://chromacheck.example.com/api/questions/ishihara?version=1.0.0&mode=quick"
+curl "https://chromacheck.app/api/questions/ishihara?version=1.0.0&mode=quick"
 ```
 
 **响应示例**：

@@ -1,12 +1,12 @@
 # 色辨 ChromaCheck 技术架构文档
 
 > **规范遵循**：本文档为 [SPEC.md](./SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。
-> **实现状态**：v1.0–v1.17.0 已实现（Next.js 14 应用；石原氏 38 板 / 路径追踪 v1.1 / 色相排列 D15 v1.2 / 进阶联合 v1.3 / 趣味包 v1.4 / GA4 v1.5.1 / SEO·GEO v1.6 / 驾驶员场景 v1.7 / 设置面板 v1.10.0 / FAQ 手风琴 v1.11.0 / i18n 子模块化 v1.11.1 / lockfile 与 SEO metadata 补齐 v1.11.2 / 无障碍走查与测试覆盖优化 v1.12.0 / 判读科学性修正 v1.13.0 / 键盘输入与构建号 v1.14.0 / 三语国际化 v1.15.0 / 判读类型未分型收敛 v1.15.1 / CI 自动发布 v1.16.0）。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [TASKS.md](./TASKS.md)。
+> **实现状态**：v1.0–v1.17.1 已实现（按 [SPEC.md](./SPEC.md) §0.3 分类清单）；纯前端、无服务端 API 路由。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [TASKS.md](./TASKS.md)。
 > **原型定位**：`prototype/` 为独立的高保真原型与设计验证参考（含早期 JS 移植源），**非应用运行依赖**；应用源码以 `lib/` 与 `components/` 为准，删除 `prototype/` 不影响构建与运行。
 
 | 项目 | 内容 |
 |------|------|
-| 文档版本 | v1.17.0 |
+| 文档版本 | v1.17.1 |
 | 创建日期 | 2026-09-03 |
 | 技术负责人 | ChromaCheck 团队 |
 
@@ -66,6 +66,8 @@
 │                    └───────────────┘                      │
 └─────────────────────────────────────────────────────────┘
 ```
+
+> 注：图中 `API Routes` 与 `可选数据库` 均为**未实现规划**。当前应用仅 `app/llms.txt/route.ts`、`app/llms-full.txt/route.ts` 两个 Route Handler，无数据库（详见 SPEC §2.3）。
 
 ### 1.3 设计原则
 
@@ -210,11 +212,11 @@ docs/                         # 项目文档（SPEC.md 为权威总纲，TASKS.m
 
 4. **缓存策略**：
    - 静态资源（JS/CSS、自托管 woff2）设置长期缓存（`Cache-Control: public, max-age=31536000, immutable`）。
-   - SSG 页面使用 ISR（Incremental Static Regeneration），科普文章 `revalidate: 3600`。
+   - 科普文章为静态生成；当前未启用 ISR / `revalidate`（远期规划）。
 
 5. **检测流程优化**：
    - 题库数据在进入检测页时一次性加载（JSON < 50KB）。
-   - 答题数据实时保存到 localStorage（防抖 500ms），防止意外丢失。
+   - 答题数据直接写入 localStorage（无防抖，`lib/storage.ts` 的 `saveProgress()`），防止意外丢失。
    - 结果计算在客户端同步执行（< 10ms），无需网络请求。
 
 ---
@@ -409,7 +411,7 @@ cc.progress.v1     # 进行中的检测进度（模式 / 题号 / 答题记录 /
 
 ### 5.1 API 路由列表
 
-> **现状（v1.17.0）**：纯前端应用**无任何服务端 API 路由**，`app/` 下仅 `app/llms.txt/route.ts` 与 `app/llms-full.txt/route.ts` 两个 Route Handler（SEO/GEO 纯文本索引）。下表接口均为 **v1.1+ 规划或历史设计，当前未实现**；访问统计仅由 GA4 `pageview` 上报（`lib/analytics.ts`），不走本站接口。
+> **现状（v1.17.1）**：纯前端应用**无任何服务端 API 路由**，`app/` 下仅 `app/llms.txt/route.ts` 与 `app/llms-full.txt/route.ts` 两个 Route Handler（SEO/GEO 纯文本索引）。下表接口均为 **v1.1+ 规划或历史设计，当前未实现**；访问统计仅由 GA4 `pageview` 上报（`lib/analytics.ts`），不走本站接口。
 
 | 方法 | 路径 | 说明 | 状态 |
 |------|------|------|------|
@@ -452,7 +454,7 @@ interface AnalyticsEvent {
 
 | 风险 | 防护措施 |
 |------|----------|
-| XSS | React 默认转义；仅 `components/seo/JsonLd.tsx` 使用 `dangerouslySetInnerHTML`，且经 `safeJson()` 转义 `</script` 注入；无 Markdown 渲染库 |
+| XSS | React 默认转义；仅 `components/seo/JsonLd.tsx` 使用 `dangerouslySetInnerHTML`；`safeJson()` 转义 `< > &` 与 U+2028/U+2029（v1.17.0 修复历史 no-op），纵深防御脚本注入；无 Markdown 渲染库 |
 | CSRF | 无服务端写入接口（v1.9.0 起移除 `/api/analytics/event`），不使用 Cookie 认证；GA4 上报为第三方统计，无本站 CSRF 面 |
 | 依赖漏洞 | 维护者定期手动执行 `npm outdated` / `npm audit`；Dependabot 与 CI 漏洞扫描均未配置（见 `.github/SECURITY.md`） |
 | 敏感信息泄露 | 前端代码中不包含 API Key、数据库连接等敏感信息 |
@@ -485,7 +487,7 @@ interface AnalyticsEvent {
 ### 7.1 单元测试（v1.7.6 已落地）
 
 - **框架**：Vitest（node 环境，`vitest.setup.ts` 注入内存 Storage，无 jsdom/happy-dom）
-- **实际覆盖**：14 个 `lib/*.test.ts` 平铺文件、共 97 例——
+- **实际覆盖**：15 个 `lib/*.test.ts` 平铺文件、共 107 例——
   - 判读引擎与题库（scoring / hue-scoring / path-scoring / signal-scoring / advanced-scoring / child-scoring / ishihara / path-field）
   - 存储与档案（storage / profile / export-import）、格式化与文案（format / scoring-text）、分享卡（sharecard）
 - **运行**：`npm test`（vitest run）、`npm run test:watch`、`npm run test:coverage`（@vitest/coverage-v8）

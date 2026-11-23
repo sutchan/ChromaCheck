@@ -1,11 +1,11 @@
 # 色辨 ChromaCheck 数据规范文档
 
 > **规范遵循**：本文档为 [SPEC.md](./SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。类型别名（ColorDeficiencyType / OverallResult / SeverityLevel / TestMode）以 SPEC §5.5 为权威定义。
-> **实现状态**：v1.0–v1.17.0 已实现（Next.js 14 应用；石原氏 38 板 / 路径追踪 v1.1 / 色相排列 D15 v1.2 / 进阶联合 v1.3 / 趣味包 v1.4 / GA4 v1.5.1 / SEO·GEO v1.6 / 驾驶员场景 v1.7 / 设置面板 v1.10.0 / FAQ 手风琴 v1.11.0 / i18n 子模块化 v1.11.1 / lockfile 与 SEO metadata 补齐 v1.11.2 / 无障碍走查与测试覆盖优化 v1.12.0）。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [TASKS.md](./TASKS.md)。
+> **实现状态**：v1.0–v1.17.1 已实现（按 [SPEC.md](./SPEC.md) §0.3 分类清单）；纯前端、无服务端 API 路由。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [TASKS.md](./TASKS.md)。
 
 | 项目 | 内容 |
 |------|------|
-| 文档版本 | v1.17.0 |
+| 文档版本 | v1.17.1 |
 | 创建日期 | 2026-09-03 |
 
 ---
@@ -126,8 +126,9 @@ interface AnswerRecord {
   durationMs: number;
 }
 
-> 字段以 `lib/types.ts` 的 `AnswerRecord` 为权威（仅 3 个字段）；正确性由判读引擎按题目答案现场计算，不落库、不冗余存正确答案。
 ```
+
+> 字段以 `lib/types.ts` 的 `AnswerRecord` 为权威（仅 3 个字段）；正确性由判读引擎按题目答案现场计算，不落库、不冗余存正确答案。
 
 ---
 
@@ -352,7 +353,7 @@ interface HistorySummary {
 
 ---
 
-### 6.5 i18n 字典数据结构（v1.15.0 起三语）
+### 6.6 i18n 字典数据结构（v1.15.0 起三语）
 
 ```
 lib/i18n/

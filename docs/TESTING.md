@@ -1,11 +1,11 @@
 # 色辨 ChromaCheck 测试策略文档
 
 > **规范遵循**：本文档为 [SPEC.md](./SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。判读引擎测试以 SPEC §6 与 `lib/scoring.ts` 为权威。
-> **实现状态**：v1.17.0：Vitest 测试套件共 15 文件 107 例（`lib/*.test.ts`：scoring / hue-scoring / path-scoring / advanced-scoring / signal-scoring / child-scoring / profile / storage / export-import / format / scoring-text / path-field / ishihara / sharecard / seo），node 环境。SEO/GEO 回归测试覆盖路由单一数据源、llms.txt 全文索引、robots UA 策略与 JSON-LD 转义。CI `.github/workflows/ci.yml` 跑 type-check + lint + build + test。组件测试与 Playwright E2E 尚未落地。判读引擎测试以 SPEC §6 与 `lib/scoring.ts` 为权威。
+> **实现状态**：v1.17.1：Vitest 15 文件 107 例（node 环境）；CI 跑 type-check + lint + build + test；组件测试与 E2E 未落地。判读引擎测试以 SPEC §6 与 `lib/scoring.ts` 为权威。
 
 | 项目 | 内容 |
 |------|------|
-| 文档版本 | v1.17.0 |
+| 文档版本 | v1.17.1 |
 | 创建日期 | 2026-09-03 |
 
 ---
@@ -75,7 +75,7 @@ lib/
 ├── signal-scoring.ts / advanced-scoring.ts / child-scoring.ts
 ├── storage.ts / profile.ts / export-import.ts / format.ts
 ├── ishihara.ts / path-field.ts / sharecard.ts / scoring-text.ts
-└── *.test.ts            # 14 个平铺测试文件，共 97 例
+└── *.test.ts            # 15 个平铺测试文件，共 107 例
 ```
 
 ### 2.3 覆盖率目标

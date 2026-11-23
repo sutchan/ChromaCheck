@@ -1,11 +1,11 @@
 # 色辨 ChromaCheck 部署文档
 
 > **规范遵循**：本文档为 [SPEC.md](./SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。
-> **实现状态**：v1.0–v1.16.3 已部署上线。Vercel 自动部署；v1.9.0 起 CSP `frame-ancestors` 收紧为 `'self'`，v1.11.2 引入 `package-lock.json`；v1.7.6 起 `next.config.mjs` 配置安全响应头（CSP/X-Frame-Options 等）。静态原型仍可单独托管预览。
+> **实现状态**：v1.0–v1.17.1 已部署上线（Vercel 自动部署，静态原型可单独托管预览）；纯前端、无服务端 API 路由。权威总纲见 [SPEC.md](./SPEC.md)。
 
 | 项目 | 内容 |
 |------|------|
-| 文档版本 | v1.17.0 |
+| 文档版本 | v1.17.1 |
 | 创建日期 | 2026-09-03 |
 
 ---
@@ -243,7 +243,7 @@ ufw deny 3000/tcp  # 3000 端口仅内网访问
 
 ## 5. 环境变量清单
 
-> 代码中实际读取的环境变量仅下列两项；`NEXT_PUBLIC_APP_NAME` / `NEXT_PUBLIC_APP_URL` / `NEXT_PUBLIC_ANALYTICS_ENABLED` / `NEXT_PUBLIC_SENTRY_DSN` / `NEXT_PUBLIC_VERCEL_ANALYTICS_ID` 均为早期规划，代码零引用、**未实现**。
+> 代码实际读取的环境变量如下（含构建期注入的 `NEXT_PUBLIC_BUILD_ID`）；`NEXT_PUBLIC_APP_NAME` / `NEXT_PUBLIC_APP_URL` / `NEXT_PUBLIC_ANALYTICS_ENABLED` / `NEXT_PUBLIC_SENTRY_DSN` / `NEXT_PUBLIC_VERCEL_ANALYTICS_ID` 均为早期规划，代码零引用、**未实现**。
 
 | 变量名 | 必需 | 说明 |
 |--------|------|------|

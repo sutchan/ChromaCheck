@@ -1,7 +1,16 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件、`package.json` 与 `package-lock.json` 的 `version` 字段（当前 `1.17.0`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件、`package.json` 与 `package-lock.json` 的 `version` 字段（当前 `1.17.1`）。
+
+## [1.17.1] - 2026-11-22
+
+### 文档（规范体系与记忆体系结构性治理）
+
+- `docs/SPEC.md`：重写为权威总纲——新增规范优先级（L0–L3）与 11 份文档清单；按模块归类实现状态；统一术语、版本口径与 DOM id 示例；修正已失效的 PRD 引用、事件名冲突、旧类型名、`system` 主题与存储键口径；补齐路由现状表、6 键存储清单、三语验收项、CSP/构建号/CI 命令口径、SEO/GEO 与服务端规划标注。
+- `docs/` 10 份分册：状态行统一为 `v1.0–v1.17.1`，文档版本表统一；修正 Vitest 14/97 → 15/107、API 域名与路径示例、架构图规划标注、ISR/防抖不实描述、`safeJson()` 转义口径、PRD 未实现项、DATA-SPEC 重复章节号与代码块格式、ROADMAP 未实现 P0 标注。
+- `.codebuddy/memory/`：重写项目内索引为按主题归类 + 时效/可信度标注；校正 `review-2026-11-05.md` 中已失效的阈值、版本、lockfile、页脚格式与 `SITE_UPDATED` 条目；统一两套页脚记忆示例版本。仓库外主题索引同步标注 `lastVerified`。
+- 版本同步：`VERSION` / `package.json` / `package-lock.json`、README、CHANGELOG 与全部 docs 分册统一为 v1.17.1；CHANGELOG 历史版本节保持原样。
 
 ## [1.17.0] - 2026-11-12
 
