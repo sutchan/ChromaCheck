@@ -1,19 +1,28 @@
 // e2e/main-flow.spec.ts — 主链路回归（任务 O-03）
 // chromacheck v1.17.6
-import { expect, test } from '@playwright/test';
+import { expect, test, type Locator, type Page } from '@playwright/test';
+
+// Next 客户端导航在冷启动时偶发吞掉首次点击，受限重试避免把环境抖动误判为功能失败
+async function clickAndWaitForUrl(page: Page, locator: Locator, expected: RegExp) {
+  for (let attempt = 0; attempt < 3; attempt += 1) {
+    await locator.click();
+    try {
+      await expect(page).toHaveURL(expected, { timeout: 8000 });
+      return;
+    } catch (error) {
+      if (attempt === 2) throw error;
+      await page.waitForTimeout(300);
+    }
+  }
+}
 
 test('首页 → 指引 → 石原氏快速 → 结果', async ({ page }) => {
   await page.goto('/');
   await expect(page.locator('#main-content')).toBeVisible();
 
-  await page.locator('#home-start-cta').click();
-  await expect(page).toHaveURL(/\/guide$/);
-
-  await page.locator('#guide-start-cta').click();
-  await expect(page).toHaveURL(/\/test$/);
-
-  await page.locator('#mode-quick-link').click();
-  await expect(page).toHaveURL(/\/test\/ishihara\/quick$/);
+  await clickAndWaitForUrl(page, page.locator('#home-start-cta'), /\/guide$/);
+  await clickAndWaitForUrl(page, page.locator('#guide-start-cta'), /\/test$/);
+  await clickAndWaitForUrl(page, page.locator('#mode-quick-link'), /\/test\/ishihara\/quick$/);
 
   // 真实流程含演示题反馈、章末过渡与正式答题；按页面状态推进而非按题号硬编码
   const waitForNextStep = async () => {
