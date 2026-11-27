@@ -1,10 +1,10 @@
 // components/test/TestRunner.tsx — 标准/快速版石原氏测试运行器
-// chromacheck v1.13.4
+// chromacheck v1.17.8
 'use client';
 
 import React, { useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
-import type { AnswerRecord, TestMode } from '@/lib/types';
+import type { AnswerRecord, Scene, TestMode } from '@/lib/types';
 import { getQuestions } from '@/lib/questions';
 import { computeResult } from '@/lib/scoring';
 import { saveResult, saveProgress, clearProgress } from '@/lib/storage';
@@ -15,7 +15,7 @@ import { Callout } from '@/components/common/Callout';
 import { useSettings } from '@/components/layout/ThemeProvider';
 import { useLang } from '@/components/layout/LangProvider';
 
-export function TestRunner({ mode }: { mode: TestMode }) {
+export function TestRunner({ mode, scene = 'general' }: { mode: TestMode; scene?: Scene }) {
   const router = useRouter();
   const { t, lang } = useLang();
   const { settings } = useSettings();
@@ -31,6 +31,7 @@ export function TestRunner({ mode }: { mode: TestMode }) {
       endedAt: Date.now(),
       device: detectDevice(lang),
       lang,
+      scene,
     });
     saveResult(result);
     router.push(`/result/${result.id}`);

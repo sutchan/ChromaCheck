@@ -1,5 +1,5 @@
 // app/test/advanced/page.tsx — 进阶联合检测页
-// chromacheck v1.13.1
+// chromacheck v1.17.8
 import React from 'react';
 import type { Metadata } from 'next';
 import { AdvancedRunner } from '@/components/test/AdvancedRunner';
@@ -22,7 +22,12 @@ export function generateMetadata(): Metadata {
   };
 }
 
-export default function AdvancedTestPage({ searchParams }: { searchParams: { scene?: string } }) {
-  const scene = searchParams.scene === 'driver' ? 'driver' : 'general';
-  return <div id="advanced-test-page"><AdvancedRunner scene={scene} /></div>;
+export default async function AdvancedTestPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ scene?: string }>;
+}) {
+  // Next.js 16 的 searchParams 为 Promise，须 await 后读取，否则驾驶场景参数恒为 undefined
+  const { scene } = await searchParams;
+  return <div id="advanced-test-page"><AdvancedRunner scene={scene === 'driver' ? 'driver' : 'general'} /></div>;
 }

@@ -1,5 +1,5 @@
 // app/test/ishihara/[mode]/page.tsx — 石原氏测试页
-// chromacheck v1.17.6
+// chromacheck v1.17.8
 import React from 'react';
 import { notFound } from 'next/navigation';
 import { TestRunner } from '@/components/test/TestRunner';
@@ -34,10 +34,17 @@ export async function generateMetadata({ params }: { params: Promise<{ mode: str
 
 export default async function IshiharaTestPage({
   params,
+  searchParams,
 }: {
   params: Promise<{ mode: string }>;
+  searchParams: Promise<{ scene?: string }>;
 }) {
   const { mode } = await params;
+  const { scene } = await searchParams;
   if (mode !== 'quick' && mode !== 'standard') notFound();
-  return <div id="ishihara-test-page"><TestRunner mode={mode as TestMode} /></div>;
+  return (
+    <div id="ishihara-test-page">
+      <TestRunner mode={mode as TestMode} scene={scene === 'driver' ? 'driver' : 'general'} />
+    </div>
+  );
 }

@@ -1,12 +1,12 @@
 // components/home/HomeFaq.tsx — 首页常见问题（双栏布局 + 可访问手风琴 + FAQPage 结构化数据）
-// chromacheck v1.16.3
+// chromacheck v1.17.8
 'use client';
 
 import React, { useCallback, useMemo, useState } from 'react';
 import { JsonLd } from '@/components/seo/JsonLd';
 import { Icon } from '@/components/common/Icon';
 import { useLang } from '@/components/layout/LangProvider';
-import type { DictKey } from '@/lib/i18n';
+import { t as translate, type DictKey } from '@/lib/i18n';
 
 /** FAQ 问答键对：文案在 lib/i18n 的 zh / zh-TW / en FAQ 字典中三语对齐 */
 const QA_KEYS: Array<{ q: DictKey; a: DictKey }> = [
@@ -31,17 +31,18 @@ export function HomeFaq() {
 
   const faqs = useMemo(() => QA_KEYS.map((k) => ({ q: t(k.q), a: t(k.a) })), [t]);
 
+  // SPEC §8.7：结构化数据恒为简体中文，不随客户端界面语言切换（SEO / GEO 口径稳定）
   const faqLd = useMemo(
     () => ({
       '@context': 'https://schema.org',
       '@type': 'FAQPage',
-      mainEntity: faqs.map((f) => ({
+      mainEntity: QA_KEYS.map((k) => ({
         '@type': 'Question',
-        name: f.q,
-        acceptedAnswer: { '@type': 'Answer', text: f.a },
+        name: translate('zh', k.q),
+        acceptedAnswer: { '@type': 'Answer', text: translate('zh', k.a) },
       })),
     }),
-    [faqs],
+    [],
   );
 
   const toggle = useCallback((index: number) => {
@@ -72,7 +73,7 @@ export function HomeFaq() {
             const qid = `faq-q-${i + 1}`;
             const aid = `faq-a-${i + 1}`;
             return (
-              <div key={f.q} className="faq-item" data-open={open ? 'true' : 'false'} role="listitem">
+              <div key={`faq-${i + 1}`} className="faq-item" data-open={open ? 'true' : 'false'} role="listitem">
                 <h3 className="faq-heading">
                   <button
                     type="button"

@@ -1,5 +1,5 @@
 // components/privacy/PrivacyContent.tsx — 隐私政策内容（客户端，双语）
-// chromacheck v1.9.0
+// chromacheck v1.17.8
 'use client';
 
 import React from 'react';
@@ -25,7 +25,7 @@ export function PrivacyContent() {
   const doc = getPrivacyDoc(lang);
 
   return (
-    <div id="privacy-page" className="wrap stack" style={{ paddingBlock: 'var(--s-7)', gap: 'var(--s-5)', maxWidth: 860 }}>
+    <div id="privacy-content" className="wrap stack" style={{ paddingBlock: 'var(--s-7)', gap: 'var(--s-5)', maxWidth: 860 }}>
       <div className="stack" style={{ gap: 'var(--s-2)' }}>
         <span className="chip">{doc.chip}</span>
         <h1 style={{ margin: 0 }}>{doc.heading}</h1>

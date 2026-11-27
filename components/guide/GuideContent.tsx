@@ -1,5 +1,5 @@
 // components/guide/GuideContent.tsx — 检测前指引内容（客户端，双语）
-// chromacheck v1.9.0
+// chromacheck v1.17.8
 'use client';
 
 import React from 'react';
@@ -28,7 +28,7 @@ export function GuideContent() {
   ];
 
   return (
-    <div id="guide-page" className="wrap stack" style={{ paddingBlock: 'var(--s-7)', gap: 'var(--s-5)', maxWidth: 880 }}>
+    <div id="guide-content" className="wrap stack" style={{ paddingBlock: 'var(--s-7)', gap: 'var(--s-5)', maxWidth: 880 }}>
       <div className="stack" style={{ gap: 'var(--s-2)' }}>
         <span className="chip">{t('guide.title')}</span>
         <h1 style={{ margin: 0 }}>{t('guide.startHint')}</h1>
@@ -37,9 +37,9 @@ export function GuideContent() {
         </p>
       </div>
 
-      <div className="grid-cards">
-        {steps.map((s) => (
-          <div key={s.title} className="card stack" style={{ gap: 'var(--s-2)' }}>
+      <div id="guide-steps-grid" className="grid-cards">
+        {steps.map((s, i) => (
+          <div key={`guide-step-${i}`} className="card stack" style={{ gap: 'var(--s-2)' }}>
             <span style={{ color: 'var(--brand)' }}>
               <Icon name={s.icon} size={26} />
             </span>
@@ -58,9 +58,9 @@ export function GuideContent() {
         <p className="muted" style={{ margin: 0 }}>
           {t('guide.calibDesc')}
         </p>
-        <div className="grid-cards">
-          {calibration.map((c) => (
-            <div key={c.title} className="card stack" style={{ gap: 'var(--s-2)' }}>
+        <div id="guide-calibration-grid" className="grid-cards">
+          {calibration.map((c, i) => (
+            <div key={`guide-calibration-${i}`} className="card stack" style={{ gap: 'var(--s-2)' }}>
               <h3 style={{ margin: 0, fontSize: '1.02rem' }}>{c.title}</h3>
               <p className="muted" style={{ margin: 0, fontSize: '0.92rem' }}>{c.text}</p>
             </div>
@@ -73,7 +73,7 @@ export function GuideContent() {
 
       <div className="row" style={{ gap: 'var(--s-3)' }}>
         <Link id="guide-start-cta" href="/test" className="btn btn-primary">{t('guide.ctaSelect')} <Icon name="arrowRight" size={18} /></Link>
-        <Link href="/test?scene=driver" className="btn btn-ghost">{t('guide.ctaDriver')}</Link>
+        <Link id="guide-driver-cta" href="/test?scene=driver" className="btn btn-ghost">{t('guide.ctaDriver')}</Link>
         <Link href="/" className="btn btn-ghost">{t('guide.ctaHome')}</Link>
       </div>
     </div>

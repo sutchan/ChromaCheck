@@ -1,5 +1,5 @@
 // lib/advanced-scoring.ts — 进阶版三模块联合判读（v1.3）
-// chromacheck v1.9.0
+// chromacheck v1.17.8
 import type {
   AnswerRecord,
   DeficiencyType,
@@ -41,6 +41,8 @@ function typeFromAdvanced(
       if (t.includes('deutan')) deutanFail++;
     }
   });
+  // 路径两轴均无命中时不得默认分型；与 scoreIshihara / SPEC §6.4 的未分型口径一致
+  if (protanFail === 0 && deutanFail === 0) return null;
   return protanFail > deutanFail ? 'protanomaly' : 'deuteranomaly';
 }
 

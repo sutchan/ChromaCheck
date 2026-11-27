@@ -1,11 +1,11 @@
 # 色辨 ChromaCheck 测试策略文档
 
 > **规范遵循**：本文档为 [SPEC.md](./SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。判读引擎测试以 SPEC §6 与 `lib/scoring.ts` 为权威。
-> **实现状态**：v1.17.7（相关实现归档见 [tasks-done.md](./tasks-done.md) §九）：Vitest 17 文件 116 例（node 环境）；V8 覆盖率 89.53% lines / 84.3% branches / 87.64% functions 达标；首页 CTA 已收敛至 `/guide`，Playwright 本地连续三次 2/2 通过，CI 三次由外部触发验证；组件测试未落地。判读引擎测试以 SPEC §6 与 `lib/scoring.ts` 为权威。
+> **实现状态**：v1.17.8（相关实现归档见 [tasks-done.md](./tasks-done.md) §九）：Vitest 17 文件 122 例（node 环境）；V8 覆盖率 89.53% lines / 84.3% branches / 87.64% functions 达标；首页 CTA 已收敛至 `/guide`，Playwright 本地连续三次 2/2 通过，CI 三次由外部触发验证；组件测试未落地。判读引擎测试以 SPEC §6 与 `lib/scoring.ts` 为权威。
 
 | 项目 | 内容 |
 |------|------|
-| 文档版本 | v1.17.7 |
+| 文档版本 | v1.17.8 |
 | 创建日期 | 2026-09-03 |
 
 ---
@@ -16,7 +16,7 @@
 
 | 层级 | 工具 | 重点 |
 |------|------|------|
-| 单元测试 | Vitest（node 环境） | 判读算法、工具函数、存储封装 —— **已落地，17 文件 116 例** |
+| 单元测试 | Vitest（node 环境） | 判读算法、工具函数、存储封装 —— **已落地，17 文件 122 例** |
 | 组件测试 | Vitest + React Testing Library | UI 组件渲染与交互 —— **规划中，未落地**（无 jsdom/happy-dom、无 RTL 依赖） |
 | 集成测试 | Playwright | 主链路回归与语言切换 `html lang` —— **配置 / 依赖 / 脚本 / CI 已接入** |
 | 端到端测试 | Playwright | 完整检测链路 —— **已接入 CI，本地连续三次稳定通过，CI 三次由外部触发验证** |
@@ -75,7 +75,7 @@ lib/
 ├── signal-scoring.ts / advanced-scoring.ts / child-scoring.ts
 ├── storage.ts / profile.ts / export-import.ts / format.ts
 ├── ishihara.ts / path-field.ts / sharecard.ts / scoring-text.ts
-└── *.test.ts            # 17 个平铺测试文件，共 116 例
+└── *.test.ts            # 17 个平铺测试文件，共 122 例
 ```
 
 ### 2.3 覆盖率目标

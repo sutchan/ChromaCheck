@@ -1,5 +1,5 @@
 // components/test/IshiharaPlate.tsx — 点阵检测图渲染（移植自 prototype/ishihara.js）
-// chromacheck v1.0.0
+// chromacheck v1.17.8
 'use client';
 
 import React, { useEffect, useRef } from 'react';
@@ -111,14 +111,17 @@ export function IshiharaPlate({
       return;
     }
     let start: number | null = null;
+    let frame = 0;
     const dur = 720;
     function step(ts: number) {
       if (start === null) start = ts;
       const p = Math.min(1, (ts - start) / dur);
       paint(p < 1 ? 1 - Math.pow(1 - p, 3) : 1);
-      if (p < 1) requestAnimationFrame(step);
+      if (p < 1) frame = requestAnimationFrame(step);
     }
-    requestAnimationFrame(step);
+    frame = requestAnimationFrame(step);
+    // 卸载或依赖变化时取消未完成的动画帧，避免在已脱离的 canvas 上继续绘制
+    return () => cancelAnimationFrame(frame);
   }, [type, text, seed, cvd, dots, animate]);
 
   return (

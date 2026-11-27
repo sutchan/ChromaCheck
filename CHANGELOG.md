@@ -1,7 +1,20 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件、`package.json` 与 `package-lock.json` 的 `version` 字段（当前 `1.17.7`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件、`package.json` 与 `package-lock.json` 的 `version` 字段（当前 `1.17.8`）。
+
+## [1.17.8] - 2026-11-27
+
+### 修复（代码审查与鲁棒性）
+
+- 判读：石原氏错误率只按已作答题目统计，未答题不再计入错误，避免「答 15 对 10」被误判为色盲；severity 同步按作答错误率计算。
+- 判读：路径追踪 / 进阶联合在两轴均无命中时返回 `type = null`（未分型），与 SPEC §6.4 及石原氏口径一致；空标准路径不再产生 NaN。
+- 数据：导入包逐字段白名单校验，拒绝 null 元素、非数组档案与 `__proto__` / `constructor` / `prototype` 键，阻断合并阶段 TypeError 与原型污染；CSV 导出对 `= + - @` 等公式前缀加单引号，防止表格软件执行。
+- 路由：Next 16 的 `searchParams` 改为 `await` 读取；驾驶场景 `?scene=driver` 从指引页 → 模式选择 → 石原氏 / 进阶测试 → 结果全链路透传，结果页驾驶提示生效。
+- 组件：IshiharaPlate 动画帧、SignalRunner / ReportActions 定时器补卸载清理；HomeFaq 的 FAQPage JSON-LD 恒为简体（SPEC §8.7）；译文不再作 React key。
+- 语义化 id：页面壳与内容组件重复 id 改为 `*-content`；首页模拟器 / 事实块 / 特性 / 流程、指引步骤与校准网格、驾驶入口、驱动模式卡片及原型四页主要容器补 kebab-case id。
+- 回归测试：新增 6 例（导入校验 / CSV 注入 / 未答题口径 / 两轴未分型 ×2），测试基线 17 文件 122 例。
+- README Next.js 徽章由 14 修正为 16；版本展示位同步 v1.17.8。
 
 ## [1.17.7] - 2026-11-27
 

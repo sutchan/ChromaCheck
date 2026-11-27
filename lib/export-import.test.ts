@@ -72,6 +72,16 @@ describe('导入解析', () => {
   it('非法 JSON → ok:false', () => {
     expect(parseImport('{broken').ok).toBe(false);
   });
+
+  it('results 含 null / profiles 非数组 → ok:false（阻断合并阶段 TypeError）', () => {
+    expect(parseImport(JSON.stringify({ app: 'ChromaCheck', schema: 'history-bundle/v1', profiles: [], results: [null] })).ok).toBe(false);
+    expect(parseImport(JSON.stringify({ app: 'ChromaCheck', schema: 'history-bundle/v1', profiles: 123, results: [] })).ok).toBe(false);
+  });
+
+  it('原型污染键 __proto__ → ok:false', () => {
+    const payload = '{"app":"ChromaCheck","schema":"history-bundle/v1","profiles":[{"id":"x","name":"n","avatar":"a","createdAt":"c","__proto__":{"polluted":true}}],"results":[]}';
+    expect(parseImport(payload).ok).toBe(false);
+  });
 });
 
 describe('导入合并（冲突策略）', () => {
@@ -130,5 +140,13 @@ describe('汇总 CSV', () => {
     const csv = buildSummaryCsv();
     expect(csv).toContain(getDefaultProfile().name);
     expect(csv).toContain('legacy');
+  });
+
+  it('公式注入型档案名被转义为文本，不生成可执行公式', () => {
+    const p = addProfile({ name: '=HYPERLINK("http://evil","x")' });
+    saveResult(result('csv-injection', '2026-09-01T00:00:00Z', p.id));
+    const csv = buildSummaryCsv();
+    expect(csv).not.toContain(',=HYPERLINK');
+    expect(csv).toContain(`"'=HYPERLINK`);
   });
 });

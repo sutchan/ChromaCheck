@@ -1,5 +1,5 @@
 // components/offline/OfflineContent.tsx — 离线兜底内容（客户端，双语）
-// chromacheck v1.9.0
+// chromacheck v1.17.8
 'use client';
 
 import React from 'react';
@@ -11,7 +11,7 @@ export function OfflineContent() {
   const { t } = useLang();
 
   return (
-    <div id="offline-page" className="wrap stack" style={{ paddingBlock: 'var(--s-7)', gap: 'var(--s-4)', maxWidth: 640 }}>
+    <div id="offline-content" className="wrap stack" style={{ paddingBlock: 'var(--s-7)', gap: 'var(--s-4)', maxWidth: 640 }}>
       <span className="chip">{t('offline.title')}</span>
       <h1 style={{ margin: 0 }}>{t('offline.heading')}</h1>
       <p className="muted" style={{ margin: 0 }}>

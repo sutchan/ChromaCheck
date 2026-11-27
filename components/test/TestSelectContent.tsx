@@ -1,12 +1,13 @@
 'use client';
 // components/test/TestSelectContent.tsx — 模式选择页双语内容
-// chromacheck v1.8.0
+// chromacheck v1.17.8
 import React from 'react';
 import Link from 'next/link';
 import { Icon } from '@/components/common/Icon';
 import { Callout } from '@/components/common/Callout';
 import { useLang } from '@/components/layout/LangProvider';
 import type { DictKey } from '@/lib/i18n';
+import type { Scene } from '@/lib/types';
 
 interface ModeCard {
   id: string;
@@ -25,8 +26,10 @@ const MODES: ModeCard[] = [
   { id: 'child', titleKey: 'mode.child.title', descKey: 'mode.child.desc', metaKey: 'mode.child.meta', href: '/test/child' },
 ];
 
-export function TestSelectContent() {
+/** 驾驶场景入口进入时，把 scene 透传到石原氏与进阶检测卡片，结果页方可展示驾驶提示 */
+export function TestSelectContent({ scene = 'general' }: { scene?: Scene }) {
   const { t } = useLang();
+  const sceneSuffix = scene === 'driver' ? '?scene=driver' : '';
 
   return (
     <>
@@ -38,7 +41,7 @@ export function TestSelectContent() {
 
       <div id="mode-grid" className="grid-cards">
         {MODES.map((m) => (
-          <Link key={m.id} id={`mode-${m.id}-link`} href={m.href} style={{ color: 'inherit' }}>
+          <Link key={m.id} id={`mode-${m.id}-link`} href={`${m.href}${sceneSuffix}`} style={{ color: 'inherit' }}>
             <div className="card stack" style={{ gap: 'var(--s-3)', height: '100%' }}>
               <div className="row between">
                 <h3 style={{ margin: 0 }}>{t(m.titleKey)}</h3>
@@ -64,7 +67,7 @@ export function TestSelectContent() {
         </div>
         <p className="muted" style={{ margin: 0 }}>{t('driver.desc')}</p>
         <div id="driver-grid" className="grid-cards">
-          <Link href="/test/ishihara/standard?scene=driver" style={{ color: 'inherit' }}>
+          <Link id="driver-standard-link" href="/test/ishihara/standard?scene=driver" style={{ color: 'inherit' }}>
             <div className="card stack" style={{ gap: 'var(--s-3)', height: '100%' }}>
               <div className="row between">
                 <h3 style={{ margin: 0 }}>{t('driver.standard')}</h3>
@@ -74,7 +77,7 @@ export function TestSelectContent() {
               <span className="muted" style={{ fontSize: '0.85rem' }}>{t('mode.standard.meta')}</span>
             </div>
           </Link>
-          <Link href="/test/signal" style={{ color: 'inherit' }}>
+          <Link id="driver-signal-link" href="/test/signal" style={{ color: 'inherit' }}>
             <div className="card stack" style={{ gap: 'var(--s-3)', height: '100%' }}>
               <div className="row between">
                 <h3 style={{ margin: 0 }}>{t('driver.signal')}</h3>

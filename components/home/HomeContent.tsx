@@ -1,6 +1,6 @@
 'use client';
 // components/home/HomeContent.tsx — 首页双语内容（Hero + 特性 + 流程）
-// chromacheck v1.7.9
+// chromacheck v1.17.8
 import React from 'react';
 import Link from 'next/link';
 import { IshiharaPlate } from '@/components/test/IshiharaPlate';
@@ -57,7 +57,7 @@ export function HomeContent() {
       </section>
 
       {/* 特性 */}
-      <section className="wrap stack" style={{ gap: 'var(--s-4)' }}>
+      <section id="home-features" className="wrap stack" style={{ gap: 'var(--s-4)' }}>
         <h2>{t('home.whyTitle')}</h2>
         <div className="grid-cards">
           {FEATURES.map((f) => (
@@ -73,7 +73,7 @@ export function HomeContent() {
       </section>
 
       {/* 流程 */}
-      <section className="wrap stack" style={{ gap: 'var(--s-4)' }}>
+      <section id="home-steps" className="wrap stack" style={{ gap: 'var(--s-4)' }}>
         <h2>{t('home.stepsTitle')}</h2>
         <div className="grid-cards">
           {STEPS.map((s) => (

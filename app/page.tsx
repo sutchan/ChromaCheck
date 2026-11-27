@@ -1,5 +1,5 @@
 // app/page.tsx — 首页
-// chromacheck v1.17.0
+// chromacheck v1.17.8
 import React from 'react';
 import { CvdSimulator } from '@/components/home/CvdSimulator';
 import { HomeFaq } from '@/components/home/HomeFaq';
@@ -13,12 +13,12 @@ export default function HomePage() {
       <HomeContent />
 
       {/* 色觉模拟 */}
-      <section className="wrap">
+      <section id="home-cvd-simulator" className="wrap">
         <CvdSimulator />
       </section>
 
       {/* 关键事实：SSR 简体静态文本，供搜索引擎与生成式引擎直接引用（与 /llms.txt 同源） */}
-      <section className="wrap" aria-labelledby="site-facts-title">
+      <section id="home-site-facts" className="wrap" aria-labelledby="site-facts-title">
         <h2 id="site-facts-title" style={{ fontSize: '1.25rem', marginBottom: 'var(--s-3)' }}>关于本站的关键事实</h2>
         <ul style={{ lineHeight: 1.8, paddingLeft: '1.25rem' }}>
           {SITE_FACTS.map((fact) => (

@@ -1,5 +1,5 @@
 // lib/path-scoring.ts — 路径追踪判读（v1.1）
-// chromacheck v1.9.0
+// chromacheck v1.17.8
 import type {
   DeficiencyType,
   Overall,
@@ -59,9 +59,10 @@ function minDist(p: { x: number; y: number }, pts: { x: number; y: number }[]): 
  * F1 = 2·cov·prec / (cov+prec)。坐标均为归一化 0–1，TOL=0.07 即画布 7%。
  */
 function pathF1(std: { x: number; y: number }[], user: { x: number; y: number }[]): number {
-  if (user.length < 2) return 0;
+  if (user.length < 2 || std.length < 1) return 0;
   const S = resample(std, 80);
   const U = resample(user, 80);
+  if (!S.length) return 0;
   let cov = 0;
   for (const p of S) if (minDist(p, U) <= TOL) cov++;
   cov /= S.length;
@@ -108,8 +109,11 @@ export function computePathResult(
   let severity: Severity = null;
   if (overall !== 'normal') {
     const blind = overall === 'suspected_blindness';
-    if (protanFail >= deutanFail) type = blind ? 'protanopia' : 'protanomaly';
-    else type = blind ? 'deuteranopia' : 'deuteranomaly';
+    // 无轴命中（0/0）不得推断类型，保持未分型（与 SPEC §6.4 一致）
+    if (protanFail > 0 || deutanFail > 0) {
+      if (protanFail >= deutanFail) type = blind ? 'protanopia' : 'protanomaly';
+      else type = blind ? 'deuteranopia' : 'deuteranomaly';
+    }
     severity = blind ? 'moderate' : 'mild';
   }
 

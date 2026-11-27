@@ -1,4 +1,4 @@
-// lib/advanced-scoring.test.ts v1.7.6
+// lib/advanced-scoring.test.ts v1.17.8
 import { describe, it, expect } from 'vitest';
 import { computeAdvancedResult } from './advanced-scoring';
 import type {
@@ -138,6 +138,19 @@ describe('computeAdvancedResult（三模块联合判读）', () => {
     expect(r.type).toBe('deuteranomaly');
     expect(r.confidence).toBe(80);
     expect(r.analysis).toContain('分歧');
+  });
+
+  it('路径异常但两轴均无命中 → 未分型（type null）', () => {
+    const r = computeAdvancedResult({
+      ishihara: ishihara('normal'),
+      answers: [],
+      pathResults: [pathResult('p1', 40)],
+      pathQuestions: [pathQ('p1', [])],
+      hueResult: hue(true),
+      opts: OPTS,
+    });
+    expect(r.overall).toBe('suspected_deficiency');
+    expect(r.type).toBeNull();
   });
 
   it('色相偏差方向 tritan → tritanomaly', () => {

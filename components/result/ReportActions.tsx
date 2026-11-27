@@ -1,8 +1,8 @@
 // components/result/ReportActions.tsx — 结果导出 / 分享
-// chromacheck v1.9.0
+// chromacheck v1.17.8
 'use client';
 
-import React, { useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
 import { uiText } from '@/lib/scoring';
 import type { TestResult } from '@/lib/types';
@@ -14,6 +14,10 @@ import { useLang } from '@/components/layout/LangProvider';
 
 export function ReportActions({ result, plain = false }: { result: TestResult; plain?: boolean }) {
   const [copied, setCopied] = useState(false);
+  const copiedTimer = useRef<number | null>(null);
+  useEffect(() => () => {
+    if (copiedTimer.current !== null) window.clearTimeout(copiedTimer.current);
+  }, []);
   const { settings } = useSettings();
   const { t, lang } = useLang();
 
@@ -69,7 +73,10 @@ export function ReportActions({ result, plain = false }: { result: TestResult; p
     try {
       await navigator.clipboard.writeText(txt);
       setCopied(true);
-      setTimeout(() => setCopied(false), 1800);
+      copiedTimer.current = window.setTimeout(() => {
+        copiedTimer.current = null;
+        setCopied(false);
+      }, 1800);
     } catch {
       /* 忽略：剪贴板不可用时静默 */
     }

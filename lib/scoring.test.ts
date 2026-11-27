@@ -1,4 +1,4 @@
-// lib/scoring.test.ts v1.15.1
+// lib/scoring.test.ts v1.17.8
 import { describe, it, expect } from 'vitest';
 import { scoreIshihara, computeResult } from './scoring';
 import type { AnswerRecord, Question } from './types';
@@ -102,6 +102,16 @@ describe('scoreIshihara', () => {
     const r = scoreIshihara(answers, questions);
     expect(r.overall).toBe('inconclusive');
     expect(r.confidence).toBe(75);
+  });
+
+  it('未作答题不计为错误：20 题答 15 对 10 → 不误判为色盲', () => {
+    // 答错的 5 题设为 normal 类型，避免 vanishWrong>=4 的独立判盲规则干扰错误率口径验证
+    const questions = Array.from({ length: 20 }, (_, i) => q(`v${i}`, i >= 10 ? { type: 'normal' } : {}));
+    const answers = questions.slice(0, 15).map((x, i) => a(x.id, i < 10 ? '12' : '99'));
+    const r = scoreIshihara(answers, questions);
+    // 作答错误率 5/15 = 33%（suspected_deficiency），而非 10/15 = 67%（suspected_blindness）
+    expect(r.overall).toBe('suspected_deficiency');
+    expect(r.severity).toBe('mild');
   });
 
   it('hidden 题看见数字达半数 → suspected_deficiency', () => {

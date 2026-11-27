@@ -1,5 +1,5 @@
 // lib/export-import.ts — 历史导出 / 导入（本地优先，JSON 包），含冲突合并与汇总 CSV
-// chromacheck v1.9.1
+// chromacheck v1.17.8
 import type { TestResult } from './types';
 import type { Profile } from './profile';
 import { listProfiles, saveAllProfiles, getDefaultProfile } from './profile';
@@ -51,13 +51,59 @@ export interface ImportResult {
   bundle?: ExportBundle;
 }
 
+/**
+ * 导入包逐字段白名单校验：只接受结构合法的档案 / 结果，阻断 null 元素与原型污染键。
+ * 导入内容直接进入 localStorage 并参与渲染，宽松校验会导致合并阶段 TypeError 与原型污染。
+ */
+function isPlainRecord(x: unknown): x is Record<string, unknown> {
+  return typeof x === 'object' && x !== null && !Array.isArray(x) && Object.getPrototypeOf(x) === Object.prototype;
+}
+
+function hasUnsafeKeys(x: unknown): boolean {
+  if (!isPlainRecord(x)) return true;
+  return Object.keys(x).some((k) => k === '__proto__' || k === 'constructor' || k === 'prototype');
+}
+
+function validProfile(p: unknown): boolean {
+  return (
+    isPlainRecord(p) &&
+    typeof p.id === 'string' && p.id.length > 0 &&
+    typeof p.name === 'string' &&
+    typeof p.avatar === 'string' &&
+    typeof p.createdAt === 'string' &&
+    !hasUnsafeKeys(p)
+  );
+}
+
+const VALID_OVERALLS = new Set(['normal', 'inconclusive', 'suspected_deficiency', 'suspected_blindness']);
+
+function validResult(r: unknown): boolean {
+  if (!isPlainRecord(r) || hasUnsafeKeys(r)) return false;
+  return (
+    typeof r.id === 'string' && r.id.length > 0 &&
+    typeof r.createdAt === 'string' &&
+    typeof r.overall === 'string' && VALID_OVERALLS.has(r.overall) &&
+    typeof r.testMode === 'string' &&
+    typeof r.confidence === 'number' && Number.isFinite(r.confidence) &&
+    Array.isArray(r.answers)
+  );
+}
+
 export function parseImport(text: string, lang: Lang = 'zh'): ImportResult {
   try {
-    const data = JSON.parse(text) as Partial<ExportBundle>;
-    if (data?.app !== 'ChromaCheck' || !Array.isArray(data.results)) {
+    const data: unknown = JSON.parse(text);
+    if (
+      !isPlainRecord(data) ||
+      data.app !== 'ChromaCheck' ||
+      data.schema !== 'history-bundle/v1' ||
+      !Array.isArray(data.profiles) ||
+      !Array.isArray(data.results) ||
+      !data.profiles.every(validProfile) ||
+      !data.results.every(validResult)
+    ) {
       return { ok: false, error: t(lang, 'history.errBadFormat') };
     }
-    return { ok: true, bundle: data as ExportBundle };
+    return { ok: true, bundle: data as unknown as ExportBundle };
   } catch {
     return { ok: false, error: t(lang, 'history.errBadJson') };
   }
@@ -105,8 +151,11 @@ export function mergeImport(bundle: ExportBundle): MergeSummary {
 }
 
 function csvCell(value: string): string {
-  if (/[",\n]/.test(value)) return `"${value.replace(/"/g, '""')}"`;
-  return value;
+  let safe = String(value ?? '');
+  // CSV 公式注入防护：Excel / Sheets 会把 = + - @ 与制表符 / 回车开头的单元格当公式执行
+  if (/^[=+\-@\t\r]/.test(safe)) safe = `'${safe}`;
+  if (/[",\n]/.test(safe)) return `"${safe.replace(/"/g, '""')}"`;
+  return safe;
 }
 
 /** 批量汇总 CSV：按档案分组，每人取最新一条结果；lang 缺省为中文 */

@@ -4,7 +4,7 @@
 
 [![Website](https://img.shields.io/badge/在线试用-chroma.appti.cn-4c1)][website]
 [![CI](https://github.com/sutchan/ChromaCheck/actions/workflows/ci.yml/badge.svg)][ci]
-[![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org/)
+[![Next.js](https://img.shields.io/badge/Next.js-16-black)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3-38bdf8)](https://tailwindcss.com/)
 [![License](https://img.shields.io/badge/License-MIT-green)](#license)
@@ -18,7 +18,7 @@
 
 **规范域名（canonical）**：<https://chroma.appti.cn>（`lib/site.ts` 的 `SITE_URL`，用于 metadata / sitemap / robots / OG URL）。旧域名 `chromacheck.app` 与 `chroma.ewuse.com` 由 `next.config.mjs` 308 永久重定向至规范域名。
 
-> **当前版本 v1.17.7**（版本单一来源见 `VERSION`）。已实现能力见下方「功能特性」；权威规范见 [docs/SPEC.md](docs/SPEC.md)。
+> **当前版本 v1.17.8**（版本单一来源见 `VERSION`）。已实现能力见下方「功能特性」；权威规范见 [docs/SPEC.md](docs/SPEC.md)。
 
 ## 功能特性
 
@@ -34,7 +34,7 @@
 
 > **判读能力边界**：题库仅含演示题与消失型题（另含 3 张常规数字题），未实现真正的双数字变形 / 隐藏版，因此**不能可靠区分红 / 绿 / 蓝黄异常类型**；异常类型字段在无转换/分类题命中时输出 null（未分型，v1.15.1 起不再默认输出「绿色弱/盲」），三轴中的 tritan 为推算参考值。结果仅供初筛参考，不能替代专业医学诊断。
 
-## 当前状态（更新于 2026-11-27 / v1.17.7）
+## 当前状态（更新于 2026-11-27 / v1.17.8）
 
 - **最新功能变更**：迁移 Next.js 16 / React 19，生产依赖 critical 审计归零；首页主 CTA 先进入 `/guide`；补齐内容型文案繁体字段；规范域名收敛至 `chroma.appti.cn`；E2E 本地连续三次通过，PWA 离线覆盖完成验证。详见 [tasks-done.md](docs/tasks-done.md) §九。
 - **已知边界**：组件测试未引入；判读未分型；CI 连续三次运行由外部触发验证；本地 `next build` 可能受 IDE 安全删除护栏拦截（CI 不受影响）。
@@ -96,7 +96,7 @@ chromacheck/
 │                   #   画布导出（report-canvas、sharecard-canvas）/ 趣味（fun、sharecard）/
 │                   #   i18n/（简繁英字典与 t()）/ profile / export-import / ishihara / storage /
 │                   #   learn-data / privacy-data / license / format / analytics /
-│                   #   *.test.ts（Vitest 17 文件 116 例）
+│                   #   *.test.ts（Vitest 17 文件 122 例）
 ├── public/         # PWA sw.js / og-default.svg / og-default.png（1200×630 社交图）/ icons/（3 个 PNG 图标）
 ├── scripts/        # check-openapi.mjs / check-docs.mjs（CI 门禁）
 ├── e2e/             # Playwright 主链路回归（main-flow.spec.ts）

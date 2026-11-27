@@ -1,4 +1,4 @@
-// lib/path-scoring.test.ts v1.7.6
+// lib/path-scoring.test.ts v1.17.8
 import { describe, it, expect } from 'vitest';
 import { scorePathTracking, computePathResult } from './path-scoring';
 import type { PathTrackingQuestion, PathTrackingResult } from './types';
@@ -78,6 +78,17 @@ describe('computePathResult（多题汇总）', () => {
     expect(r.type).toBe('protanomaly');
     expect(r.severity).toBe('mild');
     expect(r.confidence).toBe(58); // 50 + 8（多题）
+  });
+
+  it('异常但两轴均无命中 → 未分型（type null），符合 SPEC §6.4', () => {
+    const results: PathTrackingResult[] = [
+      { questionId: 'p1', overlapScore: 20, userPath: [], passed: false },
+    ];
+    const r = computePathResult(results, [pathQ({ targets: [] })], {
+      testMode: 'standard', startedAt: 0, endedAt: 0, device: 'test',
+    });
+    expect(r.overall).toBe('suspected_blindness');
+    expect(r.type).toBeNull();
   });
 
   it('平均 < 30 → suspected_blindness + moderate', () => {

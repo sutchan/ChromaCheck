@@ -1,5 +1,5 @@
 // app/test/page.tsx — 模式选择
-// chromacheck v1.17.0
+// chromacheck v1.17.8
 import React from 'react';
 import type { Metadata } from 'next';
 import { Breadcrumbs } from '@/components/seo/Breadcrumbs';
@@ -21,11 +21,18 @@ export const metadata: Metadata = {
   },
 };
 
-export default function TestSelectPage() {
+export default async function TestSelectPage({
+  searchParams,
+}: {
+  searchParams: Promise<{ scene?: string }>;
+}) {
+  // Next.js 16 的 searchParams 为 Promise；驾驶场景入口 /test?scene=driver 需透传给模式卡片
+  const { scene } = await searchParams;
+  const driverScene = scene === 'driver';
   return (
     <div id="test-select-page" className="wrap stack" style={{ paddingBlock: 'var(--s-7)', gap: 'var(--s-5)' }}>
       <Breadcrumbs items={[{ name: '首页', path: '/' }, { name: '选择检测模式', path: '/test' }]} />
-      <TestSelectContent />
+      <TestSelectContent scene={driverScene ? 'driver' : 'general'} />
     </div>
   );
 }

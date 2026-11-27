@@ -1,5 +1,5 @@
 // lib/scoring.ts — 判读引擎（移植自 prototype/scoring.js，纯函数）
-// chromacheck v1.15.1
+// chromacheck v1.17.8
 import type {
   AnswerRecord,
   DeficiencyType,
@@ -77,6 +77,8 @@ export function scoreIshihara(answers: AnswerRecord[], questions: Question[], la
     }
   });
 
+  // 未作答不得计为错误：否则 20 题答 15、对 10 时错误率被夸大为 10/15=67%，误判色盲
+  const answeredWrong = Math.max(answered - correct, 0);
   const wrong = Math.max(total - correct, 0);
   const base = Math.round(Math.min(100, (wrong / Math.max(total, 1)) * 130));
   const dimensions = {
@@ -86,7 +88,7 @@ export function scoreIshihara(answers: AnswerRecord[], questions: Question[], la
   };
 
   let overall: Overall = 'normal';
-  const wrongRate = wrong / Math.max(answered, 1);
+  const wrongRate = answeredWrong / Math.max(answered, 1);
   if (answered < total * 0.5) overall = 'inconclusive';
   else if (vanishWrong >= 4 || wrongRate >= 0.6) overall = 'suspected_blindness';
   else if (
@@ -109,7 +111,7 @@ export function scoreIshihara(answers: AnswerRecord[], questions: Question[], la
     } else {
       type = overall === 'suspected_blindness' ? 'protanopia' : 'protanomaly';
     }
-    const rate = wrong / Math.max(total, 1);
+    const rate = answeredWrong / Math.max(answered, 1);
     severity = rate >= 0.7 ? 'severe' : rate >= 0.4 ? 'moderate' : 'mild';
   }
 

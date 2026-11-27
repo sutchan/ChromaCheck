@@ -1,8 +1,8 @@
 // components/test/SignalRunner.tsx — 信号灯辨识检测编排
-// chromacheck v1.9.0
+// chromacheck v1.17.8
 'use client';
 
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import Link from 'next/link';
 import { getSignalTasks, type SignalTask } from '@/lib/questions/signal';
 import { scoreSignal } from '@/lib/signal-scoring';
@@ -17,6 +17,12 @@ export function SignalRunner() {
   const [answers, setAnswers] = useState<Record<string, string>>({});
   const [recorded, setRecorded] = useState(false);
   const [done, setDone] = useState<ReturnType<typeof scoreSignal> | null>(null);
+  const advanceTimer = useRef<number | null>(null);
+
+  // 卸载时清除作答反馈定时器，避免对已卸载组件 setState
+  useEffect(() => () => {
+    if (advanceTimer.current !== null) window.clearTimeout(advanceTimer.current);
+  }, []);
 
   const total = tasks.length;
   const q: SignalTask | undefined = tasks[idx];
@@ -26,7 +32,8 @@ export function SignalRunner() {
     const next = { ...answers, [q.id]: value };
     setAnswers(next);
     setRecorded(true);
-    window.setTimeout(() => {
+    advanceTimer.current = window.setTimeout(() => {
+      advanceTimer.current = null;
       setRecorded(false);
       if (idx + 1 >= total) {
         setDone(scoreSignal(tasks, next, lang));
