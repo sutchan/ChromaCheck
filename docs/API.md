@@ -2,7 +2,7 @@
 
 > **规范遵循**：本文档为 [SPEC.md](./SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。
 > **实现状态**：v1.0–v1.17.6 已实现（按 [SPEC.md](./SPEC.md) §0.3 分类清单）；纯前端、无服务端 API 路由。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [tasks.md](./tasks.md)。
-> **OpenAPI 规范**：机器可读规范见 [openapi.yaml](./openapi.yaml)（OpenAPI 3.1），仅描述真实存在的 `GET /llms.txt` 与 `GET /llms-full.txt`；业务 API 数量为零，下文 §3 的历史接口均标注未实现 / 已移除。
+> **OpenAPI 规范**：机器可读规范见 [openapi.yaml](./openapi.yaml)（OpenAPI 3.1），仅描述真实存在的 `GET /llms.txt` 与 `GET /llms-full.txt`；业务 API 数量为零，下文 §4 的历史接口均标注未实现 / 已移除。
 
 | 项目 | 内容 |
 |------|------|
@@ -68,7 +68,7 @@ curl https://chroma.appti.cn/llms-full.txt
 
 ## 3. 历史通用规范（未落地）
 
-### 2.1 请求头
+### 3.1 请求头
 
 | Header | 说明 | 必填 |
 |--------|------|------|
@@ -76,7 +76,7 @@ curl https://chroma.appti.cn/llms-full.txt
 | `Origin` | 请求来源（用于 CSRF 防护） | POST 是 |
 | `X-Request-ID` | 请求追踪 ID（UUID），便于排查 | 否 |
 
-### 2.2 响应格式
+### 3.2 响应格式
 
 所有接口返回统一 JSON 格式：
 
@@ -108,7 +108,7 @@ curl https://chroma.appti.cn/llms-full.txt
 }
 ```
 
-### 2.3 错误码
+### 3.3 错误码
 
 | 错误码 | HTTP 状态码 | 说明 |
 |--------|-------------|------|
@@ -119,7 +119,7 @@ curl https://chroma.appti.cn/llms-full.txt
 | `RATE_LIMITED` | 429 | 请求过于频繁 |
 | `INTERNAL_ERROR` | 500 | 服务器内部错误 |
 
-### 2.4 限流策略
+### 3.4 限流策略
 
 - 匿名事件上报：每 IP 每分钟最多 60 次。
 - 题库接口：每 IP 每小时最多 120 次。
@@ -129,7 +129,7 @@ curl https://chroma.appti.cn/llms-full.txt
 
 ## 4. 历史接口列表（未实现 / 已移除）
 
-### 3.1 健康检查
+### 4.1 健康检查
 
 #### GET `/api/health`（未实现）
 
@@ -154,7 +154,7 @@ curl https://chroma.appti.cn/api/health
 
 ---
 
-### 3.2 匿名事件上报（已于 v1.9.0 移除）
+### 4.2 匿名事件上报（已于 v1.9.0 移除）
 
 > **v1.9.0 起废止**：`POST /api/analytics/event` 路由与客户端 `reportServerEvent()` 已删除，应用不再向服务端上报任何检测事件，仅保留 Google Analytics 4 匿名访问统计。以下内容保留作历史设计记录，不再对外提供服务。
 
@@ -213,7 +213,7 @@ curl -X POST https://chroma.appti.cn/api/analytics/event \
 
 ---
 
-### 3.3 题库版本查询
+### 4.3 题库版本查询
 
 #### GET `/api/questions/version`（未实现）
 
@@ -239,7 +239,7 @@ curl https://chroma.appti.cn/api/questions/version
 
 ---
 
-### 3.4 获取题库数据（远期）
+### 4.4 获取题库数据（远期）
 
 #### GET `/api/questions/:type`（未实现）
 
@@ -287,7 +287,7 @@ curl "https://chroma.appti.cn/api/questions/ishihara?version=1.0.0&mode=quick"
 
 ## 5. 历史错误示例
 
-### 4.1 参数错误
+### 5.1 参数错误
 
 ```json
 {
@@ -300,7 +300,7 @@ curl "https://chroma.appti.cn/api/questions/ishihara?version=1.0.0&mode=quick"
 }
 ```
 
-### 4.2 资源不存在
+### 5.2 资源不存在
 
 ```json
 {

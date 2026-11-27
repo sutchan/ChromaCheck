@@ -1,9 +1,9 @@
 {
-  "version": "1.17.5",
+  "version": "1.17.6",
   "files": 16,
   "checked": {
-    "links": 95,
-    "versionLines": 10,
+    "links": 98,
+    "versionLines": 14,
     "envKeys": 2
   },
   "errors": []

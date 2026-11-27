@@ -46,7 +46,7 @@
 - **体验与内容**：结果页五视角、历史多档案 + 导出导入、科普与隐私页、首页 FAQ 双栏 12 条（v1.13.2）、趣味体验包（v1.4）、断点续测、驾驶场景专项（v1.7.0）。
 - **工程与合规**：三语 i18n（v1.15.0，简中 > 繁中 > 英文）、判读类型未分型收敛（v1.15.1）、GitHub Releases 自动发布（v1.16.0）、页脚版本 + 构建号（v1.14.0）、安全响应头（v1.7.6）。
 - **SEO / GEO（v1.17.0）**：`lib/seo-routes.ts` 单一路由源、`llms.txt` / `llms-full.txt`、站点级结构化数据、静态 PNG 社交图、`safeJson()` 转义修复、回归测试。
-- **质量**：Vitest 17 文件 116 例（node 环境）；V8 覆盖率 89.53% lines / 84.3% branches / 87.64% functions 达标；Playwright 配置、依赖、脚本与 CI 已接入，仅余连续三次稳定验收（O-03）；组件测试未落地。
+- **质量**：Vitest 17 文件 116 例（node 环境）；V8 覆盖率 89.53% lines / 84.3% branches / 87.64% functions 达标；Playwright 本地连续三次稳定通过，CI 三次为外部触发验证项；组件测试未落地。
 - **边界**：纯前端、无服务端 API 路由（仅 `app/llms.txt/route.ts`、`app/llms-full.txt/route.ts` 两个 Route Handler）、无账号、无 PII 上传、仅 GA4 匿名统计。
 
 ## 1. 产品定位与功能范围
@@ -327,14 +327,35 @@ clamp(confidence, 0, 100)
 - 原型文件头为 v0.1.x（内部迭代号，与产品版本解耦，不随发版刷写）。
 
 ### 8.3 文档结构与维护
-- 16 份文档（1 总纲 + 15 分册，见 §0.2，v1.17.6 标准化）；每份顶部含路径与版本、实现状态声明、负责人（当前多为 `—`，待补实）。
-- 变更须记录 `CHANGELOG.md`；分册冲突以本 SPEC 裁决，并同步修订分册。
+
+16 份文档（1 总纲 + 15 分册，见 §0.2，v1.17.6 标准化）；`.md` 文档不拆分，即使超过 200 行亦保持完整连贯。
+
+**文件命名规范**
+- 分册统一 `UPPER-KEBAB-CASE.md`：主题词大写、多词用单个连字符，如 `DATA-SPEC.md`、`USER-GUIDE.md`、`TROUBLESHOOTING.md`；不用空格、下划线、中文或数字前缀。
+- 任务文档固定小写 `tasks.md`（唯一来源）与 `tasks-done.md`（归档）；机器可读规范用小写 `openapi.yaml`；图片资源放 `images/`。
+- 文件名须与 §0.2 清单及 README 文档索引一一对应，新增分册须同步两处。
+
+**统一章节结构（必要组成与顺序）**
+1. 一级标题：`# 色辨 ChromaCheck <主题>（<缩写>）`；总纲为 `# 色辨 ChromaCheck 项目规范（SPEC）`。
+2. 头部说明块：`规范遵循`（指向 SPEC）→ `实现状态` / `适用对象` / `定位` → `文档版本`；其中规范遵循置于首行，其余字段可合并为一行 `> **字段A**：… ｜ **字段B**：…`。总纲另用 HTML 注释写路径、版本与权威顺序；任务文档用「唯一来源 / 最后更新」说明。
+3. 文档属性表：`| 项目 | 内容 |` 二列表，至少含「文档版本」「创建日期」。
+4. 目录：章节 ≥4 个且用户向文档（FAQ / USER-GUIDE / TROUBLESHOOTING / FEATURES）必列 `## 目录`，条目与正式标题逐字一致。
+5. 正文：二级标题 `## N. <名称>` 从 1 起连续编号（总纲 `## 0.` 为文档关系例外，其后从 1 起）；三级 `### N.M <名称>`，N 与所属二级一致、M 从 1 起。FAQ 问答用 `### Qn：<问题>`；归档文档用中文数字 `## 一、`…并在文末保持连续。
+6. 结尾：边界与限制 / 已知问题（如有）→ 变更记录或版本记录（如有）。`---` 仅用于分隔头部与正文、或结尾附注。
+
+**术语与格式规范**
+- 术语：统一「简体中文 / 繁体中文（台湾用语）/ 英语」（`zh` / `zh-TW` / `en`）、「判读」「石原氏检测」「未分型（type = null）」「纯前端、无服务端业务 API」；禁用「诊断结论」「色盲图」等不实表述。
+- 引用：跨文档用相对链接 `./FILE.md` 与 `§N.M`，不写绝对磁盘路径；章节引用须指向调整后的实际编号。
+- 代码块须标注语言（`json` / `bash` / `typescript` / `yaml` / `dockerfile`）；表格列宽对齐；列表统一 `-`；中英文间加空格，中文标点用全角。
+- 版本写 `vX.Y.Z`，与 `VERSION` 一致；历史规划内容须显著标注「历史规划 / 未实现 / 已移除」，不与现行事实混写。
+
+变更须记录 `CHANGELOG.md`；分册冲突以本 SPEC 裁决，并同步修订分册。
 - **任务单一来源（硬约束，永久遵循）**：所有未完成 / 待验证 / 计划实施的任务只写入 `docs/tasks.md`，其他任何位置（README、CHANGELOG、ROADMAP、各分册、`tasks-done.md`、源码注释等）不得维护第二份任务清单。发现「待办 / TODO / 待验证 / 待实施 / 规划中 / 未闭环 / 待决策」等任务型表述时：先登记到 `docs/tasks.md`，原位置只保留问题证据与方案正文并链接到任务清单；迁移完成后删除冗余任务文档。
 - 已完成项移入 `docs/tasks-done.md`（仅作归档，不维护状态）。
 
 ### 8.4 测试与质量门禁
 - Vitest（v1.7.6 落地，当前 **17 文件 116 例**）：`lib/*.test.ts` 覆盖判读、存储、格式化、导出导入、分享卡、SEO 等；`npm test` = `vitest run`，`npm run test:coverage` 走 `@vitest/coverage-v8`。
-- 测试环境为 node（`vitest.setup.ts` 注入内存 Storage，无 jsdom/happy-dom）；Canvas 绘制不可单测（仅 `computeRadar` 有覆盖），勿强行加 jsdom。组件测试未落地；Playwright 配置 / 依赖 / 脚本 / CI 已接入，验收标准为 CI 连续三次稳定通过。
+- 测试环境为 node（`vitest.setup.ts` 注入内存 Storage，无 jsdom/happy-dom）；Canvas 绘制不可单测（仅 `computeRadar` 有覆盖），勿强行加 jsdom。组件测试未落地；Playwright 配置 / 依赖 / 脚本 / CI 已接入，本地连续三次通过，CI 连续三次由外部触发验证。
 - CI（`.github/workflows/ci.yml`）：Node 22 LTS、checkout / setup-node v5、`npm ci`（无 `cache`），跑 lint / type-check / check:openapi / check:docs / test / coverage / build / playwright install / e2e。
 - **安全响应头唯一真值为 `next.config.mjs`**（§8.7 之外亦适用）：CSP（开发态额外放行 `'unsafe-eval'`）、X-Frame-Options、X-Content-Type-Options、Referrer-Policy、Permissions-Policy。
 
@@ -363,7 +384,7 @@ clamp(confidence, 0, 100)
 ## 9. 实现状态与待办
 - **已完成**：见 §0.3 分类清单与 `CHANGELOG.md`（v1.0 → v1.17.6 逐版本记录）；历史里程碑细节以 CHANGELOG 为准，本节不重复枚举。
 - **待办**：见 `docs/tasks.md`（唯一来源，当前 O-01 ~ O-11 / V-01 ~ V-07）；历史收口见 `docs/tasks-done.md`。
-- **当前限制（非待办但需知悉）**：判读未分型（§6.4）、组件测试未落地、E2E 已接入 CI 待连续三次稳定验收、内容型文案三语齐全、无服务端 API / 账号 / 云同步、本地 `next build` 可能受 IDE 安全删除护栏拦截（CI 不受影响）。
+- **当前限制（非待办但需知悉）**：判读未分型（§6.4）、组件测试未落地、E2E 本地连续三次通过且 CI 三次由外部触发验证、内容型文案三语齐全、无服务端 API / 账号 / 云同步、本地 `next build` 可能受 IDE 安全删除护栏拦截（CI 不受影响）。
 
 ---
 *本文档为 ChromaCheck 权威规范总纲 v1.17.6。分册应据本规范修订；冲突时以本规范为准。*

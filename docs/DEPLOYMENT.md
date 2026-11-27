@@ -306,12 +306,12 @@ ufw deny 3000/tcp  # 3000 端口仅内网访问
 
 ## 7. 回滚方案
 
-### Vercel
+### 7.1 Vercel
 
 - 在 Vercel Dashboard → Deployments 中选择历史部署，点击 "Redeploy" 即可回滚。
 - 支持按分支、按时间查看历史版本。
 
-### Docker
+### 7.2 Docker
 
 ```bash
 # 查看历史镜像

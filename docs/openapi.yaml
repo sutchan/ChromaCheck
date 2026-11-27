@@ -10,7 +10,7 @@ info:
     本规范仅描述真实存在的两个静态 GET Route Handler：/llms.txt 与 /llms-full.txt。
     它们由 Next.js App Router 的 route.ts 生成，以 force-static 输出纯文本，供 AI 爬虫与
     站点索引使用。历史规划中的 /api/health、/api/analytics/event、/api/questions/* 等接口
-    从未实现或已移除，不在本规范内；详见 API.md §3 与 §6。
+    从未实现或已移除，不在本规范内；详见 API.md §4 与 §6。
   license:
     name: MIT
     url: https://github.com/sutchan/ChromaCheck/blob/main/LICENSE

@@ -17,6 +17,13 @@ async function clickAndWaitForUrl(page: Page, locator: Locator, expected: RegExp
 }
 
 test('首页 → 指引 → 石原氏快速 → 结果', async ({ page }) => {
+  test.setTimeout(60000);
+  const pageErrors: string[] = [];
+  page.on('pageerror', (error) => pageErrors.push(`pageerror: ${error.message}`));
+  page.on('console', (message) => {
+    if (message.type() === 'error') pageErrors.push(`console: ${message.text()}`);
+  });
+
   await page.goto('/');
   await expect(page.locator('#main-content')).toBeVisible();
 
@@ -28,15 +35,20 @@ test('首页 → 指引 → 石原氏快速 → 结果', async ({ page }) => {
   const waitForNextStep = async () => {
     // 作答反馈缓冲为 420ms，先让当前提交 / 继续动作落地，避免旧按钮造成重复推进
     await page.waitForTimeout(600);
-    await page.waitForFunction(() => {
-      const input = document.querySelector('#answer') as HTMLInputElement | null;
-      if (input && !input.disabled) return true;
-      const buttons = Array.from(document.querySelectorAll('button'));
-      if (buttons.some((button) => /^(继续|继续检测|完成作答|完成检测)$/.test((button.textContent || '').trim()))) {
-        return true;
-      }
-      return /^\/result\//.test(location.pathname);
-    }, null, { timeout: 15000 });
+    try {
+      await page.waitForFunction(() => {
+        const input = document.querySelector('#answer') as HTMLInputElement | null;
+        if (input && !input.disabled) return true;
+        const buttons = Array.from(document.querySelectorAll('button'));
+        if (buttons.some((button) => /^(继续|继续检测|完成作答|完成检测)$/.test((button.textContent || '').trim()))) {
+          return true;
+        }
+        return /^\/result\//.test(location.pathname);
+      }, null, { timeout: 15000 });
+    } catch (error) {
+      if (pageErrors.length > 0) throw new Error(`页面异常阻断答题流程：${pageErrors.join(' | ')}`);
+      throw error;
+    }
   };
 
   for (let i = 0; i < 16; i += 1) {
@@ -65,6 +77,7 @@ test('首页 → 指引 → 石原氏快速 → 结果', async ({ page }) => {
   }
 
   await expect(page).toHaveURL(/\/result\//, { timeout: 30000 });
+  expect(pageErrors).toEqual([]);
   await expect(page.locator('#app-footer')).toContainText(/build \d{10}/);
 });
 

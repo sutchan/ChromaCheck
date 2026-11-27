@@ -34,9 +34,15 @@ yarn-error.log*
 *.seed
 *.pid.lock
 
-# ===== 测试覆盖率 =====
+# ===== 测试覆盖率与测试产物 =====
 /coverage
 .nyc_output
+/test-results/
+/playwright-report/
+/reports/
+/.tmp/
+audit-*.json
+*-result.json
 
 # ===== 部署 / 托管平台 =====
 .vercel

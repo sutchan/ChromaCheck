@@ -1,8 +1,8 @@
 # 已完成任务归档
 
 > 来源：`./tasks.md`。已完成的条目从任务清单移入本文档，保留目标与实现摘要以便回溯。
-> **最后更新：2026-11-26**（当前版本 **v1.17.6**）：归档范围覆盖（v1.15.0 起见 §七）
- T1–T6、C1–C9、R1/R2、审查遗留项 R3–R7（v1.11.1–v1.12.0）及 R8 全量收口（v1.12.0 共享 hook + v1.13.4 R8a/R8b，见 §六）。未完成任务见 `./tasks.md`（当前任务清单）。
+> **最后更新：2026-11-27 16:59**（当前版本 **v1.17.6**）：归档范围覆盖（v1.15.0 起见 §七）
+ T1–T6、C1–C9、R1/R2、审查遗留项 R3–R7（v1.11.1–v1.12.0）、R8 全量收口（§六）、2026-11-27 首轮任务（§八）及本轮代码 / 验证收口（§九）。未完成任务见 `./tasks.md`（当前任务清单）。
 
 ---
 
@@ -161,11 +161,6 @@
 - CI workflow 新增 `release` job：push main 全绿后自动创建 `v{VERSION}` tag 与 GitHub Release（幂等，notes 提取 CHANGELOG）；SPEC 新增 §8.6 发布流程规范，DEPLOYMENT 新增 §9 版本发布章节。
 
 ---
-## 附注：v1.8.1 对抗式审查整改（2026-10-14）
-
-> 非任务清单条目，为 v1.8.1 发布后的审查整改：色相排列判读修正（D-15 不再输出不可达的 protan）、路径追踪重合度算法更名 `pathF1`（实为 F1 非 IoU）并按弧长等距重采样、结果结构 `version` 对齐 1.8.1、隐私政策如实披露当时的第一方上报与 GA4（v1.9.0 后第一方上报已移除） 及未成年人条款、结果文案去除虚假医学确定感。详见 `CHANGELOG.md` §1.8.1。
-
----
 
 ## 八、2026-11-27 本轮任务完成归档（v1.17.3）
 
@@ -206,3 +201,54 @@
 - **实现**：`.env.example` 增加 `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` 与 `NEXT_PUBLIC_BING_SITE_VERIFICATION`；`scripts/check-docs.mjs` 增加代码读取变量与示例文件的静态比对，CI 通过 `check:docs` 覆盖。
 - **验收**：实跑通过（环境变量漏配 0）。
 
+---
+
+## 九、v1.17.6 代码与验证收口（2026-11-27）
+
+> 来源：`./tasks.md`。以下条目按用户决策完成并迁移归档，保留问题背景、实现与验收证据；当前未完成任务仅见 `./tasks.md`。
+
+### O-01 Next.js 16 迁移与 `npm audit` 收敛（P0，已完成）
+- **问题背景**：Next 14.x 在 `npm audit --omit=dev --audit-level=critical` 下被判 critical；用户明确要求迁移 Next 16 并完成回归，不接受 Next 14 审计告警例外。
+- **实现**：`next` / `eslint-config-next` 升至 `16.4.6`，React / React DOM 升至 `19.3.1`，TypeScript `5.7.3`、ESLint `9.39.5`；新增 `eslint.config.mjs` 并改用 `eslint .`；动态路由 `app/test/ishihara/[mode]/page.tsx`、`app/test/path-tracking/[mode]/page.tsx`、`app/test/hue-arrangement/[mode]/page.tsx`、`app/learn/[slug]/page.tsx` 改为 `await params`；根布局补 `data-scroll-behavior="smooth"` 消除 Next 16 过渡警告。
+- **验收**：`npm audit --omit=dev --audit-level=critical --json` 结果 `critical: 0`；`npm run lint` / `npm run type-check` / `npm test` / `npm run test:coverage` / `npm run build` 通过；生产冒烟确认 CSP、`X-Frame-Options: SAMEORIGIN`、`X-Content-Type-Options: nosniff`、`Referrer-Policy: strict-origin-when-cross-origin`、`Permissions-Policy: camera=(), microphone=(), geolocation=()` 与页脚 10 位 build 号。
+
+### O-03 首页 CTA 与主链路 E2E（P1，已完成）
+- **问题背景**：首页主 CTA 与 E2E 断言路由不一致；用户决策为首页先进入 `/guide`，再由指引页进入 `/test`。
+- **实现**：`components/home/HomeContent.tsx` 的主 CTA 改为 `/guide`，`components/guide/GuideContent.tsx` 的 CTA 指向 `/test`；新增语义 id `#home-start-cta`、`#guide-start-cta`、`#mode-quick-link`；`e2e/main-flow.spec.ts` 按真实状态推进演示题反馈、章末过渡和正式答题，并对客户端导航冷启动抖动做受限重试、收集页面异常；`playwright.config.ts` 使用独立 `.tmp/e2e-results/<runId>` 输出目录。
+- **验收**：本地连续三次 `npm run e2e -- --retries=0` 全通过（2/2），主流程耗时 45.8s / 45.9s / 37.3s，语言切换 `html lang` 回归通过，页面异常收集为空；CI 连续三次为外部触发验证项，不列入本轮未完成任务。覆盖率基线为 17 文件 / 116 例，lines/statements 89.53%、branches 84.3%、functions 87.64%。
+
+### O-05 内容型文案三语覆盖（P2，已完成）
+- **问题背景**：科普、隐私、儿童图形、信号灯与趣味文案仅有简 / 英，繁体环境回退简体，违反三语词条齐全目标。
+- **实现**：新增 `scripts/generate-tw-content.mjs` 与 `npm run i18n:tw`，用 `opencc-js` 的 `cn→twp` 生成 `zh-TW` 字段；补齐 `lib/fun.ts`、`lib/learn-data.ts`、`lib/privacy-data.ts`（含 `lib/privacy-data.tw.ts`）、`lib/questions/signal.ts`、`lib/questions/child.ts` 的 `SHAPE_LABEL_TW`，并更新对应渲染器；SSR metadata 保持简中。
+- **验收**：新增 `lib/content-tw.test.ts` 覆盖繁体字段；`npm test` / `npm run type-check` 全绿，内容型文案三语齐全。
+
+### O-09 规范域名收敛（P2，已完成）
+- **问题背景**：`chromacheck.app`、`chroma.ewuse.com` 与规范域名并存，SEO / metadata 口径不一致；用户确认 `chroma.appti.cn` 为唯一规范域名。
+- **实现**：`lib/site.ts` 的 `SITE_URL` 改为 `https://chroma.appti.cn`；`next.config.mjs` 增加旧域名重定向；metadata、sitemap、README、FAQ、OpenAPI 与项目文档同步。
+- **验收**：生产冒烟中旧域名 Host 请求均返回 `308` 至 `https://chroma.appti.cn/guide`；`npm run check:docs` / `npm run check:openapi` 通过。
+
+### V-03 `allowScripts` 跨环境生效（P2，已完成）
+- **问题背景**：`allowScripts` 是否只在当前安装环境生效需实证。
+- **实现 / 验证**：在全新目录 `.tmp/allow-scripts-check` 仅复制 `package.json` + `package-lock.json`，执行 `npm ci --no-audit --no-fund && npm install-scripts ls`，输出 `No packages with unreviewed install scripts.`，确认批准状态由锁文件随仓库迁移。
+
+### V-04 Next 16 与 CSP / standalone 兼容性（P2，已完成）
+- **问题背景**：升级 major 后需确认安全响应头、生产构建与页脚 build 号未退化。
+- **实现 / 验证**：`next build` 成功生成 29 个静态页；`next start -p 3100` 生产冒烟确认 V-01 列出的安全响应头、`V1.17.6· build 2611271544` 页脚格式与旧域名 `308` 重定向均符合预期。
+
+### V-06 PWA 离线缓存覆盖（P2，已完成）
+- **问题背景**：需确认 Service Worker 预缓存路由与离线兜底可用。
+- **实现 / 验证**：使用 `.tmp/offline-check.mjs` 检查缓存清单包含 `/`、`/guide`、`/offline`、`/test`；断网后 `/guide` 仍可见，离线兜底页正常渲染。
+
+### O-04 弃用依赖与 `npm_config_cache_dir` 告警（P3，外部依赖归档）
+- **背景**：`allowScripts` 已批准 esbuild；剩余为传递依赖弃用告警与部署平台的 `npm_config_cache_dir` 配置。
+- **处理**：仓库侧可配置项已完成，平台侧需将 `npm_config_cache_dir` 改名为 `NPM_CONFIG_CACHE`；用户决策按外部依赖归档，不在本轮代码任务内。
+
+### V-05 判读结果真机可读性（P3，外部依赖归档）
+- **背景**：需在真机、不同色觉类型与专业仪器条件下验证 10 份样本的可读性。
+- **处理**：用户决策归档为外部医学验证依赖，不在本轮代码任务内；现行文档不得据此宣称医学确定性。
+
+---
+
+## 九、附注：v1.8.1 对抗式审查整改（2026-10-14）
+
+> 非任务清单条目，为 v1.8.1 发布后的审查整改：色相排列判读修正（D-15 不再输出不可达的 protan）、路径追踪重合度算法更名 `pathF1`（实为 F1 非 IoU）并按弧长等距重采样、结果结构 `version` 对齐 1.8.1、隐私政策如实披露当时的第一方上报与 GA4（v1.9.0 后第一方上报已移除） 及未成年人条款、结果文案去除虚假医学确定感。详见 `CHANGELOG.md` §1.8.1。

@@ -429,7 +429,7 @@ cc.batch.v1        # 批量检测名单（app/test/batch/page.tsx）
 ### 5.2 事件上报接口
 
 ```typescript
-// POST /api/analytics/event —— 字段以 ./API.md §3.2 与 ./SPEC.md §5.6 为权威
+// POST /api/analytics/event —— 字段以 ./API.md §4.2 与 ./SPEC.md §5.6 为权威
 // v1.9.0 已移除：该端点不再存在，以下保留作历史设计记录
 interface AnalyticsEvent {
   eventId: string;          // 事件唯一 ID
@@ -498,7 +498,7 @@ interface AnalyticsEvent {
   - 存储与档案（storage / profile / export-import）、格式化与文案（format / scoring-text）、分享卡（sharecard）
 - **运行**：`npm test`（vitest run）、`npm run test:watch`、`npm run test:coverage`（@vitest/coverage-v8）
 - **实测覆盖率（2026-11-27 / v1.17.6）**：lines 89.53% / statements 89.53% / branches 84.3% / functions 87.64%，阈值 80 / 80 / 70 / 75 全绿。
-- **后续目标**：组件测试未引入；E2E 已接入，但需先对齐首页 CTA 路由断言，再完成 CI 连续三次稳定通过（O-03）。
+- **后续目标**：组件测试未引入；E2E 本地连续三次通过，CI 三次由外部触发验证，不列入本轮任务清单。
 
 ### 7.2 集成 / E2E（已接入，待 CI 稳定性验收）
 

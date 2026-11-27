@@ -11,8 +11,10 @@
 - O-03：首页主 CTA 改为先进入 `/guide`，与现有 Playwright 主链路断言一致。
 - O-05：新增 `npm run i18n:tw` 与 `opencc-js` cn→twp 生成流程，补齐科普、隐私、儿童图形、信号灯和趣味文案的台湾繁体字段；新增 5 例三语覆盖回归。
 - O-09：`chroma.appti.cn` 设为唯一规范域名；旧域名 `chromacheck.app` / `chroma.ewuse.com` 由 Next 永久重定向收敛，metadata / sitemap / OpenAPI / 文档同步。
-- V-03：全新目录 `npm ci` 后 `npm install-scripts ls` 返回无待审脚本；V-04：生产构建、CSP / 安全响应头与页脚 10 位 build 号实跑通过。
+- V-03：全新目录 `npm ci` 后 `npm install-scripts ls` 返回无待审脚本；V-04：生产构建、CSP / 安全响应头与页脚 10 位 build 号实跑通过；V-06：PWA 预缓存 `/`、`/guide`、`/offline`、`/test`，断网兜底可用。
+- O-03：E2E 按真实答题状态推进演示题反馈与章末过渡，首页 CTA 已收敛至 `/guide`；本地连续三次 `npm run e2e -- --retries=0` 全通过，根布局补 `data-scroll-behavior="smooth"`，测试产物改写入 `.tmp/e2e-results/<runId>`。
 - 测试基线更新为 17 文件 / 116 例，覆盖率 lines/statements 89.53%、branches 84.3%、functions 87.64%。
+- 任务清单收口：O-01 / O-03 / O-05 / O-09 / V-03 / V-04 / V-06 归档，O-04 / V-05 按外部依赖归档，`tasks.md` 仅保留 O-10 / O-11。
 
 ## [1.17.5] - 2026-11-27
 
