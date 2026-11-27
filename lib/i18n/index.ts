@@ -15,5 +15,6 @@
 // 使用：t(lang, 'key', { vars })；键名在 DictKey 联合类型内受编译期校验。
 
 export * from './lang';
+export * from './html-lang';
 export * from './dict';
 export * from './t';
