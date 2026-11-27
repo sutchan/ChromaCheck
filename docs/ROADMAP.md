@@ -1,14 +1,14 @@
 # 色辨 ChromaCheck 路线图文档
 
 > **规范遵循**：本文档为 [SPEC.md](./SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。功能范围以 SPEC §1.2 为权威。
-> **实现状态**：v1.0–v1.17.6 已实现（按 [SPEC.md](./SPEC.md) §0.3 分类清单）；纯前端、无服务端 API 路由。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [tasks.md](./tasks.md)。
+> **实现状态**：v1.0–v1.17.7 已实现（按 [SPEC.md](./SPEC.md) §0.3 分类清单）；纯前端、无服务端 API 路由。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [tasks.md](./tasks.md)。
 
 | 项目 | 内容 |
 |------|------|
-| 文档版本 | v1.17.6 |
+| 文档版本 | v1.17.7 |
 | 创建日期 | 2026-09-03 |
 
-> 以下为历史规划记录，当前项目版本为 v1.17.6；带「已实现」标注者以现行代码为准。
+> 以下为历史规划记录，当前项目版本为 v1.17.7；带「已实现」标注者以现行代码为准。
 
 ---
 
@@ -216,14 +216,14 @@ v1.0 (MVP) ──→ v1.1 (完善) ──→ v1.5 (进阶) ──→ v2.0 (平�
 
 ---
 
-## 11. 优化建议与未来展望（v1.17.6 系统评估）
+## 11. 优化建议与未来展望（v1.17.7 系统评估）
 
 > 本节来自对代码实现、架构设计、性能与用户体验的同步评估。每条含问题背景、实施方案、预期效果与优先级；执行状态统一登记在 [tasks.md](./tasks.md)。责任人与计划完成时间为建议值，待项目负责人确认。
 
 ### O-01 升级 Next.js 至安全补丁版本
 
-- **背景**：npm 提示 `next@14.2.15` 存在 2025-12-11 披露的安全漏洞；依赖已升至 `14.2.35`，本机 lint / type-check / test / coverage / OpenAPI / 文档校验全绿，但 `npm audit --omit=dev --audit-level=critical` 仍报告 1 个 critical（审计库判定全部 Next 16.x 受影响）。当前选择保持 Next 14 并接受审计告警，跨 major 至 Next 16 需业务决策（见 [tasks.md](./tasks.md) O-01）。
-- **方案**：维持 Next.js 16 同 minor 补丁版本 `14.2.35`；若决定跨 major，则迁移至 Next 16 并做完整回归。无论选择哪条路径，均需完成 lint / type-check / test / coverage / build / E2E 与 Preview 冒烟。
+- **背景**：Next 14.x 在 `npm audit --omit=dev --audit-level=critical` 下被判 critical；用户决策不接受该告警例外，要求迁移 Next 16 并完成完整回归。
+- **方案（已落地）**：`next` / `eslint-config-next` 升至 `16.4.6`，React 19、ESLint 9 与扁平配置同步升级；lint / type-check / test / coverage / build / E2E / critical 审计均已完成，实现与证据见 [tasks-done.md](./tasks-done.md) §九。
 - **预期效果**：消除已知 CVE，`npm audit` 关键项归零；构建与运行行为保持不变。
 - **优先级**：**P0**（安全），建议 2026-12-05 前完成。
 
@@ -237,7 +237,7 @@ v1.0 (MVP) ──→ v1.1 (完善) ──→ v1.5 (进阶) ──→ v2.0 (平�
 ### O-03 补齐覆盖率门禁与关键路径 E2E
 
 - **背景**：17 文件 116 例覆盖判读与工具逻辑，UI 主链路此前无自动回归。
-- **方案（已落地）**：① `vitest.config.ts` 配置 V8 覆盖率与阈值，CI 已执行 `npm run test:coverage`（实测 89.53% lines / 84.3% branches / 87.64% functions）；② Playwright 配置、依赖、脚本与 CI 已接入，`e2e/main-flow.spec.ts` 覆盖首页 → 指引 → 石原氏快速 → 结果。剩余验收为 CI 连续三次稳定通过（O-03）。
+- **方案（已落地）**：① `vitest.config.ts` 配置 V8 覆盖率与阈值，CI 已执行 `npm run test:coverage`（实测 89.53% lines / 84.3% branches / 87.64% functions）；② Playwright 配置、依赖、脚本与 CI 已接入，`e2e/main-flow.spec.ts` 覆盖首页 → `/guide` → `/test` → 石原氏快速 → 结果，本地连续三次稳定通过；CI 三次由外部触发验证。
 - **预期效果**：覆盖率可量化并纳入门禁；核心链路回归从人工 15 分钟降至自动 ~2 分钟。
 - **优先级**：**P1**（质量），建议 2026-12-19 前完成。
 
@@ -250,15 +250,15 @@ v1.0 (MVP) ──→ v1.1 (完善) ──→ v1.5 (进阶) ──→ v2.0 (平�
 
 ### O-05 补齐内容型文案的繁体版本
 
-- **背景**：`lib/learn-data.ts`、`lib/privacy-data.ts`、儿童图形标签、信号灯题库、`lib/fun.ts` 的 `LocalizedText` 仅简英双语，繁体环境回退简体（见 FEATURES §8）；违反三语「词条齐全」目标。
-- **方案**：使用 `opencc-js` 的 `cn→twp` 转换生成 `zh-TW` 字段，人工校对台湾用语（設定 / 搜尋 / 檔案），保持 SSR metadata 恒简中不变。
+- **背景**：`lib/learn-data.ts`、`lib/privacy-data.ts`、儿童图形标签、信号灯题库、`lib/fun.ts` 的 `LocalizedText` 曾仅简英双语，繁体环境回退简体。
+- **方案（已落地）**：使用 `opencc-js` 的 `cn→twp` 转换生成 `zh-TW` 字段，人工校对台湾用语（設定 / 搜尋 / 檔案），SSR metadata 保持简中；实现与证据见 [tasks-done.md](./tasks-done.md) §九。
 - **预期效果**：内容型文案三语覆盖率由界面 100% / 内容 0% 提升至整体 100%。
 - **优先级**：**P2**（国际化一致性），建议 2027-01-15 前完成。
 
 ### O-06 提供官方 Dockerfile 与 Compose 模板
 
 - **背景**：README / DEPLOYMENT 曾要求用户自建 `Dockerfile`，多环境复现成本高。
-- **方案**：新增多阶段 `Dockerfile`（`node:22-alpine` + `npm ci` + `next build` + standalone 运行）与 `docker-compose.yml`，纳入 CI 构建冒烟。**当前进展**：模板已提供，锁文件已同步；`npm ci` 镜像构建与 CI 冒烟仍待验证（见 [tasks.md](./tasks.md) O-06）。
+- **方案（模板已落地）**：新增多阶段 `Dockerfile`（`node:22-alpine` + `npm ci` + `next build` + standalone 运行）与 `docker-compose.yml`；镜像构建与 CI 冒烟由运维侧按需执行，归档见 [tasks-done.md](./tasks-done.md) §八。
 - **预期效果**：自托管部署步骤由 6 步降至 2 步；镜像构建可复现。
 - **优先级**：**P2**（部署体验），建议 2027-01-15 前完成。
 

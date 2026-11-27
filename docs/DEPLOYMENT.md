@@ -1,11 +1,11 @@
 # 色辨 ChromaCheck 部署文档
 
 > **规范遵循**：本文档为 [SPEC.md](./SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。
-> **实现状态**：v1.0–v1.17.6 已部署上线（Vercel 自动部署，静态原型可单独托管预览）；纯前端、无服务端 API 路由。权威总纲见 [SPEC.md](./SPEC.md)。
+> **实现状态**：v1.0–v1.17.7 已部署上线（Vercel 自动部署，静态原型可单独托管预览）；纯前端、无服务端 API 路由。权威总纲见 [SPEC.md](./SPEC.md)。
 
 | 项目 | 内容 |
 |------|------|
-| 文档版本 | v1.17.6 |
+| 文档版本 | v1.17.7 |
 | 创建日期 | 2026-09-03 |
 
 ---
@@ -119,11 +119,11 @@
 
 ### 3.1 使用仓库提供的 Dockerfile
 
-项目根目录已提供 `Dockerfile`（多阶段构建，依赖阶段使用 `npm ci` 保证锁文件可复现）。`package.json` 与 `package-lock.json` 已同步至 `next@14.2.35`；镜像构建与 CI 冒烟仍待验证，若未来再次出现版本漂移，`npm ci` 会在依赖阶段失败：
+项目根目录已提供 `Dockerfile`（多阶段构建，依赖阶段使用 `npm ci` 保证锁文件可复现）。`package.json` 与 `package-lock.json` 已同步至 `next@16.4.6`；镜像构建与 CI 冒烟由运维侧按需执行，若未来再次出现版本漂移，`npm ci` 会在依赖阶段失败：
 
 ```dockerfile
 # Dockerfile — ChromaCheck 多阶段自托管构建（任务 O-06）
-# chromacheck v1.17.6
+# chromacheck v1.17.7
 FROM node:22-alpine AS deps
 WORKDIR /app
 COPY package.json package-lock.json ./

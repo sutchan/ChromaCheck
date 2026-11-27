@@ -1,8 +1,8 @@
 {
-  "version": "1.17.6",
+  "version": "1.17.7",
   "files": 16,
   "checked": {
-    "links": 98,
+    "links": 100,
     "versionLines": 14,
     "envKeys": 2
   },

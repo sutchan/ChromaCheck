@@ -1,12 +1,12 @@
 # 色辨 ChromaCheck 产品需求文档（PRD）
 
 > **规范遵循**：本文档为 [SPEC.md](./SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。
-> **实现状态**：v1.0–v1.17.6 已实现（按 [SPEC.md](./SPEC.md) §0.3 分类清单）；纯前端、无服务端 API 路由。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [tasks.md](./tasks.md)。
+> **实现状态**：v1.0–v1.17.7 已实现（按 [SPEC.md](./SPEC.md) §0.3 分类清单）；纯前端、无服务端 API 路由。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [tasks.md](./tasks.md)。
 
 | 项目 | 内容 |
 |------|------|
 | 产品名称 | 色辨 ChromaCheck |
-| 文档版本 | v1.17.6 |
+| 文档版本 | v1.17.7 |
 | 创建日期 | 2026-09-03 |
 | 文档状态 | 已落地，持续维护 |
 | 产品负责人 | ChromaCheck 团队 |

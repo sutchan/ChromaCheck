@@ -1,7 +1,16 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件、`package.json` 与 `package-lock.json` 的 `version` 字段（当前 `1.17.6`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件、`package.json` 与 `package-lock.json` 的 `version` 字段（当前 `1.17.7`）。
+
+## [1.17.7] - 2026-11-27
+
+### 文档结构与命名规范统一
+
+- `docs/SPEC.md` §8.3 固化 16 份文档的文件命名、章节顺序、编号、术语与格式规范，明确 `.md` 文档不拆分。
+- 修正 `docs/API.md` 标题编号错位及相关交叉引用；统一 `docs/DEPLOYMENT.md` §7 子标题；补齐用户向文档头部说明与文档属性表。
+- 整理 `docs/tasks-done.md` 归档章节顺序，保留历史记录；未完成任务仍以 `docs/tasks.md` 为唯一来源。
+- 版本同步至 v1.17.7，包含 `VERSION`、包清单、README、CHANGELOG、文档分册、OpenAPI 与贡献约定。
 
 ## [1.17.6] - 2026-11-27
 

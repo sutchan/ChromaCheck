@@ -1,25 +1,25 @@
 # 色辨 ChromaCheck 测试策略文档
 
 > **规范遵循**：本文档为 [SPEC.md](./SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。判读引擎测试以 SPEC §6 与 `lib/scoring.ts` 为权威。
-> **实现状态**：v1.17.6（相关任务见 [tasks.md](./tasks.md) O-03）：Vitest 17 文件 116 例（node 环境）；V8 覆盖率 89.53% lines / 84.3% branches / 87.64% functions 达标；Playwright 配置、依赖、脚本与 CI 已接入，但首页 CTA 路由断言与当前实现不一致，需先对齐再验收连续三次稳定运行；组件测试未落地。判读引擎测试以 SPEC §6 与 `lib/scoring.ts` 为权威。
+> **实现状态**：v1.17.7（相关实现归档见 [tasks-done.md](./tasks-done.md) §九）：Vitest 17 文件 116 例（node 环境）；V8 覆盖率 89.53% lines / 84.3% branches / 87.64% functions 达标；首页 CTA 已收敛至 `/guide`，Playwright 本地连续三次 2/2 通过，CI 三次由外部触发验证；组件测试未落地。判读引擎测试以 SPEC §6 与 `lib/scoring.ts` 为权威。
 
 | 项目 | 内容 |
 |------|------|
-| 文档版本 | v1.17.6 |
+| 文档版本 | v1.17.7 |
 | 创建日期 | 2026-09-03 |
 
 ---
 
 ## 1. 测试总览
 
-本项目采用分层测试策略，当前覆盖单元测试、覆盖率门禁、Playwright 主链路 E2E 与手动检查清单；组件测试未落地，E2E 已接入 CI，但需先对齐首页 CTA 路由断言，再做连续三次稳定验收。
+本项目采用分层测试策略，当前覆盖单元测试、覆盖率门禁、Playwright 主链路 E2E 与手动检查清单；组件测试未落地，首页 CTA 与 E2E 断言一致，本地连续三次稳定通过，CI 三次由外部触发验证。
 
 | 层级 | 工具 | 重点 |
 |------|------|------|
 | 单元测试 | Vitest（node 环境） | 判读算法、工具函数、存储封装 —— **已落地，17 文件 116 例** |
 | 组件测试 | Vitest + React Testing Library | UI 组件渲染与交互 —— **规划中，未落地**（无 jsdom/happy-dom、无 RTL 依赖） |
 | 集成测试 | Playwright | 主链路回归与语言切换 `html lang` —— **配置 / 依赖 / 脚本 / CI 已接入** |
-| 端到端测试 | Playwright | 完整检测链路 —— **已接入 CI，首页 CTA 路由断言待对齐，随后验收连续三次稳定**（O-03） |
+| 端到端测试 | Playwright | 完整检测链路 —— **已接入 CI，本地连续三次稳定通过，CI 三次由外部触发验证** |
 | 手动测试 | 人工 | 兼容性、无障碍、色彩准确性 |
 
 ---
@@ -158,19 +158,22 @@ describe('AnswerInput', () => {
 ```typescript
 import { defineConfig, devices } from '@playwright/test';
 
+const runId = process.env.E2E_RUN_ID ?? new Date().toISOString().replace(/[:.]/g, '-');
+
 export default defineConfig({
   testDir: './e2e',
   fullyParallel: false,
   retries: 2,
   reporter: [['list']],
+  outputDir: `.tmp/e2e-results/${runId}`,
   use: {
-    baseURL: 'http://127.0.0.1:3000',
+    baseURL: 'http://127.0.0.1:3101',
     trace: 'retain-on-failure',
   },
   projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
   webServer: {
-    command: 'npm run dev -- -p 3000 -H 127.0.0.1',
-    url: 'http://127.0.0.1:3000',
+    command: 'npm run dev -- -p 3101 -H 127.0.0.1',
+    url: 'http://127.0.0.1:3101',
     reuseExistingServer: true,
     timeout: 120000,
   },
@@ -181,7 +184,7 @@ export default defineConfig({
 
 实际用例位于 `e2e/main-flow.spec.ts`，覆盖主链路与语言切换回归；以该文件为权威，不再另存一份示例副本。
 
-> **现行口径（2026-11-27）**：用户确认首页「开始检测」应先进入 `/guide`；`components/home/HomeContent.tsx` 已按此实现，主链路断言与实际路由一致。CI 连续三次稳定验收状态见 [tasks.md O-03](./tasks.md#o-03-playwright-主链路-e2e-在-ci-稳定三次)。
+> **现行口径（2026-11-27）**：首页「开始检测」先进入 `/guide`，`components/home/HomeContent.tsx` 与主链路断言一致；本地连续三次 `npm run e2e -- --retries=0` 全通过，完整实现与证据见 [tasks-done.md §九](./tasks-done.md)。
 
 ### 4.4 运行命令
 
@@ -325,7 +328,7 @@ jobs:
 
 - [ ] 单元测试全部通过
 - [ ] 覆盖率达标
-- [ ] E2E 已接入 CI；先对齐首页 CTA 路由断言，再连续三次稳定通过（O-03）
+- [x] E2E 已接入 CI，本地连续三次稳定通过；CI 三次由外部触发验证
 - [ ] 手动测试清单完成
 - [ ] 无新增安全告警
 
