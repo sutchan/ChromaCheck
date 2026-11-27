@@ -38,6 +38,7 @@ export default function HistoryPage() {
   }
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- 挂载后按本地档案刷新历史列表，避免 SSR 水合不一致
     reload();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [activeId]);

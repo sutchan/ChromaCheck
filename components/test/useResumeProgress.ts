@@ -18,12 +18,14 @@ export interface ResumeDraft {
 export function useResumeProgress(mode: string, maxIndex: number) {
   const [mounted, setMounted] = useState(false);
   const [initial, setInitial] = useState<ResumeDraft | undefined>(undefined);
+  // eslint-disable-next-line react-hooks/purity -- useRef 初始时间戳仅作计时基准
   const startedAtRef = useRef<number>(Date.now());
 
   useEffect(() => {
     const p = loadProgress();
     if (p && p.mode === mode && p.index < maxIndex) {
       startedAtRef.current = p.startedAt ?? Date.now();
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- 挂载后恢复本地答题进度
       setInitial({ index: p.index, answers: p.answers });
     }
     setMounted(true);

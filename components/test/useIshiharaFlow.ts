@@ -50,11 +50,13 @@ export function useIshiharaFlow(opts: {
   const [milestone, setMilestone] = useState<string | null>(null);
   const [pulse, setPulse] = useState(false);
   const [pausedChapter, setPausedChapter] = useState<number | null>(null);
+  // eslint-disable-next-line react-hooks/purity -- useRef 初始时间戳仅作计时基准
   const qStartRef = useRef<number>(Date.now());
   const timersRef = useRef<number[]>([]);
 
   useEffect(() => {
     qStartRef.current = Date.now();
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- 题号变化后重置答题输入状态
     setInput('');
     setReveal(null);
     setRecorded(false);

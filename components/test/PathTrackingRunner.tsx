@@ -22,6 +22,7 @@ export function PathTrackingRunner({ mode }: { mode: TestMode }) {
   const [idx, setIdx] = useState(0);
   const [results, setResults] = useState<ReturnType<typeof scorePathTracking>[]>([]);
   const [finished, setFinished] = useState(false);
+  // eslint-disable-next-line react-hooks/purity -- useRef 初始时间戳仅作计时基准
   const startedAtRef = useRef<number>(Date.now());
 
   useEffect(() => {

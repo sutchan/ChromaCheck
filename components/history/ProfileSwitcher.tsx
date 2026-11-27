@@ -48,6 +48,7 @@ export function ProfileSwitcher({
   const [relation, setRelation] = useState('');
 
   useEffect(() => {
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- 挂载后恢复本地档案列表
     setProfiles(listProfiles());
     setMounted(true);
   }, []);

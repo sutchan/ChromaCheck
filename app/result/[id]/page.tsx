@@ -30,6 +30,7 @@ export default function ResultPage() {
 
   useEffect(() => {
     if (!id) {
+      // eslint-disable-next-line react-hooks/set-state-in-effect -- 按路由参数读取本地结果，挂载初始化必需
       setState('missing');
       return;
     }

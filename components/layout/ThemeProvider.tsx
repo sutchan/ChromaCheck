@@ -20,6 +20,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   useEffect(() => {
     const s = loadSettings();
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- 挂载后恢复本地显示设置
     setSettings(s);
   }, []);
 

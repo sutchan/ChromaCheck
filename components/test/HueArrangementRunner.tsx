@@ -18,6 +18,7 @@ export function HueArrangementRunner({ mode }: { mode: TestMode }) {
   const { t, lang } = useLang();
   const question = getHueQuestions(mode)[0];
   const [submitted, setSubmitted] = useState(false);
+  // eslint-disable-next-line react-hooks/purity -- useRef 初始时间戳仅作计时基准
   const startedAtRef = useRef<number>(Date.now());
 
   useEffect(() => {

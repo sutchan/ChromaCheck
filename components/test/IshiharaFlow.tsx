@@ -46,6 +46,7 @@ export function IshiharaFlow({
   // 实体键盘输入：输入框未聚焦时，将数字键 / 退格 / 回车路由到作答逻辑，
   // 使「用物理键盘直接输入数字」无需先点输入框。聚焦输入框时交由原生处理。
   const apiRef = useRef(f);
+  // eslint-disable-next-line react-hooks/refs -- 键盘监听器通过 ref 读取最新回调，避免在 render 中订阅
   apiRef.current = f;
   useEffect(() => {
     function onKey(e: KeyboardEvent) {

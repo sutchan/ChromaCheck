@@ -34,9 +34,11 @@ export function ChildRunner({ onDone }: ChildRunnerProps) {
     if (!current) return;
     const next: ChildAnswer[] = [
       ...answers,
+      // eslint-disable-next-line react-hooks/purity -- 用户点击时取时间戳
       { questionId: current.id, value, durationMs: Math.max(0, Date.now() - startedAt) },
     ];
     setAnswers(next);
+    // eslint-disable-next-line react-hooks/purity -- 用户点击时更新计时基准
     setStartedAt(Date.now());
     if (next.length >= questions.length) onDone(next);
   }

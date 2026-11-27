@@ -23,6 +23,7 @@ export function PathTrackingCanvas({ question, onResult }: PathCanvasProps) {
   const cursorRef = useRef<{ x: number; y: number }>({ x: 0.5, y: 0.5 });
   const [userPath, setUserPath] = useState<{ x: number; y: number }[]>([]);
   const [, forceTick] = useState(0);
+  // eslint-disable-next-line react-hooks/refs -- 键盘映射工具仅接收 ref 句柄，不在 render 中读取值
   const { handleKeyDown, clear } = createPathKeymap({ cursorRef, ptsRef, setUserPath, forceTick });
 
   function scheduleRender() {
@@ -62,6 +63,7 @@ export function PathTrackingCanvas({ question, onResult }: PathCanvasProps) {
     offRef.current = off;
     ptsRef.current = [];
     cursorRef.current = { x: 0.5, y: 0.5 };
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- 题号变化后重置本地作答画布
     setUserPath([]);
     drawPathField(canvasRef.current, off, field, [], cursorRef.current);
     // eslint-disable-next-line react-hooks/exhaustive-deps

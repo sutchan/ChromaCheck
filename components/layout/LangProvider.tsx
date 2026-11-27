@@ -29,6 +29,7 @@ export function LangProvider({ children }: { children: React.ReactNode }) {
     } catch {
       /* 隐私模式禁用存储时保持默认 */
     }
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- 挂载后恢复语言偏好并同步 html lang
     setLangState(restored);
     // 恢复偏好时同步 html lang，避免繁中 / 英文用户首屏语义标记错误（O-02）
     applyHtmlLang(restored);

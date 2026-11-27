@@ -59,6 +59,7 @@ export default function BatchPage() {
 
   useEffect(() => {
     const s = loadBatch();
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- 挂载后读取本地批量名单
     setSubjects(s);
     setMounted(true);
   }, []);
@@ -66,6 +67,7 @@ export default function BatchPage() {
   useEffect(() => {
     const results = listResults();
     const done = new Set(results.map((r) => r.profileId ?? getDefaultProfile().id));
+    // eslint-disable-next-line react-hooks/set-state-in-effect -- 本地名单变化后重算完成集合
     setDoneSet(done);
   }, [subjects, mounted]);
 

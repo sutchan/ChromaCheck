@@ -13,6 +13,7 @@ import type { TestResult } from '@/lib/types';
 
 export function ChildFlow() {
   const router = useRouter();
+  // eslint-disable-next-line react-hooks/purity -- useRef 初始时间戳仅作计时基准，时间源来自用户事件环境
   const startedAt = useRef<number>(Date.now());
   const [saving, setSaving] = useState(false);
   const { t, lang } = useLang();
