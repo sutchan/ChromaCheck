@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     type: 'website',
     title: '隐私政策 · 色辨 ChromaCheck',
     description: '检测数据本地化、匿名统计与医学免责声明。',
-    url: 'https://chromacheck.app/privacy',
+    url: 'https://chroma.appti.cn/privacy',
     siteName: 'ChromaCheck',
     locale: 'zh_CN',
   },

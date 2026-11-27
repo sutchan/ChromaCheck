@@ -6,6 +6,7 @@ import {
   CHILD_QUESTIONS,
   SHAPE_LABEL,
   SHAPE_LABEL_EN,
+  SHAPE_LABEL_TW,
   type ChildAnswerValue,
   type ChildShape,
 } from '@/lib/questions/child';
@@ -18,7 +19,7 @@ export interface ChildSummaryProps {
 
 export function ChildSummary({ result }: ChildSummaryProps) {
   const { t, lang } = useLang();
-  const labels = lang === 'en' ? SHAPE_LABEL_EN : SHAPE_LABEL;
+  const labels = lang === 'en' ? SHAPE_LABEL_EN : lang === 'zh-TW' ? SHAPE_LABEL_TW : SHAPE_LABEL;
   return (
     <section id="child-summary" className="card stack" style={{ gap: 'var(--s-3)' }}>
       <h2 style={{ margin: 0, fontSize: '1.15rem' }}>{t('result.childTitle')}</h2>

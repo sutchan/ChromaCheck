@@ -591,7 +591,7 @@ jobs:
 
 ## 11. 已知问题与待办（更新于 2026-11-27 / v1.17.5）
 
-- **已知问题**：`npm audit --omit=dev --audit-level=critical` 报告 1 个 critical（审计库将全部 Next 14.x 判为受影响；是否跨 major 升至 Next 16 属 O-01 决策）；E2E 首页 CTA 路由断言与 `HomeContent.tsx` 实际 `href="/test"` 不一致（O-03）；组件测试未引入；内容型文案繁体仍回退简体；规范域名 `chromacheck.app` 与试用入口 `chroma.ewuse.com` 并存。
+- **已知问题**：`npm audit --omit=dev --audit-level=critical` 报告 1 个 critical（审计库将全部 Next 14.x 判为受影响；是否跨 major 升至 Next 16 属 O-01 决策）；E2E 首页 CTA 路由断言与 `HomeContent.tsx` 实际 `href="/test"` 不一致（O-03）；组件测试未引入；内容型文案繁体仍回退简体；规范域名 `chroma.appti.cn` 与试用入口 `chroma.appti.cn` 并存。
 - **待办事项**：唯一来源为 [tasks.md](./tasks.md)。当前活跃项包括 O-01、O-03、O-04、O-05、V-03、V-04、V-06、V-05 与 O-09~O-11；本文件仅记录架构证据，不维护第二份状态。
 - **验证基线**：16 文件 / 111 例 Vitest 实跑全绿；覆盖率 88.96% lines / 84.3% branches / 87.64% functions；lint、type-check、check:docs、check:openapi 全绿；E2E 已接入 CI，但需先对齐首页 CTA 路由断言，再完成连续三次稳定验收（O-03）。
 

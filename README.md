@@ -2,21 +2,21 @@
 
 > 一眼辨色，科学筛查 — 在线色觉检测 Web 应用
 
-[![Website](https://img.shields.io/badge/在线试用-chroma.ewuse.com-4c1)][website]
+[![Website](https://img.shields.io/badge/在线试用-chroma.appti.cn-4c1)][website]
 [![CI](https://github.com/sutchan/ChromaCheck/actions/workflows/ci.yml/badge.svg)][ci]
 [![Next.js](https://img.shields.io/badge/Next.js-14-black)](https://nextjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5-blue)](https://www.typescriptlang.org/)
 [![Tailwind CSS](https://img.shields.io/badge/Tailwind-3-38bdf8)](https://tailwindcss.com/)
 [![License](https://img.shields.io/badge/License-MIT-green)](#license)
 
-[website]: https://chroma.ewuse.com/
+[website]: https://chroma.appti.cn/
 [ci]: https://github.com/sutchan/ChromaCheck/actions/workflows/ci.yml
 
 色辨（ChromaCheck）是基于 Web 的在线色觉检测工具，通过标准化石原氏色盲检测图与多种测试范式，帮助用户快速、便捷地筛查色觉异常。纯本地运行、无需注册，检测数据默认仅存储于浏览器。
 
-**在线试用**：<https://chroma.ewuse.com/> — 打开即用，无需注册，检测数据仅存于本地浏览器。
+**在线试用**：<https://chroma.appti.cn/> — 打开即用，无需注册，检测数据仅存于本地浏览器。
 
-**规范域名（canonical）**：<https://chromacheck.app>（`lib/site.ts` 的 `SITE_URL`，用于 metadata / sitemap / robots / OG URL）；当前与试用入口并存，域名收敛计划待确认。
+**规范域名（canonical）**：<https://chroma.appti.cn>（`lib/site.ts` 的 `SITE_URL`，用于 metadata / sitemap / robots / OG URL）。旧域名 `chromacheck.app` 与 `chroma.ewuse.com` 由 `next.config.mjs` 301 至规范域名。
 
 > **当前版本 v1.17.5**（版本单一来源见 `VERSION`）。已实现能力见下方「功能特性」；权威规范见 [docs/SPEC.md](docs/SPEC.md)。
 

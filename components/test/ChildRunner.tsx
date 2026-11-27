@@ -6,6 +6,7 @@ import {
   getChildQuestions,
   SHAPE_LABEL,
   SHAPE_LABEL_EN,
+  SHAPE_LABEL_TW,
   type ChildAnswerValue,
   type ChildShape,
 } from '@/lib/questions/child';
@@ -24,7 +25,7 @@ export function ChildRunner({ onDone }: ChildRunnerProps) {
   const [answers, setAnswers] = useState<ChildAnswer[]>([]);
   const [startedAt, setStartedAt] = useState<number>(() => Date.now());
   const { lang, t } = useLang();
-  const labels = lang === 'en' ? SHAPE_LABEL_EN : SHAPE_LABEL;
+  const labels = lang === 'en' ? SHAPE_LABEL_EN : lang === 'zh-TW' ? SHAPE_LABEL_TW : SHAPE_LABEL;
 
   const index = answers.length;
   const current = questions[index];

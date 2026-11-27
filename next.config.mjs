@@ -32,6 +32,9 @@ const securityHeaders = [
   { key: 'Permissions-Policy', value: 'camera=(), microphone=(), geolocation=()' },
 ];
 
+const CANONICAL_ORIGIN = 'https://chroma.appti.cn';
+const LEGACY_HOSTS = ['chromacheck.app', 'chroma.ewuse.com'];
+
 const nextConfig = {
   reactStrictMode: true,
   output: 'standalone',
@@ -40,6 +43,15 @@ const nextConfig = {
   },
   async headers() {
     return [{ source: '/:path*', headers: securityHeaders }];
+  },
+  // 旧域名 301 到规范域名；路径与查询串由 Next 自动保留
+  async redirects() {
+    return LEGACY_HOSTS.map((host) => ({
+      source: '/:path*',
+      has: [{ type: 'host', value: host }],
+      destination: `${CANONICAL_ORIGIN}/:path*`,
+      permanent: true,
+    }));
   },
 };
 

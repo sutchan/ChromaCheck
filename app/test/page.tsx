@@ -15,7 +15,7 @@ export const metadata: Metadata = {
     type: 'website',
     title: '选择检测模式 · 色辨 ChromaCheck',
     description: '快速版、标准版、路径追踪、色相排列、进阶联合与儿童模式六类色觉检测。',
-    url: 'https://chromacheck.app/test',
+    url: 'https://chroma.appti.cn/test',
     siteName: 'ChromaCheck',
     locale: 'zh_CN',
   },

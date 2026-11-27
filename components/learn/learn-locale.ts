@@ -10,22 +10,20 @@ export interface LocalizedArticle {
   excerpt: string;
 }
 
-/** 文章的展示字段按当前语言取值；英文字段缺失时回退中文。 */
+/** 文章的展示字段按当前语言取值；缺字段时回退简体中文。 */
 export function localizeArticle(a: Article, lang: Lang): LocalizedArticle {
-  const en = lang === 'en';
-  return {
-    title: en ? a.titleEn : a.title,
-    cat: en ? a.catEn : a.cat,
-    read: en ? a.readEn : a.read,
-    excerpt: en ? a.excerptEn : a.excerpt,
-  };
+  if (lang === 'en') {
+    return { title: a.titleEn, cat: a.catEn, read: a.readEn, excerpt: a.excerptEn };
+  }
+  if (lang === 'zh-TW') {
+    return { title: a.titleTW, cat: a.catTW, read: a.readTW, excerpt: a.excerptTW };
+  }
+  return { title: a.title, cat: a.cat, read: a.read, excerpt: a.excerpt };
 }
 
-/** 正文章节按当前语言取值；小标题缺失英文时回退中文。 */
+/** 正文章节按当前语言取值；缺字段时回退简体中文。 */
 export function localizeSection(s: LearnSection, lang: Lang): { h?: string; p: string } {
-  const en = lang === 'en';
-  return {
-    h: s.h ? (en ? s.hEn ?? s.h : s.h) : undefined,
-    p: en ? s.pEn : s.p,
-  };
+  if (lang === 'en') return { h: s.h ? s.hEn ?? s.h : undefined, p: s.pEn };
+  if (lang === 'zh-TW') return { h: s.h ? s.hTW ?? s.h : undefined, p: s.pTW };
+  return { h: s.h, p: s.p };
 }

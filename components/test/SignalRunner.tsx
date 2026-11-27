@@ -100,7 +100,7 @@ export function SignalRunner() {
             }}
           />
         ) : null}
-        <p style={{ margin: 0, textAlign: 'center', fontSize: '1.05rem' }}>{lang === 'en' ? q.promptEn : q.prompt}</p>
+        <p style={{ margin: 0, textAlign: 'center', fontSize: '1.05rem' }}>{lang === 'en' ? q.promptEn : lang === 'zh-TW' ? q.promptTW : q.prompt}</p>
       </div>
 
       <div className="stack" style={{ gap: 'var(--s-3)' }}>
@@ -113,7 +113,7 @@ export function SignalRunner() {
             disabled={recorded}
             onClick={() => pick(o.value)}
           >
-            {lang === 'en' ? o.labelEn : o.label}
+            {lang === 'en' ? o.labelEn : lang === 'zh-TW' ? o.labelTW : o.label}
           </button>
         ))}
       </div>

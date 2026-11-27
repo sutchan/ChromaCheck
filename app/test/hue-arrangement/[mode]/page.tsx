@@ -22,7 +22,7 @@ export function generateMetadata({ params }: { params: { mode: string } }): Meta
       type: 'website',
       title: `${title} · 色辨 ChromaCheck`,
       description: desc,
-      url: `https://chromacheck.app/test/hue-arrangement/${params.mode}`,
+      url: `https://chroma.appti.cn/test/hue-arrangement/${params.mode}`,
       siteName: 'ChromaCheck',
       locale: 'zh_CN',
     },

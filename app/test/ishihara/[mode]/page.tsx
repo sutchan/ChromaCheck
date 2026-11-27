@@ -24,7 +24,7 @@ export function generateMetadata({ params }: { params: { mode: string } }): Meta
       type: 'website',
       title: `${title} · 色辨 ChromaCheck`,
       description: desc,
-      url: `https://chromacheck.app/test/ishihara/${params.mode}`,
+      url: `https://chroma.appti.cn/test/ishihara/${params.mode}`,
       siteName: 'ChromaCheck',
       locale: 'zh_CN',
     },

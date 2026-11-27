@@ -176,7 +176,7 @@ flowchart LR
 - `sitemap.ts`、`robots.ts`、`manifest.ts` 为 Next.js 元数据路由，不是业务接口。
 - `llms.txt` 与 `llms-full.txt` 是两个静态 GET Route Handler（`force-static`），返回纯文本站点索引与全文索引；详见 [API.md](./API.md) 与 [openapi.yaml](./openapi.yaml)。
 - `public/sw.js` 提供离线兜底；`/offline` 为离线页面。
-- 站点规范域名 `https://chromacheck.app`（`lib/site.ts` 的 `SITE_URL`）与当前试用入口 `https://chroma.ewuse.com` 并存。
+- 站点规范域名 `https://chroma.appti.cn`（`lib/site.ts` 的 `SITE_URL`）与当前试用入口 `https://chroma.appti.cn` 并存。
 
 ---
 

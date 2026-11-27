@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     type: 'website',
     title: '信号灯辨识 · 色辨 ChromaCheck',
     description: '模拟驾驶场景的红、绿、黄信号辨色测试。',
-    url: 'https://chromacheck.app/test/signal',
+    url: 'https://chroma.appti.cn/test/signal',
     siteName: 'ChromaCheck',
     locale: 'zh_CN',
   },

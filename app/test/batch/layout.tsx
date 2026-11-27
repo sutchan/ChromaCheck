@@ -13,7 +13,7 @@ export const metadata: Metadata = {
     type: 'website',
     title: '批量色觉筛查 · 色辨 ChromaCheck',
     description: '录入名单 → 逐人检测 → 汇总导出，适合学校与企业批量色觉筛查。',
-    url: 'https://chromacheck.app/test/batch',
+    url: 'https://chroma.appti.cn/test/batch',
     siteName: 'ChromaCheck',
     locale: 'zh_CN',
   },

@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     type: 'website',
     title: '检测前指引 · 色辨 ChromaCheck',
     description: '检测前的环境、设备、距离与作答方式准备。',
-    url: 'https://chromacheck.app/guide',
+    url: 'https://chroma.appti.cn/guide',
     siteName: 'ChromaCheck',
     locale: 'zh_CN',
   },

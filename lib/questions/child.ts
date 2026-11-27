@@ -67,3 +67,14 @@ export const SHAPE_LABEL: Record<ChildAnswerValue, string> = {
   cross: '十字',
   none: '看不清 / 没有图形',
 };
+
+/** 儿童图形标签繁体（台湾）；由 opencc-js cn→twp 生成并人工复核 */
+export const SHAPE_LABEL_TW: Record<ChildAnswerValue, string> = {
+  circle: '圓形',
+  square: '方形',
+  triangle: '三角形',
+  star: '星星',
+  heart: '愛心',
+  cross: '十字',
+  none: '看不清 / 沒有圖形',
+};

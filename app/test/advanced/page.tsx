@@ -15,7 +15,7 @@ export function generateMetadata(): Metadata {
       type: 'website',
       title: `${title} · 色辨 ChromaCheck`,
       description: desc,
-      url: 'https://chromacheck.app/test/advanced',
+      url: 'https://chroma.appti.cn/test/advanced',
       siteName: 'ChromaCheck',
       locale: 'zh_CN',
     },

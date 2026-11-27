@@ -14,7 +14,7 @@ export const metadata: Metadata = {
     type: 'website',
     title: '色觉科普 · 色辨 ChromaCheck',
     description: '色盲与色弱的区别、石原氏检测原理、遗传规律与生活技巧。',
-    url: 'https://chromacheck.app/learn',
+    url: 'https://chroma.appti.cn/learn',
     siteName: 'ChromaCheck',
     locale: 'zh_CN',
   },
