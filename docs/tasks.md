@@ -1,6 +1,6 @@
 # ChromaCheck 任务清单（唯一来源）
 
-> **文档版本**：v1.17.5 ｜ **最后更新**：2026-11-27 14:59（本轮决策与进度更新；已完成项归档至 `./tasks-done.md` §八）
+> **文档版本**：v1.17.6 ｜ **最后更新**：2026-11-27 14:59（本轮决策与进度更新；已完成项归档至 `./tasks-done.md` §八）
 > **唯一来源硬约束**：项目内所有未完成 / 待验证 / 计划实施的任务**只记录在本文件**。其他位置（README、CHANGELOG、ROADMAP、各分册、`tasks-done.md`、源码注释等）出现「待办 / TODO / 待验证 / 待实施 / 规划中 / 未闭环 / 待决策」等任务型表述时，必须先登记到本文件，原位置仅保留问题证据与方案正文，并链接到本文件；不得维护第二份任务清单。已完成项移入 [tasks-done.md](./tasks-done.md)（仅作归档，不维护状态）。规则固化于 [SPEC.md §8.3](./SPEC.md)。
 > **责任人与时间说明**：当前以角色标注「待指派」；计划完成时间为基于 2026-11-26 的建议值，待项目负责人确认后填写实际负责人与日期。
 > **本轮结论（2026-11-27 14:59）**：O-02、V-01、V-02、V-07、O-06、O-07、O-08 已完成并归档；用户决策为 O-01 迁移 Next 16、O-03 首页 CTA 先进入 `/guide`、O-09 规范域名 `chroma.appti.cn`；O-04 与 V-05 按外部依赖归档，O-10 / O-11 保留开放；O-05、V-03、V-04、V-06 继续推进。
@@ -39,7 +39,7 @@
 
 ### O-03 Playwright 主链路 E2E 在 CI 稳定三次
 
-- **已完成部分**：`vitest.config.ts` 配置 v8 覆盖率与阈值（lines 80 / functions 75 / branches 70 / statements 80）；`npm run test:coverage` 实跑 **88.96% lines / 87.64% functions / 84.3% branches / 88.96% statements** 全达标；`playwright.config.ts` 与 `e2e/main-flow.spec.ts`（首页 → 指引 → 石原氏快速 → 结果、语言切换 `html lang` 回归）已提供；CI 接入 coverage 与 E2E 步骤。
+- **已完成部分**：`vitest.config.ts` 配置 v8 覆盖率与阈值（lines 80 / functions 75 / branches 70 / statements 80）；`npm run test:coverage` 实跑 **89.53% lines / 87.64% functions / 84.3% branches / 89.53% statements** 全达标；`playwright.config.ts` 与 `e2e/main-flow.spec.ts`（首页 → 指引 → 石原氏快速 → 结果、语言切换 `html lang` 回归）已提供；CI 接入 coverage 与 E2E 步骤。
 - **用户决策（2026-11-27 14:59）**：首页主 CTA 先进入 `/guide`，保留现有 E2E 断言；实现侧修改 `HomeContent.tsx` 的 `href`。
 - **待验证**：本地 Chromium 安装 / E2E 连续三次实跑，以及 CI 连续三次稳定通过；CI 三次结果需外部触发后回填。
 - **验收标准**：E2E 在 CI 稳定 3 次；覆盖率报告持续生成且门禁通过。
@@ -81,5 +81,5 @@
 | 日期 | 变更 |
 |------|------|
 | 2026-11-27 14:59 | 用户决策更新：O-01 迁移 Next 16；O-03 首页 CTA 先进入 `/guide`；O-09 规范域名改为 `chroma.appti.cn` 并增加旧域名 301；O-04 / V-05 按外部依赖归档，O-10 / O-11 保留开放；同步调整优先级、状态与计划时间 |
-| 2026-11-27 | 本轮推进完成并归档：O-02 / V-01 / V-02 / V-07 / O-06 / O-07 / O-08 移入 `./tasks-done.md` §八；O-01 因审计要求跨 major 升级转为阻塞待决策；O-03 覆盖率门禁已达标（88.96% lines），并发现首页 CTA 路由断言不一致，E2E 待对齐后 CI 实跑；O-05 与 O-09~O-11 / V-05 保留待办或阻塞状态 |
+| 2026-11-27 | 本轮推进完成并归档：O-02 / V-01 / V-02 / V-07 / O-06 / O-07 / O-08 移入 `./tasks-done.md` §八；O-01 因审计要求跨 major 升级转为阻塞待决策；O-03 覆盖率门禁已达标（89.53% lines），并发现首页 CTA 路由断言不一致，E2E 待对齐后 CI 实跑；O-05 与 O-09~O-11 / V-05 保留待办或阻塞状态 |
 | 2026-11-26 | 系统性文档标准化：新增 FEATURES / USER-GUIDE / FAQ / TROUBLESHOOTING / openapi.yaml；任务文档由 `TASKS.md` 迁移为 `tasks.md` 并改为唯一任务单；登记 O-01 ~ O-11 与 V-01 ~ V-07；在 SPEC §8.3 固化任务单一来源硬约束 |

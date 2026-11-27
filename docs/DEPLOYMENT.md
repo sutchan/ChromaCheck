@@ -1,18 +1,18 @@
 # 色辨 ChromaCheck 部署文档
 
 > **规范遵循**：本文档为 [SPEC.md](./SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。
-> **实现状态**：v1.0–v1.17.5 已部署上线（Vercel 自动部署，静态原型可单独托管预览）；纯前端、无服务端 API 路由。权威总纲见 [SPEC.md](./SPEC.md)。
+> **实现状态**：v1.0–v1.17.6 已部署上线（Vercel 自动部署，静态原型可单独托管预览）；纯前端、无服务端 API 路由。权威总纲见 [SPEC.md](./SPEC.md)。
 
 | 项目 | 内容 |
 |------|------|
-| 文档版本 | v1.17.5 |
+| 文档版本 | v1.17.6 |
 | 创建日期 | 2026-09-03 |
 
 ---
 
 ## 1. 部署总览
 
-色辨 ChromaCheck 基于 Next.js 14，推荐使用 **Vercel** 进行部署（与 Next.js 原生集成、自动 CI/CD、全球 CDN）。也支持 Docker 自托管部署。
+色辨 ChromaCheck 基于 Next.js 16，推荐使用 **Vercel** 进行部署（与 Next.js 原生集成、自动 CI/CD、全球 CDN）。也支持 Docker 自托管部署。
 
 | 部署方式 | 适用场景 | 优点 |
 |----------|----------|------|
@@ -123,7 +123,7 @@
 
 ```dockerfile
 # Dockerfile — ChromaCheck 多阶段自托管构建（任务 O-06）
-# chromacheck v1.17.5
+# chromacheck v1.17.6
 FROM node:22-alpine AS deps
 WORKDIR /app
 COPY package.json package-lock.json ./

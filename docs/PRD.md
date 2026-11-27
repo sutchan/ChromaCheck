@@ -1,12 +1,12 @@
 # 色辨 ChromaCheck 产品需求文档（PRD）
 
 > **规范遵循**：本文档为 [SPEC.md](./SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。
-> **实现状态**：v1.0–v1.17.5 已实现（按 [SPEC.md](./SPEC.md) §0.3 分类清单）；纯前端、无服务端 API 路由。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [tasks.md](./tasks.md)。
+> **实现状态**：v1.0–v1.17.6 已实现（按 [SPEC.md](./SPEC.md) §0.3 分类清单）；纯前端、无服务端 API 路由。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [tasks.md](./tasks.md)。
 
 | 项目 | 内容 |
 |------|------|
 | 产品名称 | 色辨 ChromaCheck |
-| 文档版本 | v1.17.5 |
+| 文档版本 | v1.17.6 |
 | 创建日期 | 2026-09-03 |
 | 文档状态 | 已落地，持续维护 |
 | 产品负责人 | ChromaCheck 团队 |
@@ -379,7 +379,7 @@ interface LocalStorageData {
 
 | 层级 | 技术 | 说明 |
 |------|------|------|
-| 前端框架 | Next.js 14 (App Router) | SSG/CSR 混合，SEO 友好 |
+| 前端框架 | Next.js 16 (App Router) | SSG/CSR 混合，SEO 友好 |
 | 语言 | TypeScript（strict） | 类型安全 |
 | 样式 | 设计令牌 + CSS 变量（`globals.css`），Tailwind 3 | 深色 / 色觉安全模式 |
 | UI 组件 | 自研组件（`components/` 多域：common / layout / home / test / result / history / guide / learn / offline / privacy / analytics / pwa / seo） | 零 UI 库依赖 |

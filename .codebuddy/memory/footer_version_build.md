@@ -2,7 +2,7 @@
 name: 页脚版本与构建号格式规范
 description: ChromaCheck 页脚必须展示 V{版本}· build {10位yymmddhhmm}；构建号由 next.config.mjs 注入 NEXT_PUBLIC_BUILD_ID，禁止回退旧格式
 type: feedback
-lastVerified: 2026-11-27（随 v1.17.5 复核）
+lastVerified: 2026-11-27（随 v1.17.6 复核）
 ---
 
 页脚（`components/layout/Footer.tsx`，根元素 `id="app-footer"`）展示版本号 + 构建号，格式固定为 `V{版本号}· build {构建号}`：大写 `V`、版本号后**紧接** `·`（无空格）、再 ` build `（空格-英文 build-空格）、最后 **10 位**构建号。完整行：`© {年} ChromaCheck · V{pkg.version}· build {buildId} · {t('footer.purpose')}`。示例 `V1.17.5· build 2611121200`（示例仅示意格式，实际值以构建注入为准）。

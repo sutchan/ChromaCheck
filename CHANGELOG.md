@@ -1,7 +1,18 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件、`package.json` 与 `package-lock.json` 的 `version` 字段（当前 `1.17.5`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件、`package.json` 与 `package-lock.json` 的 `version` 字段（当前 `1.17.6`）。
+
+## [1.17.6] - 2026-11-27
+
+### 任务收口与依赖升级
+
+- O-01：按用户决策从 Next.js 14 迁移至 Next.js 16.4.6 / React 19，ESLint 9 与扁平配置替代 `next lint`；生产依赖 `npm audit --omit=dev --audit-level=critical` 归零。
+- O-03：首页主 CTA 改为先进入 `/guide`，与现有 Playwright 主链路断言一致。
+- O-05：新增 `npm run i18n:tw` 与 `opencc-js` cn→twp 生成流程，补齐科普、隐私、儿童图形、信号灯和趣味文案的台湾繁体字段；新增 5 例三语覆盖回归。
+- O-09：`chroma.appti.cn` 设为唯一规范域名；旧域名 `chromacheck.app` / `chroma.ewuse.com` 由 Next 永久重定向收敛，metadata / sitemap / OpenAPI / 文档同步。
+- V-03：全新目录 `npm ci` 后 `npm install-scripts ls` 返回无待审脚本；V-04：生产构建、CSP / 安全响应头与页脚 10 位 build 号实跑通过。
+- 测试基线更新为 17 文件 / 116 例，覆盖率 lines/statements 89.53%、branches 84.3%、functions 87.64%。
 
 ## [1.17.5] - 2026-11-27
 

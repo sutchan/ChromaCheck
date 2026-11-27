@@ -1,6 +1,6 @@
 # 色辨 ChromaCheck 功能模块说明
 
-> **文档版本**：v1.17.5 ｜ **实现状态**：v1.0–v1.17.5 已落地能力清单
+> **文档版本**：v1.17.6 ｜ **实现状态**：v1.0–v1.17.6 已落地能力清单
 > **权威依据**：[SPEC.md](./SPEC.md)（规范总纲）、[ARCHITECTURE.md](./ARCHITECTURE.md)（架构）、`lib/` 与 `components/` 实际代码
 > **定位**：本文按模块说明「做什么、怎么流转、关键逻辑是什么」；数据结构见 [DATA-SPEC.md](./DATA-SPEC.md)，判读算法权威口径见 SPEC §6。
 
@@ -176,7 +176,7 @@ flowchart LR
 - `sitemap.ts`、`robots.ts`、`manifest.ts` 为 Next.js 元数据路由，不是业务接口。
 - `llms.txt` 与 `llms-full.txt` 是两个静态 GET Route Handler（`force-static`），返回纯文本站点索引与全文索引；详见 [API.md](./API.md) 与 [openapi.yaml](./openapi.yaml)。
 - `public/sw.js` 提供离线兜底；`/offline` 为离线页面。
-- 站点规范域名为 `https://chroma.appti.cn`（`lib/site.ts` 的 `SITE_URL`）；旧域名 `chromacheck.app` / `chroma.ewuse.com` 通过 `next.config.mjs` 301 收敛。
+- 站点规范域名为 `https://chroma.appti.cn`（`lib/site.ts` 的 `SITE_URL`）；旧域名 `chromacheck.app` / `chroma.ewuse.com` 通过 `next.config.mjs` 308 永久重定向收敛。
 
 ---
 

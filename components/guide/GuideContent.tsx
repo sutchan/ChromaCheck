@@ -72,7 +72,7 @@ export function GuideContent() {
       </div>
 
       <div className="row" style={{ gap: 'var(--s-3)' }}>
-        <Link href="/test" className="btn btn-primary">{t('guide.ctaSelect')} <Icon name="arrowRight" size={18} /></Link>
+        <Link id="guide-start-cta" href="/test" className="btn btn-primary">{t('guide.ctaSelect')} <Icon name="arrowRight" size={18} /></Link>
         <Link href="/test?scene=driver" className="btn btn-ghost">{t('guide.ctaDriver')}</Link>
         <Link href="/" className="btn btn-ghost">{t('guide.ctaHome')}</Link>
       </div>

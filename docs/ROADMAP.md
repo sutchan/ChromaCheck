@@ -1,14 +1,14 @@
 # 色辨 ChromaCheck 路线图文档
 
 > **规范遵循**：本文档为 [SPEC.md](./SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。功能范围以 SPEC §1.2 为权威。
-> **实现状态**：v1.0–v1.17.5 已实现（按 [SPEC.md](./SPEC.md) §0.3 分类清单）；纯前端、无服务端 API 路由。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [tasks.md](./tasks.md)。
+> **实现状态**：v1.0–v1.17.6 已实现（按 [SPEC.md](./SPEC.md) §0.3 分类清单）；纯前端、无服务端 API 路由。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [tasks.md](./tasks.md)。
 
 | 项目 | 内容 |
 |------|------|
-| 文档版本 | v1.17.5 |
+| 文档版本 | v1.17.6 |
 | 创建日期 | 2026-09-03 |
 
-> 以下为历史规划记录，当前项目版本为 v1.17.5；带「已实现」标注者以现行代码为准。
+> 以下为历史规划记录，当前项目版本为 v1.17.6；带「已实现」标注者以现行代码为准。
 
 ---
 
@@ -167,7 +167,7 @@ v1.0 (MVP) ──→ v1.1 (完善) ──→ v1.5 (进阶) ──→ v2.0 (平�
 
 | 阶段 | 技术升级 |
 |------|----------|
-| v1.0 | Next.js 14 + Tailwind + localStorage |
+| v1.0 | Next.js 16 + Tailwind + localStorage |
 | v1.1 | PWA、i18n（v1.9.0 双语 → v1.15.0 三语）、window.print() 与 Canvas 导出（jsPDF/html2canvas 未引入） |
 | v1.5 | Auth.js、PostgreSQL、多云同步 |
 | v2.0 | AI 模型、开放 API、移动端 SDK |
@@ -216,14 +216,14 @@ v1.0 (MVP) ──→ v1.1 (完善) ──→ v1.5 (进阶) ──→ v2.0 (平�
 
 ---
 
-## 11. 优化建议与未来展望（v1.17.5 系统评估）
+## 11. 优化建议与未来展望（v1.17.6 系统评估）
 
 > 本节来自对代码实现、架构设计、性能与用户体验的同步评估。每条含问题背景、实施方案、预期效果与优先级；执行状态统一登记在 [tasks.md](./tasks.md)。责任人与计划完成时间为建议值，待项目负责人确认。
 
 ### O-01 升级 Next.js 至安全补丁版本
 
-- **背景**：npm 提示 `next@14.2.15` 存在 2025-12-11 披露的安全漏洞；依赖已升至 `14.2.35`，本机 lint / type-check / test / coverage / OpenAPI / 文档校验全绿，但 `npm audit --omit=dev --audit-level=critical` 仍报告 1 个 critical（审计库判定全部 Next 14.x 受影响）。当前选择保持 Next 14 并接受审计告警，跨 major 至 Next 16 需业务决策（见 [tasks.md](./tasks.md) O-01）。
-- **方案**：维持 Next.js 14 同 minor 补丁版本 `14.2.35`；若决定跨 major，则迁移至 Next 16 并做完整回归。无论选择哪条路径，均需完成 lint / type-check / test / coverage / build / E2E 与 Preview 冒烟。
+- **背景**：npm 提示 `next@14.2.15` 存在 2025-12-11 披露的安全漏洞；依赖已升至 `14.2.35`，本机 lint / type-check / test / coverage / OpenAPI / 文档校验全绿，但 `npm audit --omit=dev --audit-level=critical` 仍报告 1 个 critical（审计库判定全部 Next 16.x 受影响）。当前选择保持 Next 14 并接受审计告警，跨 major 至 Next 16 需业务决策（见 [tasks.md](./tasks.md) O-01）。
+- **方案**：维持 Next.js 16 同 minor 补丁版本 `14.2.35`；若决定跨 major，则迁移至 Next 16 并做完整回归。无论选择哪条路径，均需完成 lint / type-check / test / coverage / build / E2E 与 Preview 冒烟。
 - **预期效果**：消除已知 CVE，`npm audit` 关键项归零；构建与运行行为保持不变。
 - **优先级**：**P0**（安全），建议 2026-12-05 前完成。
 
@@ -236,8 +236,8 @@ v1.0 (MVP) ──→ v1.1 (完善) ──→ v1.5 (进阶) ──→ v2.0 (平�
 
 ### O-03 补齐覆盖率门禁与关键路径 E2E
 
-- **背景**：16 文件 111 例覆盖判读与工具逻辑，UI 主链路此前无自动回归。
-- **方案（已落地）**：① `vitest.config.ts` 配置 V8 覆盖率与阈值，CI 已执行 `npm run test:coverage`（实测 88.96% lines / 84.3% branches / 87.64% functions）；② Playwright 配置、依赖、脚本与 CI 已接入，`e2e/main-flow.spec.ts` 覆盖首页 → 指引 → 石原氏快速 → 结果。剩余验收为 CI 连续三次稳定通过（O-03）。
+- **背景**：17 文件 116 例覆盖判读与工具逻辑，UI 主链路此前无自动回归。
+- **方案（已落地）**：① `vitest.config.ts` 配置 V8 覆盖率与阈值，CI 已执行 `npm run test:coverage`（实测 89.53% lines / 84.3% branches / 87.64% functions）；② Playwright 配置、依赖、脚本与 CI 已接入，`e2e/main-flow.spec.ts` 覆盖首页 → 指引 → 石原氏快速 → 结果。剩余验收为 CI 连续三次稳定通过（O-03）。
 - **预期效果**：覆盖率可量化并纳入门禁；核心链路回归从人工 15 分钟降至自动 ~2 分钟。
 - **优先级**：**P1**（质量），建议 2026-12-19 前完成。
 
@@ -278,8 +278,8 @@ v1.0 (MVP) ──→ v1.1 (完善) ──→ v1.5 (进阶) ──→ v2.0 (平�
 
 ### O-09 域名收敛
 
-- **背景**：已确认 `chroma.appti.cn` 为唯一规范域名；旧域名 `chromacheck.app` / `chroma.ewuse.com` 由 Next 301 收敛，metadata / OG URL 与 sitemap 同步使用 `SITE_URL`。
-- **方案**：确认最终域名 → 更新 `lib/site.ts` 的 `SITE_URL` → 配置 301 跳转 → 更新 sitemap / robots / README 与 FAQ 链接。
+- **背景**：已确认 `chroma.appti.cn` 为唯一规范域名；旧域名 `chromacheck.app` / `chroma.ewuse.com` 由 Next 308 永久重定向收敛，metadata / OG URL 与 sitemap 同步使用 `SITE_URL`。
+- **方案**：确认最终域名 → 更新 `lib/site.ts` 的 `SITE_URL` → 配置 308 永久重定向 → 更新 sitemap / robots / README 与 FAQ 链接。
 - **预期效果**：搜索结果中规范域名占比 100%，跨域名重复内容归零。
 - **优先级**：**P3**（需业务决策），时间待域名确认。
 

@@ -42,7 +42,7 @@ export function HomeContent() {
             {t('home.desc')}
           </p>
           <div className="row" style={{ gap: 'var(--s-3)', flexWrap: 'wrap' }}>
-            <Link href="/guide" className="btn btn-primary">
+            <Link id="home-start-cta" href="/guide" className="btn btn-primary">
               {t('home.ctaStart')} <Icon name="arrowRight" size={18} />
             </Link>
             <Link href="/learn" className="btn btn-ghost">

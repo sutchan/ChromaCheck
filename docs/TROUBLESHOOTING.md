@@ -1,6 +1,6 @@
 # 色辨 ChromaCheck 故障排除指南
 
-> **文档版本**：v1.17.5 ｜ **适用对象**：终端用户与部署 / 维护人员
+> **文档版本**：v1.17.6 ｜ **适用对象**：终端用户与部署 / 维护人员
 > **配套**：常见问题见 [FAQ.md](./FAQ.md)，安装部署见 [DEPLOYMENT.md](./DEPLOYMENT.md)，CI 与测试见 [TESTING.md](./TESTING.md)。
 
 ## 目录
@@ -81,7 +81,7 @@
 
 - 确认项目根目录为仓库根（Next.js `public/` 必须在根，不能自定义路径）。
 - 检查 `app/` 下对应路由文件是否存在；`ishihara/[mode]` 预生成 `quick` / `standard`，`path-tracking/[mode]` 与 `hue-arrangement/[mode]` 仅预生成 `standard`（`quick` 为动态变体），非法 mode 会 404。
-- 站点规范域名为 `https://chroma.appti.cn`（`lib/site.ts` 的 `SITE_URL`）；部署到新域名后需同步更新 `SITE_URL`、`next.config.mjs` 的旧域名 301 列表与 sitemap / metadata。
+- 站点规范域名为 `https://chroma.appti.cn`（`lib/site.ts` 的 `SITE_URL`）；部署到新域名后需同步更新 `SITE_URL`、`next.config.mjs` 的旧域名 308 永久重定向列表与 sitemap / metadata。
 
 ### 3.4 Docker 自托管失败
 
@@ -111,7 +111,7 @@ npm 提示旧版本存在已披露漏洞（2025-12-11 公告）。`package.json`
 
 ### 4.4 弃用依赖告警（rimraf / inflight / glob / eslint 8）
 
-来自 Next.js 14 + ESLint 8 + Vitest 2 工具链的传递依赖，当前不影响运行；升级工具链时一并处理，见优化建议 O-04。
+来自 Next.js 16 + ESLint 8 + Vitest 2 工具链的传递依赖，当前不影响运行；升级工具链时一并处理，见优化建议 O-04。
 
 ---
 

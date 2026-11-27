@@ -11,7 +11,7 @@
 
 ### 前置要求
 
-- Node.js 22 LTS（CI 固定 Node 22；现行 Next.js 14 要求最低 >= 18.17.0，详见 `package-lock.json` 中 `next.engines`）
+- Node.js 22 LTS（CI 固定 Node 22；现行 Next.js 16 要求最低 >= 18.17.0，详见 `package-lock.json` 中 `next.engines`）
 - npm >= 9.0.0（或 pnpm / yarn）
 - Git
 

@@ -38,7 +38,7 @@ export function TestSelectContent() {
 
       <div id="mode-grid" className="grid-cards">
         {MODES.map((m) => (
-          <Link key={m.id} href={m.href} style={{ color: 'inherit' }}>
+          <Link key={m.id} id={`mode-${m.id}-link`} href={m.href} style={{ color: 'inherit' }}>
             <div className="card stack" style={{ gap: 'var(--s-3)', height: '100%' }}>
               <div className="row between">
                 <h3 style={{ margin: 0 }}>{t(m.titleKey)}</h3>

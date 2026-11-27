@@ -16,9 +16,9 @@
 
 **在线试用**：<https://chroma.appti.cn/> — 打开即用，无需注册，检测数据仅存于本地浏览器。
 
-**规范域名（canonical）**：<https://chroma.appti.cn>（`lib/site.ts` 的 `SITE_URL`，用于 metadata / sitemap / robots / OG URL）。旧域名 `chromacheck.app` 与 `chroma.ewuse.com` 由 `next.config.mjs` 301 至规范域名。
+**规范域名（canonical）**：<https://chroma.appti.cn>（`lib/site.ts` 的 `SITE_URL`，用于 metadata / sitemap / robots / OG URL）。旧域名 `chromacheck.app` 与 `chroma.ewuse.com` 由 `next.config.mjs` 308 永久重定向至规范域名。
 
-> **当前版本 v1.17.5**（版本单一来源见 `VERSION`）。已实现能力见下方「功能特性」；权威规范见 [docs/SPEC.md](docs/SPEC.md)。
+> **当前版本 v1.17.6**（版本单一来源见 `VERSION`）。已实现能力见下方「功能特性」；权威规范见 [docs/SPEC.md](docs/SPEC.md)。
 
 ## 功能特性
 
@@ -34,10 +34,10 @@
 
 > **判读能力边界**：题库仅含演示题与消失型题（另含 3 张常规数字题），未实现真正的双数字变形 / 隐藏版，因此**不能可靠区分红 / 绿 / 蓝黄异常类型**；异常类型字段在无转换/分类题命中时输出 null（未分型，v1.15.1 起不再默认输出「绿色弱/盲」），三轴中的 tritan 为推算参考值。结果仅供初筛参考，不能替代专业医学诊断。
 
-## 当前状态（更新于 2026-11-27 / v1.17.5）
+## 当前状态（更新于 2026-11-27 / v1.17.6）
 
 - **最新功能变更**：石原氏答题语言恢复时同步 `<html lang>`（O-02）；历史页新增「N/30」容量条、达上限导出建议与写入失败非阻断提示（O-07）；仓库提供 `Dockerfile` / `docker-compose.yml` 与 `.env.example` 站点验证变量（O-06 / O-08）；V8 覆盖率门禁与 Playwright 主链路 E2E 已接入 CI（O-03）；新增 OpenAPI / 文档一致性脚本（V-01 / V-02）。
-- **已知问题**：`npm audit --omit=dev --audit-level=critical` 仍报告 1 个 critical——审计库将全部 Next 14.x 判为受影响，跨 major 升级到 Next 16 属待决策（O-01）；E2E 首页 CTA 路由断言与当前页面实现不一致（O-03）；组件测试未引入；内容型文案繁体仍回退简体；规范域名与试用入口并存。
+- **已知问题**：`npm audit --omit=dev --audit-level=critical` 仍报告 1 个 critical——审计库将全部 Next 16.x 判为受影响，跨 major 升级到 Next 16 属待决策（O-01）；E2E 首页 CTA 路由断言与当前页面实现不一致（O-03）；组件测试未引入；内容型文案三语齐全；规范域名与试用入口并存。
 - **待办事项**：唯一来源为 [docs/tasks.md](docs/tasks.md)。当前活跃项包括 O-01、O-03、O-04、O-05、V-03、V-04、V-06、V-05 与 O-09~O-11；本文件不维护第二份任务清单。
 - **关键决策**：纯前端 + 本地优先、无服务端业务 API；检测数据不上传，仅 GA4 匿名访问统计；三语优先级简中 > 繁中 > 英文；字体真自托管；7 个扁平 `localStorage` 键；版本与 build 仅在页脚展示；任务状态单一来源；CI 使用 `npm ci` 并保留覆盖率 / E2E 门禁。
 
@@ -51,11 +51,11 @@
 
 ## 技术栈
 
-Next.js 14（App Router）+ TypeScript + Tailwind CSS（设计令牌 / CSS 变量，支持深色与色觉安全模式）。图表用内联 SVG，导出用 Canvas + 浏览器打印，不引入重型运行时依赖。
+Next.js 16（App Router）+ TypeScript + Tailwind CSS（设计令牌 / CSS 变量，支持深色与色觉安全模式）。图表用内联 SVG，导出用 Canvas + 浏览器打印，不引入重型运行时依赖。
 
 | 类别 | 技术 |
 | --- | --- |
-| 框架 | Next.js 14（App Router） |
+| 框架 | Next.js 16（App Router） |
 | 语言 | TypeScript 5 |
 | 样式 | Tailwind CSS 3 + 设计令牌 |
 | 图表 | 内联 SVG |
@@ -96,7 +96,7 @@ chromacheck/
 │                   #   画布导出（report-canvas、sharecard-canvas）/ 趣味（fun、sharecard）/
 │                   #   i18n/（简繁英字典与 t()）/ profile / export-import / ishihara / storage /
 │                   #   learn-data / privacy-data / license / format / analytics /
-│                   #   *.test.ts（Vitest 16 文件 111 例）
+│                   #   *.test.ts（Vitest 17 文件 116 例）
 ├── public/         # PWA sw.js / og-default.svg / og-default.png（1200×630 社交图）/ icons/（3 个 PNG 图标）
 ├── scripts/        # check-openapi.mjs / check-docs.mjs（CI 门禁）
 ├── e2e/             # Playwright 主链路回归（main-flow.spec.ts）

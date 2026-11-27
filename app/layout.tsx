@@ -1,5 +1,5 @@
 // app/layout.tsx — 根布局
-// chromacheck v1.17.0
+// chromacheck v1.17.6
 import React from 'react';
 import type { Metadata, Viewport } from 'next';
 import './globals.css';
@@ -136,6 +136,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html
       lang="zh-CN"
       data-theme="light"
+      data-scroll-behavior="smooth"
       suppressHydrationWarning
       className={`${archivo.variable} ${plexMono.variable}`}
     >
