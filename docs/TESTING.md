@@ -1,11 +1,11 @@
 # 色辨 ChromaCheck 测试策略文档
 
 > **规范遵循**：本文档为 [SPEC.md](./SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。判读引擎测试以 SPEC §6 与 `lib/scoring.ts` 为权威。
-> **实现状态**：v1.17.3（相关任务见 [tasks.md](./tasks.md) O-03）：Vitest 15 文件 107 例（node 环境）；V8 覆盖率阈值与 Playwright 配置 / 主链路用例已提供，但依赖、npm 脚本与 CI 接入仍待验；组件测试未落地。判读引擎测试以 SPEC §6 与 `lib/scoring.ts` 为权威。
+> **实现状态**：v1.17.4（相关任务见 [tasks.md](./tasks.md) O-03）：Vitest 15 文件 107 例（node 环境）；V8 覆盖率阈值与 Playwright 配置 / 主链路用例已提供，但依赖、npm 脚本与 CI 接入仍待验；组件测试未落地。判读引擎测试以 SPEC §6 与 `lib/scoring.ts` 为权威。
 
 | 项目 | 内容 |
 |------|------|
-| 文档版本 | v1.17.3 |
+| 文档版本 | v1.17.4 |
 | 创建日期 | 2026-09-03 |
 
 ---

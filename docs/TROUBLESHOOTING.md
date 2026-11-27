@@ -1,6 +1,6 @@
 # 色辨 ChromaCheck 故障排除指南
 
-> **文档版本**：v1.17.3 ｜ **适用对象**：终端用户与部署 / 维护人员
+> **文档版本**：v1.17.4 ｜ **适用对象**：终端用户与部署 / 维护人员
 > **配套**：常见问题见 [FAQ.md](./FAQ.md)，安装部署见 [DEPLOYMENT.md](./DEPLOYMENT.md)，CI 与测试见 [TESTING.md](./TESTING.md)。
 
 ## 目录

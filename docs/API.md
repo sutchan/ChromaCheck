@@ -1,22 +1,59 @@
 # 色辨 ChromaCheck API 接口文档
 
 > **规范遵循**：本文档为 [SPEC.md](./SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。
-> **实现状态**：v1.0–v1.17.3 已实现（按 [SPEC.md](./SPEC.md) §0.3 分类清单）；纯前端、无服务端 API 路由。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [tasks.md](./tasks.md)。
+> **实现状态**：v1.0–v1.17.4 已实现（按 [SPEC.md](./SPEC.md) §0.3 分类清单）；纯前端、无服务端 API 路由。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [tasks.md](./tasks.md)。
 > **OpenAPI 规范**：机器可读规范见 [openapi.yaml](./openapi.yaml)（OpenAPI 3.1），仅描述真实存在的 `GET /llms.txt` 与 `GET /llms-full.txt`；业务 API 数量为零，下文 §3 的历史接口均标注未实现 / 已移除。
 
 | 项目 | 内容 |
 |------|------|
-| 文档版本 | v1.17.3 |
+| 文档版本 | v1.17.4 |
 | 创建日期 | 2026-09-03 |
 | Base URL | 无服务端 API；站点规范域名取自 `lib/site.ts` 的 `SITE_URL`（当前 `https://chromacheck.app`），线上试用入口为 `https://chroma.ewuse.com`；仓库不含 `/api` 路由 |
 
-> 本分册描述的服务端 API 均为**历史规划 / 未落地**设计；当前仓库除 GA4 外无任何服务端接口，见 ./ARCHITECTURE.md §5.1。
+> 本分册 §2 起描述的服务端 API 均为**历史规划 / 未落地**设计；当前仓库除 GA4 外无任何服务端业务接口，现行公开接口见 §1，架构边界见 [ARCHITECTURE.md §5](./ARCHITECTURE.md#5-api-设计)。
 
 ---
 
-## 1. 概述
+## 1. 现行公开接口（更新于 2026-11-27 / v1.17.4）
 
-> **规划状态说明**：本产品 v1.0 为**纯前端应用，无服务端 API 路由**（见 SPEC §2.3 与 PRIVACY §2.2：当前仅 GA4 匿名访问统计，无服务端上报接口）。本节描述的 API 为 **v1.1+ 规划**，仅在引入服务端能力（匿名上报 / 题库远程更新）时落地；v1.0 交付范围不包含下列接口。
+当前应用**不提供任何业务 API**：无 `/api/*` 路由、无认证、无数据库、无服务端上报。真实存在的公开接口只有两个静态文本 Route Handler，均由 [openapi.yaml](./openapi.yaml) 机器校验（`npm run check:openapi`）。
+
+| 方法 | 路径 | 说明 | 内容类型 | 实现文件 |
+|------|------|------|----------|----------|
+| GET | `/llms.txt` | 站点关键事实索引，面向 LLM / SEO | `text/plain` | `app/llms.txt/route.ts` |
+| GET | `/llms-full.txt` | 站点全文索引，恒为简体中文 | `text/plain` | `app/llms-full.txt/route.ts` |
+
+### 1.1 `GET /llms.txt`
+
+- **请求**：无路径参数、无查询参数、无认证；仅 `GET`，其他方法由 Next.js 返回 `405`。
+- **响应**：`200 text/plain`；由 `export const dynamic = 'force-static'` 在构建期生成。
+- **示例**：
+
+```bash
+curl https://chromacheck.app/llms.txt
+```
+
+### 1.2 `GET /llms-full.txt`
+
+- **请求**：无参数、无认证；输出恒为简体中文，便于 AI 爬虫与站点索引。
+- **响应**：`200 text/plain`；构建期静态输出，罕见生成失败时返回 `500`。
+- **示例**：
+
+```bash
+curl https://chromacheck.app/llms-full.txt
+```
+
+### 1.3 当前边界、待办与关键决策
+
+- **已知问题**：公开面仅上述两个静态文本端点；历史规划接口不可调用。生产依赖审计仍有 1 个 critical（Next 14.x 全系判定，O-01 待决策），与接口实现无关。
+- **待办事项**：唯一来源为 [tasks.md](./tasks.md)。服务端账号 / 云同步（O-10）与 AI 辅助判读 / 开放 API（O-11）均因业务与合规决策阻塞，当前不得写入已实现能力。
+- **关键决策**：纯前端本地优先；检测数据不上传，仅 GA4 匿名 `page_view`；不保留服务端事件上报接口（v1.9.0 已移除）；两个静态 Route Handler 是 SEO/GEO 例外，不扩展为通用后端。
+
+---
+
+## 2. 历史规划总览
+
+> **历史规划状态说明**：截至 v1.17.4，本产品仍为**纯前端应用，无服务端业务 API 路由**（见 SPEC §2.3 与 PRIVACY §2.2：当前仅 GA4 匿名访问统计，无服务端上报接口）。本节描述的 API 为 **v1.1+ 历史规划**，仅在引入服务端能力（匿名上报 / 题库远程更新）时落地；现行版本不包含下列接口。
 
 本项目采用**隐私优先**设计，核心检测功能完全在客户端运行，无需服务端 API。规划中的服务端 API 仅用于：
 
@@ -29,7 +66,7 @@
 
 ---
 
-## 2. 通用规范
+## 3. 历史通用规范（未落地）
 
 ### 2.1 请求头
 
@@ -90,7 +127,7 @@
 
 ---
 
-## 3. 接口列表
+## 4. 历史接口列表（未实现 / 已移除）
 
 ### 3.1 健康检查
 
@@ -109,7 +146,7 @@ curl https://chromacheck.app/api/health
   "ok": true,
   "data": {
     "status": "healthy",
-    "version": "1.17.1",
+    "version": "1.17.4",
     "timestamp": "2026-09-03T10:00:00.000Z"
   }
 }
@@ -248,7 +285,7 @@ curl "https://chromacheck.app/api/questions/ishihara?version=1.0.0&mode=quick"
 
 ---
 
-## 4. 错误示例
+## 5. 历史错误示例
 
 ### 4.1 参数错误
 
@@ -278,7 +315,7 @@ curl "https://chromacheck.app/api/questions/ishihara?version=1.0.0&mode=quick"
 
 ---
 
-## 5. 安全规范
+## 6. 历史安全规范
 
 - 所有接口仅支持 HTTPS。
 - 事件上报接口校验 `Origin` 头，拒绝跨域伪造请求。
@@ -287,10 +324,11 @@ curl "https://chromacheck.app/api/questions/ishihara?version=1.0.0&mode=quick"
 
 ---
 
-## 6. 版本记录
+## 7. 版本记录
 
 | 版本 | 日期 | 变更内容 |
 |------|------|----------|
+| v1.17.4 | 2026-11-27 | 新增现行公开接口章节（`/llms.txt`、`/llms-full.txt`）；同步 OpenAPI `info.version`；历史规划接口归档为未实现 / 已移除 |
 | v1.0 | 2026-09-03 | 初始版本：健康检查、事件上报、题库查询 |
 
 ---

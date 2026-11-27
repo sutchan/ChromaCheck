@@ -1,12 +1,12 @@
 # 色辨 ChromaCheck 技术架构文档
 
 > **规范遵循**：本文档为 [SPEC.md](./SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。
-> **实现状态**：v1.0–v1.17.3 已实现（按 [SPEC.md](./SPEC.md) §0.3 分类清单）；纯前端、无服务端 API 路由。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [tasks.md](./tasks.md)。
+> **实现状态**：v1.0–v1.17.4 已实现（按 [SPEC.md](./SPEC.md) §0.3 分类清单）；纯前端、无服务端 API 路由。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [tasks.md](./tasks.md)。
 > **原型定位**：`prototype/` 为独立的高保真原型与设计验证参考（含早期 JS 移植源），**非应用运行依赖**；应用源码以 `lib/` 与 `components/` 为准，删除 `prototype/` 不影响构建与运行。
 
 | 项目 | 内容 |
 |------|------|
-| 文档版本 | v1.17.3 |
+| 文档版本 | v1.17.4 |
 | 创建日期 | 2026-09-03 |
 | 技术负责人 | ChromaCheck 团队 |
 
@@ -20,7 +20,7 @@
 
 - **营销/科普页面**（首页、科普文章）：使用 SSG 静态生成，利于 SEO 和首屏加载。
 - **检测/结果页面**：使用 CSR 客户端渲染，检测过程涉及大量交互和状态管理，无需 SEO。
-- **API 路由**（v1.1 规划，v1.0 为纯前端、无服务端 API 路由）：使用 Next.js Route Handlers，用于可选的数据上报和内容管理。
+- **公开文本接口**：现有 Route Handler 仅 `app/llms.txt/route.ts` 与 `app/llms-full.txt/route.ts` 两个静态 GEO 索引；业务 API（数据上报 / 题库远程更新）为历史规划，当前不实现。
 
 ### 1.2 架构图
 
@@ -154,7 +154,7 @@ lib/
 ├── site.ts / seo-routes.ts   # SITE_URL 单一来源；SEO/GEO 可索引路由单一数据源
 ├── learn-data.ts / format.ts  # 科普数据与格式化
 ├── i18n/                      # 三语字典与查表（zh/tw/en × core/faq/ui/ui.flow/ui.guide/ui.result/result 七组 + lang/dict/t；SPEC §8.5）
-└── *.test.ts                 # Vitest 单测（15 文件 107 例，node 环境）
+└── *.test.ts                 # Vitest 单测（16 文件 111 例，node 环境）
 docs/                         # 项目文档（SPEC.md 为权威总纲，tasks.md 为任务唯一来源）
 ```
 
@@ -417,7 +417,7 @@ cc.batch.v1        # 批量检测名单（app/test/batch/page.tsx）
 
 ### 5.1 API 路由列表
 
-> **现状（v1.17.3）**：纯前端应用**无任何服务端 API 路由**，`app/` 下仅 `app/llms.txt/route.ts` 与 `app/llms-full.txt/route.ts` 两个 Route Handler（SEO/GEO 纯文本索引）。下表接口均为 **v1.1+ 规划或历史设计，当前未实现**；访问统计仅由 GA4 `pageview` 上报（`lib/analytics.ts`），不走本站接口。
+> **现状（v1.17.4）**：纯前端应用**无任何服务端 API 路由**，`app/` 下仅 `app/llms.txt/route.ts` 与 `app/llms-full.txt/route.ts` 两个 Route Handler（SEO/GEO 纯文本索引）。下表接口均为 **v1.1+ 规划或历史设计，当前未实现**；访问统计仅由 GA4 `pageview` 上报（`lib/analytics.ts`），不走本站接口。
 
 | 方法 | 路径 | 说明 | 状态 |
 |------|------|------|------|
@@ -493,15 +493,17 @@ interface AnalyticsEvent {
 ### 7.1 单元测试（v1.7.6 已落地）
 
 - **框架**：Vitest（node 环境，`vitest.setup.ts` 注入内存 Storage，无 jsdom/happy-dom）
-- **实际覆盖**：15 个 `lib/*.test.ts` 平铺文件、共 107 例——
+- **实际覆盖**：16 个 `lib/*.test.ts` 平铺文件、共 111 例——
   - 判读引擎与题库（scoring / hue-scoring / path-scoring / signal-scoring / advanced-scoring / child-scoring / ishihara / path-field）
   - 存储与档案（storage / profile / export-import）、格式化与文案（format / scoring-text）、分享卡（sharecard）
 - **运行**：`npm test`（vitest run）、`npm run test:watch`、`npm run test:coverage`（@vitest/coverage-v8）
-- **后续目标**：业务逻辑覆盖率持续提升；组件测试未引入，Playwright 配置 / 用例已提供但依赖与 CI 接入待验。
+- **实测覆盖率（2026-11-27 / v1.17.4）**：lines 88.96% / statements 88.96% / branches 84.3% / functions 87.64%，阈值 80 / 80 / 70 / 75 全绿。
+- **后续目标**：组件测试未引入；E2E 已接入但需 CI 连续三次稳定通过（O-03）。
 
-### 7.2 集成 / E2E（待验收）
+### 7.2 集成 / E2E（已接入，待 CI 稳定性验收）
 
-- `playwright.config.ts` 与 `e2e/main-flow.spec.ts` 已提供，覆盖主链路目标；`@playwright/test` 依赖、npm 脚本、CI 接入与稳定三次运行仍未闭环（见 [tasks.md](./tasks.md) O-03）。
+- `playwright.config.ts` + `e2e/main-flow.spec.ts` + `@playwright/test@1.65.1` + `npm run e2e` 均已落地；CI 在 `build-and-test` 中安装 Chromium 并执行 `npm run e2e`（见 `.github/workflows/ci.yml`）。
+- **当前状态**：脚本与 CI 步骤齐备，仅余本地 Chromium 实跑与 CI 连续三次稳定验证（O-03）；组件测试仍未引入 React Testing Library。
 
 ### 7.3 手动测试清单
 

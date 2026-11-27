@@ -1,7 +1,17 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件、`package.json` 与 `package-lock.json` 的 `version` 字段（当前 `1.17.3`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件、`package.json` 与 `package-lock.json` 的 `version` 字段（当前 `1.17.4`）。
+
+## [1.17.4] - 2026-11-27
+
+### 文档与记忆同步（README / ARCHITECTURE / API / memory）
+
+- 按当前代码与 CI 实况更新 README、架构说明、API 文档和项目记忆：测试基线实跑 16 文件 / 111 例，覆盖率 88.96% lines / 84.3% branches / 87.64% functions；lint、type-check、check:docs、check:openapi 全绿。
+- 补齐现行门禁事实：`npm ci`、check:docs / check:openapi / coverage / Playwright E2E 均已接入 CI；组件测试仍未引入，E2E 仅余 CI 连续三次稳定验收（O-03）。
+- API 文档明确现行仅 `GET /llms.txt` 与 `GET /llms-full.txt` 两个静态 Route Handler，历史规划接口保留为未实现记录；OpenAPI `info.version` 同步至 `1.17.4`。
+- 项目记忆索引与新增当前状态主题文件标注 2026-11-27 / v1.17.4，记录关键决策、已知问题与任务单一来源链接；历史记忆条目标记为历史快照。
+- 版本同步：`VERSION` / `package.json` / `package-lock.json` 及全部当前文档版本展示位统一为 v1.17.4。
 
 ## [1.17.3] - 2026-11-27
 

@@ -1,11 +1,11 @@
 # 色辨 ChromaCheck 数据规范文档
 
 > **规范遵循**：本文档为 [SPEC.md](./SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。类型别名（ColorDeficiencyType / OverallResult / SeverityLevel / TestMode）以 SPEC §5.5 为权威定义。
-> **实现状态**：v1.0–v1.17.3 已实现（按 [SPEC.md](./SPEC.md) §0.3 分类清单）；纯前端、无服务端 API 路由。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [tasks.md](./tasks.md)。
+> **实现状态**：v1.0–v1.17.4 已实现（按 [SPEC.md](./SPEC.md) §0.3 分类清单）；纯前端、无服务端 API 路由。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [tasks.md](./tasks.md)。
 
 | 项目 | 内容 |
 |------|------|
-| 文档版本 | v1.17.3 |
+| 文档版本 | v1.17.4 |
 | 创建日期 | 2026-09-03 |
 
 ---
