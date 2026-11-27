@@ -1,12 +1,12 @@
 # 色辨 ChromaCheck 技术架构文档
 
 > **规范遵循**：本文档为 [SPEC.md](./SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。
-> **实现状态**：v1.0–v1.17.1 已实现（按 [SPEC.md](./SPEC.md) §0.3 分类清单）；纯前端、无服务端 API 路由。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [TASKS.md](./TASKS.md)。
+> **实现状态**：v1.0–v1.17.2 已实现（按 [SPEC.md](./SPEC.md) §0.3 分类清单）；纯前端、无服务端 API 路由。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [tasks.md](./tasks.md)。
 > **原型定位**：`prototype/` 为独立的高保真原型与设计验证参考（含早期 JS 移植源），**非应用运行依赖**；应用源码以 `lib/` 与 `components/` 为准，删除 `prototype/` 不影响构建与运行。
 
 | 项目 | 内容 |
 |------|------|
-| 文档版本 | v1.17.1 |
+| 文档版本 | v1.17.2 |
 | 创建日期 | 2026-09-03 |
 | 技术负责人 | ChromaCheck 团队 |
 
@@ -155,7 +155,7 @@ lib/
 ├── learn-data.ts / format.ts  # 科普数据与格式化
 ├── i18n/                      # 三语字典与查表（zh/tw/en × core/faq/ui/ui.flow/ui.guide/ui.result/result 七组 + lang/dict/t；SPEC §8.5）
 └── *.test.ts                 # Vitest 单测（15 文件 107 例，node 环境）
-docs/                         # 项目文档（SPEC.md 为权威总纲，TASKS.md 为任务 SSOT）
+docs/                         # 项目文档（SPEC.md 为权威总纲，tasks.md 为任务唯一来源）
 ```
 
 ### 2.3 状态管理
@@ -411,7 +411,7 @@ cc.progress.v1     # 进行中的检测进度（模式 / 题号 / 答题记录 /
 
 ### 5.1 API 路由列表
 
-> **现状（v1.17.1）**：纯前端应用**无任何服务端 API 路由**，`app/` 下仅 `app/llms.txt/route.ts` 与 `app/llms-full.txt/route.ts` 两个 Route Handler（SEO/GEO 纯文本索引）。下表接口均为 **v1.1+ 规划或历史设计，当前未实现**；访问统计仅由 GA4 `pageview` 上报（`lib/analytics.ts`），不走本站接口。
+> **现状（v1.17.2）**：纯前端应用**无任何服务端 API 路由**，`app/` 下仅 `app/llms.txt/route.ts` 与 `app/llms-full.txt/route.ts` 两个 Route Handler（SEO/GEO 纯文本索引）。下表接口均为 **v1.1+ 规划或历史设计，当前未实现**；访问统计仅由 GA4 `pageview` 上报（`lib/analytics.ts`），不走本站接口。
 
 | 方法 | 路径 | 说明 | 状态 |
 |------|------|------|------|
@@ -495,7 +495,7 @@ interface AnalyticsEvent {
 
 ### 7.2 集成 / E2E（未实现）
 
-- Playwright 完整检测链路、答题中断恢复、报告导出流程：**规划中，尚未落地**（见 [TASKS.md](./TASKS.md)）。
+- Playwright 完整检测链路、答题中断恢复、报告导出流程：**规划中，尚未落地**（见 [tasks.md](./tasks.md)）。
 
 ### 7.3 手动测试清单
 
@@ -576,4 +576,4 @@ jobs:
 
 ## 10. 扩展规划
 
-> 任务清单见 [TASKS.md](./TASKS.md)。
+> 任务清单见 [tasks.md](./tasks.md)。

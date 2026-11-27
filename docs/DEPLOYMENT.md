@@ -1,11 +1,11 @@
 # 色辨 ChromaCheck 部署文档
 
 > **规范遵循**：本文档为 [SPEC.md](./SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。
-> **实现状态**：v1.0–v1.17.1 已部署上线（Vercel 自动部署，静态原型可单独托管预览）；纯前端、无服务端 API 路由。权威总纲见 [SPEC.md](./SPEC.md)。
+> **实现状态**：v1.0–v1.17.2 已部署上线（Vercel 自动部署，静态原型可单独托管预览）；纯前端、无服务端 API 路由。权威总纲见 [SPEC.md](./SPEC.md)。
 
 | 项目 | 内容 |
 |------|------|
-| 文档版本 | v1.17.1 |
+| 文档版本 | v1.17.2 |
 | 创建日期 | 2026-09-03 |
 
 ---
@@ -18,6 +18,36 @@
 |----------|----------|------|
 | Vercel（推荐） | 快速上线、无运维团队 | 自动部署、CDN、免费额度充足 |
 | Docker 自托管 | 数据主权要求高、已有服务器 | 可控性强、可私有化 |
+
+### 1.1 环境依赖清单
+
+| 依赖 | 版本 / 要求 | 用途 | 必需 |
+|------|-------------|------|------|
+| Node.js | ≥ 18.17，CI 固定 22 LTS（推荐本地 22） | 构建与运行 Next.js | 是 |
+| npm | 11（仓库已提交 `package-lock.json`） | 依赖安装；`esbuild` 已在 `package.json.allowScripts` 批准 | 是 |
+| Git | 任意现代版本 | 拉取仓库、触发部署 | 是 |
+| Docker / Docker Compose | 20+（仅自托管） | 容器化运行，需自行创建 `Dockerfile` | 否 |
+| Vercel 账号 | 免费版即可 | 推荐部署平台与 Preview 环境 | 否（推荐） |
+| 数据库 / Blob / 对象存储 | **无** | 应用纯前端、无服务端存储 | 否 |
+
+### 1.2 多环境部署方案
+
+| 环境 | 触发方式 | 配置要点 | 验证重点 |
+|------|----------|----------|----------|
+| 本地开发 | `npm run dev` | `.env.local`（复制 `.env.example`）；监听 3000 端口 | 检测流程、HMR、三语切换 |
+| Vercel Preview | PR / 非 `main` 分支推送 | 在 Vercel 项目设置中单独配置 Preview 环境变量 | 完整冒烟测试，不写入生产数据 |
+| Vercel Production | 推送到 `main` 且 CI 全绿 | 生产环境变量单独配置；构建号自动注入 | 响应头、页脚版本号、GA4 |
+| Docker 自托管 | 自建 `Dockerfile` 后 `docker build` | `output: 'standalone'`；反代配置见 §4 | 端口映射、HTTPS、CSP |
+
+> 各环境的环境变量相互独立；`NEXT_PUBLIC_BUILD_ID` 在每次构建期由 `next.config.mjs` 自动生成，无需手工设置。
+
+### 1.3 部署验证方法
+
+1. **本地门禁**：依次执行 `npm run lint`、`npm run type-check`、`npm test`、`npm run build`，全部通过后再部署。
+2. **可用性验证**：`curl -I http://localhost:3000/` 返回 200；`GET /llms.txt` 与 `GET /llms-full.txt` 返回 `text/plain`；`/offline` 可访问（纯前端无 `/api/health`）。
+3. **功能抽查**：完成一次石原氏快速检测 → 结果页可见 → 导出 PNG → 历史出现记录 → 切换简中 / 繁中 / English。
+4. **安全与版本验证**：检查响应头含 CSP、`X-Frame-Options: SAMEORIGIN`、`X-Content-Type-Options: nosniff`；页脚显示 `V{ver}· build {10 位}`。
+5. **回滚**：若验证失败，按 §7 回滚方案切回上一版本，并在 `docs/tasks.md` 登记问题。
 
 ---
 
@@ -66,7 +96,7 @@
    |--------|------|--------|
    | `NEXT_PUBLIC_GA_ID` | Google Analytics 4 衡量 ID（置空即停用匿名统计，仅生产环境加载） | G-0F9QWS1PDX |
 
-   > 这是代码中唯一实际读取的环境变量（见 `.env.example`）。`NEXT_PUBLIC_BUILD_ID` 由 `next.config.mjs` 在构建期自动注入，无需配置；`NEXT_PUBLIC_APP_NAME` / `NEXT_PUBLIC_APP_URL` / `NEXT_PUBLIC_ANALYTICS_ENABLED` 均为早期规划，代码零引用、未实现。
+   > 这是面向用户的主要可选环境变量（见 `.env.example`）；`app/layout.tsx` 还读取两个站点验证变量（见 §5）。`NEXT_PUBLIC_BUILD_ID` 由 `next.config.mjs` 在构建期自动注入，无需配置；`NEXT_PUBLIC_APP_NAME` / `NEXT_PUBLIC_APP_URL` / `NEXT_PUBLIC_ANALYTICS_ENABLED` 均为早期规划，代码零引用、未实现。
 
    > 注意：环境变量应在 Production 和 Preview 环境中分别配置。
 
@@ -249,6 +279,8 @@ ufw deny 3000/tcp  # 3000 端口仅内网访问
 |--------|------|------|
 | `NEXT_PUBLIC_GA_ID` | 否 | Google Analytics 4 衡量 ID（`lib/analytics.ts`，置空即停用；仅生产环境加载） |
 | `NEXT_PUBLIC_BUILD_ID` | 否（自动） | 10 位 `yymmddhhmm` 构建号，由 `next.config.mjs` 在**构建时**按构建机本地时间生成并注入，供页脚展示；缺失时回退版本号，无需手工配置 |
+| `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` | 否 | Google Search Console 站点所有权验证（`app/layout.tsx` 读取；`.env.example` 尚未列出，见 tasks O-08） |
+| `NEXT_PUBLIC_BING_SITE_VERIFICATION` | 否 | Bing Webmaster Tools 站点验证（`app/layout.tsx` 读取；`.env.example` 尚未列出，见 tasks O-08） |
 
 ---
 

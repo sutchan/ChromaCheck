@@ -1,0 +1,107 @@
+openapi: 3.1.0
+info:
+  title: ChromaCheck 公开文本接口
+  version: 1.17.2
+  summary: 纯前端色觉筛查应用的公开文本索引接口
+  description: |
+    ChromaCheck 是纯前端应用，检测、判读、存储全部在浏览器内完成，**不提供任何业务 API**
+    （无 /api 路由、无用户账号、无服务端上报、无数据库或 Blob 存储）。
+
+    本规范仅描述真实存在的两个静态 GET Route Handler：/llms.txt 与 /llms-full.txt。
+    它们由 Next.js App Router 的 route.ts 生成，以 force-static 输出纯文本，供 AI 爬虫与
+    站点索引使用。历史规划中的 /api/health、/api/analytics/event、/api/questions/* 等接口
+    从未实现或已移除，不在本规范内；详见 API.md §3 与 §6。
+  license:
+    name: MIT
+    url: https://github.com/sutchan/ChromaCheck/blob/main/LICENSE
+servers:
+  - url: https://chromacheck.app
+    description: 规范域名（metadata / sitemap / robots / OG 使用）
+  - url: https://chroma.ewuse.com
+    description: 当前线上试用入口
+  - url: http://localhost:3000
+    description: 本地开发（npm run dev）
+tags:
+  - name: SiteIndex
+    description: 站点索引与全文索引（静态文本，非业务接口）
+paths:
+  /llms.txt:
+    get:
+      tags: [SiteIndex]
+      operationId: getLlmsTxt
+      summary: 获取站点关键事实索引
+      description: |
+        返回面向 LLM 的站点关键事实清单（纯文本）。对应 app/llms.txt/route.ts，
+        以 `export const dynamic = 'force-static'` 输出。无查询参数、无认证要求。
+      parameters: []
+      responses:
+        '200':
+          description: 成功返回纯文本索引
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: |
+                # ChromaCheck
+                > 在线色觉筛查工具，纯前端本地运行。
+                - 石原氏检测：https://chromacheck.app/test/ishihara/standard
+        '405':
+          $ref: '#/components/responses/MethodNotAllowed'
+        '500':
+          $ref: '#/components/responses/InternalError'
+      x-implementation:
+        file: app/llms.txt/route.ts
+        status: implemented
+        method: GET
+        cache: force-static
+  /llms-full.txt:
+    get:
+      tags: [SiteIndex]
+      operationId: getLlmsFullTxt
+      summary: 获取站点全文索引
+      description: |
+        返回面向 LLM 的站点全文索引（纯文本，恒为简体中文）。
+        对应 app/llms-full.txt/route.ts，以 `force-static` 输出；无查询参数、无认证要求。
+      parameters: []
+      responses:
+        '200':
+          description: 成功返回纯文本全文索引
+          content:
+            text/plain:
+              schema:
+                type: string
+              example: |
+                # ChromaCheck 全文索引
+                ## 检测原理
+                色觉筛查基于石原氏检测原理……
+        '405':
+          $ref: '#/components/responses/MethodNotAllowed'
+        '500':
+          $ref: '#/components/responses/InternalError'
+      x-implementation:
+        file: app/llms-full.txt/route.ts
+        status: implemented
+        method: GET
+        cache: force-static
+components:
+  responses:
+    MethodNotAllowed:
+      description: 请求方法不被允许（Route Handler 仅导出 GET，其他方法由 Next.js 返回 405）
+      content:
+        text/plain:
+          schema:
+            type: string
+    InternalError:
+      description: 服务端生成失败（罕见；静态输出通常在构建期完成）
+      content:
+        text/plain:
+          schema:
+            type: string
+  securitySchemes: {}
+security: []
+x-project-facts:
+  businessApi: none
+  authentication: none
+  persistence: "localStorage only: cc.results.v1 / cc.settings.v1 / cc.progress.v1 / cc.profiles.v1 / cc.activeProfile.v1 / cc.batch.v1 / cc.lang.v1"
+  outboundNetwork: "client-side GA4 page_view only (NEXT_PUBLIC_GA_ID)"
+  note: 错误码采用标准 HTTP 状态码；本接口无业务错误码体系。

@@ -18,7 +18,7 @@
 
 **规范域名（canonical）**：<https://chromacheck.app>（`lib/site.ts` 的 `SITE_URL`，用于 metadata / sitemap / robots / OG URL）；当前与试用入口并存，域名收敛计划待确认。
 
-> **当前版本 v1.17.1**（版本单一来源见 `VERSION`）。已实现能力见下方「功能特性」；权威规范见 [docs/SPEC.md](docs/SPEC.md)。
+> **当前版本 v1.17.2**（版本单一来源见 `VERSION`）。已实现能力见下方「功能特性」；权威规范见 [docs/SPEC.md](docs/SPEC.md)。
 
 ## 功能特性
 
@@ -99,7 +99,25 @@ chromacheck/
 
 ## 文档
 
-权威总纲 [docs/SPEC.md](docs/SPEC.md)；分册：PRD / ARCHITECTURE / API / DATA-SPEC / DEPLOYMENT / TESTING / PRIVACY / ROADMAP（均在 `docs/`），任务跟踪 `docs/TASKS.md`、`docs/tasks-done.md`；开发约定见 [.github/CONTRIBUTING.md](.github/CONTRIBUTING.md)；版本记录见 [CHANGELOG.md](CHANGELOG.md)。
+**文档索引**（按使用顺序）：
+
+| 场景 | 文档 |
+|------|------|
+| 权威规范 / 术语裁决 | [docs/SPEC.md](docs/SPEC.md) |
+| 产品需求与用户流程 | [docs/PRD.md](docs/PRD.md) |
+| 架构设计 / 技术选型 | [docs/ARCHITECTURE.md](docs/ARCHITECTURE.md) |
+| 功能模块 / 业务流程图 | [docs/FEATURES.md](docs/FEATURES.md) |
+| 安装部署 / 多环境 / 验证 | [docs/DEPLOYMENT.md](docs/DEPLOYMENT.md) |
+| 接口文档 / OpenAPI | [docs/API.md](docs/API.md) · [docs/openapi.yaml](docs/openapi.yaml) |
+| 数据结构 / 存储键 | [docs/DATA-SPEC.md](docs/DATA-SPEC.md) |
+| 测试策略与门禁 | [docs/TESTING.md](docs/TESTING.md) |
+| 用户操作指南 | [docs/USER-GUIDE.md](docs/USER-GUIDE.md) |
+| FAQ / 故障排除 | [docs/FAQ.md](docs/FAQ.md) · [docs/TROUBLESHOOTING.md](docs/TROUBLESHOOTING.md) |
+| 隐私与合规 | [docs/PRIVACY.md](docs/PRIVACY.md) |
+| 路线图 / 优化建议 | [docs/ROADMAP.md](docs/ROADMAP.md) |
+| 未完成任务（单一来源） | [docs/tasks.md](docs/tasks.md) · [docs/tasks-done.md](docs/tasks-done.md) |
+
+开发约定见 [.github/CONTRIBUTING.md](.github/CONTRIBUTING.md)，版本记录见 [CHANGELOG.md](CHANGELOG.md)。
 
 ## 高保真原型
 

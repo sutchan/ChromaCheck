@@ -1,7 +1,19 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件、`package.json` 与 `package-lock.json` 的 `version` 字段（当前 `1.17.1`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件、`package.json` 与 `package-lock.json` 的 `version` 字段（当前 `1.17.2`）。
+
+## [1.17.2] - 2026-11-26
+
+### 文档（系统性标准化，任务单一来源）
+
+- 新增 `docs/FEATURES.md`（按模块的核心功能 / Mermaid 业务流程图 / 关键逻辑）、`docs/USER-GUIDE.md`（角色权限 / 操作流程图 / 详细步骤）、`docs/FAQ.md`、`docs/TROUBLESHOOTING.md`、`docs/openapi.yaml`（OpenAPI 3.1，仅描述真实存在的两个静态 GET 接口，业务 API 为零）。
+- `docs/DEPLOYMENT.md`：补环境依赖清单、多环境部署方案与部署验证方法；环境变量表补齐两个站点验证变量，纠正「唯一环境变量」表述。
+- `docs/ROADMAP.md` §11：新增优化建议与未来展望，按背景 / 方案 / 量化效果 / 优先级登记 O-01 ~ O-11 与 V-01 ~ V-07。
+- 任务文档由 `docs/TASKS.md` 迁移为 `docs/tasks.md` 并改为唯一任务单；其他位置的任务型表述只保留证据与方案并链接至该文件，冗余任务文档已删除。
+- `docs/SPEC.md` §8.3 固化任务单一来源硬约束与「任务型表述回流」规则；文档清单由 11 份更新为 16 份；README 增加文档索引表。
+- `docs/API.md` 增加 OpenAPI 入口；全仓库 `TASKS.md` 引用统一为 `tasks.md`。
+- 版本同步：`VERSION` / `package.json` / `package-lock.json`、README、CHANGELOG 及全部 docs 分册 / `.github/CONTRIBUTING.md` 统一为 v1.17.2；本次未改源码，源码头注释保持不变。
 
 ## [1.17.1] - 2026-11-22
 
