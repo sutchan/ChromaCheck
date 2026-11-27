@@ -9,6 +9,19 @@ const K = {
   progress: 'cc.progress.v1',
 };
 
+/** 历史结果上限（任务 O-07）：超出后按 createdAt 倒序淘汰最旧记录 */
+export const RESULT_LIMIT = 30;
+
+/** 最近一次 localStorage 写入失败的键；由历史页消费并提示，不打断检测流程 */
+let lastWriteFailure: string | null = null;
+
+/** 读取并清空写入失败标记（非阻断提示用） */
+export function consumeWriteFailure(): string | null {
+  const failed = lastWriteFailure;
+  lastWriteFailure = null;
+  return failed;
+}
+
 function isBrowser(): boolean {
   return typeof window !== 'undefined' && typeof window.localStorage !== 'undefined';
 }
@@ -32,6 +45,7 @@ function safeSet(key: string, value: string): boolean {
     window.localStorage.setItem(key, value);
     return true;
   } catch {
+    lastWriteFailure = key;
     return false;
   }
 }
@@ -48,14 +62,14 @@ export function saveResult(r: TestResult): void {
   const map = new Map(all.map((x) => [x.id, x]));
   map.set(withProfile.id, withProfile);
   const arr = Array.from(map.values()).sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
-  safeSet(K.results, JSON.stringify(arr.slice(0, 30)));
+  safeSet(K.results, JSON.stringify(arr.slice(0, RESULT_LIMIT)));
 }
 
 /** 全量覆盖历史（导入合并后使用），统一排序与截断 */
 export function saveAllResults(arr: TestResult[]): void {
   if (!isBrowser()) return;
   const valid = arr.filter(isTestResult).sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
-  safeSet(K.results, JSON.stringify(valid.slice(0, 30)));
+  safeSet(K.results, JSON.stringify(valid.slice(0, RESULT_LIMIT)));
 }
 
 function isTestResult(x: unknown): x is TestResult {

@@ -1,25 +1,25 @@
 # 色辨 ChromaCheck 测试策略文档
 
 > **规范遵循**：本文档为 [SPEC.md](./SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。判读引擎测试以 SPEC §6 与 `lib/scoring.ts` 为权威。
-> **实现状态**：v1.17.2（相关任务见 [tasks.md](./tasks.md) O-03）：Vitest 15 文件 107 例（node 环境）；CI 跑 type-check + lint + build + test；组件测试与 E2E 未落地。判读引擎测试以 SPEC §6 与 `lib/scoring.ts` 为权威。
+> **实现状态**：v1.17.3（相关任务见 [tasks.md](./tasks.md) O-03）：Vitest 15 文件 107 例（node 环境）；V8 覆盖率阈值与 Playwright 配置 / 主链路用例已提供，但依赖、npm 脚本与 CI 接入仍待验；组件测试未落地。判读引擎测试以 SPEC §6 与 `lib/scoring.ts` 为权威。
 
 | 项目 | 内容 |
 |------|------|
-| 文档版本 | v1.17.2 |
+| 文档版本 | v1.17.3 |
 | 创建日期 | 2026-09-03 |
 
 ---
 
 ## 1. 测试总览
 
-本项目采用分层测试策略，当前覆盖单元测试与手动检查清单；集成 / 组件 / E2E 尚未落地。
+本项目采用分层测试策略，当前覆盖单元测试与手动检查清单；组件测试未落地，Playwright 集成 / E2E 配置与用例已提供但待验收。
 
 | 层级 | 工具 | 重点 |
 |------|------|------|
 | 单元测试 | Vitest（node 环境） | 判读算法、工具函数、存储封装 —— **已落地，15 文件 107 例** |
 | 组件测试 | Vitest + React Testing Library | UI 组件渲染与交互 —— **规划中，未落地**（无 jsdom/happy-dom、无 RTL 依赖） |
-| 集成测试 | Playwright | 核心用户流程 —— **规划中，未落地** |
-| 端到端测试 | Playwright | 完整检测链路 —— **规划中，未落地**（CI 以 `echo` 占位跳过） |
+| 集成测试 | Playwright | 核心用户流程 —— **配置 / 用例已提供，待依赖与 CI 接入** |
+| 端到端测试 | Playwright | 完整检测链路 —— **配置 / 用例已提供，待验收**（CI 仍以 `echo` 占位跳过） |
 | 手动测试 | 人工 | 兼容性、无障碍、色彩准确性 |
 
 ---
@@ -104,7 +104,7 @@ npx vitest run --coverage
 
 ## 3. 组件测试
 
-> 本章与 §4 E2E 章节均为**规划示例**：当前仓库未引入 @testing-library/react / Playwright，CI 的 E2E 步骤为占位跳过。
+> 本章组件测试代码仍为**规划示例**：仓库未引入 `@testing-library/react`；§4 已有 `playwright.config.ts` 与 `e2e/main-flow.spec.ts`，但依赖 / 脚本 / CI 接入未完成，命令可执行性待验收。
 
 ### 3.1 测试重点
 
@@ -233,7 +233,7 @@ test('完整检测流程', async ({ page }) => {
 # 安装 Playwright 浏览器（首次）
 npx playwright install
 
-# 运行 E2E 测试（脚本尚未配置，以下为规划示例）
+# 运行 E2E 测试（配置与用例已提供，依赖 / npm 脚本待接入）
 npx playwright test
 
 # 指定浏览器
@@ -365,7 +365,7 @@ jobs:
 
 - [ ] 单元测试全部通过
 - [ ] 覆盖率达标
-- [ ] E2E 暂不纳入门禁（CI 为占位跳过）
+- [ ] E2E 配置 / 用例已提供，待依赖与脚本接入后再评估是否纳入门禁（CI 当前仍为占位跳过）
 - [ ] 手动测试清单完成
 - [ ] 无新增安全告警
 

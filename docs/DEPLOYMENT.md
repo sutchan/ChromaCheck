@@ -1,11 +1,11 @@
 # 色辨 ChromaCheck 部署文档
 
 > **规范遵循**：本文档为 [SPEC.md](./SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。
-> **实现状态**：v1.0–v1.17.2 已部署上线（Vercel 自动部署，静态原型可单独托管预览）；纯前端、无服务端 API 路由。权威总纲见 [SPEC.md](./SPEC.md)。
+> **实现状态**：v1.0–v1.17.3 已部署上线（Vercel 自动部署，静态原型可单独托管预览）；纯前端、无服务端 API 路由。权威总纲见 [SPEC.md](./SPEC.md)。
 
 | 项目 | 内容 |
 |------|------|
-| 文档版本 | v1.17.2 |
+| 文档版本 | v1.17.3 |
 | 创建日期 | 2026-09-03 |
 
 ---
@@ -26,7 +26,7 @@
 | Node.js | ≥ 18.17，CI 固定 22 LTS（推荐本地 22） | 构建与运行 Next.js | 是 |
 | npm | 11（仓库已提交 `package-lock.json`） | 依赖安装；`esbuild` 已在 `package.json.allowScripts` 批准 | 是 |
 | Git | 任意现代版本 | 拉取仓库、触发部署 | 是 |
-| Docker / Docker Compose | 20+（仅自托管） | 容器化运行，需自行创建 `Dockerfile` | 否 |
+| Docker / Docker Compose | 20+（仅自托管） | 容器化运行，仓库已提供 `Dockerfile` / `docker-compose.yml` | 否 |
 | Vercel 账号 | 免费版即可 | 推荐部署平台与 Preview 环境 | 否（推荐） |
 | 数据库 / Blob / 对象存储 | **无** | 应用纯前端、无服务端存储 | 否 |
 
@@ -37,7 +37,7 @@
 | 本地开发 | `npm run dev` | `.env.local`（复制 `.env.example`）；监听 3000 端口 | 检测流程、HMR、三语切换 |
 | Vercel Preview | PR / 非 `main` 分支推送 | 在 Vercel 项目设置中单独配置 Preview 环境变量 | 完整冒烟测试，不写入生产数据 |
 | Vercel Production | 推送到 `main` 且 CI 全绿 | 生产环境变量单独配置；构建号自动注入 | 响应头、页脚版本号、GA4 |
-| Docker 自托管 | 自建 `Dockerfile` 后 `docker build` | `output: 'standalone'`；反代配置见 §4 | 端口映射、HTTPS、CSP |
+| Docker 自托管 | 使用仓库 `Dockerfile` 执行 `docker build` | `output: 'standalone'`；反代配置见 §4 | 端口映射、HTTPS、CSP |
 
 > 各环境的环境变量相互独立；`NEXT_PUBLIC_BUILD_ID` 在每次构建期由 `next.config.mjs` 自动生成，无需手工设置。
 
@@ -117,18 +117,18 @@
 
 ## 3. Docker 自托管部署
 
-### 3.1 创建 Dockerfile
+### 3.1 使用仓库提供的 Dockerfile
 
-在项目根目录创建 `Dockerfile`：
+项目根目录已提供 `Dockerfile`（多阶段构建，依赖阶段使用 `npm ci` 保证锁文件可复现）。`package.json` 与 `package-lock.json` 已同步至 `next@14.2.35`；镜像构建与 CI 冒烟仍待验证，若未来再次出现版本漂移，`npm ci` 会在依赖阶段失败：
 
 ```dockerfile
-# 依赖安装阶段
+# Dockerfile — ChromaCheck 多阶段自托管构建（任务 O-06）
+# chromacheck v1.17.3
 FROM node:22-alpine AS deps
 WORKDIR /app
 COPY package.json package-lock.json ./
-RUN npm install
+RUN npm ci --no-audit --no-fund
 
-# 构建阶段
 FROM node:22-alpine AS builder
 WORKDIR /app
 COPY --from=deps /app/node_modules ./node_modules
@@ -136,14 +136,12 @@ COPY . .
 ENV NEXT_TELEMETRY_DISABLED=1
 RUN npm run build
 
-# 运行阶段
 FROM node:22-alpine AS runner
 WORKDIR /app
 ENV NODE_ENV=production
 ENV NEXT_TELEMETRY_DISABLED=1
 
-RUN addgroup --system --gid 1001 nodejs
-RUN adduser --system --uid 1001 nextjs
+RUN addgroup -S -g 1001 nodejs && adduser -S -u 1001 -G nodejs nextjs
 
 COPY --from=builder /app/public ./public
 COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
@@ -152,7 +150,7 @@ COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
 USER nextjs
 EXPOSE 3000
 ENV PORT=3000
-ENV HOSTNAME="0.0.0.0"
+ENV HOSTNAME=0.0.0.0
 
 CMD ["node", "server.js"]
 ```
@@ -186,7 +184,7 @@ docker run -d \
 
 ### 3.3 使用 docker-compose（推荐）
 
-创建 `docker-compose.yml`：
+项目根目录已提供 `docker-compose.yml`：
 
 ```yaml
 
@@ -239,7 +237,7 @@ server {
 
     # 安全响应头
     add_header X-Content-Type-Options nosniff;
-    add_header X-Frame-Options DENY;
+    add_header X-Frame-Options SAMEORIGIN;
     add_header Referrer-Policy strict-origin-when-cross-origin;
 
     location / {
@@ -279,8 +277,8 @@ ufw deny 3000/tcp  # 3000 端口仅内网访问
 |--------|------|------|
 | `NEXT_PUBLIC_GA_ID` | 否 | Google Analytics 4 衡量 ID（`lib/analytics.ts`，置空即停用；仅生产环境加载） |
 | `NEXT_PUBLIC_BUILD_ID` | 否（自动） | 10 位 `yymmddhhmm` 构建号，由 `next.config.mjs` 在**构建时**按构建机本地时间生成并注入，供页脚展示；缺失时回退版本号，无需手工配置 |
-| `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` | 否 | Google Search Console 站点所有权验证（`app/layout.tsx` 读取；`.env.example` 尚未列出，见 tasks O-08） |
-| `NEXT_PUBLIC_BING_SITE_VERIFICATION` | 否 | Bing Webmaster Tools 站点验证（`app/layout.tsx` 读取；`.env.example` 尚未列出，见 tasks O-08） |
+| `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` | 否 | Google Search Console 站点所有权验证（`app/layout.tsx` 读取；`.env.example` 已列出，CI 静态检查属 O-08 未完成部分） |
+| `NEXT_PUBLIC_BING_SITE_VERIFICATION` | 否 | Bing Webmaster Tools 站点验证（`app/layout.tsx` 读取；`.env.example` 已列出，CI 静态检查属 O-08 未完成部分） |
 
 ---
 
@@ -329,7 +327,7 @@ docker run -d --name chromacheck-rollback -p 3000:3000 chromacheck:<old-tag>
 ## 8. 运维建议
 
 - **监控**：当前仅 GA4 匿名页面浏览统计（`NEXT_PUBLIC_GA_ID`，生产环境）；Vercel Analytics / Web Vitals 均为规划项，尚未接入。
-- **告警**：配置错误率告警（Sentry 或自建），日错误率 > 1% 触发通知。
+- **告警**：Sentry / 自建错误率告警为**规划项，当前未接入**；接入后可配置日错误率 > 1% 触发通知。
 - **备份**：本项目为无状态应用，无需数据库备份；本地存储数据由用户自持。
 - **升级**：关注 Next.js 和依赖的安全更新，定期 `npm audit`。
 

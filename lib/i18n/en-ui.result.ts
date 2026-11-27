@@ -97,6 +97,9 @@ export const EN_UI_RESULT = {
 
   // History page
   'history.localOnly': 'Saved only in this browser, up to the 30 most recent runs.',
+  'history.capacity': '{n}/{max} saved',
+  'history.capacityFull': 'Limit of {max} reached; new runs replace the oldest. Export JSON to back up.',
+  'history.writeFailed': 'Local storage write failed (quota or private mode); this run was not saved.',
   'history.clear': 'Clear all',
   'history.clearConfirm': 'Clear all history records?',
   'history.clearOk': 'Confirm clear',

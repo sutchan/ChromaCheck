@@ -97,6 +97,9 @@ export const ZH_UI_RESULT = {
 
   // 历史页
   'history.localOnly': '仅保存于本设备浏览器，最多保留最近 30 次。',
+  'history.capacity': '已保存 {n}/{max} 条',
+  'history.capacityFull': '已达 {max} 条上限，新记录会覆盖最早的一条；建议先导出 JSON 备份。',
+  'history.writeFailed': '本地存储写入失败（空间不足或隐私模式），本次记录未保存。',
   'history.clear': '清空',
   'history.clearConfirm': '确定清空全部历史记录？',
   'history.clearOk': '确认清空',

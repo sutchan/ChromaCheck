@@ -13,5 +13,25 @@ export default defineConfig({
     environment: 'node',
     setupFiles: ['./vitest.setup.ts'],
     include: ['lib/**/*.test.ts'],
+    // 覆盖率门禁（任务 O-03）：仅在 npm run test:coverage 时执行阈值判定
+    coverage: {
+      provider: 'v8',
+      // Windows 盘符大小写导致 V8 报告同一文件两份，all=false 仅统计测试实际加载的源码
+      all: false,
+      reporter: ['text-summary', 'json-summary'],
+      reportsDirectory: './coverage',
+      include: ['lib/**/*.ts'],
+      exclude: [
+        '**/*.test.ts',
+        'lib/i18n/**',
+        'lib/questions/**',
+        'lib/types.ts',
+        'lib/site.ts',
+        'lib/learn-data.ts',
+        'lib/privacy-data.ts',
+        'lib/fun.ts',
+      ],
+      thresholds: { lines: 80, functions: 75, branches: 70, statements: 80 },
+    },
   },
 });

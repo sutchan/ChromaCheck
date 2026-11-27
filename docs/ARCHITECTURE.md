@@ -1,12 +1,12 @@
 # 色辨 ChromaCheck 技术架构文档
 
 > **规范遵循**：本文档为 [SPEC.md](./SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。
-> **实现状态**：v1.0–v1.17.2 已实现（按 [SPEC.md](./SPEC.md) §0.3 分类清单）；纯前端、无服务端 API 路由。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [tasks.md](./tasks.md)。
+> **实现状态**：v1.0–v1.17.3 已实现（按 [SPEC.md](./SPEC.md) §0.3 分类清单）；纯前端、无服务端 API 路由。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [tasks.md](./tasks.md)。
 > **原型定位**：`prototype/` 为独立的高保真原型与设计验证参考（含早期 JS 移植源），**非应用运行依赖**；应用源码以 `lib/` 与 `components/` 为准，删除 `prototype/` 不影响构建与运行。
 
 | 项目 | 内容 |
 |------|------|
-| 文档版本 | v1.17.2 |
+| 文档版本 | v1.17.3 |
 | 创建日期 | 2026-09-03 |
 | 技术负责人 | ChromaCheck 团队 |
 
@@ -102,7 +102,7 @@ app/                          # Next.js App Router 页面
 ├── not-found.tsx             # 404
 ├── globals.css               # 全局样式 + 设计令牌 + prefers-reduced-motion
 ├── icon.svg                  # 站点图标
-├── robots.ts / sitemap.ts / llms.txt/route.ts   # SEO/GEO（v1.6）
+├── robots.ts / sitemap.ts / llms.txt/route.ts / llms-full.txt/route.ts   # SEO/GEO（v1.6；llms-full.txt 为 v1.17.0 补全）
 ├── guide/page.tsx            # 检测前指引（含屏幕校准提示 v1.7）
 ├── offline/page.tsx          # PWA 离线兜底页
 ├── test/
@@ -193,7 +193,7 @@ docs/                         # 项目文档（SPEC.md 为权威总纲，tasks.m
 | `/learn` | SSG | 科普文章列表 |
 | `/learn/[slug]` | SSG | 科普文章详情 |
 | `/history` | CSR | 历史记录 |
-| `/robots.txt` `/sitemap.xml` `/llms.txt` | SSG Route Handler | SEO/GEO（v1.6） |
+| `/robots.txt` `/sitemap.xml` `/llms.txt` `/llms-full.txt` | SSG Route Handler | SEO/GEO（v1.6；`llms-full.txt` 为 v1.17.0 补全） |
 
 ### 2.5 性能优化策略
 
@@ -352,7 +352,7 @@ export interface IshiharaResult {
 ### 3.5 报告导出模块
 
 **技术方案**（零外部依赖）：
-- PNG 导出：`lib/report-canvas.ts` / `lib/sharecard-canvas.ts` 用原生 Canvas API 自绘报告与分享卡，`canvas.toBlob()` 导出 PNG。
+- PNG 导出：`lib/report-canvas.ts` / `lib/sharecard-canvas.ts` 用原生 Canvas API 自绘报告与分享卡，`canvas.toDataURL('image/png')` 生成下载链接（无 `toBlob`）。
 - PDF 导出：`window.print()` + 打印样式（`@media print`），浏览器另存为 PDF。
 
 **优化**：
@@ -368,17 +368,23 @@ export interface IshiharaResult {
 
 实现位于 `lib/storage.ts`，全部数据仅存于用户浏览器 localStorage（SSR 环境直接返回空值，不触库）。
 
-**存储 Key 规范**（单一来源 `lib/storage.ts` 的 `K` 常量）：
+**存储 Key 规范**（核心 3 键来自 `lib/storage.ts` 的 `K` 常量；全站共 7 个扁平键）：
 
 ```
 cc.settings.v1     # 用户设置（AppSettings：主题 / 色觉安全 / 趣味模式）
 cc.results.v1      # 检测结果列表（倒序数组，每条含完整判读分析）
 cc.progress.v1     # 进行中的检测进度（模式 / 题号 / 答题记录 / 开始时间）
+cc.lang.v1         # 界面语言偏好（lib/i18n/lang.ts）
+cc.profiles.v1     # 本地档案列表（lib/profile.ts）
+cc.activeProfile.v1 # 当前档案 ID（lib/profile.ts）
+cc.batch.v1        # 批量检测名单（app/test/batch/page.tsx）
 ```
+
+> `lib/storage.ts` 只负责前 3 个核心键；语言 / 档案 / 批量名单分别由 `lib/i18n/lang.ts`、`lib/profile.ts` 与 `app/test/batch/page.tsx` 管理。批量名单由页面直接读写（`try/catch`），其余核心写入走 `safeSet` 降级。
 
 **容量与写入策略**：
 - 结果列表最多保留 30 条，超出自动淘汰最旧（`saveResult` 按 `createdAt` 降序后截断）。
-- 写路径统一走 `safeSet`：配额满（QuotaExceededError）或隐私模式禁用时静默失败并返回 `false`，绝不打断检测提交流程。
+- 核心写入走 `safeSet`：配额满（QuotaExceededError）或隐私模式禁用时返回 `false` 并记录失败键，结果写入失败由历史页非阻断提示，草稿写入仍静默降级；批量名单写入失败由批量页自行捕获。
 - 总存储量远小于 1MB 配额（结果记录为轻量 JSON）。
 
 **读取容错（运行时校验）**：
@@ -411,7 +417,7 @@ cc.progress.v1     # 进行中的检测进度（模式 / 题号 / 答题记录 /
 
 ### 5.1 API 路由列表
 
-> **现状（v1.17.2）**：纯前端应用**无任何服务端 API 路由**，`app/` 下仅 `app/llms.txt/route.ts` 与 `app/llms-full.txt/route.ts` 两个 Route Handler（SEO/GEO 纯文本索引）。下表接口均为 **v1.1+ 规划或历史设计，当前未实现**；访问统计仅由 GA4 `pageview` 上报（`lib/analytics.ts`），不走本站接口。
+> **现状（v1.17.3）**：纯前端应用**无任何服务端 API 路由**，`app/` 下仅 `app/llms.txt/route.ts` 与 `app/llms-full.txt/route.ts` 两个 Route Handler（SEO/GEO 纯文本索引）。下表接口均为 **v1.1+ 规划或历史设计，当前未实现**；访问统计仅由 GA4 `pageview` 上报（`lib/analytics.ts`），不走本站接口。
 
 | 方法 | 路径 | 说明 | 状态 |
 |------|------|------|------|
@@ -491,18 +497,18 @@ interface AnalyticsEvent {
   - 判读引擎与题库（scoring / hue-scoring / path-scoring / signal-scoring / advanced-scoring / child-scoring / ishihara / path-field）
   - 存储与档案（storage / profile / export-import）、格式化与文案（format / scoring-text）、分享卡（sharecard）
 - **运行**：`npm test`（vitest run）、`npm run test:watch`、`npm run test:coverage`（@vitest/coverage-v8）
-- **后续目标**：业务逻辑覆盖率持续提升；组件测试与 E2E 尚未引入。
+- **后续目标**：业务逻辑覆盖率持续提升；组件测试未引入，Playwright 配置 / 用例已提供但依赖与 CI 接入待验。
 
-### 7.2 集成 / E2E（未实现）
+### 7.2 集成 / E2E（待验收）
 
-- Playwright 完整检测链路、答题中断恢复、报告导出流程：**规划中，尚未落地**（见 [tasks.md](./tasks.md)）。
+- `playwright.config.ts` 与 `e2e/main-flow.spec.ts` 已提供，覆盖主链路目标；`@playwright/test` 依赖、npm 脚本、CI 接入与稳定三次运行仍未闭环（见 [tasks.md](./tasks.md) O-03）。
 
 ### 7.3 手动测试清单
 
 - [ ] 各浏览器兼容性（Chrome、Safari、Firefox、Edge）
 - [ ] 移动端触摸操作（iOS Safari、Android Chrome）
 - [ ] 检测图色彩准确性（使用校色过的显示器对比标准图谱）
-- [ ] 弱网环境（图片加载失败处理）
+- [ ] 弱网环境（自托管字体 / 脚本资源加载失败处理；检测图为 Canvas 自绘，无图片请求）
 - [ ] 无障碍（键盘导航、屏幕阅读器）
 - [ ] 深色模式
 
@@ -563,13 +569,12 @@ jobs:
 
 ### 9.2 错误监控
 
-- **Sentry**（可选）：前端错误捕获、性能追踪。
-- 错误率告警：日错误率 > 1% 时通知。
+以下均为**规划项，当前未实现**：Sentry（前端错误捕获 / 性能追踪）、日错误率 > 1% 告警。现行只有页面错误边界与浏览器控制台可见的客户端异常。
 
 ### 9.3 日志
 
-- 服务端日志：Vercel Logs（保留 1 小时，付费版更长）。
-- 客户端错误：Sentry 或自建日志收集。
+- 服务端日志：Vercel Logs（保留 1 小时，付费版更长）；纯前端应用无自定义业务日志。
+- 客户端错误：现阶段仅浏览器控制台；Sentry / 自建收集为上述规划项。
 - 日志中不记录用户个人信息和检测答案。
 
 ---

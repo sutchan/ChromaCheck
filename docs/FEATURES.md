@@ -1,6 +1,6 @@
 # 色辨 ChromaCheck 功能模块说明
 
-> **文档版本**：v1.17.2 ｜ **实现状态**：v1.0–v1.17.2 已落地能力清单
+> **文档版本**：v1.17.3 ｜ **实现状态**：v1.0–v1.17.3 已落地能力清单
 > **权威依据**：[SPEC.md](./SPEC.md)（规范总纲）、[ARCHITECTURE.md](./ARCHITECTURE.md)（架构）、`lib/` 与 `components/` 实际代码
 > **定位**：本文按模块说明「做什么、怎么流转、关键逻辑是什么」；数据结构见 [DATA-SPEC.md](./DATA-SPEC.md)，判读算法权威口径见 SPEC §6。
 
@@ -24,7 +24,7 @@
 | 模块 | 入口路由 | 核心能力 | 关键实现文件 | 状态 |
 |------|----------|----------|--------------|------|
 | 石原氏检测 | `/test/ishihara/quick`、`/standard` | 10 / 38 题数字图初筛，键盘直接作答 | `lib/ishihara.ts`、`lib/scoring.ts`、`components/test/IshiharaFlow.tsx` | 已实现 |
-| 路径追踪 | `/test/path-tracking/[mode]` | 描线 Intersection over Union（实际为 F1）重合度评分 | `lib/path-field.ts`、`lib/path-scoring.ts` | 已实现 |
+| 路径追踪 | `/test/path-tracking/[mode]` | 描线 F1 重合度（`pathF1`，非 IoU）评分 | `lib/path-field.ts`、`lib/path-scoring.ts` | 已实现 |
 | 色相排列 D15 | `/test/hue-arrangement/[mode]` | 15 色卡排序，TES 误差与偏差方向 | `lib/hue-scoring.ts`、`lib/questions/hue-arrangement.ts` | 已实现 |
 | 进阶联合 | `/test/advanced` | 三范式联合判读，色相优先、路径补充 | `lib/advanced-scoring.ts` | 已实现 |
 | 信号灯辨识 | `/test/signal` | 灯色与含义双维度作答 | `lib/signal-scoring.ts`、`lib/questions/signal.ts` | 已实现 |
@@ -139,7 +139,7 @@ flowchart LR
     B -- PDF --> D[window.print + @media print]
     B -- 文字 --> E[scoring-text 复制到剪贴板]
     B -- JSON --> F[export-import 全量本地数据]
-    C --> G[canvas.toBlob + createObjectURL 下载]
+    C --> G[canvas.toDataURL + 下载链接]
     F --> G
 ```
 
@@ -185,6 +185,6 @@ flowchart LR
 1. 不能可靠区分红 / 绿 / 蓝黄异常类型，也不能区分「色盲 / 色弱」。
 2. 题库无转换型 / 隐藏型题，`protanHit` / `deutanHit` 恒 0。
 3. 结果最多保存 30 条，超出后最早的被覆盖。
-4. 本地存储写入失败静默降级，用户无感知。
+4. 本地存储写入失败不打断流程；结果写入失败在历史页非阻断提示，草稿写入仍静默降级。
 5. 无账号体系、无服务端同步；跨设备迁移依赖 JSON 导出 / 导入。
 6. 内容型文案繁体非完整翻译，回退简体。

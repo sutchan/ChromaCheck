@@ -18,7 +18,7 @@
 
 **规范域名（canonical）**：<https://chromacheck.app>（`lib/site.ts` 的 `SITE_URL`，用于 metadata / sitemap / robots / OG URL）；当前与试用入口并存，域名收敛计划待确认。
 
-> **当前版本 v1.17.2**（版本单一来源见 `VERSION`）。已实现能力见下方「功能特性」；权威规范见 [docs/SPEC.md](docs/SPEC.md)。
+> **当前版本 v1.17.3**（版本单一来源见 `VERSION`）。已实现能力见下方「功能特性」；权威规范见 [docs/SPEC.md](docs/SPEC.md)。
 
 ## 功能特性
 
@@ -87,7 +87,7 @@ chromacheck/
 │                   #   i18n/（简繁英字典与 t()）/ profile / export-import / ishihara / storage /
 │                   #   learn-data / privacy-data / license / format / analytics /
 │                   #   *.test.ts（Vitest 15 文件 107 例）
-├── public/         # PWA sw.js / og-default.svg / icons/（3 个 PNG 图标）
+├── public/         # PWA sw.js / og-default.svg / og-default.png（1200×630 社交图）/ icons/（3 个 PNG 图标）
 ├── scripts/        # 构建辅助脚本目录（当前为空）
 ├── docs/           # 项目文档（SPEC.md 为权威总纲）+ images/ 界面截图
 ├── prototype/      # 高保真静态原型（设计验证参考，无运行依赖）
@@ -129,12 +129,13 @@ chromacheck/
 
 ## 部署
 
-**Vercel（推荐）**：导入仓库，构建命令自动识别为 `next build`。唯一可选环境变量为 `NEXT_PUBLIC_GA_ID`（置空即停用 GA4）；`NEXT_PUBLIC_BUILD_ID` 由 `next.config.mjs` 在构建期自动注入，无需配置。
+**Vercel（推荐）**：导入仓库，构建命令自动识别为 `next build`。面向用户的主要可选环境变量为 `NEXT_PUBLIC_GA_ID`（置空即停用 GA4）；另有站点验证变量 `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` / `NEXT_PUBLIC_BING_SITE_VERIFICATION`（见 [docs/DEPLOYMENT.md §5](docs/DEPLOYMENT.md)）。`NEXT_PUBLIC_BUILD_ID` 由 `next.config.mjs` 在构建期自动注入，无需配置。
 
-**Docker**：本仓库**不提供 `Dockerfile`**，需先按 [docs/DEPLOYMENT.md §3.1](docs/DEPLOYMENT.md) 在根目录自行创建（`node:22-alpine` + `npm install`，`output: 'standalone'` 已配置），再执行：
+**Docker**：仓库根目录已提供 `Dockerfile` 与 `docker-compose.yml`（`node:22-alpine` 多阶段构建，`output: 'standalone'` 已配置；见 [docs/DEPLOYMENT.md §3](docs/DEPLOYMENT.md)）。`package.json` 与锁文件已同步，Dockerfile 的 `npm ci` 构建仍待 CI / Preview 验证：
 
 ```bash
 docker build -t chromacheck . && docker run -p 3000:3000 chromacheck
+# 或：docker compose up -d
 ```
 
 **版本发布**：`push` 到 `main` 且 CI 全绿后自动创建 `v{VERSION}` tag 与 GitHub Release（notes 取自 CHANGELOG，同名 tag 已存在则跳过；详见 [docs/DEPLOYMENT.md §9](docs/DEPLOYMENT.md) 与 SPEC §8.6）。

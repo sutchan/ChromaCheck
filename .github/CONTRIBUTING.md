@@ -1,7 +1,7 @@
 # 贡献指南
 
 > **规范遵循**：本文档为 [../docs/SPEC.md](../docs/SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。
-> **实现状态**：v1.0–v1.17.2 已实现，§开发环境 的 npm 流程（install / dev / build / start / lint / type-check / test / test:watch / test:coverage）当前可直接使用。
+> **实现状态**：v1.0–v1.17.3 已实现，§开发环境 的 npm 流程（install / dev / build / start / lint / type-check / test / test:watch / test:coverage）当前可直接使用。
 >
 > **分支说明**：当前仓库仅维护 `main`；文中提及的 `develop` 为可选集成分支，若远程不存在请直接从 `main` 切功能分支并向 `main` 提交 PR。
 
@@ -11,7 +11,7 @@
 
 ### 前置要求
 
-- Node.js 22 LTS（CI 固定 Node 22；Next.js 14.2.15 要求最低 >= 18.17.0，见 `package-lock.json` 中 `next.engines`）
+- Node.js 22 LTS（CI 固定 Node 22；现行 Next.js 14 要求最低 >= 18.17.0，详见 `package-lock.json` 中 `next.engines`）
 - npm >= 9.0.0（或 pnpm / yarn）
 - Git
 
@@ -173,17 +173,17 @@ Closes #xxx
 - 测试用例描述清晰，使用 `describe` + `it` 结构。
 - 判读算法必须覆盖边界用例和异常输入。
 
-### 集成 / E2E 测试（尚未落地）
+### 集成 / E2E 测试（待验收）
 
-- 当前仓库**未引入** Playwright 或 `@testing-library/react`，无 `e2e/` 目录。
-- CI 的 E2E 步骤为占位跳过（`echo "E2E 跳过：当前版本未配置 e2e"`）。
-- 现有自动化仅 Vitest 单元测试（`npm test`）；组件测试与 E2E 属规划项。
+- 仓库已提供 `playwright.config.ts` 与 `e2e/main-flow.spec.ts`，但 `package.json` 尚未声明 `@playwright/test` 与运行脚本，CI 仍为占位跳过。
+- 组件测试仍未引入 `@testing-library/react`；现有自动化以 Vitest 单元测试（`npm test`）为主。
+- E2E 依赖安装、脚本接入与 CI 稳定三次运行属 O-03 未闭环部分。
 
 ## 常见问题
 
 ### 环境变量
 
-- 唯一可配置项为 `NEXT_PUBLIC_GA_ID`（见 `.env.example`），置空即停用 GA4 匿名统计，且仅生产环境加载。
+- 面向用户的主要可配置项为 `NEXT_PUBLIC_GA_ID`（见 `.env.example`），置空即停用 GA4 匿名统计，且仅生产环境加载；另有站点验证变量 `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` / `NEXT_PUBLIC_BING_SITE_VERIFICATION`（见 [DEPLOYMENT.md](../docs/DEPLOYMENT.md) §5）。
 - `NEXT_PUBLIC_BUILD_ID` 由 `next.config.mjs` 在构建期自动生成并注入，无需（也不应）手工配置。
 - `NEXT_PUBLIC_APP_URL` / `NEXT_PUBLIC_APP_NAME` / `NEXT_PUBLIC_ANALYTICS_ENABLED` 等为早期规划，代码零引用。
 

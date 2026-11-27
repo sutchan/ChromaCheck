@@ -1,12 +1,12 @@
 # 色辨 ChromaCheck 产品需求文档（PRD）
 
 > **规范遵循**：本文档为 [SPEC.md](./SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。
-> **实现状态**：v1.0–v1.17.2 已实现（按 [SPEC.md](./SPEC.md) §0.3 分类清单）；纯前端、无服务端 API 路由。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [tasks.md](./tasks.md)。
+> **实现状态**：v1.0–v1.17.3 已实现（按 [SPEC.md](./SPEC.md) §0.3 分类清单）；纯前端、无服务端 API 路由。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [tasks.md](./tasks.md)。
 
 | 项目 | 内容 |
 |------|------|
 | 产品名称 | 色辨 ChromaCheck |
-| 文档版本 | v1.17.2 |
+| 文档版本 | v1.17.3 |
 | 创建日期 | 2026-09-03 |
 | 文档状态 | 已落地，持续维护 |
 | 产品负责人 | ChromaCheck 团队 |
@@ -22,7 +22,7 @@
 ### 1.2 产品目标
 
 - **用户目标**：让普通用户无需专业设备，在家即可完成初步色觉筛查，了解自身色觉状况。
-- **业务目标**：打造国内领先的在线色觉检测平台，积累色觉数据，拓展职业体检、眼科转诊等 B 端合作场景。
+- **业务目标**：提供可信赖的本地色觉初筛体验；职业体检、眼科转诊等 B 端合作和数据积累为未实现远景（见 [tasks.md](./tasks.md) O-10）。
 - **体验目标**：检测流程简洁流畅，结果呈现直观易懂，全程不超过 3 分钟。
 
 ### 1.3 目标用户
@@ -107,7 +107,7 @@
 | 功能描述 | 产品门面，展示核心价值，引导用户开始检测 |
 | 入口 | 用户访问根路径 `/` |
 | 页面元素 | Hero 区（产品名 + Slogan + "开始检测"按钮）、检测流程三步图示、产品特点卡片、科普文章入口、页脚 |
-| 交互 | 点击"开始检测"→ 跳转检测前指引页 |
+| 交互 | 点击"开始检测"→ 跳转 `/test` 模式选择页，再进入 `/guide` 检测前指引 |
 | 验收标准 | 首屏加载 < 2.5s（LCP）；CTA 按钮在首屏可见；移动端适配良好 |
 
 #### F2. 检测前指引
@@ -268,7 +268,7 @@
 | 异常场景 | 处理方式 |
 |----------|----------|
 | 用户中途退出 | 自动保存进度到本地，下次访问提示"继续上次检测" |
-| 图片加载失败 | 显示占位图 + 重试按钮；连续失败 3 次提示检查网络 |
+| 字体 / 脚本资源加载失败 | 自托管 woff2 或前端脚本异常时回退系统字体链并显示错误边界；检测图由 Canvas 自绘，无图片请求 |
 | 用户答题过快（< 1s/题） | 不拦截，但在结果中降低置信度，提示"答题过快可能影响准确性" |
 | 结果无法判定（答题矛盾） | 显示"检测结果不确定，建议重新检测或就医"，不强行给出结论 |
 
@@ -343,7 +343,7 @@ interface TestResult {
 ### 6.3 本地存储数据
 
 ```typescript
-// v1.0 实际以 ./SPEC.md §5.4 为准：使用 6 个扁平键（见 SPEC §5.4），无聚合 LocalStorageData。
+// 现行以 ./SPEC.md §5.4 为准：使用 7 个扁平键（含 cc.batch.v1），无聚合 LocalStorageData。
 // 以下为 v1.1 规划结构（含 advanced 模式、soundEnabled/autoNext/analyticsEnabled/system 主题），仅供参考。
 interface LocalStorageData {
   version: string;
@@ -382,7 +382,7 @@ interface LocalStorageData {
 | 前端框架 | Next.js 14 (App Router) | SSG/CSR 混合，SEO 友好 |
 | 语言 | TypeScript（strict） | 类型安全 |
 | 样式 | 设计令牌 + CSS 变量（`globals.css`），Tailwind 3 | 深色 / 色觉安全模式 |
-| UI 组件 | 自研组件（`components/` 五域） | 零 UI 库依赖 |
+| UI 组件 | 自研组件（`components/` 多域：common / layout / home / test / result / history / guide / learn / offline / privacy / analytics / pwa / seo） | 零 UI 库依赖 |
 | 图表 | 内联 SVG | 结果可视化零 bundle |
 | 状态管理 | React Context + useState | 轻量，无需 Redux |
 | 画布 | Canvas API | 路径追踪描线、石原氏点阵自绘、报告 PNG |

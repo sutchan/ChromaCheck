@@ -1,6 +1,6 @@
-<!-- ./SPEC.md v1.17.2 — ChromaCheck 项目规范总纲（单一事实来源） -->
+<!-- ./SPEC.md v1.17.3 — ChromaCheck 项目规范总纲（单一事实来源） -->
 <!-- 权威顺序：全局用户规则 > 本 SPEC > 各分册 > prototype/ 设计参考；冲突时按此顺序取舍 -->
-<!-- 实现状态：Next.js 14 应用已落地——石原氏检测（38 板）、路径追踪、色相排列 D15、进阶联合、信号灯专项、趣味包、结果/历史/科普/隐私、首页 FAQ 双栏（12 条）、GA4、SEO/GEO、Vitest（15 文件 107 例）；原型仅作设计验证参考。当前版本 v1.17.2。 -->
+<!-- 实现状态：Next.js 14 应用已落地——石原氏检测（38 板）、路径追踪、色相排列 D15、进阶联合、信号灯专项、趣味包、结果/历史/科普/隐私、首页 FAQ 双栏（12 条）、GA4、SEO/GEO、Vitest（15 文件 107 例）；原型仅作设计验证参考。当前版本 v1.17.3。 -->
 
 # 色辨 ChromaCheck 项目规范（SPEC）
 
@@ -18,7 +18,7 @@
 | L2 | `docs/` 各分册、`.github/CONTRIBUTING.md` | 对应子主题 | 不得与 L1 冲突；冲突即修订分册 |
 | L3 | `prototype/`（4 页 HTML + 经典全局脚本） | 设计验证与视觉参考 | 判读/绘制以 `app/` `lib/` 为准；脚本豁免 200 行拆分 |
 
-### 0.2 文档清单（16 份，1 总纲 + 15 分册，v1.17.2 标准化）
+### 0.2 文档清单（16 份，1 总纲 + 15 分册，v1.17.3 标准化）
 
 | 文档 | 角色 | 权威领域 |
 |------|------|----------|
@@ -40,13 +40,13 @@
 | `./tasks-done.md` | 已完成任务归档 | 历史任务收口记录 |
 | `.github/CONTRIBUTING.md` | 贡献约定（位于 `.github/`） | 分支、提交、发版流程 |
 
-### 0.3 实现状态（截至 v1.17.2，按模块分类）
+### 0.3 实现状态（截至 v1.17.3，按模块分类）
 
 - **检测范式**：石原氏（`quick` 10 题 / `standard` 38 题，v1.5 补齐 38 板）、路径追踪（v1.1）、色相排列 D15（v1.2）、进阶联合（v1.3）、信号灯辨识（v1.7，独立于 `TestMode`）、儿童图形（v1.7.9）、批量检测。
 - **体验与内容**：结果页五视角、历史多档案 + 导出导入、科普与隐私页、首页 FAQ 双栏 12 条（v1.13.2）、趣味体验包（v1.4）、断点续测、驾驶场景专项（v1.7.0）。
 - **工程与合规**：三语 i18n（v1.15.0，简中 > 繁中 > 英文）、判读类型未分型收敛（v1.15.1）、GitHub Releases 自动发布（v1.16.0）、页脚版本 + 构建号（v1.14.0）、安全响应头（v1.7.6）。
 - **SEO / GEO（v1.17.0）**：`lib/seo-routes.ts` 单一路由源、`llms.txt` / `llms-full.txt`、站点级结构化数据、静态 PNG 社交图、`safeJson()` 转义修复、回归测试。
-- **质量**：Vitest 15 文件 107 例（node 环境）；CI 跑 type-check + lint + build + test；组件测试与 Playwright E2E 尚未落地。
+- **质量**：Vitest 15 文件 107 例（node 环境）；V8 覆盖率阈值与 Playwright 配置 / 主链路用例已提供，但 npm 脚本 / 依赖 / CI 接入及 E2E 验收尚未闭环；组件测试未落地。
 - **边界**：纯前端、无服务端 API 路由（仅 `app/llms.txt/route.ts`、`app/llms-full.txt/route.ts` 两个 Route Handler）、无账号、无 PII 上传、仅 GA4 匿名统计。
 
 ## 1. 产品定位与功能范围
@@ -62,7 +62,7 @@
 
 ## 2. 技术架构
 
-> 本节描述 v1.17.2 实际落地的技术栈与结构；与真实代码不一致时以代码为准并修订本节。
+> 本节描述 v1.17.3 实际落地的技术栈与结构；与真实代码不一致时以代码为准并修订本节。
 
 ### 2.1 技术栈与选型
 - 框架：**Next.js 14（App Router）+ TypeScript（strict）**；样式：**Tailwind CSS + CSS 变量令牌**（深色 / 色觉安全）。
@@ -84,7 +84,7 @@ lib/
   storage.ts      # localStorage 读写（safeSet 降级 + 校验）
   i18n/           # lang.ts / dict.ts / t.ts + zh-/tw-/en-* 字典
   seo-routes.ts   # SEO_ROUTES 单一路由源（v1.17.0）
-  site.ts / seo.ts / format.ts / analytics.ts / license.ts / privacy-data.ts / learn-data.ts / fun.ts
+  site.ts / seo-routes.ts / format.ts / analytics.ts / license.ts / privacy-data.ts / learn-data.ts / fun.ts
   *.test.ts       # Vitest 单测（15 文件 107 例）
 prototype/        # 4 页 HTML 设计验证（v0.1.x，与产品版本解耦，不随发版刷写）
 ```
@@ -125,7 +125,7 @@ prototype/        # 4 页 HTML 设计验证（v0.1.x，与产品版本解耦，�
 **功能清单（7 项）**：进度点阵仪式感、章末轻科普过渡、中性提交反馈（恒开）、色觉人格分享卡（Canvas）、换一双眼睛（4 种色觉视角）、三轴互动科普、「趣味体验」总开关（`cc.settings.v1.funMode`，默认开；关闭后人格化文案回退中性）。开关控制 #1/#2/#4/#5 文案与过渡，#3 恒开。
 
 ### 3.6 页脚版本号与构建号（v1.14.0 起规范）
-- 页脚（`components/layout/Footer.tsx`，`id="app-footer"`）以单一 token 展示，格式固定 `V{版本号}· build {构建号}`：大写 `V`、版本号后**紧接** `·`（无空格）、再 ` build `、最后 10 位构建号。示例 `V1.17.2· build 2611121200`。
+- 页脚（`components/layout/Footer.tsx`，`id="app-footer"`）以单一 token 展示，格式固定 `V{版本号}· build {构建号}`：大写 `V`、版本号后**紧接** `·`（无空格）、再 ` build `、最后 10 位构建号。示例 `V1.17.3· build 2611121200`。
 - 版本号直读 `package.json`（单一来源，禁止硬编码）；构建号为 **10 位 `yymmddhhmm`**，由 `next.config.mjs` 构建时按本地时间生成并注入 `NEXT_PUBLIC_BUILD_ID`（dev / build 均生效），缺失时回退版本号。
 - **版本与构建号只在页脚展示，页眉禁止出现版本号**；不再展示更新日期（`SITE_UPDATED` 另有用途，见 §8.7）。
 
@@ -205,9 +205,9 @@ interface TestResult {
   profileId?: string;               // v1.8.1，旧记录归默认档案
 }
 ```
-> **版本口径**：`TestResult.version` 是**结果结构版本**（当前 `1.9.0`），与**产品版本**（`VERSION` = `1.17.2`）不同，不得混用或同步修改。
+> **版本口径**：`TestResult.version` 是**结果结构版本**（当前 `1.9.0`），与**产品版本**（`VERSION` = `1.17.3`）不同，不得混用或同步修改。
 
-### 5.4 本地存储（6 个扁平键，以代码为准）
+### 5.4 本地存储（7 个扁平键，以代码为准）
 
 | 键 | 数据 | 负责模块 | 说明 |
 |----|------|----------|------|
@@ -217,16 +217,18 @@ interface TestResult {
 | `cc.lang.v1` | `Lang` | `lib/i18n/lang.ts` | `'zh' \| 'zh-TW' \| 'en'` |
 | `cc.profiles.v1` | `Profile[]` | `lib/profile.ts` | 昵称 / emoji / 关系 / 创建时间 |
 | `cc.activeProfile.v1` | 当前档案 ID | `lib/profile.ts` | 旧记录缺失时归默认档案 |
+| `cc.batch.v1` | `BatchSubject[]` | `app/test/batch/page.tsx` | 批量检测名单，页面直接读写（`try/catch`） |
 
-写入统一走 `safeSet` 降级；无 `LocalStorageData` 聚合结构、无 `analyticsEnabled`、无 `UserSettings`（均属未实现规划）。
+核心结果 / 设置 / 进度经 `safeSet` 降级写入；批量名单由页面直接读写。无 `LocalStorageData` 聚合结构、无 `analyticsEnabled`、无 `UserSettings`（均属未实现规划）。
 
 ### 5.5 枚举别名（代码为准）
 代码使用 `DeficiencyType` / `Overall` / `Severity`（`lib/types.ts`）；分册若使用 `ColorDeficiencyType` / `OverallResult` / `SeverityLevel`，语义一致但**不得另起新别名**：
 ```ts
 type DeficiencyType = 'protanopia' | 'protanomaly' | 'deuteranopia'
-                    | 'deuteranomaly' | 'tritanopia' | 'tritanomaly' | 'achromatopsia';
+                    | 'deuteranomaly' | 'tritanopia' | 'tritanomaly' | 'achromatopsia'
+                    | null;
 type Overall = 'normal' | 'suspected_deficiency' | 'suspected_blindness' | 'inconclusive';
-type Severity = 'mild' | 'moderate' | 'severe';
+type Severity = 'mild' | 'moderate' | 'severe' | null;
 type TestMode = 'quick' | 'standard' | 'advanced' | 'child';
 ```
 
@@ -325,14 +327,14 @@ clamp(confidence, 0, 100)
 - 原型文件头为 v0.1.x（内部迭代号，与产品版本解耦，不随发版刷写）。
 
 ### 8.3 文档结构与维护
-- 16 份文档（1 总纲 + 15 分册，见 §0.2，v1.17.2 标准化）；每份顶部含路径与版本、实现状态声明、负责人（当前多为 `—`，待补实）。
+- 16 份文档（1 总纲 + 15 分册，见 §0.2，v1.17.3 标准化）；每份顶部含路径与版本、实现状态声明、负责人（当前多为 `—`，待补实）。
 - 变更须记录 `CHANGELOG.md`；分册冲突以本 SPEC 裁决，并同步修订分册。
 - **任务单一来源（硬约束，永久遵循）**：所有未完成 / 待验证 / 计划实施的任务只写入 `docs/tasks.md`，其他任何位置（README、CHANGELOG、ROADMAP、各分册、`tasks-done.md`、源码注释等）不得维护第二份任务清单。发现「待办 / TODO / 待验证 / 待实施 / 规划中 / 未闭环 / 待决策」等任务型表述时：先登记到 `docs/tasks.md`，原位置只保留问题证据与方案正文并链接到任务清单；迁移完成后删除冗余任务文档。
 - 已完成项移入 `docs/tasks-done.md`（仅作归档，不维护状态）。
 
 ### 8.4 测试与质量门禁
 - Vitest（v1.7.6 落地，当前 **15 文件 107 例**）：`lib/*.test.ts` 覆盖判读、存储、格式化、导出导入、分享卡、SEO 等；`npm test` = `vitest run`，`npm run test:coverage` 走 `@vitest/coverage-v8`。
-- 测试环境为 node（`vitest.setup.ts` 注入内存 Storage，无 jsdom/happy-dom）；Canvas 绘制不可单测（仅 `computeRadar` 有覆盖），勿强行加 jsdom。组件测试与 Playwright E2E 尚未落地。
+- 测试环境为 node（`vitest.setup.ts` 注入内存 Storage，无 jsdom/happy-dom）；Canvas 绘制不可单测（仅 `computeRadar` 有覆盖），勿强行加 jsdom。组件测试未落地；Playwright 配置与主链路用例已提供，但依赖 / 脚本 / CI 接入待验。
 - CI（`.github/workflows/ci.yml`）：Node 22 LTS、checkout / setup-node v5、`npm install`（无 `cache`），跑 type-check + lint + build + test（e2e 安全跳过）。
 - **安全响应头唯一真值为 `next.config.mjs`**（§8.7 之外亦适用）：CSP（开发态额外放行 `'unsafe-eval'`）、X-Frame-Options、X-Content-Type-Options、Referrer-Policy、Permissions-Policy。
 
@@ -359,9 +361,9 @@ clamp(confidence, 0, 100)
 - `lib/seo.test.ts` 对 URL 集合、事实文案、robots 与 `safeJson` 做回归断言。
 
 ## 9. 实现状态与待办
-- **已完成**：见 §0.3 分类清单与 `CHANGELOG.md`（v1.0 → v1.17.2 逐版本记录）；历史里程碑细节以 CHANGELOG 为准，本节不重复枚举。
+- **已完成**：见 §0.3 分类清单与 `CHANGELOG.md`（v1.0 → v1.17.3 逐版本记录）；历史里程碑细节以 CHANGELOG 为准，本节不重复枚举。
 - **待办**：见 `docs/tasks.md`（唯一来源，当前 O-01 ~ O-11 / V-01 ~ V-07）；历史收口见 `docs/tasks-done.md`。
-- **当前限制（非待办但需知悉）**：判读未分型（§6.4）、组件测试与 E2E 未落地、内容型文案繁体回退简体、无服务端 API / 账号 / 云同步、本地 `next build` 可能受 IDE 安全删除护栏拦截（CI 不受影响）。
+- **当前限制（非待办但需知悉）**：判读未分型（§6.4）、组件测试未落地、E2E 配置 / 用例待验收、内容型文案繁体回退简体、无服务端 API / 账号 / 云同步、本地 `next build` 可能受 IDE 安全删除护栏拦截（CI 不受影响）。
 
 ---
-*本文档为 ChromaCheck 权威规范总纲 v1.17.2。分册应据本规范修订；冲突时以本规范为准。*
+*本文档为 ChromaCheck 权威规范总纲 v1.17.3。分册应据本规范修订；冲突时以本规范为准。*

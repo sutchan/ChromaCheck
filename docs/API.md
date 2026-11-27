@@ -1,12 +1,12 @@
 # 色辨 ChromaCheck API 接口文档
 
 > **规范遵循**：本文档为 [SPEC.md](./SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。
-> **实现状态**：v1.0–v1.17.2 已实现（按 [SPEC.md](./SPEC.md) §0.3 分类清单）；纯前端、无服务端 API 路由。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [tasks.md](./tasks.md)。
+> **实现状态**：v1.0–v1.17.3 已实现（按 [SPEC.md](./SPEC.md) §0.3 分类清单）；纯前端、无服务端 API 路由。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [tasks.md](./tasks.md)。
 > **OpenAPI 规范**：机器可读规范见 [openapi.yaml](./openapi.yaml)（OpenAPI 3.1），仅描述真实存在的 `GET /llms.txt` 与 `GET /llms-full.txt`；业务 API 数量为零，下文 §3 的历史接口均标注未实现 / 已移除。
 
 | 项目 | 内容 |
 |------|------|
-| 文档版本 | v1.17.2 |
+| 文档版本 | v1.17.3 |
 | 创建日期 | 2026-09-03 |
 | Base URL | 无服务端 API；站点规范域名取自 `lib/site.ts` 的 `SITE_URL`（当前 `https://chromacheck.app`），线上试用入口为 `https://chroma.ewuse.com`；仓库不含 `/api` 路由 |
 

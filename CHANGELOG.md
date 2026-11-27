@@ -1,7 +1,27 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件、`package.json` 与 `package-lock.json` 的 `version` 字段（当前 `1.17.2`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件、`package.json` 与 `package-lock.json` 的 `version` 字段（当前 `1.17.3`）。
+
+## [1.17.3] - 2026-11-27
+
+### 文档（现行事实复核与一致性修正）
+
+- 校正 Next.js 升级口径：`package.json` 与 `package-lock.json` 均已升至 14.2.35；O-01 标记为部分完成（门禁 / Preview 待验收），文档不再声称当前固定 14.2.15 或升级已完全闭环。
+- 统一本地存储键口径为 7 个（补 `cc.batch.v1`），并说明批量名单由页面直接读写；修正 `pathF1` / IoU、PNG `toDataURL()`、站点验证环境变量、批量检测结果、首页 CTA、反向代理 `SAMEORIGIN` 等现行事实。
+- 补齐 `llms-full.txt` 与本机静态分享图；将 Sentry / 错误率告警明确标注为规划项；同步 ROADMAP 与 `tasks.md` 的 O-04 / O-08 优先级，并修正归档头部「已清零」表述。
+- 同步外部落地进展：Dockerfile / Compose 模板、`.env.example` 站点验证变量、V8 覆盖率配置、Playwright 配置 / 主链路用例与历史页容量 / 写入失败提示已提供；O-01 / O-03 / O-06 / O-07 / O-08 标记为部分完成，相关依赖 / 脚本 / CI / 构建 / E2E 验收仍待完成。
+- 版本同步：`VERSION` / `package.json` / `package-lock.json`、README、CHANGELOG 及全部 docs 分册 / `.github/CONTRIBUTING.md` 统一为 v1.17.3；源码头注释仅更新本轮实际改动文件。
+
+### 工程（本轮任务清单推进，2026-11-27）
+
+- `next` / `eslint-config-next` 升至 `14.2.35`，重装依赖恢复 Next 类型声明；`npm audit --omit=dev` 仍判全部 Next 14.x 有 critical，是否跨 major 升级至 Next 16 转 P0 决策项（O-01）。
+- O-02：`lib/i18n/html-lang.ts` 抽出 `applyHtmlLang()`，`LangProvider` 挂载恢复与主动切换统一写入 `<html lang>`；新增 `html-lang.test.ts` 三语断言。
+- V-01 / V-02：新增 `scripts/check-openapi.mjs` 与 `scripts/check-docs.mjs`（含 `.env.example` 环境变量一致性），接入 `package.json` 与 CI；实跑 0 错误。
+- O-03：`vitest.config.ts` 配置 v8 覆盖率与阈值，实跑 88.96% lines / 87.64% functions / 84.3% branches；新增 `playwright.config.ts` 与 `e2e/main-flow.spec.ts`，CI 接入 coverage 与 E2E 步骤。
+- V-07 / O-06 / O-08：CI 与 Dockerfile 统一切 `npm ci`；新增多阶段 `Dockerfile` 与 `docker-compose.yml`；`.env.example` 补两个站点验证变量。
+- O-07：`RESULT_LIMIT` 与 `consumeWriteFailure()` 支撑历史页「N/30」容量条、达上限导出建议与写入失败非阻断提示，补齐三语文案。
+- 任务文档：`tasks.md` 收敛为 11 项未完成条目，O-02 / V-01 / V-02 / V-07 / O-06 / O-07 / O-08 连同完整问题背景、实现与验收证据归档至 `tasks-done.md` §八；O-05 与 O-09~O-11 / V-05 保留待办或阻塞标注。
 
 ## [1.17.2] - 2026-11-26
 

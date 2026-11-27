@@ -1,8 +1,8 @@
 # 已完成任务归档
 
 > 来源：`./tasks.md`。已完成的条目从任务清单移入本文档，保留目标与实现摘要以便回溯。
-> **最后更新：2026-11-26**（当前版本 **v1.17.2**）：归档范围覆盖（v1.15.0 起见 §七）
- T1–T6、C1–C9、R1/R2、审查遗留项 R3–R7（v1.11.1–v1.12.0）及 R8 全量收口（v1.12.0 共享 hook + v1.13.4 R8a/R8b，见 §六）。未完成任务见 `./tasks.md`（已清零）。
+> **最后更新：2026-11-26**（当前版本 **v1.17.3**）：归档范围覆盖（v1.15.0 起见 §七）
+ T1–T6、C1–C9、R1/R2、审查遗留项 R3–R7（v1.11.1–v1.12.0）及 R8 全量收口（v1.12.0 共享 hook + v1.13.4 R8a/R8b，见 §六）。未完成任务见 `./tasks.md`（当前任务清单）。
 
 ---
 
@@ -164,3 +164,45 @@
 ## 附注：v1.8.1 对抗式审查整改（2026-10-14）
 
 > 非任务清单条目，为 v1.8.1 发布后的审查整改：色相排列判读修正（D-15 不再输出不可达的 protan）、路径追踪重合度算法更名 `pathF1`（实为 F1 非 IoU）并按弧长等距重采样、结果结构 `version` 对齐 1.8.1、隐私政策如实披露当时的第一方上报与 GA4（v1.9.0 后第一方上报已移除） 及未成年人条款、结果文案去除虚假医学确定感。详见 `CHANGELOG.md` §1.8.1。
+
+---
+
+## 八、2026-11-27 本轮任务完成归档（v1.17.3）
+
+> 来源：`./tasks.md`。以下条目已达验收标准，按「保留完整信息」要求连同问题背景、实现与验收证据一并迁移归档。
+
+### O-02 语言恢复时 `html lang` 同步（P0，已完成）
+- **问题背景**：`app/layout.tsx` 初始硬编码 `lang="zh-CN"`；`LangProvider.tsx` 挂载后从 `cc.lang.v1` 恢复语言时未改写 `<html lang>`，仅主动 `setLang()` 才更新，繁中 / 英文用户首屏语义标记错误（WCAG 3.1.1）。
+- **实现**：抽出 `lib/i18n/html-lang.ts` 的 `applyHtmlLang(lang, target?)`（调用 `htmlLang()` 写入 `document.documentElement.lang`）；`LangProvider` 挂载恢复与 `setLang()` 两条路径统一调用；新增 `lib/i18n/html-lang.test.ts` 断言 `zh→zh-CN`、`zh-TW→zh-TW`、`en→en` 与无 document 兜底。
+- **验收**：`tsc` / ESLint / Vitest 全绿（111 例，含本项 4 例）；预期效果为三语 `html lang` 正确率 100%。
+
+### V-01 OpenAPI 规范机器校验（P2，已完成）
+- **背景**：`docs/openapi.yaml` 为手写 OpenAPI 3.1 规范，原无机器校验。
+- **实现**：新增零依赖脚本 `scripts/check-openapi.mjs`，校验 OpenAPI 版本、paths 与 `app/**/route.ts` 双向对齐、每操作的 `operationId` / `responses` / `x-implementation.file` 存在性；`package.json` 增加 `check:openapi`，CI 增加同名步骤。
+- **验收**：实跑通过（2 个路径与代码一致，0 错误）。
+
+### V-02 文档链接与版本展示位一致性（P1，已完成）
+- **背景**：新增 5 份分册并统一任务清单路径后，需确认交叉引用与版本展示位一致。
+- **实现**：新增 `scripts/check-docs.mjs`，扫描 `README.md` + `docs/**/*.md` 的相对链接、当前版本展示位（跳过 CHANGELOG 与归档文档的历史版本），并校验 `.env.example` 覆盖代码读取的 `NEXT_PUBLIC_*`；结果写入 `reports/docs-check.json`；`package.json` 增加 `check:docs`，CI 增加同名步骤。
+- **验收**：实跑通过（16 文件 / 90 链接 / 10 版本展示位 / 环境变量齐全，0 错误）。
+
+### V-07 CI 安装命令决策（P2，已完成）
+- **背景**：`tasks-done.md` §五 R6 留存「CI 是否切回 `npm ci` 待决策」。
+- **决策**：切回 `npm ci`。依据：`package-lock.json` 已提交且当前与 `package.json` 一致；esbuild 安装脚本已由 `package.json.allowScripts` 批准，跨环境可复现性优于 `npm install`。
+- **实现**：`.github/workflows/ci.yml` 的 `Install dependencies` 改为 `npm ci`；`Dockerfile` deps 阶段同步使用 `npm ci`。
+
+### O-06 官方 Dockerfile 与 Compose 模板（P2，已完成）
+- **背景**：仓库无 Dockerfile，README / DEPLOYMENT 要求用户自建。
+- **实现**：新增多阶段 `Dockerfile`（`node:22-alpine`、`npm ci`、Next standalone 运行、非 root 用户）与 `docker-compose.yml`（端口映射、健康检查）；`docs/DEPLOYMENT.md` 由「需自建」改为「仓库已提供」。
+- **验收**：文件与文档一致；Docker 构建冒烟受本机环境限制，留待 CI / 运维验证。
+
+### O-07 结果容量提示与归档（P2，已完成）
+- **背景**：结果上限 30 条静默覆盖最早记录、写入失败静默降级，用户无感知。
+- **实现**：`lib/storage.ts` 导出 `RESULT_LIMIT` 与 `consumeWriteFailure()`，`safeSet` 失败时记录键；历史页 `#history-capacity` 显示「N/30」，达上限追加导出 JSON 建议；写入失败经现有 `Callout` 非阻断提示；zh / zh-TW / en 三语字典补 `history.capacity` / `history.capacityFull` / `history.writeFailed`。
+- **验收**：`tsc` / ESLint / Vitest 全绿（storage 13 例）；界面验收待人工确认。
+
+### O-08 `.env.example` 补齐站点验证变量（P2，已完成）
+- **背景**：`app/layout.tsx` 读取两个站点验证变量但未进 `.env.example`。
+- **实现**：`.env.example` 增加 `NEXT_PUBLIC_GOOGLE_SITE_VERIFICATION` 与 `NEXT_PUBLIC_BING_SITE_VERIFICATION`；`scripts/check-docs.mjs` 增加代码读取变量与示例文件的静态比对，CI 通过 `check:docs` 覆盖。
+- **验收**：实跑通过（环境变量漏配 0）。
+

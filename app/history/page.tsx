@@ -4,7 +4,7 @@
 
 import React, { useEffect, useRef, useState } from 'react';
 import Link from 'next/link';
-import { listResults, deleteResult, clearResults } from '@/lib/storage';
+import { listResults, deleteResult, clearResults, RESULT_LIMIT, consumeWriteFailure } from '@/lib/storage';
 import { getActiveProfileId, getDefaultProfile } from '@/lib/profile';
 import { buildExport, downloadExport, parseImport, mergeImport, downloadSummaryCsv } from '@/lib/export-import';
 import type { TestResult } from '@/lib/types';
@@ -22,10 +22,13 @@ export default function HistoryPage() {
   const [loaded, setLoaded] = useState(false);
   const [confirming, setConfirming] = useState(false);
   const [notice, setNotice] = useState<string | null>(null);
+  const [total, setTotal] = useState(0);
   const fileRef = useRef<HTMLInputElement>(null);
 
   function reload() {
     const all = listResults();
+    setTotal(all.length);
+    if (consumeWriteFailure()) setNotice(t('history.writeFailed'));
     setItems(
       activeId === '__all__'
         ? all
@@ -78,6 +81,10 @@ export default function HistoryPage() {
           <div className="stack history-title-group">
             <h1>{t('nav.history')}</h1>
             <span className="muted history-sub">{t('history.localOnly')}</span>
+            <span id="history-capacity" className="muted history-sub" aria-live="polite">
+              {t('history.capacity', { n: total, max: RESULT_LIMIT })}
+              {total >= RESULT_LIMIT ? ` · ${t('history.capacityFull', { max: RESULT_LIMIT })}` : ''}
+            </span>
           </div>
           <div className="row history-actions">
             <button type="button" className="btn btn-ghost btn-sm" onClick={handleExport}>

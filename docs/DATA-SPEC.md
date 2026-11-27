@@ -1,11 +1,11 @@
 # 色辨 ChromaCheck 数据规范文档
 
 > **规范遵循**：本文档为 [SPEC.md](./SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。类型别名（ColorDeficiencyType / OverallResult / SeverityLevel / TestMode）以 SPEC §5.5 为权威定义。
-> **实现状态**：v1.0–v1.17.2 已实现（按 [SPEC.md](./SPEC.md) §0.3 分类清单）；纯前端、无服务端 API 路由。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [tasks.md](./tasks.md)。
+> **实现状态**：v1.0–v1.17.3 已实现（按 [SPEC.md](./SPEC.md) §0.3 分类清单）；纯前端、无服务端 API 路由。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [tasks.md](./tasks.md)。
 
 | 项目 | 内容 |
 |------|------|
-| 文档版本 | v1.17.2 |
+| 文档版本 | v1.17.3 |
 | 创建日期 | 2026-09-03 |
 
 ---
@@ -278,9 +278,10 @@ cc.progress.v1       # 进行中的检测进度（TestProgress，lib/storage.ts�
 cc.lang.v1           # 界面语言偏好（Lang：zh / zh-TW / en，lib/i18n/lang.ts）
 cc.profiles.v1       # 本地多成员档案（Profile[]，lib/profile.ts）
 cc.activeProfile.v1  # 当前档案 ID（lib/profile.ts）
+cc.batch.v1          # 批量检测名单（BatchSubject[]，app/test/batch/page.tsx）
 ```
 
-> 实际以 `lib/storage.ts`、`lib/i18n/lang.ts`、`lib/profile.ts` 与 `./SPEC.md §5.4` 为准：共 **6 个扁平键**，无聚合 `LocalStorageData`；`soundEnabled` / `autoNext` / `analyticsEnabled` / `'system'` 主题均为早期规划字段，**至今未实现**。下方 §6.2–§6.4 的结构为早期规划草案，现行结构见各节标注。
+> 实际以 `lib/storage.ts`、`lib/i18n/lang.ts`、`lib/profile.ts`、`app/test/batch/page.tsx` 与 `./SPEC.md §5.4` 为准：共 **7 个扁平键**，无聚合 `LocalStorageData`。核心结果 / 设置 / 进度通过 `lib/storage.ts` 的 `safeSet` 降级写入；批量名单由批量页自行读写（`try/catch`）。`soundEnabled` / `autoNext` / `analyticsEnabled` / `'system'` 主题均为早期规划字段，**至今未实现**。下方 §6.2–§6.4 的结构为早期规划草案，现行结构见各节标注。
 
 ### 6.2 用户设置（Settings）
 

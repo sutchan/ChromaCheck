@@ -1,0 +1,21 @@
+// playwright.config.ts — 主链路 E2E 配置（任务 O-03）
+// chromacheck v1.17.3
+import { defineConfig, devices } from '@playwright/test';
+
+export default defineConfig({
+  testDir: './e2e',
+  fullyParallel: false,
+  retries: 2,
+  reporter: [['list']],
+  use: {
+    baseURL: 'http://127.0.0.1:3000',
+    trace: 'retain-on-failure',
+  },
+  projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
+  webServer: {
+    command: 'npm run dev -- -p 3000 -H 127.0.0.1',
+    url: 'http://127.0.0.1:3000',
+    reuseExistingServer: true,
+    timeout: 120000,
+  },
+});

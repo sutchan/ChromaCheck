@@ -1,6 +1,6 @@
 # 色辨 ChromaCheck 故障排除指南
 
-> **文档版本**：v1.17.2 ｜ **适用对象**：终端用户与部署 / 维护人员
+> **文档版本**：v1.17.3 ｜ **适用对象**：终端用户与部署 / 维护人员
 > **配套**：常见问题见 [FAQ.md](./FAQ.md)，安装部署见 [DEPLOYMENT.md](./DEPLOYMENT.md)，CI 与测试见 [TESTING.md](./TESTING.md)。
 
 ## 目录
@@ -43,7 +43,7 @@
 
 ### 2.5 历史记录丢失
 
-- **原因**：清除浏览器站点数据、换浏览器 / 设备、或 `localStorage` 写入失败（代码静默降级）；结果上限 30 条，超出后最早记录被覆盖。
+- **原因**：清除浏览器站点数据、换浏览器 / 设备，或 `localStorage` 写入失败（结果写入失败会在历史页提示，草稿写入静默降级）；结果上限 30 条，超出后最早记录被覆盖。
 - **处理**：从导出的 JSON 导入恢复；今后定期导出备份。若正在使用隐私模式，关闭后数据不会保留。
 
 ### 2.6 导出 PNG / PDF 失败
@@ -80,7 +80,7 @@
 ### 3.3 Vercel 部署后页面 404 或资源丢失
 
 - 确认项目根目录为仓库根（Next.js `public/` 必须在根，不能自定义路径）。
-- 检查 `app/` 下对应路由文件是否存在；动态路由 `[mode]` 仅对 `quick` / `standard` 预生成，非法 mode 会 404。
+- 检查 `app/` 下对应路由文件是否存在；`ishihara/[mode]` 预生成 `quick` / `standard`，`path-tracking/[mode]` 与 `hue-arrangement/[mode]` 仅预生成 `standard`（`quick` 为动态变体），非法 mode 会 404。
 - 站点规范域名（`SITE_URL`）与试用入口并存，部署到新域名后需同步更新 `lib/site.ts`。
 
 ### 3.4 Docker 自托管失败
@@ -105,9 +105,9 @@
 
 npm 11 的安装脚本批准策略提示。`package.json` 已通过 `npm install-scripts approve esbuild` 写入 `allowScripts: { "esbuild@0.21.5": true }`，`npm install-scripts ls` 应返回 `No packages with unreviewed install scripts.`。若在新环境仍出现，确认 `package.json` 的该字段已提交。
 
-### 4.3 `next@14.2.15` 安全告警
+### 4.3 `next@14.2.15` 安全告警（依赖已升级，待验收）
 
-npm 提示该版本存在已披露漏洞（2025-12-11 公告）。建议升级到 14.x 最新补丁 `14.2.35`（同 minor，风险较小）。该升级属于优化建议 O-01，见 [ROADMAP.md](./ROADMAP.md) 与 [tasks.md](./tasks.md)。
+npm 提示旧版本存在已披露漏洞（2025-12-11 公告）。`package.json` 与 `package-lock.json` 均已升至 `14.2.35`；仍需完成 lint / type-check / test / build 与 Preview 冒烟后才视为闭环。该升级属于优化建议 O-01，见 [ROADMAP.md](./ROADMAP.md) 与 [tasks.md](./tasks.md)。
 
 ### 4.4 弃用依赖告警（rimraf / inflight / glob / eslint 8）
 

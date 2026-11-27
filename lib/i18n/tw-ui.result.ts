@@ -97,6 +97,9 @@ export const TW_UI_RESULT = {
 
   // 歷史頁
   'history.localOnly': '僅保存於本裝置瀏覽器，最多保留最近 30 次。',
+  'history.capacity': '已儲存 {n}/{max} 則',
+  'history.capacityFull': '已達 {max} 則上限，新紀錄會覆蓋最早一筆；建議先匯出 JSON 備份。',
+  'history.writeFailed': '本機儲存寫入失敗（空間不足或隱私模式），本次紀錄未儲存。',
   'history.clear': '清空',
   'history.clearConfirm': '確定清空全部歷史記錄？',
   'history.clearOk': '確認清空',
