@@ -181,7 +181,7 @@ export default defineConfig({
 
 实际用例位于 `e2e/main-flow.spec.ts`，覆盖主链路与语言切换回归；以该文件为权威，不再另存一份示例副本。
 
-> **已知阻塞**：主链路用例第 10 行期待首页「开始检测」进入 `/guide`，但 `components/home/HomeContent.tsx:45` 当前是 `href="/test"`。该差异已登记 [tasks.md O-03](./tasks.md#o-03-playwright-主链路-e2e-在-ci-稳定三次)；在确认产品预期并同步路由或断言前，不应宣称 E2E 已通过。
+> **现行口径（2026-11-27）**：用户确认首页「开始检测」应先进入 `/guide`；`components/home/HomeContent.tsx` 已按此实现，主链路断言与实际路由一致。CI 连续三次稳定验收状态见 [tasks.md O-03](./tasks.md#o-03-playwright-主链路-e2e-在-ci-稳定三次)。
 
 ### 4.4 运行命令
 

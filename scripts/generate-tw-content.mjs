@@ -105,16 +105,26 @@ replaceExact(
   '  p: string;\n  /** 正文繁体（台湾） */\n  pTW: string;\n  /** 正文英文（v1.9.0 国际化） */',
 );
 
-// 隐私长文整篇转换，避免逐字段散落译文
+// 隐私长文整篇转换，独立成文件以避免 privacy-data.ts 超过 200 行
 const privacy = await import(pathToFileURL(path.join(root, 'lib/privacy-data.ts')).href);
 const zhDoc = privacy.getPrivacyDoc('zh');
 const twDocLiteral = JSON.stringify(convertDeep(zhDoc), null, 2);
+const twFile = [
+  '// lib/privacy-data.tw.ts — 隐私政策台湾繁体内容（由 npm run i18n:tw 生成）',
+  '// chromacheck v1.17.6',
+  "import type { PrivacyDoc } from './privacy-data';",
+  '',
+  `export const TW: PrivacyDoc = ${twDocLiteral};`,
+  '',
+].join('\n');
+fs.writeFileSync(path.join(root, 'lib/privacy-data.tw.ts'), twFile);
+
 const privacyAbs = path.join(root, 'lib/privacy-data.ts');
 let privacyText = fs.readFileSync(privacyAbs, 'utf8');
-if (!privacyText.includes('const TW: PrivacyDoc =')) {
+if (!privacyText.includes("import { TW } from './privacy-data.tw';")) {
   privacyText = privacyText.replace(
-    'const EN: PrivacyDoc = {',
-    `const TW: PrivacyDoc = ${twDocLiteral};\n\nconst EN: PrivacyDoc = {`,
+    "import type { Lang } from './i18n';",
+    "import type { Lang } from './i18n';\nimport { TW } from './privacy-data.tw';",
   );
 }
 privacyText = privacyText.replace(

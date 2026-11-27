@@ -4,6 +4,7 @@
 // 长文本采用独立数据模块（与 lib/learn-data.ts 同构），避免撑大 i18n 字典。
 // 段落内以 **强调** 标记表达需要加粗的片段，由 parseEmphasis 拆为片段数组。
 import type { Lang } from './i18n';
+import { TW } from './privacy-data.tw';
 
 export interface PrivacyPrinciple {
   icon: string;
@@ -151,7 +152,7 @@ const EN: PrivacyDoc = {
 };
 
 export function getPrivacyDoc(lang: Lang): PrivacyDoc {
-  return lang === 'en' ? EN : ZH;
+  return lang === 'en' ? EN : lang === 'zh-TW' ? TW : ZH;
 }
 
 /** 将 **强调** 标记拆为片段数组，交由渲染层输出 <strong>。 */

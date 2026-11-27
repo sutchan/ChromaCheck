@@ -8,7 +8,7 @@
 |------|------|
 | 文档版本 | v1.17.5 |
 | 创建日期 | 2026-09-03 |
-| Base URL | 无服务端 API；站点规范域名取自 `lib/site.ts` 的 `SITE_URL`（当前 `https://chroma.appti.cn`），线上试用入口为 `https://chroma.appti.cn`；仓库不含 `/api` 路由 |
+| Base URL | 无服务端 API；唯一规范域名取自 `lib/site.ts` 的 `SITE_URL`（`https://chroma.appti.cn`），旧域名由 Next 301 收敛；仓库不含 `/api` 路由 |
 
 > 本分册 §2 起描述的服务端 API 均为**历史规划 / 未落地**设计；当前仓库除 GA4 外无任何服务端业务接口，现行公开接口见 §1，架构边界见 [ARCHITECTURE.md §5](./ARCHITECTURE.md#5-api-设计)。
 

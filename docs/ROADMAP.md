@@ -278,7 +278,7 @@ v1.0 (MVP) ──→ v1.1 (完善) ──→ v1.5 (进阶) ──→ v2.0 (平�
 
 ### O-09 域名收敛
 
-- **背景**：规范域名 `chroma.appti.cn` 与试用入口 `chroma.appti.cn` 并存，metadata / OG URL 与用户访问域名不一致，影响品牌与 SEO 信号。
+- **背景**：已确认 `chroma.appti.cn` 为唯一规范域名；旧域名 `chromacheck.app` / `chroma.ewuse.com` 由 Next 301 收敛，metadata / OG URL 与 sitemap 同步使用 `SITE_URL`。
 - **方案**：确认最终域名 → 更新 `lib/site.ts` 的 `SITE_URL` → 配置 301 跳转 → 更新 sitemap / robots / README 与 FAQ 链接。
 - **预期效果**：搜索结果中规范域名占比 100%，跨域名重复内容归零。
 - **优先级**：**P3**（需业务决策），时间待域名确认。

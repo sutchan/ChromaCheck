@@ -81,7 +81,7 @@
 
 - 确认项目根目录为仓库根（Next.js `public/` 必须在根，不能自定义路径）。
 - 检查 `app/` 下对应路由文件是否存在；`ishihara/[mode]` 预生成 `quick` / `standard`，`path-tracking/[mode]` 与 `hue-arrangement/[mode]` 仅预生成 `standard`（`quick` 为动态变体），非法 mode 会 404。
-- 站点规范域名（`SITE_URL`）与试用入口并存，部署到新域名后需同步更新 `lib/site.ts`。
+- 站点规范域名为 `https://chroma.appti.cn`（`lib/site.ts` 的 `SITE_URL`）；部署到新域名后需同步更新 `SITE_URL`、`next.config.mjs` 的旧域名 301 列表与 sitemap / metadata。
 
 ### 3.4 Docker 自托管失败
 
