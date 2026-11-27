@@ -1,6 +1,6 @@
 <!-- ./SPEC.md v1.17.4 — ChromaCheck 项目规范总纲（单一事实来源） -->
 <!-- 权威顺序：全局用户规则 > 本 SPEC > 各分册 > prototype/ 设计参考；冲突时按此顺序取舍 -->
-<!-- 实现状态：Next.js 14 应用已落地——石原氏检测（38 板）、路径追踪、色相排列 D15、进阶联合、信号灯专项、趣味包、结果/历史/科普/隐私、首页 FAQ 双栏（12 条）、GA4、SEO/GEO、Vitest（15 文件 107 例）；原型仅作设计验证参考。当前版本 v1.17.4。 -->
+<!-- 实现状态：Next.js 14 应用已落地——石原氏检测（38 板）、路径追踪、色相排列 D15、进阶联合、信号灯专项、趣味包、结果/历史/科普/隐私、首页 FAQ 双栏（12 条）、GA4、SEO/GEO、Vitest（16 文件 111 例）；原型仅作设计验证参考。当前版本 v1.17.4。 -->
 
 # 色辨 ChromaCheck 项目规范（SPEC）
 
@@ -46,7 +46,7 @@
 - **体验与内容**：结果页五视角、历史多档案 + 导出导入、科普与隐私页、首页 FAQ 双栏 12 条（v1.13.2）、趣味体验包（v1.4）、断点续测、驾驶场景专项（v1.7.0）。
 - **工程与合规**：三语 i18n（v1.15.0，简中 > 繁中 > 英文）、判读类型未分型收敛（v1.15.1）、GitHub Releases 自动发布（v1.16.0）、页脚版本 + 构建号（v1.14.0）、安全响应头（v1.7.6）。
 - **SEO / GEO（v1.17.0）**：`lib/seo-routes.ts` 单一路由源、`llms.txt` / `llms-full.txt`、站点级结构化数据、静态 PNG 社交图、`safeJson()` 转义修复、回归测试。
-- **质量**：Vitest 15 文件 107 例（node 环境）；V8 覆盖率阈值与 Playwright 配置 / 主链路用例已提供，但 npm 脚本 / 依赖 / CI 接入及 E2E 验收尚未闭环；组件测试未落地。
+- **质量**：Vitest 16 文件 111 例（node 环境）；V8 覆盖率 88.96% lines / 84.3% branches / 87.64% functions 达标；Playwright 配置、依赖、脚本与 CI 已接入，仅余连续三次稳定验收（O-03）；组件测试未落地。
 - **边界**：纯前端、无服务端 API 路由（仅 `app/llms.txt/route.ts`、`app/llms-full.txt/route.ts` 两个 Route Handler）、无账号、无 PII 上传、仅 GA4 匿名统计。
 
 ## 1. 产品定位与功能范围
@@ -68,7 +68,7 @@
 - 框架：**Next.js 14（App Router）+ TypeScript（strict）**；样式：**Tailwind CSS + CSS 变量令牌**（深色 / 色觉安全）。
 - 图表：内联 SVG 自绘，不引入图表库；导出：Canvas（PNG）+ `window.print()`（PDF），不引入重型依赖。
 - 存储：React 状态 + `localStorage`（`safeSet` 降级与运行时校验），无服务端状态。
-- 测试：Vitest（node 环境）；CI Node 22 LTS，checkout / setup-node v5，`npm install`（不配 `cache`）。
+- 测试：Vitest（node 环境）；CI Node 22 LTS，checkout / setup-node v5，`npm ci`（不配 `cache`），门禁含 lint / type-check / check:openapi / check:docs / test / coverage / build / e2e。
 
 ### 2.2 目录结构（核心）
 ```
@@ -85,7 +85,7 @@ lib/
   i18n/           # lang.ts / dict.ts / t.ts + zh-/tw-/en-* 字典
   seo-routes.ts   # SEO_ROUTES 单一路由源（v1.17.0）
   site.ts / seo-routes.ts / format.ts / analytics.ts / license.ts / privacy-data.ts / learn-data.ts / fun.ts
-  *.test.ts       # Vitest 单测（15 文件 107 例）
+  *.test.ts       # Vitest 单测（16 文件 111 例）
 prototype/        # 4 页 HTML 设计验证（v0.1.x，与产品版本解耦，不随发版刷写）
 ```
 > 原型 `prototype/assets/js/*.js` 的纯逻辑已作为 `lib/` 的参考真值移植；v1.7.5 起原型判读反向对齐应用。详见 `.codebuddy/memory/`（项目内记忆索引）。
@@ -333,9 +333,9 @@ clamp(confidence, 0, 100)
 - 已完成项移入 `docs/tasks-done.md`（仅作归档，不维护状态）。
 
 ### 8.4 测试与质量门禁
-- Vitest（v1.7.6 落地，当前 **15 文件 107 例**）：`lib/*.test.ts` 覆盖判读、存储、格式化、导出导入、分享卡、SEO 等；`npm test` = `vitest run`，`npm run test:coverage` 走 `@vitest/coverage-v8`。
-- 测试环境为 node（`vitest.setup.ts` 注入内存 Storage，无 jsdom/happy-dom）；Canvas 绘制不可单测（仅 `computeRadar` 有覆盖），勿强行加 jsdom。组件测试未落地；Playwright 配置与主链路用例已提供，但依赖 / 脚本 / CI 接入待验。
-- CI（`.github/workflows/ci.yml`）：Node 22 LTS、checkout / setup-node v5、`npm install`（无 `cache`），跑 type-check + lint + build + test（e2e 安全跳过）。
+- Vitest（v1.7.6 落地，当前 **16 文件 111 例**）：`lib/*.test.ts` 覆盖判读、存储、格式化、导出导入、分享卡、SEO 等；`npm test` = `vitest run`，`npm run test:coverage` 走 `@vitest/coverage-v8`。
+- 测试环境为 node（`vitest.setup.ts` 注入内存 Storage，无 jsdom/happy-dom）；Canvas 绘制不可单测（仅 `computeRadar` 有覆盖），勿强行加 jsdom。组件测试未落地；Playwright 配置 / 依赖 / 脚本 / CI 已接入，验收标准为 CI 连续三次稳定通过。
+- CI（`.github/workflows/ci.yml`）：Node 22 LTS、checkout / setup-node v5、`npm ci`（无 `cache`），跑 lint / type-check / check:openapi / check:docs / test / coverage / build / playwright install / e2e。
 - **安全响应头唯一真值为 `next.config.mjs`**（§8.7 之外亦适用）：CSP（开发态额外放行 `'unsafe-eval'`）、X-Frame-Options、X-Content-Type-Options、Referrer-Policy、Permissions-Policy。
 
 ### 8.5 语言与国际化（v1.15.0 起三语）
@@ -363,7 +363,7 @@ clamp(confidence, 0, 100)
 ## 9. 实现状态与待办
 - **已完成**：见 §0.3 分类清单与 `CHANGELOG.md`（v1.0 → v1.17.4 逐版本记录）；历史里程碑细节以 CHANGELOG 为准，本节不重复枚举。
 - **待办**：见 `docs/tasks.md`（唯一来源，当前 O-01 ~ O-11 / V-01 ~ V-07）；历史收口见 `docs/tasks-done.md`。
-- **当前限制（非待办但需知悉）**：判读未分型（§6.4）、组件测试未落地、E2E 配置 / 用例待验收、内容型文案繁体回退简体、无服务端 API / 账号 / 云同步、本地 `next build` 可能受 IDE 安全删除护栏拦截（CI 不受影响）。
+- **当前限制（非待办但需知悉）**：判读未分型（§6.4）、组件测试未落地、E2E 已接入 CI 待连续三次稳定验收、内容型文案繁体回退简体、无服务端 API / 账号 / 云同步、本地 `next build` 可能受 IDE 安全删除护栏拦截（CI 不受影响）。
 
 ---
 *本文档为 ChromaCheck 权威规范总纲 v1.17.4。分册应据本规范修订；冲突时以本规范为准。*

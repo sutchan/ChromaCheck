@@ -222,8 +222,8 @@ v1.0 (MVP) ──→ v1.1 (完善) ──→ v1.5 (进阶) ──→ v2.0 (平�
 
 ### O-01 升级 Next.js 至安全补丁版本
 
-- **背景**：npm 提示 `next@14.2.15` 存在 2025-12-11 披露的安全漏洞；14.x 最新补丁为 `14.2.35`。`package.json` 与 `package-lock.json` 均已升至 `14.2.35`；门禁与 Preview 验收尚未闭环（见 [tasks.md](./tasks.md) O-01）。
-- **方案**：技术选型沿用 Next.js 14 同 minor 补丁升级；步骤为修改 `next@14.2.35` 与 `eslint-config-next@14.2.35` → `npm install` 更新锁文件 → 跑 lint / type-check / test / build → 灰度部署 Preview。
+- **背景**：npm 提示 `next@14.2.15` 存在 2025-12-11 披露的安全漏洞；依赖已升至 `14.2.35`，本机 lint / type-check / test / coverage / OpenAPI / 文档校验全绿，但 `npm audit --omit=dev --audit-level=critical` 仍报告 1 个 critical（审计库判定全部 Next 14.x 受影响）。当前选择保持 Next 14 并接受审计告警，跨 major 至 Next 16 需业务决策（见 [tasks.md](./tasks.md) O-01）。
+- **方案**：维持 Next.js 14 同 minor 补丁版本 `14.2.35`；若决定跨 major，则迁移至 Next 16 并做完整回归。无论选择哪条路径，均需完成 lint / type-check / test / coverage / build / E2E 与 Preview 冒烟。
 - **预期效果**：消除已知 CVE，`npm audit` 关键项归零；构建与运行行为保持不变。
 - **优先级**：**P0**（安全），建议 2026-12-05 前完成。
 
@@ -236,8 +236,8 @@ v1.0 (MVP) ──→ v1.1 (完善) ──→ v1.5 (进阶) ──→ v2.0 (平�
 
 ### O-03 补齐覆盖率门禁与关键路径 E2E
 
-- **背景**：15 文件 107 例已覆盖判读逻辑，但 UI 关键路径无自动回归；CI 只跑 `npm test`，E2E 为跳过占位。
-- **方案**：① 配置 `coverage.provider = 'v8'`、`thresholds` 80/75/70/80 并在 CI 增加 `npm run test:coverage`（配置已加入 `vitest.config.ts`，CI 接入未完成）；② Playwright 配置与主链路用例已提供，依赖 / 脚本 / CI 接入与稳定三次运行仍待验。
+- **背景**：16 文件 111 例覆盖判读与工具逻辑，UI 主链路此前无自动回归。
+- **方案（已落地）**：① `vitest.config.ts` 配置 V8 覆盖率与阈值，CI 已执行 `npm run test:coverage`（实测 88.96% lines / 84.3% branches / 87.64% functions）；② Playwright 配置、依赖、脚本与 CI 已接入，`e2e/main-flow.spec.ts` 覆盖首页 → 指引 → 石原氏快速 → 结果。剩余验收为 CI 连续三次稳定通过（O-03）。
 - **预期效果**：覆盖率可量化并纳入门禁；核心链路回归从人工 15 分钟降至自动 ~2 分钟。
 - **优先级**：**P1**（质量），建议 2026-12-19 前完成。
 

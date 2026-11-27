@@ -538,12 +538,16 @@ jobs:
       - uses: actions/setup-node@v5
         with:
           node-version: 22
-      - run: npm install
+      - run: npm ci                         # V-07：锁文件可复现，不配置 setup-node cache
       - run: npm run lint
-      - run: npx tsc --noEmit
+      - run: npm run type-check
+      - run: npm run check:openapi
+      - run: npm run check:docs
       - run: npm test
+      - run: npm run test:coverage
       - run: npm run build
-      - run: echo "E2E 跳过：当前版本未配置 e2e"
+      - run: npx playwright install --with-deps chromium
+      - run: npm run e2e
 
   release:
     # v1.16.0 起：全绿 + push main 自动发布 GitHub Releases（规范 SPEC §8.6）
@@ -584,3 +588,21 @@ jobs:
 ## 10. 扩展规划
 
 > 任务清单见 [tasks.md](./tasks.md)。
+
+## 11. 已知问题与待办（更新于 2026-11-27 / v1.17.4）
+
+- **已知问题**：`npm audit --omit=dev --audit-level=critical` 报告 1 个 critical（审计库将全部 Next 14.x 判为受影响；是否跨 major 升至 Next 16 属 O-01 决策）；组件测试未引入；内容型文案繁体仍回退简体；规范域名 `chromacheck.app` 与试用入口 `chroma.ewuse.com` 并存。
+- **待办事项**：唯一来源为 [tasks.md](./tasks.md)。当前活跃项包括 O-01、O-03、O-04、O-05、V-03、V-04、V-06、V-05 与 O-09~O-11；本文件仅记录架构证据，不维护第二份状态。
+- **验证基线**：16 文件 / 111 例 Vitest 实跑全绿；覆盖率 88.96% lines / 84.3% branches / 87.64% functions；lint、type-check、check:docs、check:openapi 全绿；E2E 已接入 CI，仅余连续三次稳定验收。
+
+## 12. 关键决策记录
+
+| 版本 / 日期 | 决策 | 影响 |
+|-------------|------|------|
+| v1.0 / 2026-09-03 | 纯前端 + 本地优先，检测数据不上传 | 无服务端业务 API；结果仅存 localStorage |
+| v1.5.1 | 仅接入 GA4 匿名 `page_view`，移除服务端事件上报 | 隐私承诺与现有统计口径一致 |
+| v1.13.3 起 | 字体真自托管（`next/font/local` + 8 个 woff2） | 构建期不联网，禁止回退 `next/font/google` |
+| v1.14.0 起 | 版本与 build 只在页脚展示 `V{ver}· build {yymmddhhmm}` | 页眉禁止版本号 |
+| v1.15.0 | 三语优先级简中 > 繁中 > 英文 | 缺键回退简体，繁体用台湾用语 |
+| v1.17.3 / 2026-11-27 | 7 个扁平存储键；任务状态单一来源 `docs/tasks.md` | 避免聚合结构与多份任务清单漂移 |
+| v1.17.3~v1.17.4 | CI / Dockerfile 统一 `npm ci`，接入覆盖率、OpenAPI、文档与 E2E 门禁 | 锁文件可复现；E2E 稳定性仍为 O-03 |

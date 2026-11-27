@@ -86,7 +86,7 @@
    | Framework Preset | Next.js |
    | Build Command | `npm run build` |
    | Output Directory | `.next` |
-   | Install Command | `npm install` |
+   | Install Command | `npm ci` |
 
 4. **配置环境变量**：
 

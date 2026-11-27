@@ -68,7 +68,7 @@
 ### 3.1 本地启动失败：`npm install` 报错
 
 - 要求 Node.js ≥ 18.17（CI 固定 22 LTS，推荐本地也用 22）；执行 `node -v` 核对。
-- 仓库提交 `package-lock.json`，使用 `npm install` 而非随意切换包管理器。
+- 仓库提交 `package-lock.json`，使用 `npm ci` 而非随意切换包管理器；CI 与 Dockerfile 同样固定 `npm ci`。
 - 若公司网络受限，配置 registry 代理后重试。
 
 ### 3.2 `npm run build` 失败

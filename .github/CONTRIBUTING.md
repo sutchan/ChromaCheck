@@ -25,7 +25,7 @@ cd chromacheck
 ### 安装依赖
 
 ```bash
-npm install
+npm ci
 ```
 
 ### 启动开发服务器
