@@ -1,25 +1,25 @@
 # 色辨 ChromaCheck 测试策略文档
 
 > **规范遵循**：本文档为 [SPEC.md](./SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。判读引擎测试以 SPEC §6 与 `lib/scoring.ts` 为权威。
-> **实现状态**：v1.17.4（相关任务见 [tasks.md](./tasks.md) O-03）：Vitest 16 文件 111 例（node 环境）；V8 覆盖率 88.96% lines / 84.3% branches / 87.64% functions 达标；Playwright 配置、依赖、脚本与 CI 已接入，仅余连续三次稳定验收；组件测试未落地。判读引擎测试以 SPEC §6 与 `lib/scoring.ts` 为权威。
+> **实现状态**：v1.17.5（相关任务见 [tasks.md](./tasks.md) O-03）：Vitest 16 文件 111 例（node 环境）；V8 覆盖率 88.96% lines / 84.3% branches / 87.64% functions 达标；Playwright 配置、依赖、脚本与 CI 已接入，但首页 CTA 路由断言与当前实现不一致，需先对齐再验收连续三次稳定运行；组件测试未落地。判读引擎测试以 SPEC §6 与 `lib/scoring.ts` 为权威。
 
 | 项目 | 内容 |
 |------|------|
-| 文档版本 | v1.17.4 |
+| 文档版本 | v1.17.5 |
 | 创建日期 | 2026-09-03 |
 
 ---
 
 ## 1. 测试总览
 
-本项目采用分层测试策略，当前覆盖单元测试、覆盖率门禁、Playwright 主链路 E2E 与手动检查清单；组件测试未落地，E2E 已接入 CI，待连续三次稳定验收。
+本项目采用分层测试策略，当前覆盖单元测试、覆盖率门禁、Playwright 主链路 E2E 与手动检查清单；组件测试未落地，E2E 已接入 CI，但需先对齐首页 CTA 路由断言，再做连续三次稳定验收。
 
 | 层级 | 工具 | 重点 |
 |------|------|------|
 | 单元测试 | Vitest（node 环境） | 判读算法、工具函数、存储封装 —— **已落地，16 文件 111 例** |
 | 组件测试 | Vitest + React Testing Library | UI 组件渲染与交互 —— **规划中，未落地**（无 jsdom/happy-dom、无 RTL 依赖） |
-| 集成测试 | Playwright | 核心用户流程 —— **配置 / 依赖 / 脚本 / CI 已接入** |
-| 端到端测试 | Playwright | 完整检测链路 —— **已接入 CI，待连续三次稳定验收**（O-03） |
+| 集成测试 | Playwright | 主链路回归与语言切换 `html lang` —— **配置 / 依赖 / 脚本 / CI 已接入** |
+| 端到端测试 | Playwright | 完整检测链路 —— **已接入 CI，首页 CTA 路由断言待对齐，随后验收连续三次稳定**（O-03） |
 | 手动测试 | 人工 | 兼容性、无障碍、色彩准确性 |
 
 ---
@@ -75,7 +75,7 @@ lib/
 ├── signal-scoring.ts / advanced-scoring.ts / child-scoring.ts
 ├── storage.ts / profile.ts / export-import.ts / format.ts
 ├── ishihara.ts / path-field.ts / sharecard.ts / scoring-text.ts
-└── *.test.ts            # 15 个平铺测试文件，共 107 例
+└── *.test.ts            # 16 个平铺测试文件，共 111 例
 ```
 
 ### 2.3 覆盖率目标
@@ -147,94 +147,50 @@ describe('AnswerInput', () => {
 
 ### 4.1 测试场景
 
-**核心流程**：
-1. 首页 → 点击"开始检测" → 检测前指引
-2. 指引页 → 勾选确认 → 开始测试
-3. 石原氏测试 → 答题 10 题 → 完成
-4. 结果页 → 显示评估结果
-5. 历史记录 → 新增一条记录
+**已实现场景**（以 `e2e/main-flow.spec.ts` 为准）：
+1. 首页 → 检测指引 → 模式选择 → 石原氏快速 → 结果页；断言页脚含 10 位 `build` 编号。
+2. 首页语言切换后，`html lang` 与所选语言一致（简体中文 `zh-CN`、繁体中文 `zh-TW`）。
 
-**异常流程**：
-1. 答题中途刷新页面 → 恢复进度
-2. 答题中途退出 → 重新进入提示继续
-3. 未勾选确认 → 开始按钮禁用
-4. 结果页访问无效 ID → 显示"未找到"
+**尚未自动化**：刷新恢复进度、中途退出提示、未勾选确认禁用按钮、无效结果 ID 等异常流程仍依赖手动检查。
 
-### 4.2 配置文件（`e2e/playwright.config.ts`）
+### 4.2 配置文件（仓库根 `playwright.config.ts`）
 
 ```typescript
-import { defineConfig } from '@playwright/test';
+import { defineConfig, devices } from '@playwright/test';
 
 export default defineConfig({
   testDir: './e2e',
-  timeout: 30000,
-  retries: 1,
+  fullyParallel: false,
+  retries: 2,
+  reporter: [['list']],
   use: {
-    baseURL: 'http://localhost:3000',
-    trace: 'on-first-retry',
-    screenshot: 'only-on-failure',
-    viewport: { width: 1280, height: 720 },
+    baseURL: 'http://127.0.0.1:3000',
+    trace: 'retain-on-failure',
   },
-  projects: [
-    {
-      name: 'chromium',
-      use: { browserName: 'chromium' },
-    },
-    {
-      name: 'mobile-chromium',
-      use: {
-        browserName: 'chromium',
-        viewport: { width: 375, height: 667 },
-        isMobile: true,
-      },
-    },
-  ],
+  projects: [{ name: 'chromium', use: { ...devices['Desktop Chrome'] } }],
+  webServer: {
+    command: 'npm run dev -- -p 3000 -H 127.0.0.1',
+    url: 'http://127.0.0.1:3000',
+    reuseExistingServer: true,
+    timeout: 120000,
+  },
 });
 ```
 
-### 4.3 测试用例示例
+### 4.3 现行用例
 
-```typescript
-import { test, expect } from '@playwright/test';
+实际用例位于 `e2e/main-flow.spec.ts`，覆盖主链路与语言切换回归；以该文件为权威，不再另存一份示例副本。
 
-test('完整检测流程', async ({ page }) => {
-  // 首页
-  await page.goto('/');
-  await expect(page.getByRole('heading', { name: /一眼辨色/ })).toBeVisible();
-
-  // 进入指引
-  await page.getByRole('link', { name: /开始检测/ }).click();
-  await expect(page).toHaveURL(/\/guide/);
-
-  // 勾选并开始
-  await page.getByRole('checkbox').check();
-  await page.getByRole('button', { name: /开始检测/ }).click();
-  await expect(page).toHaveURL(/\/test/);
-
-  // 选择快速检测
-  await page.getByRole('button', { name: /快速检测/ }).click();
-  await expect(page).toHaveURL(/\/test\/ishihara\/quick/);
-
-  // 答题
-  for (let i = 0; i < 10; i++) {
-    await page.getByLabel('输入您看到的数字').fill('12');
-    await page.getByRole('button', { name: /下一题|完成检测/ }).click();
-  }
-
-  // 结果页
-  await expect(page).toHaveURL(/\/result\/[^/]+/);
-  await expect(page.getByText(/色觉正常|疑似色/)).toBeVisible();
-});
-```
+> **已知阻塞**：主链路用例第 10 行期待首页「开始检测」进入 `/guide`，但 `components/home/HomeContent.tsx:45` 当前是 `href="/test"`。该差异已登记 [tasks.md O-03](./tasks.md#o-03-playwright-主链路-e2e-在-ci-稳定三次)；在确认产品预期并同步路由或断言前，不应宣称 E2E 已通过。
 
 ### 4.4 运行命令
 
 ```bash
-# 安装 Playwright 浏览器（首次）
-npx playwright install
+# 安装 Playwright 浏览器（首次；CI 使用 --with-deps chromium）
+npx playwright install chromium
 
-# 运行 E2E 测试（配置与用例已提供，依赖 / npm 脚本待接入）
-npx playwright test
+# 运行 E2E 测试（依赖与 npm 脚本已接入）
+npm run e2e
 
 # 指定浏览器
 npx playwright test --project=chromium
@@ -369,7 +325,7 @@ jobs:
 
 - [ ] 单元测试全部通过
 - [ ] 覆盖率达标
-- [ ] E2E 已接入 CI，待连续三次稳定通过（O-03）
+- [ ] E2E 已接入 CI；先对齐首页 CTA 路由断言，再连续三次稳定通过（O-03）
 - [ ] 手动测试清单完成
 - [ ] 无新增安全告警
 

@@ -193,7 +193,7 @@ Closes #xxx
 
 ```bash
 rm -rf node_modules   # Windows PowerShell: Remove-Item -Recurse -Force node_modules
-npm install
+npm ci
 ```
 
 ### 开发服务器启动失败

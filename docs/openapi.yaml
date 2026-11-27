@@ -1,7 +1,7 @@
 openapi: 3.1.0
 info:
   title: ChromaCheck 公开文本接口
-  version: 1.17.4
+  version: 1.17.5
   summary: 纯前端色觉筛查应用的公开文本索引接口
   description: |
     ChromaCheck 是纯前端应用，检测、判读、存储全部在浏览器内完成，**不提供任何业务 API**

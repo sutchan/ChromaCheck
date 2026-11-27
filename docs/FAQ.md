@@ -1,6 +1,6 @@
 # 色辨 ChromaCheck 常见问题解答（FAQ）
 
-> **文档版本**：v1.17.4 ｜ **定位**：面向终端用户的常见疑问；技术故障见 [TROUBLESHOOTING.md](./TROUBLESHOOTING.md)，能力边界见 [FEATURES.md §10](./FEATURES.md#10-能力边界与已知限制)。
+> **文档版本**：v1.17.5 ｜ **定位**：面向终端用户的常见疑问；技术故障见 [TROUBLESHOOTING.md](./TROUBLESHOOTING.md)，能力边界见 [FEATURES.md §10](./FEATURES.md#10-能力边界与已知限制)。
 
 ## 目录
 

@@ -1,6 +1,6 @@
 # 色辨 ChromaCheck 故障排除指南
 
-> **文档版本**：v1.17.4 ｜ **适用对象**：终端用户与部署 / 维护人员
+> **文档版本**：v1.17.5 ｜ **适用对象**：终端用户与部署 / 维护人员
 > **配套**：常见问题见 [FAQ.md](./FAQ.md)，安装部署见 [DEPLOYMENT.md](./DEPLOYMENT.md)，CI 与测试见 [TESTING.md](./TESTING.md)。
 
 ## 目录
@@ -85,8 +85,8 @@
 
 ### 3.4 Docker 自托管失败
 
-- **仓库不提供 `Dockerfile`**，需按 [DEPLOYMENT.md §3.1](./DEPLOYMENT.md) 自行创建；项目已配置 `output: 'standalone'`。
-- 确认 `node:22-alpine` 基础镜像与 `npm install` 步骤完整，构建后容器监听 3000 端口。
+- 仓库已提供 `Dockerfile` 与 `docker-compose.yml`，用法见 [DEPLOYMENT.md §3.1](./DEPLOYMENT.md)；项目已配置 `output: 'standalone'`。
+- 确认 `node:22-alpine` 基础镜像与 `npm ci` 步骤完整，构建后容器监听 3000 端口。
 
 ### 3.5 GA4 统计无数据
 

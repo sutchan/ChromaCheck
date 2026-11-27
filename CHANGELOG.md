@@ -1,7 +1,16 @@
 # 变更日志
 
 本文件记录 ChromaCheck 的版本变更，遵循 [Keep a Changelog](https://keepachangelog.com/) 规范。
-版本号的单一来源为仓库根目录 `VERSION` 文件、`package.json` 与 `package-lock.json` 的 `version` 字段（当前 `1.17.4`）。
+版本号的单一来源为仓库根目录 `VERSION` 文件、`package.json` 与 `package-lock.json` 的 `version` 字段（当前 `1.17.5`）。
+
+## [1.17.5] - 2026-11-27
+
+### 文档与记忆一致性收尾
+
+- 修正测试文档残留的 15 文件 / 107 例口径，统一为实跑 16 文件 / 111 例；同步 Playwright 配置与运行命令到仓库实际文件（`playwright.config.ts`、`npm run e2e`）。
+- 校正 Docker 排障、贡献指南依赖安装与 CI 注释：仓库已提供 `Dockerfile` / `docker-compose.yml`，CI 与 Docker 均固定 `npm ci`，E2E 已接入门禁。
+- 将 E2E 首页 CTA 路由断言与 `HomeContent.tsx` 实际 `href` 不一致登记到唯一任务源 `docs/tasks.md` O-03；在 README、架构、测试文档与项目记忆中链接说明，不维护第二份任务清单。
+- 同步 `VERSION` / `package.json` / `package-lock.json` / OpenAPI 与全部当前文档、记忆版本展示位至 v1.17.5。
 
 ## [1.17.4] - 2026-11-27
 

@@ -1,12 +1,12 @@
 # 色辨 ChromaCheck 技术架构文档
 
 > **规范遵循**：本文档为 [SPEC.md](./SPEC.md) 的子主题分册；若与 SPEC 冲突，以 SPEC 为准。
-> **实现状态**：v1.0–v1.17.4 已实现（按 [SPEC.md](./SPEC.md) §0.3 分类清单）；纯前端、无服务端 API 路由。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [tasks.md](./tasks.md)。
+> **实现状态**：v1.0–v1.17.5 已实现（按 [SPEC.md](./SPEC.md) §0.3 分类清单）；纯前端、无服务端 API 路由。权威总纲见 [SPEC.md](./SPEC.md)，任务清单见 [tasks.md](./tasks.md)。
 > **原型定位**：`prototype/` 为独立的高保真原型与设计验证参考（含早期 JS 移植源），**非应用运行依赖**；应用源码以 `lib/` 与 `components/` 为准，删除 `prototype/` 不影响构建与运行。
 
 | 项目 | 内容 |
 |------|------|
-| 文档版本 | v1.17.4 |
+| 文档版本 | v1.17.5 |
 | 创建日期 | 2026-09-03 |
 | 技术负责人 | ChromaCheck 团队 |
 
@@ -417,7 +417,7 @@ cc.batch.v1        # 批量检测名单（app/test/batch/page.tsx）
 
 ### 5.1 API 路由列表
 
-> **现状（v1.17.4）**：纯前端应用**无任何服务端 API 路由**，`app/` 下仅 `app/llms.txt/route.ts` 与 `app/llms-full.txt/route.ts` 两个 Route Handler（SEO/GEO 纯文本索引）。下表接口均为 **v1.1+ 规划或历史设计，当前未实现**；访问统计仅由 GA4 `pageview` 上报（`lib/analytics.ts`），不走本站接口。
+> **现状（v1.17.5）**：纯前端应用**无任何服务端 API 路由**，`app/` 下仅 `app/llms.txt/route.ts` 与 `app/llms-full.txt/route.ts` 两个 Route Handler（SEO/GEO 纯文本索引）。下表接口均为 **v1.1+ 规划或历史设计，当前未实现**；访问统计仅由 GA4 `pageview` 上报（`lib/analytics.ts`），不走本站接口。
 
 | 方法 | 路径 | 说明 | 状态 |
 |------|------|------|------|
@@ -497,8 +497,8 @@ interface AnalyticsEvent {
   - 判读引擎与题库（scoring / hue-scoring / path-scoring / signal-scoring / advanced-scoring / child-scoring / ishihara / path-field）
   - 存储与档案（storage / profile / export-import）、格式化与文案（format / scoring-text）、分享卡（sharecard）
 - **运行**：`npm test`（vitest run）、`npm run test:watch`、`npm run test:coverage`（@vitest/coverage-v8）
-- **实测覆盖率（2026-11-27 / v1.17.4）**：lines 88.96% / statements 88.96% / branches 84.3% / functions 87.64%，阈值 80 / 80 / 70 / 75 全绿。
-- **后续目标**：组件测试未引入；E2E 已接入但需 CI 连续三次稳定通过（O-03）。
+- **实测覆盖率（2026-11-27 / v1.17.5）**：lines 88.96% / statements 88.96% / branches 84.3% / functions 87.64%，阈值 80 / 80 / 70 / 75 全绿。
+- **后续目标**：组件测试未引入；E2E 已接入，但需先对齐首页 CTA 路由断言，再完成 CI 连续三次稳定通过（O-03）。
 
 ### 7.2 集成 / E2E（已接入，待 CI 稳定性验收）
 
@@ -589,11 +589,11 @@ jobs:
 
 > 任务清单见 [tasks.md](./tasks.md)。
 
-## 11. 已知问题与待办（更新于 2026-11-27 / v1.17.4）
+## 11. 已知问题与待办（更新于 2026-11-27 / v1.17.5）
 
-- **已知问题**：`npm audit --omit=dev --audit-level=critical` 报告 1 个 critical（审计库将全部 Next 14.x 判为受影响；是否跨 major 升至 Next 16 属 O-01 决策）；组件测试未引入；内容型文案繁体仍回退简体；规范域名 `chromacheck.app` 与试用入口 `chroma.ewuse.com` 并存。
+- **已知问题**：`npm audit --omit=dev --audit-level=critical` 报告 1 个 critical（审计库将全部 Next 14.x 判为受影响；是否跨 major 升至 Next 16 属 O-01 决策）；E2E 首页 CTA 路由断言与 `HomeContent.tsx` 实际 `href="/test"` 不一致（O-03）；组件测试未引入；内容型文案繁体仍回退简体；规范域名 `chromacheck.app` 与试用入口 `chroma.ewuse.com` 并存。
 - **待办事项**：唯一来源为 [tasks.md](./tasks.md)。当前活跃项包括 O-01、O-03、O-04、O-05、V-03、V-04、V-06、V-05 与 O-09~O-11；本文件仅记录架构证据，不维护第二份状态。
-- **验证基线**：16 文件 / 111 例 Vitest 实跑全绿；覆盖率 88.96% lines / 84.3% branches / 87.64% functions；lint、type-check、check:docs、check:openapi 全绿；E2E 已接入 CI，仅余连续三次稳定验收。
+- **验证基线**：16 文件 / 111 例 Vitest 实跑全绿；覆盖率 88.96% lines / 84.3% branches / 87.64% functions；lint、type-check、check:docs、check:openapi 全绿；E2E 已接入 CI，但需先对齐首页 CTA 路由断言，再完成连续三次稳定验收（O-03）。
 
 ## 12. 关键决策记录
 
